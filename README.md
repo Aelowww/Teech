@@ -39,7 +39,7 @@ TEECH/
 
 ## System Architecture
 
-![Teech system architecture](docs/architecture/Teech%20System%20Architecture.svg)
+![Teech system architecture](docs/architecture/Teech%20System%20Architecture.png)
 
 ## Environment Variables
 
