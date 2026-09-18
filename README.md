@@ -37,6 +37,10 @@ TEECH/
   public/
 ```
 
+## System Architecture
+
+![Teech system architecture](docs/architecture/Teech%20System%20Architecture.svg)
+
 ## Environment Variables
 
 Create `.env.local` in the project root:
