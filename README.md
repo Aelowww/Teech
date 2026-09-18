@@ -39,6 +39,11 @@ TEECH/
 
 ## System Architecture
 
+Teech follows a layered architecture connecting the user interface,
+application server, Supabase backend services, and PostgreSQL database to
+support authentication, availability management, appointment scheduling,
+and notifications.
+
 ![Teech system architecture](docs/architecture/Teech%20System%20Architecture.png)
 
 ## Environment Variables
