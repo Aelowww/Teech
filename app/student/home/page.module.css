@@ -1,0 +1,28 @@
+.screen { --accent: #7772c9; }
+@media (min-width: 701px) { .screen { height: min(810px, calc(100dvh - 24px)); min-height: min(810px, calc(100dvh - 24px)); } }
+.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.header { margin-bottom: 21px; display: flex; align-items: center; justify-content: space-between; color: var(--accent); }
+.greeting { display: flex; align-items: center; justify-content: flex-start; gap: 12px; }
+.greeting strong,.greeting small { display: block; }
+.greeting strong { color: #4c4e7f; font-size: 18px; }
+.greeting small { margin-top: 3px; color: #77799d; font-size: 12px; }
+.availability { width: 100%; margin: 12px 0 18px; display: flex; align-items: center; gap: 10px; }
+.availabilityLabel { flex: 0 0 auto; color: #4c4e7f; font-size: 13px; font-weight: 600; }
+.availabilitySelect { min-height: 36px; padding: 0 12px; flex: 1; display: flex; align-items: center; gap: 8px; color: #646789; background: #f4f3fc; border: 1px solid #d5d3f2; border-radius: 20px; font-size: 11px; }
+.availabilitySelect span { flex: 1; }
+.availability i { width: 8px; height: 8px; background: #26cf78; border-radius: 50%; }
+.metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 22px; }
+.metric { min-height: 85px; padding: 12px 6px; display: grid; align-content: center; justify-items: center; gap: 5px; background: #f2f7ff; border: 1px solid #bddbff; border-radius: 13px; text-align: center; }
+.metric:nth-child(2) { background: #f7f4ff; border-color: #d8cbf9; }
+.metric:nth-child(3) { background: #effcf5; border-color: #b8edcc; }
+.metric strong { font-size: 18px; }
+.metric span { font-size: 9px; }
+.sectionTitle { margin: 0 0 9px; font-size: 14px; }
+.sectionTitle small { color: var(--muted); font-size: 10px; font-weight: 500; }
+.weekStrip { margin-bottom: 19px; padding: 10px 7px; display: grid; grid-template-columns: repeat(7,1fr); border: 1px solid #e7e6f1; border-radius: 12px; }
+.weekStrip div { display: grid; justify-items: center; gap: 6px; }
+.weekStrip small { color: var(--muted); font-size: 8px; }
+.weekStrip span { width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; font-size: 10px; }
+.weekStrip .selectedDate { color: #fff; background: var(--accent); }
+.dashboardActions { gap: 12px; margin-bottom: 12px; padding-top: 0; }
+.dashboardActions a { min-height: 56px; }

@@ -1,7 +1,5 @@
 # Teech
 
-Teech is a web-based student-faculty consultation scheduling system built to make appointment requests, faculty availability, and consultation records easier to manage in one place.
-
 ## Overview
 
 This project provides a centralized platform for students and faculty members to organize consultation appointments. Students can view faculty availability and request a consultation, while faculty members can manage their schedules and respond to requests.
@@ -31,24 +29,19 @@ Teech is designed to reduce scheduling conflicts, missed consultations, and scat
 
 ```text
 TEECH/
-  app/
-  components/
-  lib/
-  public/
+	app/
+	components/
+	lib/
+	public/
 ```
 
-## System Architecture
+## Planned System Architecture
 
-Teech follows a layered architecture connecting the user interface,
-application server, Supabase backend services, and PostgreSQL database to
-support authentication, availability management, appointment scheduling,
-and notifications.
+The planned backend connects the Next.js application to Supabase for authentication and PostgreSQL data. The application screens are currently prototypes; database tables, row-level security policies, and user flows are not connected yet.
 
-![Teech system architecture](docs/architecture/Teech%20System%20Architecture.png)
+## Supabase Setup
 
-## Environment Variables
-
-Create `.env.local` in the project root:
+Create a Supabase project, then copy `.env.example` to `.env.local` and replace the placeholders with the project URL and anon key from the Supabase dashboard:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
@@ -57,10 +50,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ## Local Setup
 
-Install dependencies:
+Install the locked dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
 Start the development server:
@@ -73,4 +66,4 @@ The application runs on `http://localhost:3000`.
 
 ## Project Status
 
-Teech is currently under development.
+Teech is currently under development. Supabase browser and server clients are set up, but the database schema, row-level security policies, and application authentication and data flows still need to be implemented. Supabase credentials are not included; each developer should create `.env.local` from `.env.example` and use the team's Supabase project values.

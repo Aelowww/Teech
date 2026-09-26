@@ -1,0 +1,7 @@
+.screen { --accent: #7772c9; }
+.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.welcome { min-height: 700px; flex: 1; padding: 120px 14px 20px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+.welcome > :not(.circle):not(.circleBottom) { z-index: 1; }
+.circle,.circleBottom { position: absolute; top: -80px; right: -97px; width: 245px; height: 245px; background: #e7e5fa; border-radius: 50%; }
+.circleBottom { top: auto; right: auto; bottom: -155px; left: -130px; width: 285px; height: 285px; }
+.roles { z-index: 1; display: grid; gap: 12px; margin: 20px 0 auto; }

@@ -1,0 +1,11 @@
+.screen { --accent: #7772c9; }
+.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.header { margin: 0 0 10px; display: flex; align-items: center; justify-content: space-between; }
+.notifications { width: 32px; height: 32px; display: grid; flex: 0 0 auto; place-items: center; color: var(--accent); }
+.search { min-height: 43px; margin-top: 12px; padding: 0 12px; display: flex; align-items: center; gap: 9px; color: var(--muted); background: #f8f8fc; border: 1px solid #dcdce9; border-radius: 10px; }
+.search input { width: 100%; min-width: 0; padding: 0; color: var(--ink); background: transparent; border: 0; outline: 0; font: inherit; font-size: 11px; }
+.search input::placeholder { color: var(--muted); }
+.filters { margin: 13px 0; display: flex; gap: 7px; }
+.filters button { min-height: 29px; padding: 0 12px; color: #85859b; background: #f7f7fb; border: 1px solid #e7e6f1; border-radius: 99px; font: inherit; font-size: 9px; cursor: pointer; }
+.filters .filterSelected { color: #fff; background: var(--accent); border-color: var(--accent); }
+.emptyState { margin: 18px 0; color: var(--muted); font-size: 12px; text-align: center; }

@@ -1,0 +1,6 @@
+.screen { --accent: #7772c9; }
+.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.header { margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; color: var(--accent); }
+.empty { margin: auto 0; padding: 40px 18px; display: grid; justify-items: center; color: var(--accent); text-align: center; }
+.empty strong { margin-top: 14px; color: #28294a; font-size: 14px; }
+.empty p { max-width: 220px; color: #8586a0; font-size: 10px; line-height: 1.5; }
