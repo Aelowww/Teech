@@ -284,6 +284,7 @@ export function MonthCalendar({
   markedDates = [],
   availableDates,
   legend = "Select a date",
+  disablePastDates = true,
   onSelectDate,
   onMonthChange,
 }: {
@@ -293,6 +294,7 @@ export function MonthCalendar({
   markedDates?: string[];
   availableDates?: string[];
   legend?: string;
+  disablePastDates?: boolean;
   onSelectDate?: (date: string) => void;
   onMonthChange?: (month: Date) => void;
 }) {
@@ -302,6 +304,8 @@ export function MonthCalendar({
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
   const days = Array.from({ length: Math.ceil((firstDay + daysInMonth) / 7) * 7 }, (_, index) => index - firstDay + 1);
   const monthLabel = month.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   function dateValue(day: number) {
     return `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -329,11 +333,13 @@ export function MonthCalendar({
           const date = day > 0 && day <= daysInMonth ? dateValue(day) : "";
           const selected = selectedDate === date || selectedDates.includes(date);
           const marked = markedDates.includes(date);
-          const className = `${styles.day} ${selected ? styles.daySelected : ""} ${marked && !selected ? styles.dayMarked : ""}`;
+          const isAvailable = availableDates?.includes(date);
+          const isPastDate = disablePastDates && date < today;
+          const className = `${styles.day} ${selected ? styles.daySelected : ""} ${marked && !selected ? styles.dayMarked : ""} ${isAvailable && !selected ? styles.dayAvailable : ""}`;
           return day > 0 && day <= daysInMonth
-            ? onSelectDate && (!availableDates || availableDates.includes(date))
+            ? onSelectDate && !isPastDate && (!availableDates || availableDates.includes(date))
               ? <button type="button" key={index} className={className} onClick={() => onSelectDate(date)}>{day}</button>
-              : <span key={index} className={`${className} ${availableDates ? styles.dayDisabled : ""}`}>{day}</span>
+              : <span key={index} className={`${className} ${(availableDates || isPastDate) ? styles.dayDisabled : ""}`}>{day}</span>
             : <span key={index} className={styles.day} />;
         })}
       </div>
@@ -345,11 +351,13 @@ export function AvailabilitySlots({
   times,
   selectedTime,
   onSelectTime,
+  unavailableTimes = [],
   disabled = false,
 }: {
   times: string[];
   selectedTime?: string;
   onSelectTime?: (time: string) => void;
+  unavailableTimes?: string[];
   disabled?: boolean;
 }) {
   const morningSlots = times.filter((time) => !time.includes("PM"));
@@ -357,11 +365,11 @@ export function AvailabilitySlots({
 
   function renderSlots(slots: string[]) {
     return slots.map((time) => (
-      <label className={styles.timeToggle} key={time}>
+      <label className={`${styles.timeToggle} ${unavailableTimes.includes(time) ? styles.timeUnavailable : ""}`} key={time}>
         {time}
         {onSelectTime
-          ? <input type="radio" name="appointment-time" checked={selectedTime === time} onChange={() => onSelectTime(time)} disabled={disabled} />
-          : <input type="checkbox" disabled={disabled} />}
+          ? <input type="radio" name="appointment-time" checked={selectedTime === time} onChange={() => onSelectTime(time)} disabled={disabled || unavailableTimes.includes(time)} />
+          : <input type="checkbox" disabled={disabled || unavailableTimes.includes(time)} />}
       </label>
     ));
   }

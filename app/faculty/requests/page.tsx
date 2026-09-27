@@ -21,6 +21,7 @@ export default function Page() {
 
   useEffect(() => {
     let active = true;
+    let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | undefined;
     async function loadRequests() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
@@ -36,9 +37,27 @@ export default function Page() {
       if (requestError) setError(requestError.message);
       else setRequests(data as Appointment[] || []);
       setIsLoading(false);
+
+      channel = supabase
+        .channel(`faculty-requests-${profile.id}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "appointment_requests", filter: `faculty_profile_id=eq.${profile.id}` },
+          (payload) => {
+            const changedRequest = payload.new as Appointment;
+            setRequests((current) => {
+              if (payload.eventType === "INSERT") return [changedRequest, ...current];
+              return current.map((request) => request.id === changedRequest.id ? { ...request, ...changedRequest } : request);
+            });
+          },
+        )
+        .subscribe();
     }
     void loadRequests();
-    return () => { active = false; };
+    return () => {
+      active = false;
+      if (channel) void createClient().removeChannel(channel);
+    };
   }, [router]);
 
   if (isLoading) return <AppLoader />;

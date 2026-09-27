@@ -1,0 +1,26 @@
+.screen { --accent: #7772c9; }
+.page { flex: 1; min-height: 0; padding-bottom: 8px; display: flex; flex-direction: column; }
+.statusMark { width: 64px; height: 64px; margin: 4px auto 15px; display: grid; place-items: center; color: var(--accent); background: #eeedfc; border-radius: 50%; }
+.timeline { width: min(100%, 235px); margin: 2px auto 21px; position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; text-align: center; }
+.timeline::before { content: ""; height: 1px; position: absolute; top: 10px; right: 16.7%; left: 16.7%; background: #deddf0; }
+.timeline div { position: relative; z-index: 1; display: grid; justify-items: center; gap: 5px; color: #9a9ab2; }
+.timeline span { width: 20px; height: 20px; display: grid; place-items: center; color: #b4b3d8; border: 1px solid #d6d5ed; border-radius: 50%; }
+.timeline .complete, .timeline .current { color: #fff; background: var(--accent); border-color: var(--accent); }
+.timeline .current { box-shadow: 0 0 0 3px #eeedfc; }
+.timeline small { color: #777896; font-size: 9px; white-space: nowrap; }
+.detailsCard { overflow: hidden; border: 1px solid #deddf0; border-radius: 8px; }
+.detailsCard > header { padding: 13px 14px; display: grid; gap: 4px; background: #f2f1fd; }
+.detailsCard > header span, .reason > span { color: #7375a0; font-size: 10px; }
+.detailsCard > header strong { color: #474579; font-size: 12px; }
+.faculty { padding: 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #edecf5; }
+.initials { width: 30px; height: 30px; display: grid; flex: 0 0 auto; place-items: center; color: var(--accent); background: #f0effd; border-radius: 50%; font-size: 10px; font-weight: 700; }
+.faculty div { display: grid; gap: 2px; }.faculty strong { color: var(--ink); font-size: 12px; }.faculty small { color: var(--muted); font-size: 9px; }
+.detailsCard dl { margin: 0; padding: 3px 14px; display: grid; }
+.detailsCard dl div { min-height: 37px; display: grid; grid-template-columns: 20px 50px minmax(0, 1fr); align-items: center; color: #a2a2bc; }
+.detailsCard dt { font-size: 11px; }.detailsCard dd { margin: 0; color: #45436d; font-size: 11px; font-weight: 600; }
+.statusPill { padding: 5px 9px; display: inline-flex; align-items: center; border-radius: 999px; font-size: 10px; font-weight: 700; }
+.statusPending { color: #a26015; background: #fff5df; }.statusConfirmed { color: #277d51; background: #edfbf3; }.statusDeclined, .statusCancelled { color: #b13a55; background: #fff0f3; }
+.reason { padding: 10px 14px 13px; border-top: 1px solid #edecf5; }.reason p { margin: 4px 0; color: #45436d; font-size: 11px; font-weight: 600; }.reason small { color: var(--muted); font-size: 10px; line-height: 1.4; }
+.notice { margin: 12px 0; padding: 10px 12px; display: flex; align-items: center; gap: 9px; color: #52527a; background: #f1f0fc; border: 1px solid #e2e0f5; border-radius: 8px; font-size: 10px; line-height: 1.35; }
+.homeButton { width: 100%; min-height: 50px; margin-top: auto; margin-bottom: 12px; display: grid; place-items: center; color: var(--accent); background: #f1f0fc; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.homeButton:hover, .homeButton:focus-visible { color: #fff; background: var(--accent); }

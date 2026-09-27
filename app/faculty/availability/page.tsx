@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/components/app-loader";
 import styles from "./page.module.css";
 
-type Availability = { id: string; available_date: string; start_time: string; end_time: string };
+type Availability = { id: string; available_date: string; start_time: string; end_time: string; meeting_location: string | null };
 
 export default function Page() {
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function Page() {
   const [availability, setAvailability] = useState<Availability[]>([]);
   const [startTime, setStartTime] = useState("08:00");
   const [endTime, setEndTime] = useState("16:00");
+  const [meetingLocation, setMeetingLocation] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
@@ -33,7 +34,7 @@ export default function Page() {
       if (!user) { router.replace("/faculty/sign-in"); return; }
       const { data: profile } = await supabase.from("profiles").select("id, role").eq("auth_user_id", user.id).maybeSingle();
       if (!profile || profile.role !== "faculty") { router.replace("/faculty/sign-in"); return; }
-      const { data, error: availabilityError } = await supabase.from("faculty_availability").select("id, available_date, start_time, end_time").eq("faculty_profile_id", profile.id).eq("is_available", true).not("available_date", "is", null).order("available_date");
+      const { data, error: availabilityError } = await supabase.from("faculty_availability").select("id, available_date, start_time, end_time, meeting_location").eq("faculty_profile_id", profile.id).eq("is_available", true).not("available_date", "is", null).order("available_date");
       if (!active) return;
       setFacultyId(profile.id);
       if (availabilityError) setError(availabilityError.message);
@@ -60,7 +61,7 @@ export default function Page() {
     const supabase = createClient();
     const { error: deleteError } = await supabase.from("faculty_availability").delete().eq("faculty_profile_id", facultyId).in("available_date", selectedDates);
     if (deleteError) { setSaving(false); setError(deleteError.message); return; }
-    const { data, error: insertError } = await supabase.from("faculty_availability").insert(selectedDates.map((availableDate) => ({ faculty_profile_id: facultyId, available_date: availableDate, start_time: startTime, end_time: endTime, is_available: true }))).select("id, available_date, start_time, end_time");
+    const { data, error: insertError } = await supabase.from("faculty_availability").insert(selectedDates.map((availableDate) => ({ faculty_profile_id: facultyId, available_date: availableDate, start_time: startTime, end_time: endTime, meeting_location: meetingLocation.trim() || null, is_available: true }))).select("id, available_date, start_time, end_time, meeting_location");
     setSaving(false);
     if (insertError) { setError(insertError.message); return; }
     setAvailability((current) => [...current.filter((slot) => !selectedDates.includes(slot.available_date)), ...((data || []) as Availability[])].sort((a, b) => a.available_date.localeCompare(b.available_date)));
@@ -91,6 +92,7 @@ export default function Page() {
             <label>Start time<input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} disabled={!selectedDates.length} /></label>
             <label>End time<input type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} disabled={!selectedDates.length} /></label>
           </div>
+          <label className={styles.location}>Meeting room or location<input value={meetingLocation} onChange={(event) => setMeetingLocation(event.target.value)} placeholder="e.g. Faculty Office, Room 21" disabled={!selectedDates.length} /></label>
           {savedSelectedDates.length > 0 && <button className={styles.removeButton} type="button" onClick={() => setConfirmingRemoval(true)} disabled={saving}>Make {savedSelectedDates.length === 1 ? "selected date" : "selected dates"} unavailable</button>}
         </section>
         {error && <Notice error>{error}</Notice>}

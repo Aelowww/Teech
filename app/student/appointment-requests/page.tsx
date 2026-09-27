@@ -1,8 +1,9 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { UserRound, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Ban, Eye, UserRound } from "lucide-react";
 import { MobileLayout, Notice, PageHeading } from "@/components/ui";
 import { ConfirmationModal } from "@/components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
@@ -27,6 +28,7 @@ export default function Page() {
 }
 
 function RequestsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const statusFilter = searchParams.get("status") === "pending" ? "pending" : "";
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -36,10 +38,15 @@ function RequestsPage() {
 
   useEffect(() => {
     let active = true;
+    let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | undefined;
     async function loadAppointments() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user || !active) return;
+      if (!user) {
+        if (active) router.replace("/student/sign-in");
+        return;
+      }
+      if (!active) return;
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("id")
@@ -61,10 +68,28 @@ function RequestsPage() {
       if (requestError) setError(requestError.message);
       else setAppointments(data as Appointment[] || []);
       setIsLoading(false);
+
+      channel = supabase
+        .channel(`student-requests-${profile.id}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "appointment_requests", filter: `student_profile_id=eq.${profile.id}` },
+          (payload) => {
+            const changedAppointment = payload.new as Appointment;
+            setAppointments((current) => {
+              if (payload.eventType === "INSERT") return [changedAppointment, ...current];
+              return current.map((appointment) => appointment.id === changedAppointment.id ? { ...appointment, ...changedAppointment } : appointment);
+            });
+          },
+        )
+        .subscribe();
     }
     void loadAppointments();
-    return () => { active = false; };
-  }, []);
+    return () => {
+      active = false;
+      if (channel) void createClient().removeChannel(channel);
+    };
+  }, [router]);
 
   if (isLoading) return <AppLoader />;
 
@@ -76,6 +101,8 @@ function RequestsPage() {
     if (cancelError) return cancelError.message;
     setAppointments((current) => current.map((appointment) => appointment.id === id ? { ...appointment, status: "cancelled" } : appointment));
   }
+
+  const cancellingAppointment = appointments.find((appointment) => appointment.id === cancellingId);
 
   return (
     <MobileLayout className={styles.screen} backTo="/student/home" role="student" activeNav="requests">
@@ -93,13 +120,16 @@ function RequestsPage() {
                   <small>{appointment.reason}</small>
                   <em className={styles[`status${capitalize(appointment.status)}`]}>{appointment.status}</em>
                 </div>
-                {appointment.status === "pending" && <button type="button" className={styles.withdraw} onClick={() => setCancellingId(appointment.id)} aria-label="Cancel request"><X size={16} /></button>}
+                <div className={styles.cardActions}>
+                  <Link className={styles.viewButton} href={`/student/appointment-requests/${appointment.id}`}><Eye size={14} /><span>View</span></Link>
+                  {(appointment.status === "pending" || appointment.status === "confirmed") && <button type="button" className={styles.cancelButton} onClick={() => setCancellingId(appointment.id)}><Ban size={12} />Cancel</button>}
+                </div>
               </article>
             ))}
           </div>
         ) : <p className={styles.emptyState}>{statusFilter ? "No requests are waiting for a response." : "No appointment requests have been submitted."}</p>}
       </div>
-      <ConfirmationModal open={Boolean(cancellingId)} title="Cancel request?" description="The faculty member will no longer be able to approve this consultation request." confirmLabel="Cancel Request" tone="danger" onCancel={() => setCancellingId("")} onConfirm={() => cancelRequest(cancellingId)} />
+      <ConfirmationModal open={Boolean(cancellingId)} title="Cancel consultation?" description={cancellingAppointment?.status === "confirmed" ? "This will cancel your confirmed consultation and notify the faculty member." : "This will cancel your pending consultation request and notify the faculty member."} confirmLabel="Cancel Consultation" tone="danger" onCancel={() => setCancellingId("")} onConfirm={() => cancelRequest(cancellingId)} />
     </MobileLayout>
   );
 }

@@ -6,6 +6,7 @@ export type AppointmentDraft = {
   facultyName: string;
   preferredDate: string;
   preferredTime: string;
+  meetingLocation: string;
   reason: string;
   details: string;
 };
@@ -27,6 +28,7 @@ export const emptyAppointmentDraft: AppointmentDraft = {
   facultyName: "",
   preferredDate: "",
   preferredTime: "",
+  meetingLocation: "",
   reason: "",
   details: "",
 };
