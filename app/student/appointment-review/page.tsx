@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MobileLayout, Notice, PageHeading, DetailList } from "@/components/ui";
+import { ConfirmationModal } from "@/components/confirmation-modal";
 import {
   emptyAppointmentDraft,
   getAppointmentDraft,
@@ -19,6 +20,7 @@ export default function Page() {
   const [draft, setDraft] = useState<AppointmentDraft>(emptyAppointmentDraft);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     const loadDraft = window.setTimeout(() => setDraft(getAppointmentDraft()), 0);
@@ -40,12 +42,15 @@ export default function Page() {
     return items;
   }, [draft]);
 
-  async function handleSubmit() {
+  function requestSubmission() {
     if (!isAppointmentDraftComplete(draft)) {
       router.replace("/student/calendar");
       return;
     }
-    if (!window.confirm("Submit this consultation request?")) return;
+    setConfirming(true);
+  }
+
+  async function handleSubmit() {
     setError("");
     setSubmitting(true);
     const supabase = createClient();
@@ -63,8 +68,7 @@ export default function Page() {
       .maybeSingle();
     if (profileError || !student || student.role !== "student") {
       setSubmitting(false);
-      setError("Your student profile could not be found. Please sign in again.");
-      return;
+      return "Your student profile could not be found. Please sign in again.";
     }
 
     const { data: submittedRequest, error: requestError } = await supabase
@@ -84,8 +88,7 @@ export default function Page() {
       .single();
     setSubmitting(false);
     if (requestError || !submittedRequest) {
-      setError(requestError?.message || "Your request could not be saved. Please try again.");
-      return;
+      return requestError?.message || "Your request could not be saved. Please try again.";
     }
 
     saveAppointmentDraft(emptyAppointmentDraft);
@@ -102,9 +105,10 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         <div className={styles.actions}>
           <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
-          <button className={styles.submitButton} type="button" onClick={handleSubmit} disabled={!isAppointmentDraftComplete(draft) || submitting}>{submitting ? "Submitting..." : "Submit Request"}</button>
+          <button className={styles.submitButton} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting}>{submitting ? "Submitting..." : "Submit Request"}</button>
         </div>
       </div>
+      <ConfirmationModal open={confirming} title="Submit consultation request?" description="Your request will be sent to the selected faculty member for review." confirmLabel="Submit Request" onCancel={() => setConfirming(false)} onConfirm={handleSubmit} />
     </MobileLayout>
   );
 }

@@ -11,11 +11,13 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
+import { AppLoader } from "@/components/app-loader";
 import styles from "./page.module.css";
 
 export default function Page() {
   const router = useRouter();
   const [draft, setDraft] = useState<AppointmentDraft>(emptyAppointmentDraft);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -24,7 +26,10 @@ export default function Page() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user || !active) {
-        if (active) setDraft(storedDraft);
+        if (active) {
+          setDraft(storedDraft);
+          setIsLoading(false);
+        }
         return;
       }
       const { data: profile } = await supabase
@@ -42,10 +47,13 @@ export default function Page() {
       } : storedDraft;
       setDraft(updatedDraft);
       saveAppointmentDraft(updatedDraft);
+      setIsLoading(false);
     }
     void loadDraft();
     return () => { active = false; };
   }, []);
+
+  if (isLoading) return <AppLoader />;
 
   function updateField(field: keyof AppointmentDraft) {
     return (event: ChangeEvent<HTMLInputElement>) => {

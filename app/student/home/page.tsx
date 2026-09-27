@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto } from "@/components/ui";
+import { NotificationBell } from "@/components/notification-bell";
+import { AppLoader } from "@/components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./page.module.css";
 
@@ -16,9 +16,11 @@ export default function Page() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [facultyCount, setFacultyCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | undefined;
     async function loadDashboard() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
@@ -44,13 +46,35 @@ export default function Page() {
       setProfile(currentProfile);
       setAppointments(requestsResult.data as Appointment[] || []);
       setFacultyCount(new Set(facultyResult.data?.map((slot) => slot.faculty_profile_id) || []).size);
+      setIsLoading(false);
+      channel = supabase
+        .channel(`student-dashboard-${currentProfile.id}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "appointment_requests", filter: `student_profile_id=eq.${currentProfile.id}` },
+          (payload) => {
+            const changedAppointment = payload.new as Appointment;
+            setAppointments((current) => {
+              if (payload.eventType === "INSERT") return [changedAppointment, ...current];
+              return current.map((appointment) => appointment.id === changedAppointment.id ? { ...appointment, ...changedAppointment } : appointment);
+            });
+          },
+        )
+        .subscribe();
     }
     void loadDashboard();
-    return () => { active = false; };
+    return () => {
+      active = false;
+      if (channel) void createClient().removeChannel(channel);
+    };
   }, [router]);
 
+  if (isLoading) return <AppLoader />;
+
   const pendingAppointments = appointments.filter((appointment) => appointment.status === "pending");
-  const nextAppointment = [...pendingAppointments].sort((first, second) => first.preferred_date.localeCompare(second.preferred_date))[0];
+  const nextAppointment = appointments
+    .filter((appointment) => appointment.status === "confirmed" && appointment.preferred_date >= new Date().toISOString().slice(0, 10))
+    .sort((first, second) => `${first.preferred_date}T${first.preferred_time}`.localeCompare(`${second.preferred_date}T${second.preferred_time}`))[0];
   const requestItems = pendingAppointments.slice(0, 1).map((appointment) => ({
     title: appointment.faculty_name || "Faculty",
     description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
@@ -65,7 +89,7 @@ export default function Page() {
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <Link href="/student/notifications" aria-label="Notifications"><Bell size={19} /></Link>
+          <NotificationBell href="/student/notifications" />
         </header>
         <div className={styles.greeting}>
           <ProfilePhoto inline />
@@ -78,6 +102,7 @@ export default function Page() {
         </div>
         <h2 className={styles.sectionTitle}>Calendar <small>This Week</small></h2>
         <div className={styles.weekStrip}>{week.map(({ label, day, isToday }) => <div key={`${label}-${day}`}><small>{label}</small><span className={isToday ? styles.selectedDate : ""}>{day}</span></div>)}</div>
+        {nextAppointment && <><h2 className={styles.sectionTitle}>Next Consultation</h2><CardList items={[{ title: nextAppointment.faculty_name || "Faculty", description: `${formatLongDate(nextAppointment.preferred_date)} - ${formatTime(nextAppointment.preferred_time)}`, status: "Confirmed", href: "/student/appointment-requests" }]} /></>}
         <h2 className={styles.sectionTitle}>Pending Request</h2>
         {requestItems.length > 0 ? <CardList items={requestItems} /> : <p className={styles.emptyState}>No pending requests.</p>}
       </div>

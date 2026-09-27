@@ -50,7 +50,7 @@ export function MobileLayout({
   children: React.ReactNode;
   className?: string;
   backTo?: string;
-  role?: "student" | "teacher";
+  role?: "student" | "faculty";
   activeNav?: string;
 }) {
   return (
@@ -411,15 +411,15 @@ export function BottomNavigation({
   role,
   active,
 }: {
-  role: "student" | "teacher";
+  role: "student" | "faculty";
   active: string;
 }) {
-  const items = role === "teacher"
+  const items = role === "faculty"
     ? [
-        { label: "Home", href: "/teacher/home", Icon: House },
-        { label: "Calendar", href: "/teacher/calendar", Icon: CalendarDays },
-        { label: "Requests", href: "/teacher/requests", Icon: ClipboardList },
-        { label: "Profile", href: "/teacher/profile", Icon: CircleUserRound },
+        { label: "Home", href: "/faculty/home", Icon: House },
+        { label: "Calendar", href: "/faculty/calendar", Icon: CalendarDays },
+        { label: "Requests", href: "/faculty/requests", Icon: ClipboardList },
+        { label: "Profile", href: "/faculty/profile", Icon: CircleUserRound },
       ]
     : [
         { label: "Home", href: "/student/home", Icon: House },

@@ -1,0 +1,19 @@
+.backdrop { position: fixed; z-index: 100; inset: 0; padding: 20px; display: grid; place-items: center; background: rgba(32, 33, 63, 0.48); }
+.dialog { width: min(100%, 344px); padding: 23px 20px 20px; position: relative; color: #28294a; background: #fff; border: 1px solid #e1e0ef; border-radius: 12px; box-shadow: 0 20px 48px rgba(31, 31, 57, 0.24); text-align: center; font-family: "DM Sans", Arial, sans-serif; }
+.icon { width: 45px; height: 45px; margin: 0 auto 12px; display: grid; place-items: center; color: #514c9a; background: #eeedfa; border-radius: 50%; }
+.iconDanger { color: #b5394b; background: #fff0f1; }
+.close { width: 30px; height: 30px; padding: 0; position: absolute; top: 10px; right: 10px; display: grid; place-items: center; color: #77788f; background: transparent; border: 0; border-radius: 6px; cursor: pointer; }
+.close:hover, .close:focus-visible { color: #514c9a; background: #f4f3fb; }
+.close:disabled { cursor: wait; opacity: 0.5; }
+.dialog h2 { margin: 0; font-size: 17px; line-height: 1.25; }
+.dialog > p { margin: 8px auto 0; color: #77788f; font-size: 11px; line-height: 1.55; }
+.confirmationField { margin-top: 15px; display: grid; gap: 6px; color: #77788f; font-size: 10px; font-weight: 600; text-align: left; }
+.confirmationField input { width: 100%; min-height: 42px; padding: 0 11px; color: #28294a; background: #f8f8fc; border: 1px solid #dcdce9; border-radius: 8px; font: inherit; font-size: 12px; outline: 0; }
+.confirmationField input:focus { border-color: #7772c9; box-shadow: 0 0 0 3px #eeedfa; }
+.error { margin-top: 10px !important; color: #b5394b !important; }
+.actions { margin-top: 19px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.actions button { min-height: 44px; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.actions button:disabled { cursor: wait; opacity: 0.65; }
+.cancel { color: #514c9a; background: #f1f0fc; border: 1px solid #e1e0f3; }
+.confirm { color: #fff; background: #7772c9; border: 1px solid #7772c9; }
+.confirmDanger { background: #c94658; border-color: #c94658; }

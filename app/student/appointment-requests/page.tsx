@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ClipboardList, X } from "lucide-react";
+import { UserRound, X } from "lucide-react";
 import { MobileLayout, Notice, PageHeading } from "@/components/ui";
+import { ConfirmationModal } from "@/components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import { AppLoader } from "@/components/app-loader";
 import styles from "./page.module.css";
 
 type Appointment = {
@@ -17,10 +19,20 @@ type Appointment = {
 };
 
 export default function Page() {
+  return (
+    <Suspense fallback={null}>
+      <RequestsPage />
+    </Suspense>
+  );
+}
+
+function RequestsPage() {
   const searchParams = useSearchParams();
   const statusFilter = searchParams.get("status") === "pending" ? "pending" : "";
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [error, setError] = useState("");
+  const [cancellingId, setCancellingId] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -34,7 +46,10 @@ export default function Page() {
         .eq("auth_user_id", user.id)
         .maybeSingle();
       if (profileError || !profile) {
-        if (active) setError("Your profile could not be loaded.");
+        if (active) {
+          setError("Your profile could not be loaded.");
+          setIsLoading(false);
+        }
         return;
       }
       const { data, error: requestError } = await supabase
@@ -45,21 +60,20 @@ export default function Page() {
       if (!active) return;
       if (requestError) setError(requestError.message);
       else setAppointments(data as Appointment[] || []);
+      setIsLoading(false);
     }
     void loadAppointments();
     return () => { active = false; };
   }, []);
 
+  if (isLoading) return <AppLoader />;
+
   async function cancelRequest(id: string) {
-    if (!window.confirm("Cancel this consultation request?")) return;
     const { error: cancelError } = await createClient()
       .from("appointment_requests")
       .update({ status: "cancelled" })
       .eq("id", id);
-    if (cancelError) {
-      setError(cancelError.message);
-      return;
-    }
+    if (cancelError) return cancelError.message;
     setAppointments((current) => current.map((appointment) => appointment.id === id ? { ...appointment, status: "cancelled" } : appointment));
   }
 
@@ -72,19 +86,20 @@ export default function Page() {
           <div className={styles.requests}>
             {(statusFilter ? appointments.filter((appointment) => appointment.status === statusFilter) : appointments).map((appointment) => (
               <article className={styles.requestCard} key={appointment.id}>
-                <div className={styles.requestIcon}><ClipboardList size={18} /></div>
+                <div className={styles.requestIcon} aria-label="Faculty profile"><UserRound size={18} /></div>
                 <div className={styles.requestContent}>
                   <strong>{appointment.faculty_name || "Faculty"}</strong>
                   <span>{formatDate(appointment.preferred_date)} at {formatTime(appointment.preferred_time)}</span>
                   <small>{appointment.reason}</small>
                   <em className={styles[`status${capitalize(appointment.status)}`]}>{appointment.status}</em>
                 </div>
-                {appointment.status === "pending" && <button type="button" className={styles.withdraw} onClick={() => cancelRequest(appointment.id)} aria-label="Cancel request"><X size={16} /></button>}
+                {appointment.status === "pending" && <button type="button" className={styles.withdraw} onClick={() => setCancellingId(appointment.id)} aria-label="Cancel request"><X size={16} /></button>}
               </article>
             ))}
           </div>
         ) : <p className={styles.emptyState}>{statusFilter ? "No requests are waiting for a response." : "No appointment requests have been submitted."}</p>}
       </div>
+      <ConfirmationModal open={Boolean(cancellingId)} title="Cancel request?" description="The faculty member will no longer be able to approve this consultation request." confirmLabel="Cancel Request" tone="danger" onCancel={() => setCancellingId("")} onConfirm={() => cancelRequest(cancellingId)} />
     </MobileLayout>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Bell } from "lucide-react";
 import { MobileLayout, BrandLogo, CardList, EmptyState, PageHeading } from "@/components/ui";
+import { NotificationBell } from "@/components/notification-bell";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./page.module.css";
 
@@ -42,7 +42,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <Link className={styles.notifications} href="/student/notifications" aria-label="Notifications"><Bell size={19} /></Link>
+          <NotificationBell href="/student/notifications" className={styles.notifications} />
         </header>
         <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
         <div className={styles.filters} aria-label="Faculty filters">

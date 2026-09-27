@@ -6,6 +6,7 @@ import { CalendarDays, Clock3 } from "lucide-react";
 import { MobileLayout, Notice, PageHeading, AvailabilitySlots } from "@/components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
+import { AppLoader } from "@/components/app-loader";
 import styles from "./page.module.css";
 
 const timeSlots = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
@@ -15,6 +16,7 @@ export default function Page() {
   const [draft, setDraft] = useState<AppointmentDraft | null>(null);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -22,7 +24,10 @@ export default function Page() {
       const storedDraft = getAppointmentDraft();
       if (!active) return;
       setDraft(storedDraft);
-      if (!storedDraft.facultyId || !storedDraft.preferredDate) return;
+      if (!storedDraft.facultyId || !storedDraft.preferredDate) {
+        setIsLoading(false);
+        return;
+      }
       const { data, error: availabilityError } = await createClient()
         .from("faculty_availability")
         .select("start_time, end_time")
@@ -30,7 +35,11 @@ export default function Page() {
         .eq("available_date", storedDraft.preferredDate)
         .eq("is_available", true);
       if (!active) return;
-      if (availabilityError) { setError(availabilityError.message); return; }
+      if (availabilityError) {
+        setError(availabilityError.message);
+        setIsLoading(false);
+        return;
+      }
       const times = timeSlots.filter((time) => data?.some((slot) => isWithinAvailability(time, slot.start_time, slot.end_time)));
       setAvailableTimes(times);
       if (storedDraft.preferredTime && !times.includes(storedDraft.preferredTime)) {
@@ -38,10 +47,13 @@ export default function Page() {
         setDraft(updatedDraft);
         saveAppointmentDraft(updatedDraft);
       }
+      setIsLoading(false);
     }
     void loadAvailability();
     return () => { active = false; };
   }, []);
+
+  if (isLoading) return <AppLoader />;
 
   function selectTime(preferredTime: string) {
     const updatedDraft = { ...(draft || getAppointmentDraft()), preferredTime };

@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { Bell, UsersRound } from "lucide-react";
+import { UsersRound } from "lucide-react";
 import { MobileLayout, BrandLogo, PageHeading, FilterTabs, SearchField } from "@/components/ui";
+import { NotificationBell } from "@/components/notification-bell";
 import styles from "./page.module.css";
 export default function Page() {
   return (
@@ -8,9 +8,7 @@ export default function Page() {
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <Link href="/student/notifications" aria-label="Notifications">
-            <Bell size={19} />
-          </Link>
+          <NotificationBell href="/student/notifications" />
         </header>
         <PageHeading title="No faculty available" />
         <SearchField placeholder="Search faculty" />
@@ -24,4 +22,3 @@ export default function Page() {
     </MobileLayout>
   );
 }
-

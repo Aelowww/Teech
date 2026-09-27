@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { MobileLayout, Notice, PageHeading, MonthCalendar } from "@/components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
+import { AppLoader } from "@/components/app-loader";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -13,6 +14,7 @@ export default function Page() {
   const [draft, setDraft] = useState<AppointmentDraft | null>(null);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -25,7 +27,10 @@ export default function Page() {
 
       setDraft(updatedDraft);
       if (facultyId && facultyName) saveAppointmentDraft(updatedDraft);
-      if (!updatedDraft.facultyId) return;
+      if (!updatedDraft.facultyId) {
+        setIsLoading(false);
+        return;
+      }
       const { data, error: availabilityError } = await createClient()
         .from("faculty_availability")
         .select("available_date")
@@ -36,9 +41,12 @@ export default function Page() {
       if (!active) return;
       if (availabilityError) setError(availabilityError.message);
       else setAvailableDates((data || []).map((slot) => slot.available_date));
+      setIsLoading(false);
     }, 0);
     return () => { active = false; window.clearTimeout(loadDraft); };
   }, []);
+
+  if (isLoading) return <AppLoader />;
 
   function selectDate(preferredDate: string) {
     const currentDraft = draft || getAppointmentDraft();
