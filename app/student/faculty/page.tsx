@@ -1,91 +1,60 @@
-"use client";
-
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { Bell, Search } from "lucide-react";
-import { MobileLayout, BrandLogo, CardList } from "@/components/ui";
+import { Bell } from "lucide-react";
+import { MobileLayout, BrandLogo, CardList, EmptyState, PageHeading } from "@/components/ui";
+import { createClient } from "@/lib/supabase/server";
 import styles from "./page.module.css";
 
-const faculty = [
-  {
-    title: "Dr. Adrian Villanueva",
-    description: "ITPE 4 · consultation hours 9:00 AM – 4:00 PM",
-    status: "Available",
-    href: "/student/faculty-profile",
-  },
-  {
-    title: "Prof. Camille Reyes",
-    description: "ITPE 4 · next slot tomorrow",
-    status: "Busy",
-    href: "/student/faculty-profile",
-  },
-  {
-    title: "Dr. Nathaniel Soriano",
-    description: "ITPE 4 · in a meeting",
-    status: "In a Meeting",
-    href: "/student/faculty-profile",
-  },
-  {
-    title: "Prof. Isabella Montes",
-    description: "ITPE 4 · in a meeting",
-    status: "In a Meeting",
-    href: "/student/faculty-profile",
-  },
-];
+type FacultyProfile = {
+  id: string;
+  full_name: string;
+  department: string | null;
+};
 
-export default function Page() {
-  const [filter, setFilter] = useState<"all" | "available">("all");
-  const [query, setQuery] = useState("");
-  const visibleFaculty = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-    return faculty.filter((person) => {
-      const matchesAvailability = filter === "all" || person.status === "Available";
-      const matchesSearch = !normalizedQuery
-        || `${person.title} ${person.description} ${person.status}`.toLowerCase().includes(normalizedQuery);
-      return matchesAvailability && matchesSearch;
-    });
-  }, [filter, query]);
+export default async function Page({ searchParams }: { searchParams: Promise<{ filter?: string }> }) {
+  const { filter } = await searchParams;
+  const showingAll = filter === "all";
+  const supabase = await createClient();
+  const [{ data: faculty, error }, { data: availability }] = await Promise.all([
+    supabase
+    .from("profiles")
+    .select("id, full_name, department")
+    .eq("role", "faculty")
+    .order("full_name"),
+    supabase.from("faculty_availability").select("faculty_profile_id").eq("is_available", true).not("available_date", "is", null).gte("available_date", new Date().toISOString().slice(0, 10)),
+  ]);
+
+  const availableFacultyIds = new Set(availability?.map((slot) => slot.faculty_profile_id) || []);
+
+  const facultyItems = (faculty as FacultyProfile[] | null)
+    ?.filter((profile) => showingAll || availableFacultyIds.has(profile.id))
+    .map((profile) => {
+      const available = availableFacultyIds.has(profile.id);
+      return {
+        title: profile.full_name,
+        description: profile.department || "Faculty member",
+        status: available ? "Available" : "No upcoming dates",
+        href: available ? `/student/calendar?facultyId=${profile.id}&facultyName=${encodeURIComponent(profile.full_name)}` : undefined,
+      };
+    }) || [];
 
   return (
     <MobileLayout className={styles.screen} backTo="/student/home" role="student" activeNav="faculty">
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <Link className={styles.notifications} href="/student/appointment-requests" aria-label="Notifications">
-            <Bell size={19} />
-          </Link>
+          <Link className={styles.notifications} href="/student/notifications" aria-label="Notifications"><Bell size={19} /></Link>
         </header>
-        <label className={styles.search}>
-          <Search size={15} aria-hidden="true" />
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search faculty"
-            aria-label="Search faculty"
-          />
-        </label>
-        <div className={styles.filters} aria-label="Filter faculty">
-          <button
-            type="button"
-            aria-pressed={filter === "all"}
-            className={filter === "all" ? styles.filterSelected : ""}
-            onClick={() => setFilter("all")}
-          >
-            All
-          </button>
-          <button
-            type="button"
-            aria-pressed={filter === "available"}
-            className={filter === "available" ? styles.filterSelected : ""}
-            onClick={() => setFilter("available")}
-          >
-            Available
-          </button>
+        <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
+        <div className={styles.filters} aria-label="Faculty filters">
+          <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all">All Faculty</Link>
+          <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty">Available</Link>
         </div>
-        {visibleFaculty.length > 0
-          ? <CardList items={visibleFaculty} />
-          : <p className={styles.emptyState}>No faculty match your search.</p>}
+        {facultyItems.length > 0
+          ? <CardList items={facultyItems} />
+          : <EmptyState
+              title={error ? "Faculty could not be loaded" : showingAll ? "No faculty profiles" : "No faculty available"}
+              description={error ? "Check the database connection and faculty records." : showingAll ? "Faculty profiles will appear here after accounts are created." : "Faculty will appear here after they publish a future available date."}
+            />}
       </div>
     </MobileLayout>
   );

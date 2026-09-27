@@ -1,0 +1,2 @@
+# Keep Supabase migration scripts in the repository without counting them in GitHub's language bar.
+supabase/migrations/*.sql linguist-vendored

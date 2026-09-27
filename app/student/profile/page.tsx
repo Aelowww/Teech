@@ -1,15 +1,31 @@
-import { MobileLayout, PageHeading, ActionButtons, DetailList, ProfilePhoto } from "@/components/ui";
+import { redirect } from "next/navigation";
+import { MobileLayout, PageHeading } from "@/components/ui";
+import { SignOutButton } from "@/components/sign-out-button";
+import { createClient } from "@/lib/supabase/server";
 import styles from "./page.module.css";
-export default function Page() {
+
+export default async function Page() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/student/sign-in");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, student_number, course_year, role")
+    .eq("auth_user_id", user.id)
+    .maybeSingle();
+  if (!profile || profile.role !== "student") redirect("/student/sign-in");
+
   return (
     <MobileLayout className={styles.screen} role="student" activeNav="profile">
       <div className={styles.page}>
-        <ProfilePhoto />
-        <PageHeading title="Bea Camille Flores" subtitle="Student, Information Technology · College of Engineering" />
-        <DetailList details={[{ "label": "Full Name", "value": "Bea Camille Flores" }, { "label": "Email Address", "value": "beacams@gmail.com" }, { "label": "Department", "value": "Information Technology" }, { "label": "College", "value": "College of Engineering" }, { "label": "Student ID", "value": "65379" }]} />
-        <ActionButtons actions={[{ "label": "Log Out", "href": "/welcome", "tone": "danger" }]} primaryLabel="Log Out" />
+        <PageHeading title="Profile" subtitle={profile.full_name} />
+        <dl className={styles.details}>
+          <div><dt>Student ID</dt><dd>{profile.student_number}</dd></div>
+          <div><dt>Course and Year</dt><dd>{profile.course_year}</dd></div>
+        </dl>
+        <div className={styles.signOut}><SignOutButton redirectTo="/student/sign-in" /></div>
       </div>
     </MobileLayout>
   );
 }
-

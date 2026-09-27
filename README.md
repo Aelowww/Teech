@@ -64,6 +64,21 @@ npm run dev
 
 The application runs on `http://localhost:3000`.
 
+## Share a Local Demo
+
+Start the app, then run the ngrok tunnel in a second terminal:
+
+```bash
+npm run dev
+npm run tunnel
+```
+
+Share the HTTPS URL shown by ngrok. The first time, configure the ngrok CLI with the authtoken from your ngrok dashboard:
+
+```bash
+ngrok config add-authtoken YOUR_NGROK_AUTHTOKEN
+```
+
 ## Project Status
 
 Teech is currently under development. Supabase browser and server clients are set up, but the database schema, row-level security policies, and application authentication and data flows still need to be implemented. Supabase credentials are not included; each developer should create `.env.local` from `.env.example` and use the team's Supabase project values.

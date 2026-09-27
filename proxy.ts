@@ -10,10 +10,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
-  const { supabaseUrl, supabaseAnonKey } = getSupabaseConfig();
+  const { supabaseUrl, supabasePublishableKey } = getSupabaseConfig();
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createServerClient(supabaseUrl, supabasePublishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();

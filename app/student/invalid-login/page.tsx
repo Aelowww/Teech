@@ -7,8 +7,8 @@ export default function Page() {
       <div className={styles.page}>
         <PageHeading title="Sign In" />
         <div className={styles.form}>
-          <FormField label="Student ID" placeholder="65379" />
-          <FormField label="Password" placeholder="••••••••" type="password" />
+          <FormField label="Student ID" placeholder="Enter your student ID" />
+          <FormField label="Password" placeholder="Enter your password" type="password" />
           <Link className={styles.inlineLink} href="/student/forgot-password">Forgot Password?</Link>
         </div>
         <Notice>Invalid ID number or password. Please try again.</Notice>

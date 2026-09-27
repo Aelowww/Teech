@@ -2,15 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft,
-  Bell,
   CalendarDays,
   Check,
+  ChevronLeft,
   ChevronRight,
+  ClipboardList,
   CircleUserRound,
   Clock3,
   GraduationCap,
   House,
   Info,
+  Inbox,
   LockKeyhole,
   Mail,
   Search,
@@ -139,10 +141,18 @@ export function FormField({
   label,
   placeholder,
   type = "text",
+  name,
+  value,
+  onChange,
+  required = false,
 }: {
   label: string;
   placeholder: string;
   type?: string;
+  name?: string;
+  value?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  required?: boolean;
 }) {
   const labelLower = label.toLowerCase();
   const Icon = labelLower.includes("mail") || labelLower.includes("email")
@@ -159,7 +169,15 @@ export function FormField({
       <span>{label}</span>
       <div className={styles.inputWrap}>
         <Icon size={15} />
-        <input type={type} placeholder={placeholder} aria-label={label} />
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          aria-label={label}
+          required={required}
+        />
       </div>
     </label>
   );
@@ -171,6 +189,22 @@ export function Notice({ children, error = false }: { children: React.ReactNode;
       <Info size={15} />
       <span>{children}</span>
     </div>
+  );
+}
+
+export function EmptyState({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  return (
+    <section className={styles.emptyState}>
+      <Inbox size={28} aria-hidden="true" />
+      <strong>{title}</strong>
+      <p>{description}</p>
+    </section>
   );
 }
 
@@ -204,17 +238,21 @@ export function DetailList({ details }: { details: Detail[] }) {
 export function CardList({ items }: { items: CardItem[] }) {
   return (
     <div className={styles.list}>
-      {items.map((item) => (
-        <Link href={item.href || "#"} className={styles.listCard} key={`${item.title}-${item.description}`}>
+      {items.map((item) => {
+        const card = <>
           <span className={styles.itemAvatar}><UserRound size={18} /></span>
           <div>
             <strong>{item.title}</strong>
             <small>{item.description}</small>
             {item.status && <em className={item.status === "Available" || item.status === "Confirmed" ? styles.statusGood : styles.statusBad}>{item.status}</em>}
           </div>
-          <ChevronRight size={16} />
-        </Link>
-      ))}
+          {item.href && <ChevronRight size={16} />}
+        </>;
+
+        return item.href
+          ? <Link href={item.href} className={styles.listCard} key={`${item.title}-${item.description}`}>{card}</Link>
+          : <article className={styles.listCard} key={`${item.title}-${item.description}`}>{card}</article>;
+      })}
     </div>
   );
 }
@@ -239,39 +277,99 @@ export function FilterTabs({
   );
 }
 
-export function MonthCalendar() {
-  const days = Array.from({ length: 35 }, (_, index) => index - 5);
+export function MonthCalendar({
+  month = new Date(),
+  selectedDate,
+  selectedDates = [],
+  markedDates = [],
+  availableDates,
+  legend = "Select a date",
+  onSelectDate,
+  onMonthChange,
+}: {
+  month?: Date;
+  selectedDate?: string;
+  selectedDates?: string[];
+  markedDates?: string[];
+  availableDates?: string[];
+  legend?: string;
+  onSelectDate?: (date: string) => void;
+  onMonthChange?: (month: Date) => void;
+}) {
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
+  const firstDay = new Date(year, monthIndex, 1).getDay();
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  const days = Array.from({ length: Math.ceil((firstDay + daysInMonth) / 7) * 7 }, (_, index) => index - firstDay + 1);
+  const monthLabel = month.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  function dateValue(day: number) {
+    return `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+
+  function changeMonth(offset: number) {
+    onMonthChange?.(new Date(year, monthIndex + offset, 1));
+  }
+
   return (
     <div className={styles.calendar}>
       <div className={styles.calendarHeader}>
-        <button aria-label="Previous month"><ArrowLeft size={14} /></button>
-        <strong>August 2026</strong>
-        <button aria-label="Next month"><ChevronRight size={14} /></button>
+        {onMonthChange
+          ? <button type="button" aria-label="Previous month" onClick={() => changeMonth(-1)}><ChevronLeft size={14} /></button>
+          : <span className={styles.calendarControl}><ChevronLeft size={14} /></span>}
+        <strong>{monthLabel}</strong>
+        {onMonthChange
+          ? <button type="button" aria-label="Next month" onClick={() => changeMonth(1)}><ChevronRight size={14} /></button>
+          : <span className={styles.calendarControl}><ChevronRight size={14} /></span>}
       </div>
+      <div className={styles.legend}><i /> {legend}</div>
       <div className={styles.calendarGrid}>
         {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => <span className={styles.weekday} key={`${day}${index}`}>{day}</span>)}
-        {days.map((day, index) => (
-          <span key={index} className={`${styles.day} ${day === 21 ? styles.daySelected : ""}`}>
-            {day > 0 && day <= 31 ? day : ""}
-          </span>
-        ))}
+        {days.map((day, index) => {
+          const date = day > 0 && day <= daysInMonth ? dateValue(day) : "";
+          const selected = selectedDate === date || selectedDates.includes(date);
+          const marked = markedDates.includes(date);
+          const className = `${styles.day} ${selected ? styles.daySelected : ""} ${marked && !selected ? styles.dayMarked : ""}`;
+          return day > 0 && day <= daysInMonth
+            ? onSelectDate && (!availableDates || availableDates.includes(date))
+              ? <button type="button" key={index} className={className} onClick={() => onSelectDate(date)}>{day}</button>
+              : <span key={index} className={`${className} ${availableDates ? styles.dayDisabled : ""}`}>{day}</span>
+            : <span key={index} className={styles.day} />;
+        })}
       </div>
-      <div className={styles.legend}><i /> Available <i /> Limited slots <i /> Fully booked</div>
     </div>
   );
 }
 
-export function AvailabilitySlots({ times }: { times: string[] }) {
+export function AvailabilitySlots({
+  times,
+  selectedTime,
+  onSelectTime,
+  disabled = false,
+}: {
+  times: string[];
+  selectedTime?: string;
+  onSelectTime?: (time: string) => void;
+  disabled?: boolean;
+}) {
+  const morningSlots = times.filter((time) => !time.includes("PM"));
+  const afternoonSlots = times.filter((time) => time.includes("PM"));
+
+  function renderSlots(slots: string[]) {
+    return slots.map((time) => (
+      <label className={styles.timeToggle} key={time}>
+        {time}
+        {onSelectTime
+          ? <input type="radio" name="appointment-time" checked={selectedTime === time} onChange={() => onSelectTime(time)} disabled={disabled} />
+          : <input type="checkbox" disabled={disabled} />}
+      </label>
+    ));
+  }
+
   return (
     <div className={styles.availabilityForm}>
-      <FormField label="Date" placeholder="August 21, 2026" />
-      <p className={styles.fieldHeading}>Time slots</p>
-      {times.map((time, index) => (
-        <label className={styles.timeToggle} key={time}>
-          {time}
-          <input type="checkbox" defaultChecked={index < 2 || index === 4} />
-        </label>
-      ))}
+      {morningSlots.length > 0 && <section className={styles.slotGroup}><p className={styles.slotLabel}>Morning</p>{renderSlots(morningSlots)}</section>}
+      {afternoonSlots.length > 0 && <section className={styles.slotGroup}><p className={styles.slotLabel}>Afternoon</p>{renderSlots(afternoonSlots)}</section>}
     </div>
   );
 }
@@ -320,13 +418,13 @@ export function BottomNavigation({
     ? [
         { label: "Home", href: "/teacher/home", Icon: House },
         { label: "Calendar", href: "/teacher/calendar", Icon: CalendarDays },
-        { label: "Notifications", href: "/teacher/notifications", Icon: Bell },
+        { label: "Requests", href: "/teacher/requests", Icon: ClipboardList },
         { label: "Profile", href: "/teacher/profile", Icon: CircleUserRound },
       ]
     : [
         { label: "Home", href: "/student/home", Icon: House },
         { label: "Faculty", href: "/student/faculty", Icon: UsersRound },
-        { label: "Notifications", href: "/student/appointment-requests", Icon: Bell },
+        { label: "Requests", href: "/student/appointment-requests", Icon: ClipboardList },
         { label: "Profile", href: "/student/profile", Icon: CircleUserRound },
       ];
   return (

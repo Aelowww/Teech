@@ -1,5 +1,6 @@
 .screen { --accent: #7772c9; }
 .page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.updates { display: grid; gap: 9px; margin-top: 4px; }.updates article { padding: 13px; display: flex; gap: 10px; color: var(--accent); border: 1px solid #e2e2ef; border-radius: 8px; }.updates div { display: grid; gap: 3px; }.updates strong { color: var(--ink); font-size: 12px; }.updates span { color: var(--muted); font-size: 10px; line-height: 1.4; }.empty { margin: 32px auto; color: var(--muted); font-size: 12px; text-align: center; }
 .header { margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; color: var(--accent); }
 .empty { margin: auto 0; padding: 40px 18px; display: grid; justify-items: center; color: var(--accent); text-align: center; }
 .empty strong { margin-top: 14px; color: #28294a; font-size: 14px; }

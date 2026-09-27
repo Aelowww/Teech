@@ -1,5 +1,5 @@
 .stage {
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: 8px 24px 38px;
   display: flex;
   align-items: flex-start;
@@ -13,7 +13,8 @@
   --ink: #28294a;
   --muted: #8586a0;
   width: min(100%, 390px);
-  min-height: min(844px, calc(100vh - 76px));
+  height: min(844px, calc(100dvh - 46px));
+  min-height: 0;
   padding: 28px 24px 82px;
   position: relative;
   display: flex;
@@ -30,6 +31,7 @@
 .content {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -38,6 +40,13 @@
 }
 
 .content::-webkit-scrollbar { display: none; }
+
+/* Let long page content extend the scroll area instead of painting behind the bottom navigation. */
+.content > [class] {
+  min-width: 0;
+  min-height: 100%;
+  flex: 1 0 auto;
+}
 
 .back {
   width: 34px;
@@ -183,6 +192,31 @@
   background: #fff2f3;
 }
 
+.emptyState {
+  min-height: 180px;
+  margin: auto 0;
+  padding: 24px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  color: var(--accent);
+  text-align: center;
+}
+
+.emptyState strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.emptyState p {
+  max-width: 250px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 .statusMark {
   width: 72px;
   height: 72px;
@@ -258,7 +292,9 @@
 }
 
 .list {
+  min-width: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 9px;
 }
 
@@ -357,19 +393,26 @@
 }
 
 .calendarHeader strong { font-size: 12px; }
-.calendarHeader button { color: var(--accent); background: transparent; border: 0; }
+.calendarHeader button { color: var(--accent); background: transparent; border: 0; cursor: pointer; }
+.calendarHeader button:disabled { cursor: default; opacity: 0.45; }
+.calendarControl { width: 14px; height: 14px; color: var(--muted); }
 .calendarGrid { display: grid; grid-template-columns: repeat(7, 1fr); justify-items: center; gap: 5px 0; }
 .weekday { padding-bottom: 5px; color: var(--muted); font-size: 9px; }
-.day { width: 28px; height: 28px; display: grid; place-items: center; color: #62637c; border-radius: 50%; font-size: 10px; }
+.day { width: 28px; height: 28px; padding: 0; display: grid; place-items: center; color: #62637c; background: transparent; border: 0; border-radius: 50%; font: inherit; font-size: 10px; cursor: pointer; }
 .daySelected { color: #fff; background: var(--accent); }
-.legend { margin-top: 12px; padding-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; color: var(--muted); border-top: 1px solid #e7e6f1; font-size: 8px; }
-.legend i { width: 7px; height: 7px; margin-left: 4px; background: #c9c7ec; border-radius: 50%; }
-.legend i:first-child { margin-left: 0; background: #c2d8fb; }
-.legend i:last-of-type { background: #4a477d; }
-.availabilityForm { margin-top: 22px; display: grid; gap: 13px; }
+.dayMarked { box-shadow: inset 0 0 0 1px var(--accent); }
+.dayDisabled { color: #c9c9d7; cursor: default; }
+.legend { margin: 0 0 12px; padding-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; color: var(--muted); border-bottom: 1px solid #e7e6f1; font-size: 8px; }
+.legend i { width: 7px; height: 7px; background: #c2d8fb; border-radius: 50%; }
+.passwordToggle { width: 29px; height: 29px; padding: 0; display: grid; place-items: center; color: #6d6d87; background: transparent; border: 0; cursor: pointer; }
+.passwordToggle:hover { color: var(--accent); }
+.availabilityForm { width: 100%; min-width: 0; margin-top: 22px; display: grid; gap: 13px; }
+.slotGroup { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.slotLabel { grid-column: 1 / -1; margin: 0; color: #77788f; font-size: 11px; font-weight: 700; }
 .fieldHeading { margin: 0; color: #77788f; font-size: 11px; font-weight: 700; }
-.timeToggle { min-height: 42px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; color: #676780; background: #f8f7fe; border: 1px solid #dddbf0; border-radius: 10px; font-size: 11px; }
+.timeToggle { width: 100%; min-width: 0; min-height: 42px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; color: #676780; background: #f8f7fe; border: 1px solid #dddbf0; border-radius: 10px; font-size: 11px; }
 .timeToggle input { width: 33px; height: 18px; margin: 0; accent-color: var(--accent); }
+.timeToggle:has(input:disabled) { opacity: 0.55; }
 .avatar { width: 76px; height: 76px; margin: 0 auto 14px; border: 3px solid #f1f0fc; border-radius: 50%; }
 .avatarInline { flex: 0 0 auto; margin: 0; }
 .dialogCard { margin: auto 0; padding: 22px 17px; display: grid; justify-items: center; text-align: center; background: #fbfaff; border: 1px solid #e8e6f5; border-radius: 18px; }
@@ -386,5 +429,5 @@
 
 @media (max-width: 700px) {
   .stage { padding: 0; }
-  .phone { width: 100%; min-height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
+  .phone { width: 100%; height: auto; min-height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
 }

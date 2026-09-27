@@ -1,0 +1,3 @@
+.screen { --accent: #7772c9; }
+.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.form { display: grid; gap: 14px; margin-top: 22px; }

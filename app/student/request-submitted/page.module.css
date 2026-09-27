@@ -1,3 +1,3 @@
-.screen { --accent: #36c878; }
+.screen { --accent: #7772c9; }
 .page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.info { margin: 18px 0; padding: 14px; display: grid; gap: 10px; color: #5f607b; background: #f7f6fd; border-radius: 13px; font-size: 10px; }
+.message { max-width: 250px; margin: 18px auto 0; color: var(--muted); font-size: 11px; line-height: 1.5; text-align: center; }

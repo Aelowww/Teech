@@ -8,7 +8,7 @@ export default function Page() {
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <Link href="/student/appointment-requests" aria-label="Notifications">
+          <Link href="/student/notifications" aria-label="Notifications">
             <Bell size={19} />
           </Link>
         </header>
