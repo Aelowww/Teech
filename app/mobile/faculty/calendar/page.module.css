@@ -1,0 +1,40 @@
+.screen {
+  --accent: #7772c9;
+}
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.summary {
+  margin: auto 0 16px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: #f7f6fe;
+  border: 1px solid #e3e1f1;
+  border-radius: 10px;
+}
+.summaryIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--accent);
+  background: #ecebfb;
+  border-radius: 9px;
+}
+.summary strong {
+  display: block;
+  color: var(--ink);
+  font-size: 12px;
+}
+.summary p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+}

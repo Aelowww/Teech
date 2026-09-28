@@ -1,0 +1,125 @@
+.screen {
+  --accent: #7772c9;
+}
+
+.page {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+}
+
+.header {
+  margin-bottom: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--accent);
+}
+
+.filters a:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+.search {
+  width: 100%;
+  max-width: 100%;
+  min-height: 48px;
+  margin-top: 20px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  background: #f8f8fc;
+  border: 1px solid #dcdce9;
+  border-radius: 8px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(119, 114, 201, 0.14);
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 0;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  font-size: 14px;
+}
+
+.search input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.filters {
+  width: 100%;
+  max-width: 100%;
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.filters a {
+  min-height: 44px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64657f;
+  background: #f7f7fb;
+  border: 1px solid #e7e6f1;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.filters .filterSelected {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.emptyState {
+  max-width: 280px;
+  margin: 32px auto;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (max-width: 360px) {
+  .search {
+    margin-top: 16px;
+  }
+
+  .filters {
+    gap: 6px;
+  }
+
+  .filters a {
+    padding: 0 8px;
+    font-size: 12px;
+  }
+}

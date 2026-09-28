@@ -1,0 +1,63 @@
+.screen {
+  --accent: #7772c9;
+}
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.form {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+}
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #64657f;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.checkbox input {
+  accent-color: var(--accent);
+}
+.inlineLink {
+  align-self: end;
+  color: var(--accent-dark);
+  font-size: 11px;
+  text-decoration: underline;
+}
+.authActions {
+  margin-bottom: 8px;
+}
+.formNote {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 10px;
+  text-align: center;
+}
+.formNote a {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+.submitButton {
+  width: 100%;
+  min-height: 56px;
+  margin-top: auto;
+  margin-bottom: 8px;
+  padding: 0 16px;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

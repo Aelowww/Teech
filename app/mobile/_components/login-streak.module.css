@@ -1,0 +1,101 @@
+.card {
+  margin-top: 16px;
+  padding: 13px 14px 11px;
+  display: grid;
+  gap: 12px;
+  background: var(--accent-pale);
+  border: 1px solid #dcd9f5;
+  border-radius: 14px;
+}
+
+.loading {
+  min-height: 112px;
+  background: #f6f6fa;
+  border-color: #ececf3;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary > div {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+
+.summary strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.summary small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.flame {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border-radius: 50%;
+}
+
+.best {
+  display: grid;
+  justify-items: center;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.best b {
+  color: var(--accent-dark);
+  font-size: 15px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.days div {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.days span {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #fff;
+  border: 1.5px solid #cfcbf1;
+  border-radius: 50%;
+}
+
+.days small {
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.days .dayActive {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.days .dayFuture {
+  opacity: 0.45;
+}
+
+.days .dayToday {
+  box-shadow: 0 0 0 2px var(--accent-pale), 0 0 0 3.5px var(--accent);
+}

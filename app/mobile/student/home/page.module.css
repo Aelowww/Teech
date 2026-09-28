@@ -1,0 +1,73 @@
+.screen {
+  --accent: #7772c9;
+}
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  margin-bottom: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--accent);
+}
+.greeting {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+.greeting strong,
+.greeting small {
+  display: block;
+}
+.greeting strong {
+  color: #4c4e7f;
+  font-size: 18px;
+}
+.greeting small {
+  margin-top: 3px;
+  color: #77799d;
+  font-size: 12px;
+}
+
+.sectionTitle {
+  margin: 22px 0 9px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+.sectionTitle small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+.count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-grid;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 9px;
+  font-size: 10px;
+}
+.seeAll {
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+.emptyState {
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}

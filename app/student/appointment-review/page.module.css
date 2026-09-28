@@ -1,8 +1,0 @@
-.screen { --accent: #7772c9; }
-.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.emptyState { margin: 32px 0; color: var(--muted); font-size: 13px; line-height: 1.5; text-align: center; }
-.actions { margin-top: auto; margin-bottom: 12px; padding-top: 24px; display: grid; gap: 12px; }
-.editButton,.submitButton { width: 100%; min-height: 56px; padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; font: inherit; font-size: 12px; font-weight: 700; }
-.editButton { color: var(--accent-dark); background: var(--accent-pale); }
-.submitButton { color: #fff; background: var(--accent); border: 0; cursor: pointer; }
-.submitButton:disabled { cursor: not-allowed; opacity: 0.5; }

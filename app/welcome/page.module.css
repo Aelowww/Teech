@@ -1,9 +1,0 @@
-.screen { --accent: #7772c9; }
-.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.welcome { min-height: 700px; flex: 1; padding: 120px 14px 20px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
-.welcome > :not(.circle):not(.circleBottom) { z-index: 1; }
-.circle,.circleBottom { position: absolute; top: -80px; right: -97px; width: 245px; height: 245px; background: #e7e5fa; border-radius: 50%; }
-.circleBottom { top: auto; right: auto; bottom: -155px; left: -130px; width: 285px; height: 285px; }
-.roles { z-index: 1; display: grid; gap: 12px; margin: 20px 0 auto; }
-.roleLink { width: 100%; min-height: 60px; padding: 0 20px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; color: var(--accent-dark); background: var(--accent-pale); border: 1px solid transparent; border-radius: 999px; font-size: 12px; font-weight: 700; }
-.roleLink:hover, .roleLink:focus-visible { color: #fff; background: var(--accent); }

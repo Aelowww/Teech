@@ -11,14 +11,7 @@ export type AppointmentDraft = {
   details: string;
 };
 
-export type LocalAppointment = AppointmentDraft & {
-  id: string;
-  status: "Pending";
-  submittedAt: string;
-};
-
 const draftKey = "teech.appointment-draft";
-const appointmentsKey = "teech.appointments";
 
 export const emptyAppointmentDraft: AppointmentDraft = {
   studentName: "",
@@ -73,28 +66,4 @@ export function isAppointmentDraftComplete(draft: AppointmentDraft) {
     draft.preferredTime,
     draft.reason,
   ].every((value) => value.trim());
-}
-
-export function getLocalAppointments() {
-  return readValue<LocalAppointment[]>(appointmentsKey, []);
-}
-
-export function removeLocalAppointment(id: string) {
-  writeValue(appointmentsKey, getLocalAppointments().filter((appointment) => appointment.id !== id));
-}
-
-export function submitAppointmentDraft() {
-  const draft = getAppointmentDraft();
-  if (!isAppointmentDraftComplete(draft)) return null;
-
-  const appointment: LocalAppointment = {
-    ...draft,
-    id: `local-${Date.now()}`,
-    status: "Pending",
-    submittedAt: new Date().toISOString(),
-  };
-
-  writeValue(appointmentsKey, [appointment, ...getLocalAppointments()]);
-  writeValue(draftKey, emptyAppointmentDraft);
-  return appointment;
 }

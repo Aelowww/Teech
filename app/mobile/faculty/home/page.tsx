@@ -1,0 +1,145 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { CalendarCheck2, CalendarDays, CalendarX2, ChevronRight, Clock3, Inbox, MapPin } from "lucide-react";
+import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard } from "@/app/mobile/_components/ui";
+import { NotificationBell } from "@/app/mobile/_components/notification-bell";
+import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { createClient } from "@/lib/supabase/client";
+import { avatarUrl } from "@/lib/avatar";
+import styles from "./page.module.css";
+
+type Profile = { id: string; full_name: string; avatar_path: string | null };
+type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
+
+const pendingPreviewLimit = 1;
+
+export default function Page() {
+  const router = useRouter();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [requests, setRequests] = useState<Request[]>([]);
+  const [openDates, setOpenDates] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | undefined;
+    async function loadDashboard() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.replace("/faculty/sign-in"); return; }
+      const { data: currentProfile } = await supabase.from("profiles").select("id, full_name, role, avatar_path").eq("auth_user_id", user.id).maybeSingle();
+      if (!currentProfile || currentProfile.role !== "faculty") { await supabase.auth.signOut(); router.replace("/faculty/sign-in"); return; }
+      const [requestsResult, availabilityResult] = await Promise.all([
+        supabase.from("appointment_requests").select("id, student_name, preferred_date, preferred_time, reason, status, meeting_location").eq("faculty_profile_id", currentProfile.id).in("status", ["pending", "confirmed"]).gte("preferred_date", localDateValue()).order("preferred_date").order("preferred_time"),
+        supabase.from("faculty_availability").select("available_date").eq("faculty_profile_id", currentProfile.id).eq("is_available", true).gte("available_date", localDateValue()).order("available_date"),
+      ]);
+      if (!active) return;
+      setProfile(currentProfile);
+      setRequests(requestsResult.data as Request[] || []);
+      setOpenDates([...new Set((availabilityResult.data || []).map((slot) => slot.available_date as string))]);
+      setIsLoading(false);
+
+      channel = supabase
+        .channel(`faculty-dashboard-${currentProfile.id}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "appointment_requests", filter: `faculty_profile_id=eq.${currentProfile.id}` },
+          (payload) => {
+            const changedRequest = payload.new as Request;
+            setRequests((current) => {
+              if (payload.eventType === "INSERT") return [...current, changedRequest];
+              return current.map((request) => request.id === changedRequest.id ? { ...request, ...changedRequest } : request);
+            });
+          },
+        )
+        .subscribe();
+    }
+    void loadDashboard();
+    return () => {
+      active = false;
+      if (channel) void createClient().removeChannel(channel);
+    };
+  }, [router]);
+
+  if (isLoading) return <AppLoader />;
+
+  const now = localDateTimeValue();
+  const upcoming = requests
+    .filter((request) => `${request.preferred_date}T${request.preferred_time}` >= now)
+    .sort((first, second) => `${first.preferred_date}T${first.preferred_time}`.localeCompare(`${second.preferred_date}T${second.preferred_time}`));
+  const pending = upcoming.filter((request) => request.status === "pending");
+  const confirmed = upcoming.filter((request) => request.status === "confirmed");
+  const nextConsultation = confirmed[0];
+  const pendingItems = pending.slice(0, pendingPreviewLimit).map((request) => ({
+    title: request.student_name || "Student",
+    description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
+    status: "Pending",
+    href: `/faculty/requests/${request.id}`,
+  }));
+
+  return (
+    <MobileLayout className={styles.screen} role="faculty" activeNav="home">
+      <div className={styles.page}>
+        <header className={styles.header}><BrandLogo /><NotificationBell href="/faculty/notifications" /></header>
+        <div className={styles.greeting}><ProfilePhoto inline src={avatarUrl(profile?.avatar_path)} /><div><strong>{getGreeting()}</strong><small>{profile?.full_name || "Faculty"}</small></div></div>
+
+        {nextConsultation ? (
+          <SpotlightCard
+            eyebrow={nextConsultation.preferred_date === localDateValue() ? "Up next · Today" : "Up next"}
+            title={nextConsultation.student_name || "Student consultation"}
+            details={[
+              { icon: <CalendarDays size={13} />, text: formatLongDate(nextConsultation.preferred_date) },
+              { icon: <Clock3 size={13} />, text: formatTime(nextConsultation.preferred_time) },
+              { icon: <MapPin size={13} />, text: nextConsultation.meeting_location || "Location to be confirmed" },
+            ]}
+            href={`/faculty/requests/${nextConsultation.id}`}
+            actionLabel="View details"
+          />
+        ) : (
+          <SpotlightCard
+            muted
+            eyebrow="No upcoming consultation"
+            title={pending.length ? "Review your requests" : "Open dates for booking"}
+            details={[{ icon: <Inbox size={13} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : "Students can book once you publish dates" }]}
+            href={pending.length ? "/faculty/requests" : "/faculty/availability"}
+            actionLabel={pending.length ? "View requests" : "Manage availability"}
+          />
+        )}
+
+        <LoginStreakCard />
+
+        <Link className={`${styles.availability} ${openDates.length ? "" : styles.availabilityWarning}`} href="/faculty/availability">
+          {openDates.length ? <CalendarCheck2 size={18} /> : <CalendarX2 size={18} />}
+          <div>
+            <strong>{openDates.length ? `${openDates.length} open ${openDates.length === 1 ? "date" : "dates"} for booking` : "Students can't book you yet"}</strong>
+            <small>{openDates.length ? <><CalendarDays size={11} /> Next open: {formatDate(openDates[0])}</> : "Add upcoming dates to your availability."}</small>
+          </div>
+          <ChevronRight size={16} />
+        </Link>
+
+        <h2 className={styles.sectionTitle}>
+          Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
+          {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
+        </h2>
+        {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+      </div>
+    </MobileLayout>
+  );
+}
+
+function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
+function formatLongDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }); }
+function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
+function localDateValue() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+function localDateTimeValue() {
+  const now = new Date();
+  return `${localDateValue()}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+}
