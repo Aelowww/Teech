@@ -70,7 +70,7 @@ Both versions use the same URLs. `proxy.ts` checks if you're on a phone or a com
 
 ## Database Setup
 
-If you're using a fresh Supabase project, open the SQL Editor and run every file in `supabase/migrations/` in order, from `01_` up to the last one. Our shared project already has all of them.
+If you're using a fresh Supabase project, open the SQL Editor and run every file in `supabase/migrations/` in order, oldest date first (the numbers at the start of each name are dates, so sorting by name works). Our shared project already has all of them.
 
 ## Sharing a Demo
 
