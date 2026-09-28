@@ -1,8 +1,12 @@
 .actions {
-  margin-top: 16px;
+  margin-bottom: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+.single {
+  grid-template-columns: 1fr;
 }
 
 .actions button {

@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Ban, Check, CheckCircle2, UserRound, X, XCircle } from "lucide-react";
+import { Ban, Check, CheckCircle2, Inbox, UserRound, X, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
+import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
@@ -83,16 +83,21 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         {requests.length ? <div className={styles.requests}>{list.visible.map((request) => <article className={styles.requestCard} key={request.id}>
           <span className={styles.icon} aria-label="Student profile"><UserRound size={18} /></span>
-          <Link className={styles.copy} href={`/faculty/requests/${request.id}`} aria-label={`View request from ${request.student_name || "student"}`}><strong>{request.student_name || "Student"}</strong><span>{formatDate(request.preferred_date)} at {formatTime(request.preferred_time)}</span><small>{request.student_number || ""}{request.student_number && request.reason ? " - " : ""}{request.reason}</small><em className={styles[`status${capitalize(request.status)}`]}>{request.status}</em></Link>
-          {request.status === "pending" && <div className={styles.actions}><button type="button" onClick={() => setPendingAction({ id: request.id, status: "confirmed" })} disabled={updating === request.id} aria-label="Confirm request"><Check size={16} /></button><button type="button" onClick={() => setPendingAction({ id: request.id, status: "declined" })} disabled={updating === request.id} aria-label="Decline request"><X size={16} /></button></div>}
+          <Link className={styles.copy} href={`/faculty/requests/${request.id}`} aria-label={`View request from ${request.student_name || "student"}`}><strong>{request.student_name || "Student"}</strong><span>{formatDate(request.preferred_date)} at {formatTime(request.preferred_time)}</span><small>{request.student_number || ""}{request.student_number && request.reason ? " - " : ""}{request.reason}</small><em className={styles[`status${capitalize(request.status)}`]}>{request.status === "pending" && isPastDate(request.preferred_date) ? "expired" : request.status}</em></Link>
+          {request.status === "pending" && <div className={styles.actions}>{!isPastDate(request.preferred_date) && <button type="button" onClick={() => setPendingAction({ id: request.id, status: "confirmed" })} disabled={updating === request.id} aria-label="Confirm request"><Check size={16} /></button>}<button type="button" onClick={() => setPendingAction({ id: request.id, status: "declined" })} disabled={updating === request.id} aria-label="Decline request"><X size={16} /></button></div>}
           {request.status !== "pending" && <span className={`${styles.statusIcon} ${styles[`statusIcon${capitalize(request.status)}`]}`} title={`Request ${request.status}`} aria-label={`Request ${request.status}`}>{request.status === "confirmed" ? <CheckCircle2 size={21} /> : request.status === "declined" ? <XCircle size={21} /> : <Ban size={20} />}</span>}
-        </article>)}<ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} /></div> : <p className={styles.empty}>No consultation requests yet.</p>}
+        </article>)}<ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} /></div> : <EmptyState icon={<Inbox size={30} />} title="No requests yet" description="Students can request a consultation once you publish available dates. Keep your calendar up to date." action={{ label: "Manage availability", href: "/faculty/availability" }} />}
       </div>
       <ConfirmationModal open={Boolean(pendingAction)} title={pendingAction?.status === "confirmed" ? "Confirm request?" : "Decline request?"} description={pendingAction?.status === "confirmed" ? "The student will see that their consultation request has been confirmed." : "The student will see that their consultation request was declined."} confirmLabel={pendingAction?.status === "confirmed" ? "Confirm Request" : "Decline Request"} tone={pendingAction?.status === "declined" ? "danger" : "default"} onCancel={() => setPendingAction(null)} onConfirm={() => pendingAction ? updateStatus(pendingAction.id, pendingAction.status) : undefined} />
     </MobileLayout>
   );
 }
 
+function isPastDate(value: string) {
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  return value < today;
+}
 function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
 function capitalize(value: string) { return `${value[0].toUpperCase()}${value.slice(1)}` as "Pending" | "Confirmed" | "Declined" | "Cancelled"; }

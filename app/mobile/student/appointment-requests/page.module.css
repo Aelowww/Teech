@@ -141,3 +141,11 @@
   background: #b13a55;
   border-color: #b13a55;
 }
+
+.cancelButton:disabled,
+.cancelButton:disabled:hover {
+  color: #aaaac0;
+  background: #f4f4f8;
+  border-color: #e4e4ec;
+  cursor: not-allowed;
+}

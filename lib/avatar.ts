@@ -5,7 +5,6 @@ export function avatarUrl(path: string | null | undefined) {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${avatarBucket}/${path}`;
 }
 
-// Center-crops an image to a square and re-encodes it as a small JPEG.
 export async function toSquareJpeg(file: File, maxSize = 512) {
   const bitmap = await createImageBitmap(file);
   const side = Math.min(bitmap.width, bitmap.height);

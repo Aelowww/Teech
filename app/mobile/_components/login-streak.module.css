@@ -9,7 +9,7 @@
 }
 
 .loading {
-  min-height: 112px;
+  min-height: 150px;
   background: #f6f6fa;
   border-color: #ececf3;
 }
@@ -33,8 +33,23 @@
 }
 
 .summary small {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   color: var(--muted);
   font-size: 10px;
+}
+
+.freezes {
+  padding: 1px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #3a86c8;
+  background: #e7f2fb;
+  border-radius: 999px;
+  font-weight: 700;
 }
 
 .flame {
@@ -48,16 +63,28 @@
   border-radius: 50%;
 }
 
-.best {
-  display: grid;
-  justify-items: center;
-  color: var(--muted);
-  font-size: 9px;
+.points {
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--accent-dark);
+  background: #fff;
+  border: 1px solid #dcd9f5;
+  border-radius: 999px;
 }
 
-.best b {
-  color: var(--accent-dark);
+.points svg {
+  align-self: center;
+}
+
+.points b {
   font-size: 15px;
+}
+
+.points small {
+  color: var(--muted);
+  font-size: 9px;
 }
 
 .days {
@@ -68,7 +95,7 @@
 .days div {
   display: grid;
   justify-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .days span {
@@ -82,6 +109,13 @@
   border-radius: 50%;
 }
 
+.days em {
+  color: var(--accent-dark);
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 700;
+}
+
 .days small {
   color: var(--muted);
   font-size: 8px;
@@ -92,10 +126,36 @@
   border-color: var(--accent);
 }
 
+.days .dayFrozen {
+  background: #6aa9dd;
+  border-color: #6aa9dd;
+}
+
 .days .dayFuture {
   opacity: 0.45;
 }
 
 .days .dayToday {
   box-shadow: 0 0 0 2px var(--accent-pale), 0 0 0 3.5px var(--accent);
+}
+
+.exchange {
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.exchange span {
+  flex: 1;
+}
+
+.exchange:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
 }

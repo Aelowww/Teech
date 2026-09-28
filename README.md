@@ -1,79 +1,86 @@
-# Teech
+# Teech: Student–Faculty Consultation Booking System
 
-## Overview
+*Teach within your reach.*
 
-This project provides a centralized platform for students and faculty members to organize consultation appointments. Students can view faculty availability and request a consultation, while faculty members can manage their schedules and respond to requests.
+## About
 
-Teech is designed to reduce scheduling conflicts, missed consultations, and scattered communication between students and faculty.
-
-## Tech Stack
-
-- Next.js
-- React
-- TypeScript
-- CSS / CSS Modules
-- Supabase
-- PostgreSQL
-- Supabase Authentication
+We built Teech because booking a consultation with a teacher at our school is honestly a hassle. You message them, wait, they reply late, the time doesn't work anymore, and you start over. Teech puts everything in one place: teachers post the dates and rooms they're free, students pick a slot and send a request, and the teacher just confirms or declines.
 
 ## Features
 
-- Student, faculty, and administrator accounts
-- Faculty profile and availability management
-- Consultation appointment requests
-- Appointment approval, rejection, and cancellation
-- Upcoming appointment and consultation history views
-- System record and account management
+For students:
+- Book a consultation by picking a faculty member, a date, and a time
+- Track requests (pending, confirmed, declined, cancelled) and cancel if plans change
+- Reset a forgotten password with security questions (student accounts use a Student ID, not an email)
+
+For faculty:
+- Publish available dates, time ranges, and the meeting room
+- Confirm, decline, or cancel consultation requests
+- Reset a forgotten password through email
+
+For everyone:
+- In-app notifications whenever a request changes
+- Daily login streaks, points, and badges (you can exchange points for streak freezes and collectible badges)
+- Profile photo, badge showcase, and account deletion
+
+## Tech Stack
+
+- Next.js, React, and TypeScript
+- CSS Modules
+- Supabase (Postgres, Auth, Storage, Realtime)
 
 ## Project Structure
 
 ```text
-TEECH/
-	app/
-	components/
-	lib/
-	public/
+app/
+  mobile/     the mobile version (pages + _components)
+  desktop/    the desktop version (in progress)
+  auth/       shared auth callback
+lib/          Supabase clients and small helpers
+supabase/
+  migrations/ database changes, numbered in the order we ran them
+public/       logo and images
+proxy.ts      sign-in protection and phone vs computer routing
 ```
 
-## Planned System Architecture
+Both versions use the same URLs. `proxy.ts` checks if you're on a phone or a computer and serves the right folder. Desktop pages only switch on once their path is added to `desktopPages` in `proxy.ts`, so anything not built yet falls back to mobile.
 
-The planned backend connects the Next.js application to Supabase for authentication and PostgreSQL data. The application screens are currently prototypes; database tables, row-level security policies, and user flows are not connected yet.
+## Getting Started
 
-## Supabase Setup
+1. Install everything:
 
-Create a Supabase project, then copy `.env.example` to `.env.local` and replace the placeholders with the project URL and anon key from the Supabase dashboard:
+   ```bash
+   npm ci
+   ```
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+2. Copy `.env.example` to `.env.local` and put in our Supabase project URL and publishable key (ask me for them, they're not in the repo):
 
-## Local Setup
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=...
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+   ```
 
-Install the locked dependencies:
+3. Start it:
+
+   ```bash
+   npm run dev
+   ```
+
+   Then open http://localhost:3000.
+
+## Database Setup
+
+If you're using a fresh Supabase project, open the SQL Editor and run every file in `supabase/migrations/` in order, from `01_` up to the last one. Our shared project already has all of them.
+
+## Sharing a Demo
+
+We use ngrok so groupmates can try it on their phones. With the dev server running, open a second terminal:
 
 ```bash
-npm ci
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The application runs on `http://localhost:3000`.
-
-## Share a Local Demo
-
-Start the app, then run the ngrok tunnel in a second terminal:
-
-```bash
-npm run dev
 npm run tunnel
 ```
 
-Share the HTTPS URL shown by ngrok. The first time, configure the ngrok CLI with the authtoken from your ngrok dashboard:
+Then share the https link it gives you. The first time, you need to connect ngrok to your account:
 
 ```bash
 ngrok config add-authtoken YOUR_NGROK_AUTHTOKEN
@@ -81,4 +88,4 @@ ngrok config add-authtoken YOUR_NGROK_AUTHTOKEN
 
 ## Project Status
 
-Teech is currently under development. Supabase browser and server clients are set up, but the database schema, row-level security policies, and application authentication and data flows still need to be implemented. Supabase credentials are not included; each developer should create `.env.local` from `.env.example` and use the team's Supabase project values.
+The mobile version works end to end: accounts, booking, requests, notifications, streaks, points, and badges. The desktop version is being built in `app/desktop/` on the `desktop` branch.

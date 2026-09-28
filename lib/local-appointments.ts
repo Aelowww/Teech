@@ -43,7 +43,6 @@ function writeValue(key: string, value: unknown) {
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // Keep the form usable when browser storage is unavailable.
   }
 }
 
@@ -66,4 +65,12 @@ export function isAppointmentDraftComplete(draft: AppointmentDraft) {
     draft.preferredTime,
     draft.reason,
   ].every((value) => value.trim());
+}
+
+export function clearAppointmentDraft() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(draftKey);
+  } catch {
+  }
 }

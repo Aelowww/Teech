@@ -1,6 +1,3 @@
--- Faculty can cancel consultations they already confirmed, and every request
--- records who cancelled it so the other person is notified.
-
 alter table public.appointment_requests
   add column if not exists cancelled_by text;
 
@@ -22,9 +19,6 @@ with check (
   and status in ('confirmed', 'declined', 'cancelled')
 );
 
--- Only these status changes are allowed, whoever makes them:
---   pending   -> confirmed | declined | cancelled
---   confirmed -> cancelled
 create or replace function public.enforce_appointment_status_change()
 returns trigger
 language plpgsql

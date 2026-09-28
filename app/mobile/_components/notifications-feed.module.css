@@ -19,15 +19,29 @@
   border: 1px solid #e2e2ef;
   border-radius: 8px;
 }
-.icon {
+.updates .icon {
   width: 32px;
   height: 32px;
   display: grid;
   flex: 0 0 auto;
   place-items: center;
+  border-radius: 50%;
+}
+.updates .accent {
   color: var(--accent);
   background: #f0effd;
-  border-radius: 50%;
+}
+.updates .success {
+  color: #15934e;
+  background: #e6f8ee;
+}
+.updates .danger {
+  color: #c2413b;
+  background: #fdecea;
+}
+.updates .warning {
+  color: #cd8a2d;
+  background: #fff4e3;
 }
 .updates div {
   min-width: 0;

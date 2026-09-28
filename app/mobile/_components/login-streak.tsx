@@ -1,13 +1,32 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Check, Flame } from "lucide-react";
+import { Check, ChevronRight, Coins, Flame, Gift, Snowflake } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./login-streak.module.css";
 
-type Streak = { current: number; longest: number; activeDates: string[] };
+type Streak = {
+  current: number;
+  points: number;
+  activeDates: string[];
+  frozenDates: string[];
+  dayPoints: Record<string, number>;
+  upcomingRewards: number[];
+  freezes: number;
+};
 
-export function LoginStreakCard() {
+type StreakRow = {
+  current_streak: number;
+  points_balance: number | null;
+  active_dates: string[] | null;
+  frozen_dates: string[] | null;
+  day_points: Record<string, number> | null;
+  upcoming_rewards: number[] | null;
+  freezes_available: number | null;
+};
+
+export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   const [streak, setStreak] = useState<Streak | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -16,19 +35,25 @@ export function LoginStreakCard() {
     async function recordLogin() {
       const { data, error } = await createClient().rpc("record_daily_login", { client_date: dateValue(new Date()) });
       if (!active) return;
-      const row = (data as { current_streak: number; longest_streak: number; active_dates: string[] }[] | null)?.[0];
+      const row = (data as StreakRow[] | null)?.[0];
       if (error || !row) { setFailed(true); return; }
-      setStreak({ current: row.current_streak, longest: row.longest_streak, activeDates: row.active_dates || [] });
+      setStreak({
+        current: row.current_streak,
+        points: row.points_balance || 0,
+        activeDates: row.active_dates || [],
+        frozenDates: row.frozen_dates || [],
+        dayPoints: row.day_points || {},
+        upcomingRewards: row.upcoming_rewards || [],
+        freezes: row.freezes_available || 0,
+      });
     }
     void recordLogin();
     return () => { active = false; };
   }, []);
 
-  // Hide the card rather than break the dashboard if streaks are unavailable.
   if (failed) return null;
   if (!streak) return <div className={`${styles.card} ${styles.loading}`} aria-hidden="true" />;
 
-  // Show the current week from Monday to Sunday.
   const today = new Date();
   const todayValue = dateValue(today);
   const monday = new Date(today);
@@ -37,14 +62,19 @@ export function LoginStreakCard() {
     const date = new Date(monday);
     date.setDate(monday.getDate() + index);
     const value = dateValue(date);
+    const daysAhead = Math.round((date.getTime() - new Date(`${todayValue}T00:00:00`).getTime()) / 86400000);
+    const isFuture = daysAhead > 0;
     return {
       value,
       label: date.toLocaleDateString("en-US", { weekday: "narrow" }),
       active: streak.activeDates.includes(value),
+      frozen: streak.frozenDates.includes(value),
       isToday: value === todayValue,
-      isFuture: value > todayValue,
+      isFuture,
+      points: isFuture ? streak.upcomingRewards[daysAhead - 1] : streak.dayPoints[value],
     };
   });
+  const tomorrowReward = streak.upcomingRewards[0];
 
   return (
     <section className={styles.card} aria-label="Login streak">
@@ -52,26 +82,32 @@ export function LoginStreakCard() {
         <span className={styles.flame}><Flame size={20} /></span>
         <div>
           <strong>{streak.current} day{streak.current === 1 ? "" : "s"} streak</strong>
-          <small>{streakMessage(streak)}</small>
+          <small>
+            {tomorrowReward ? `Come back tomorrow for +${tomorrowReward} pts.` : "Come back tomorrow to keep it going."}
+            {streak.freezes > 0 && <span className={styles.freezes}><Snowflake size={10} />{streak.freezes}</span>}
+          </small>
         </div>
-        <span className={styles.best}>Best<b>{streak.longest}</b></span>
+        <span className={styles.points}><Coins size={14} /><b>{streak.points}</b><small>pts</small></span>
       </div>
       <div className={styles.days}>
-        {days.map(({ value, label, active, isToday, isFuture }) => (
-          <div key={value} className={isFuture ? styles.dayFuture : ""} aria-label={`${value}${active ? ", logged in" : ""}`}>
-            <span className={`${active ? styles.dayActive : ""} ${isToday ? styles.dayToday : ""}`}>{active && <Check size={11} strokeWidth={3} />}</span>
+        {days.map(({ value, label, active, frozen, isToday, isFuture, points }) => (
+          <div key={value} className={isFuture ? styles.dayFuture : ""} aria-label={`${value}${active ? ", checked in" : frozen ? ", covered by a streak freeze" : ""}${points ? `, ${points} points` : ""}`}>
+            <span className={`${active ? styles.dayActive : ""} ${frozen ? styles.dayFrozen : ""} ${isToday ? styles.dayToday : ""}`}>
+              {active && <Check size={11} strokeWidth={3} />}
+              {frozen && <Snowflake size={11} strokeWidth={2.5} />}
+            </span>
+            <em>{points ? `+${points}` : " "}</em>
             <small>{label}</small>
           </div>
         ))}
       </div>
+      <Link className={styles.exchange} href={`/${role}/points`}>
+        <Gift size={14} />
+        <span>Exchange points</span>
+        <ChevronRight size={14} />
+      </Link>
     </section>
   );
-}
-
-function streakMessage({ current, longest }: Streak) {
-  if (current <= 1) return "Come back tomorrow to start a streak.";
-  if (current >= longest) return "Your best streak yet. Keep it going!";
-  return "Log in tomorrow to keep it going.";
 }
 
 function dateValue(date: Date) {

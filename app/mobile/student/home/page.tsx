@@ -125,7 +125,7 @@ export default function Page() {
           />
         )}
 
-        <LoginStreakCard />
+        <LoginStreakCard role="student" />
 
         <h2 className={styles.sectionTitle}>
           Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}

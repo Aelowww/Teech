@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import { clearAppointmentDraft } from "@/lib/local-appointments";
 import styles from "./ui.module.css";
 
 export function SignOutButton({ redirectTo }: { redirectTo: string }) {
@@ -14,6 +15,7 @@ export function SignOutButton({ redirectTo }: { redirectTo: string }) {
   async function signOut() {
     const { error } = await createClient().auth.signOut();
     if (error) return error.message;
+    clearAppointmentDraft();
     router.replace(redirectTo);
     router.refresh();
   }

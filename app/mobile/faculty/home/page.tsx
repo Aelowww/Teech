@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarCheck2, CalendarDays, CalendarX2, ChevronRight, Clock3, Inbox, MapPin } from "lucide-react";
+import { CalendarCheck2, CalendarDays, ChevronRight, Clock3, Inbox, MapPin } from "lucide-react";
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
@@ -110,16 +110,18 @@ export default function Page() {
           />
         )}
 
-        <LoginStreakCard />
+        <LoginStreakCard role="faculty" />
 
-        <Link className={`${styles.availability} ${openDates.length ? "" : styles.availabilityWarning}`} href="/faculty/availability">
-          {openDates.length ? <CalendarCheck2 size={18} /> : <CalendarX2 size={18} />}
-          <div>
-            <strong>{openDates.length ? `${openDates.length} open ${openDates.length === 1 ? "date" : "dates"} for booking` : "Students can't book you yet"}</strong>
-            <small>{openDates.length ? <><CalendarDays size={11} /> Next open: {formatDate(openDates[0])}</> : "Add upcoming dates to your availability."}</small>
-          </div>
-          <ChevronRight size={16} />
-        </Link>
+        {openDates.length > 0 && (
+          <Link className={styles.availability} href="/faculty/availability">
+            <CalendarCheck2 size={18} />
+            <div>
+              <strong>{openDates.length} open {openDates.length === 1 ? "date" : "dates"} for booking</strong>
+              <small><CalendarDays size={11} /> Next open: {formatDate(openDates[0])}</small>
+            </div>
+            <ChevronRight size={16} />
+          </Link>
+        )}
 
         <h2 className={styles.sectionTitle}>
           Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}

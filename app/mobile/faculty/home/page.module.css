@@ -107,8 +107,3 @@
   color: var(--muted);
   font-size: 10px;
 }
-.availabilityWarning {
-  color: #cd8a2d;
-  background: #fff8ec;
-  border-color: #f3d9ad;
-}

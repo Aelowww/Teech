@@ -2,7 +2,6 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ShieldCheck } from "lucide-react";
 import { FormField, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
@@ -18,7 +17,6 @@ export default function Page() {
   const [questions, setQuestions] = useState(emptyTrio);
   const [answers, setAnswers] = useState(emptyTrio);
   const [currentPassword, setCurrentPassword] = useState("");
-  const [isConfigured, setIsConfigured] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
@@ -42,7 +40,6 @@ export default function Page() {
         const saved = (savedResult.data || []).map((row) => row.question as string);
         if (saved.length === 3) {
           setQuestions(saved);
-          setIsConfigured(true);
         }
       }
       setIsLoading(false);
@@ -74,7 +71,6 @@ export default function Page() {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user?.email) { setSaving(false); router.replace("/student/sign-in"); return; }
-    // Security answers can reset the password, so changing them requires the current password.
     const { error: passwordError } = await supabase.auth.signInWithPassword({ email: user.email, password: currentPassword });
     if (passwordError) {
       setSaving(false);
@@ -86,7 +82,6 @@ export default function Page() {
     if (saveError) { setError(saveError.message); return; }
     setAnswers(emptyTrio);
     setCurrentPassword("");
-    setIsConfigured(true);
     setNotice("Your security questions have been saved.");
   }
 
@@ -94,10 +89,6 @@ export default function Page() {
     <MobileLayout className={styles.screen} backTo="/student/profile" role="student" activeNav="profile">
       <form className={styles.page} onSubmit={saveQuestions}>
         <PageHeading title="Account Recovery" subtitle="Security questions let you reset your password if you forget it." />
-        <p className={`${styles.securityStatus} ${isConfigured ? styles.securityStatusReady : ""}`}>
-          <ShieldCheck size={15} />
-          {isConfigured ? "Set up. Saving again replaces your current answers." : "Not set up yet. You won't be able to reset a forgotten password."}
-        </p>
         <div className={styles.form}>
           {questions.map((question, index) => (
             <div className={styles.securityQuestion} key={index}>
@@ -119,7 +110,7 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         {notice && <Notice>{notice}</Notice>}
         <div className={styles.submitArea}><button className={styles.submitButton} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Security Questions"}</button></div>
-        <SignOutEverywhere role="student" />
+        <SignOutEverywhere />
       </form>
     </MobileLayout>
   );
