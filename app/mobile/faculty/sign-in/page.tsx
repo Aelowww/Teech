@@ -58,7 +58,7 @@ export default function Page() {
         <BrandHeader />
         <FormCard>
         <div className={styles.form}>
-          <FormField label="School Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@school.edu" type="email" required />
+          <FormField label="Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@school.edu" type="email" required />
           <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
           <Link className={styles.inlineLink} href="/faculty/forgot-password">Forgot Password?</Link>
         </div>

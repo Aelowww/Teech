@@ -61,7 +61,7 @@ export default function Page() {
         <BrandHeader />
         <FormCard>
         <div className={styles.form}>
-          <FormField label="Student ID" name="studentId" value={studentId} onChange={(event) => setStudentId(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="6-digit student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
+          <FormField label="Student ID" name="studentId" value={studentId} onChange={(event) => setStudentId(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="Enter your student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
           <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
           <Link className={styles.inlineLink} href="/student/forgot-password">Forgot Password?</Link>
         </div>

@@ -751,7 +751,6 @@
   display: grid;
   gap: 14px;
   background: #fff;
-  border: 1px solid #d5d2f3;
   border-radius: 18px;
   box-shadow: 0 10px 28px rgba(81, 76, 154, 0.1);
 }

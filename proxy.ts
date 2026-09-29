@@ -46,14 +46,15 @@ export async function proxy(request: NextRequest) {
   if (portal && !data?.claims) return redirectTo(`/${portal}/sign-in`);
 
   const role = (data?.claims?.user_metadata as { role?: string } | undefined)?.role;
-  if (data?.claims && (role === "student" || role === "faculty") && entryPages.has(pathname)) {
+  const previewingSplash = pathname === "/splash" && request.nextUrl.searchParams.has("preview");
+  if (data?.claims && (role === "student" || role === "faculty") && entryPages.has(pathname) && !previewingSplash) {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) return redirectTo(`/${role}/home`);
     await supabase.auth.signOut({ scope: "local" });
   }
   const returning = request.cookies.has(visitedCookie);
   if (pathname === "/") return redirectTo(returning ? "/welcome" : "/splash");
-  if (pathname === "/splash" && returning) return redirectTo("/welcome");
+  if (pathname === "/splash" && returning && !previewingSplash) return redirectTo("/welcome");
 
   const page = serveLayout(request, response);
   if (!returning) {

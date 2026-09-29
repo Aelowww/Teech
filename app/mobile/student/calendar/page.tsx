@@ -7,9 +7,9 @@ import { MobileLayout, Notice, PageHeading, MonthCalendar } from "@/app/mobile/_
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { isPastSlotToday, slotsFor } from "@/lib/time-slots";
 import styles from "./page.module.css";
 
-const timeSlots = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
 type Availability = { available_date: string; start_time: string; end_time: string; meeting_location: string | null };
 type ReservedSlot = { preferred_date: string; preferred_time: string };
 
@@ -125,25 +125,9 @@ export default function Page() {
 
 function getBookableDates(availability: Availability[], reservedSlots: ReservedSlot[]) {
   return [...new Set(availability.map((slot) => slot.available_date))].filter((date) => {
-    const dateSlots = timeSlots.filter((time) => availability.some((slot) => slot.available_date === date && isWithinAvailability(time, slot.start_time, slot.end_time)));
+    const dateSlots = slotsFor(availability.filter((slot) => slot.available_date === date)).filter((time) => !isPastSlotToday(date, time));
     return dateSlots.some((time) => !reservedSlots.some((reserved) => reserved.preferred_date === date && reserved.preferred_time.slice(0, 5) === toDatabaseTime(time)));
   });
-}
-
-function isWithinAvailability(time: string, startTime: string, endTime: string) {
-  const candidate = toMinutes(time);
-  return candidate >= toMinutes(startTime) && candidate < toMinutes(endTime);
-}
-
-function toMinutes(value: string) {
-  if (value.includes("AM") || value.includes("PM")) {
-    const [clock, period] = value.split(" ");
-    const [hours, minutes] = clock.split(":").map(Number);
-    const normalizedHours = period === "PM" && hours !== 12 ? hours + 12 : period === "AM" && hours === 12 ? 0 : hours;
-    return normalizedHours * 60 + minutes;
-  }
-  const [hours, minutes] = value.split(":").map(Number);
-  return hours * 60 + minutes;
 }
 
 function toDatabaseTime(value: string) {

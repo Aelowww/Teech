@@ -1,6 +1,6 @@
 "use client";
 
-import { Award, Ban, Bell, CalendarCheck, CalendarX, Hourglass, Inbox, PartyPopper, Send, UserCheck, type LucideIcon } from "lucide-react";
+import { Award, Ban, Bell, CalendarCheck, CheckCheck, CalendarX, Hourglass, Inbox, PartyPopper, Send, UserCheck, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
@@ -26,11 +26,6 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
     let active = true;
     let channel: ReturnType<ReturnType<typeof createClient>["channel"]> | undefined;
     const supabase = createClient();
-
-    async function markRead(ids: string[]) {
-      if (!ids.length) return;
-      await supabase.from("notifications").update({ is_read: true }).in("id", ids);
-    }
 
     async function loadNotifications() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -62,8 +57,7 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
       }
 
       const loaded = (data || []) as Notification[];
-      setNotifications(loaded.map((notification) => ({ ...notification, is_read: true })));
-      void markRead(loaded.filter((notification) => !notification.is_read).map((notification) => notification.id));
+      setNotifications(loaded);
       setIsLoading(false);
 
       channel = supabase
@@ -73,8 +67,7 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
           { event: "INSERT", schema: "public", table: "notifications", filter: `recipient_profile_id=eq.${profile.id}` },
           (payload) => {
             const notification = payload.new as Notification;
-            setNotifications((current) => [{ ...notification, is_read: true }, ...current]);
-            void markRead([notification.id]);
+            setNotifications((current) => [notification, ...current]);
           },
         )
         .subscribe();
@@ -91,16 +84,41 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
 
   if (isLoading) return <AppLoader />;
 
+  const unreadCount = notifications.filter((notification) => !notification.is_read).length;
+
+  async function markRead(ids: string[]) {
+    if (!ids.length) return;
+    setError("");
+    setNotifications((current) => current.map((notification) => ids.includes(notification.id) ? { ...notification, is_read: true } : notification));
+    const { error: updateError } = await createClient().from("notifications").update({ is_read: true }).in("id", ids);
+    if (updateError) {
+      setError(updateError.message);
+      setNotifications((current) => current.map((notification) => ids.includes(notification.id) ? { ...notification, is_read: false } : notification));
+    }
+  }
+
   return (
     <MobileLayout className={styles.screen} backTo={`/${role}/home`} role={role}>
       <div className={styles.page}>
         <PageHeading title="Notifications" subtitle="Stay updated on your account and consultations." />
         {error && <Notice error>{error}</Notice>}
+        {notifications.length > 0 && (
+          <div className={styles.toolbar}>
+            <span>{unreadCount ? `${unreadCount} unread` : "All caught up"}</span>
+            {unreadCount > 0 && <button type="button" onClick={() => void markRead(notifications.filter((notification) => !notification.is_read).map((notification) => notification.id))}><CheckCheck size={14} />Mark all as read</button>}
+          </div>
+        )}
         {notifications.length ? (
           <div className={styles.updates}>
             {list.visible.map((notification) => {
               const { Icon, tone } = appearanceFor(notification.kind);
-              return <article key={notification.id}><span className={`${styles.icon} ${styles[tone]}`}><Icon size={17} /></span><div><strong>{notification.title}</strong><span>{notification.body}</span><small>{formatTimestamp(notification.created_at)}</small></div></article>;
+              return (
+                <button className={`${styles.item} ${notification.is_read ? "" : styles.unread}`} type="button" key={notification.id} onClick={() => !notification.is_read && void markRead([notification.id])} aria-label={`${notification.title}${notification.is_read ? "" : ", unread"}`}>
+                  <span className={`${styles.icon} ${styles[tone]}`}><Icon size={17} /></span>
+                  <div><strong>{notification.title}</strong><span>{notification.body}</span><small>{formatTimestamp(notification.created_at)}</small></div>
+                  {!notification.is_read && <i className={styles.dot} aria-hidden="true" />}
+                </button>
+              );
             })}
             <ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} />
           </div>

@@ -14,17 +14,16 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
 }
 .welcome > :not(.circle):not(.circleBottom) {
+  position: relative;
   z-index: 1;
 }
 .circle,
 .circleBottom {
   position: absolute;
-  top: -80px;
-  right: -97px;
+  top: -72px;
+  right: -82px;
   width: 245px;
   height: 245px;
   background: #e7e5fa;
@@ -33,8 +32,8 @@
 .circleBottom {
   top: auto;
   right: auto;
-  bottom: -155px;
-  left: -130px;
+  bottom: -140px;
+  left: -118px;
   width: 285px;
   height: 285px;
 }

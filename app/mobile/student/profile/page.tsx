@@ -2,10 +2,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Award, ChevronRight, FileText, KeyRound, ShieldCheck, ShieldQuestion, UserRound } from "lucide-react";
 import { MobileLayout, PageHeading, ProfilePhoto } from "@/app/mobile/_components/ui";
-import { avatarUrl } from "@/lib/avatar";
+import { signedAvatarUrl } from "@/lib/avatar";
 import { ShowcasedBadges } from "@/app/mobile/_components/showcased-badges";
 import { SignOutButton } from "@/app/mobile/_components/sign-out-button";
 import { DeleteAccountButton } from "@/app/mobile/_components/delete-account-button";
+import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./page.module.css";
 
@@ -20,6 +21,7 @@ export default async function Page() {
     .eq("auth_user_id", user.id)
     .maybeSingle();
   if (!profile || profile.role !== "student") redirect("/student/sign-in");
+  const photoUrl = await signedAvatarUrl(supabase, profile.avatar_path);
 
   const { data: showcase } = await supabase
     .from("user_badges")
@@ -35,7 +37,7 @@ export default async function Page() {
       <div className={styles.page}>
         <PageHeading title="My Profile" />
         <div className={styles.identity}>
-          <ProfilePhoto src={avatarUrl(profile.avatar_path)} />
+          <ProfilePhoto src={photoUrl} />
           <strong>{profile.full_name}</strong>
           <ShowcasedBadges badges={showcasedBadges} />
         </div>
@@ -44,6 +46,7 @@ export default async function Page() {
           <Link className={styles.settingLink} href="/student/profile/badges"><span><Award size={15} />Badges</span><ChevronRight size={16} /></Link>
           <Link className={styles.settingLink} href="/student/profile/password"><span><KeyRound size={15} />Change Password</span><ChevronRight size={16} /></Link>
           <Link className={styles.settingLink} href="/student/profile/security"><span><ShieldQuestion size={15} />Account Recovery</span><ChevronRight size={16} /></Link>
+          <SupportChat audience="student" variant="row" className={styles.settingLink} />
           <Link className={styles.settingLink} href="/student/profile/privacy"><span><ShieldCheck size={15} />Privacy Policy</span><ChevronRight size={16} /></Link>
           <Link className={styles.settingLink} href="/student/profile/terms"><span><FileText size={15} />Terms of Service</span><ChevronRight size={16} /></Link>
           <DeleteAccountButton role="student" className={styles.settingLink} />

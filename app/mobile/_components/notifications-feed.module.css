@@ -12,12 +12,71 @@
   gap: 9px;
   margin-top: 4px;
 }
-.updates article {
+.toolbar {
+  margin: 4px 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.toolbar > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+.toolbar button {
+  padding: 6px 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.toolbar button:hover {
+  color: #fff;
+  background: var(--accent);
+}
+.item {
+  width: 100%;
   padding: 13px;
+  position: relative;
   display: flex;
   gap: 10px;
+  color: inherit;
+  background: #fff;
   border: 1px solid #e2e2ef;
   border-radius: 8px;
+  font: inherit;
+  text-align: left;
+  cursor: default;
+}
+.unread {
+  background: var(--accent-pale);
+  border-color: #d5d2f3;
+  cursor: pointer;
+}
+.unread strong {
+  font-weight: 800;
+}
+.dot {
+  position: absolute;
+  top: 14px;
+  right: 13px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.item:focus-visible,
+.toolbar button:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
 }
 .updates .icon {
   width: 32px;

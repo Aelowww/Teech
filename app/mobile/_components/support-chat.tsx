@@ -1,0 +1,117 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
+import { ChevronRight, MessageCircleQuestion, MessagesSquare, SendHorizontal, X } from "lucide-react";
+import { answersFor, respond, type SupportAnswer, type SupportAudience } from "@/app/mobile/_components/support-answers";
+import styles from "./support-chat.module.css";
+
+type Message = { id: number; from: "bot" | "user"; text: string; action?: { label: string; href: string } };
+
+const greeting = "Hi! I'm the Teech helper. Ask me anything about using Teech, or pick a question below.";
+
+export function SupportChat({ audience, variant, className }: { audience: SupportAudience; variant: "floating" | "row" | "link"; className?: string }) {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([{ id: 0, from: "bot", text: greeting }]);
+  const [suggestions, setSuggestions] = useState<SupportAnswer[]>(() => answersFor(audience).slice(0, 5));
+  const [input, setInput] = useState("");
+  const [typing, setTyping] = useState(false);
+  const threadRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    inputRef.current?.focus();
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
+
+  useEffect(() => {
+    threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, typing]);
+
+  async function askGemini(question: string) {
+    try {
+      const response = await fetch("/api/support", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: question, audience }),
+      });
+      const data = await response.json() as { reply?: string; error?: string };
+      return data.reply || data.error || null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function reply(question: string, chosen?: SupportAnswer) {
+    const response = respond(question, audience, chosen);
+    setMessages((current) => [...current, { id: current.length, from: "user", text: question }]);
+    setTyping(true);
+    const [aiReply] = await Promise.all([
+      response.matched ? Promise.resolve(null) : askGemini(question),
+      new Promise((resolve) => window.setTimeout(resolve, 450)),
+    ]);
+    setTyping(false);
+    setMessages((current) => [...current, { id: current.length, from: "bot", text: aiReply || response.text, action: response.action }]);
+    setSuggestions(response.related);
+  }
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const question = input.trim();
+    if (!question || typing) return;
+    setInput("");
+    void reply(question);
+  }
+
+  const trigger = variant === "floating"
+    ? <button className={styles.floating} type="button" onClick={() => setOpen(true)} aria-label="Open help chat"><MessagesSquare size={22} /></button>
+    : variant === "row"
+      ? <button className={`${className || ""} ${styles.row}`} type="button" onClick={() => setOpen(true)}><span><MessageCircleQuestion size={15} />Help &amp; Support</span><ChevronRight size={16} /></button>
+      : <button className={`${className || ""} ${styles.link}`} type="button" onClick={() => setOpen(true)}><MessageCircleQuestion size={14} />Need help? Chat with us</button>;
+
+  return (
+    <>
+      {trigger}
+      {open && createPortal(
+        <div className={styles.backdrop} role="presentation" onMouseDown={() => setOpen(false)}>
+          <section className={styles.panel} role="dialog" aria-modal="true" aria-label="Teech help chat" onMouseDown={(event) => event.stopPropagation()}>
+            <header className={styles.header}>
+              <span className={styles.avatar}><MessagesSquare size={18} /></span>
+              <div>
+                <strong>Teech Support</strong>
+                <small>Instant answers to common questions</small>
+              </div>
+              <button type="button" onClick={() => setOpen(false)} aria-label="Close help chat"><X size={18} /></button>
+            </header>
+            <div className={styles.thread} ref={threadRef} aria-live="polite">
+              {messages.map((message) => (
+                <div className={message.from === "bot" ? styles.bot : styles.user} key={message.id}>
+                  <p>{message.text}</p>
+                  {message.action && <Link className={styles.action} href={message.action.href} onClick={() => setOpen(false)}>{message.action.label}<ChevronRight size={13} /></Link>}
+                </div>
+              ))}
+              {typing && <div className={`${styles.bot} ${styles.typing}`} aria-label="Typing"><span /><span /><span /></div>}
+              {!typing && suggestions.length > 0 && (
+                <div className={styles.suggestions}>
+                  {suggestions.map((entry) => <button type="button" key={entry.id} onClick={() => void reply(entry.question, entry)}>{entry.question}</button>)}
+                </div>
+              )}
+            </div>
+            <p className={styles.notice}>Questions I can&apos;t answer are sent to Google Gemini. Please don&apos;t share personal information.</p>
+            <form className={styles.composer} onSubmit={submit}>
+              <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Type your question..." maxLength={200} aria-label="Your question" />
+              <button type="submit" disabled={!input.trim() || typing} aria-label="Send"><SendHorizontal size={17} /></button>
+            </form>
+          </section>
+        </div>,
+        document.body,
+      )}
+    </>
+  );
+}

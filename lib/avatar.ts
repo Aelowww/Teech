@@ -1,8 +1,11 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 export const avatarBucket = "avatars";
 
-export function avatarUrl(path: string | null | undefined) {
+export async function signedAvatarUrl(supabase: SupabaseClient, path: string | null | undefined) {
   if (!path) return null;
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${avatarBucket}/${path}`;
+  const { data } = await supabase.storage.from(avatarBucket).createSignedUrl(path, 60 * 60);
+  return data?.signedUrl || null;
 }
 
 export async function toSquareJpeg(file: File, maxSize = 512) {

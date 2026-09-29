@@ -7,9 +7,10 @@ import { CalendarDays, Clock3, MapPin, UsersRound } from "lucide-react";
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
+import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
-import { avatarUrl } from "@/lib/avatar";
+import { signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
 
 type Profile = { id: string; full_name: string; avatar_path: string | null };
@@ -20,6 +21,7 @@ const pendingPreviewLimit = 1;
 export default function Page() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [facultyCount, setFacultyCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +52,7 @@ export default function Page() {
       ]);
       if (!active) return;
       setProfile(currentProfile);
+      void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setAppointments(requestsResult.data as Appointment[] || []);
       setFacultyCount(new Set(facultyResult.data?.map((slot) => slot.faculty_profile_id) || []).size);
       setIsLoading(false);
@@ -98,7 +101,7 @@ export default function Page() {
           <NotificationBell href="/student/notifications" />
         </header>
         <div className={styles.greeting}>
-          <ProfilePhoto inline src={avatarUrl(profile?.avatar_path)} />
+          <ProfilePhoto inline src={photoUrl} />
           <div><strong>{getGreeting()}</strong><small>{profile?.full_name || "Student"}</small></div>
         </div>
 
@@ -132,6 +135,7 @@ export default function Page() {
           {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
         </h2>
         {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+        <SupportChat audience="student" variant="floating" />
       </div>
     </MobileLayout>
   );

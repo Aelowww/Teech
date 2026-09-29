@@ -7,9 +7,10 @@ import { CalendarCheck2, CalendarDays, ChevronRight, Clock3, Inbox, MapPin } fro
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
+import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
-import { avatarUrl } from "@/lib/avatar";
+import { signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
 
 type Profile = { id: string; full_name: string; avatar_path: string | null };
@@ -20,6 +21,7 @@ const pendingPreviewLimit = 1;
 export default function Page() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [requests, setRequests] = useState<Request[]>([]);
   const [openDates, setOpenDates] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,6 +41,7 @@ export default function Page() {
       ]);
       if (!active) return;
       setProfile(currentProfile);
+      void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setRequests(requestsResult.data as Request[] || []);
       setOpenDates([...new Set((availabilityResult.data || []).map((slot) => slot.available_date as string))]);
       setIsLoading(false);
@@ -85,7 +88,7 @@ export default function Page() {
     <MobileLayout className={styles.screen} role="faculty" activeNav="home">
       <div className={styles.page}>
         <header className={styles.header}><BrandLogo /><NotificationBell href="/faculty/notifications" /></header>
-        <div className={styles.greeting}><ProfilePhoto inline src={avatarUrl(profile?.avatar_path)} /><div><strong>{getGreeting()}</strong><small>{profile?.full_name || "Faculty"}</small></div></div>
+        <div className={styles.greeting}><ProfilePhoto inline src={photoUrl} /><div><strong>{getGreeting()}</strong><small>{profile?.full_name || "Faculty"}</small></div></div>
 
         {nextConsultation ? (
           <SpotlightCard
@@ -128,6 +131,7 @@ export default function Page() {
           {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
         </h2>
         {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+        <SupportChat audience="faculty" variant="floating" />
       </div>
     </MobileLayout>
   );
