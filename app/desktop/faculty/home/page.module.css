@@ -200,3 +200,39 @@
     transform: none;
   }
 }
+
+/* Clickable card: shared hover lift and press (tokens in globals.css). */
+.availability {
+  transition:
+    transform var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease),
+    background-color var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  .availability:hover {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+}
+
+.availability:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: var(--motion-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .availability:hover,
+  .availability:active {
+    transform: none;
+  }
+}
+
+@media (hover: hover) {
+  .availability:hover {
+    border-color: #8fdcad;
+    box-shadow: 0 10px 24px rgba(21, 147, 78, 0.12);
+  }
+}

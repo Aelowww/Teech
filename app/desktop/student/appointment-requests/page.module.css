@@ -245,3 +245,32 @@
     transform: none;
   }
 }
+
+/* Clickable card: shared hover lift and press (tokens in globals.css). */
+.row {
+  transition:
+    transform var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease),
+    background-color var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+}
+
+.row:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: var(--motion-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row:hover,
+  .row:active {
+    transform: none;
+  }
+}

@@ -49,10 +49,127 @@
   white-space: nowrap;
 }
 
-.top {
+.layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 400px);
+  align-items: start;
+  gap: 24px;
+}
+
+.main {
+  min-width: 0;
+  display: grid;
+  gap: 28px;
+}
+
+.rail {
+  position: sticky;
+  top: var(--sticky-top, 32px);
+  min-width: 0;
+  display: grid;
   gap: 20px;
+}
+
+/* Requests overview */
+.overview {
+  padding: 20px 22px 18px;
+  display: grid;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg, 20px);
+}
+
+.overview h2 {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.overviewList {
+  display: grid;
+  gap: 2px;
+}
+
+.overviewRow {
+  margin: 0 -10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-soft);
+  border-radius: var(--radius-sm, 10px);
+  font-size: 14px;
+  transition:
+    background-color var(--motion) var(--ease),
+    color var(--motion) var(--ease);
+}
+
+.overviewRow span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.overviewRow i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dotPending {
+  background: #e9a23b;
+}
+
+.dotConfirmed {
+  background: #26c07a;
+}
+
+.dotClosed {
+  background: #c9c8d8;
+}
+
+.overviewRow b {
+  color: var(--ink);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (hover: hover) {
+  .overviewRow:hover {
+    color: var(--ink);
+    background: #f7f7fb;
+  }
+}
+
+.overviewRow:active {
+  background: #f1f0fa;
+}
+
+.overviewAll {
+  padding-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  border-top: 1px solid var(--line-soft);
+  font-size: 14px;
+  font-weight: 600;
+  transition: color var(--motion) var(--ease);
+}
+
+.overviewAll svg {
+  transition: transform var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  .overviewAll:hover {
+    color: var(--accent-dark);
+  }
+
+  .overviewAll:hover svg {
+    transform: translateX(2px);
+  }
 }
 
 .section {
@@ -105,7 +222,24 @@
 }
 
 @media (max-width: 1100px) {
-  .top {
+  .layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rail {
+    position: static;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overviewRow,
+  .overviewAll,
+  .overviewAll svg {
+    transition: none;
+  }
+
+  .overviewAll:hover svg {
+    transform: none;
   }
 }

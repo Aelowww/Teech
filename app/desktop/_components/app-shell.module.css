@@ -412,3 +412,154 @@
 .navActive {
   --nav-icon-cut: var(--indigo-50);
 }
+
+/* ---------- Navigation states ---------- */
+
+.navItem {
+  position: relative;
+  color: var(--inactive);
+  transition:
+    background-color var(--motion) var(--ease),
+    color var(--motion) var(--ease);
+}
+
+.navItem svg {
+  color: var(--inactive-icon);
+}
+
+.navItem::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: -16px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+  opacity: 0;
+  transform: scaleY(0.3);
+  transition:
+    opacity var(--motion) var(--ease),
+    transform var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  .navItem:hover {
+    color: var(--indigo-900);
+    background: #f7f7fb;
+  }
+}
+
+.navActive,
+.navActive:hover {
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  font-weight: 600;
+}
+
+.navActive svg,
+.navActive:hover svg {
+  color: var(--accent);
+}
+
+.navActive::before {
+  opacity: 1;
+  transform: scaleY(1);
+  animation: navIndicatorIn 280ms var(--ease) both;
+}
+
+@keyframes navIndicatorIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navItem::before,
+  .navActive::before {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ---------- Tablet: collapse the sidebar to an icon rail ---------- */
+
+@media (max-width: 1023px) {
+  .shell {
+    --sidebar-width: 76px;
+  }
+
+  .sidebar {
+    padding: 20px 12px 14px;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .sidebarTop {
+    padding: 0;
+    justify-content: center;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .nav {
+    width: 100%;
+    justify-items: center;
+  }
+
+  .navItem {
+    width: 48px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .navItem > span {
+    display: none;
+  }
+
+  .navItem::before {
+    left: -12px;
+  }
+
+  .sidebarFooter {
+    width: 100%;
+    justify-items: center;
+  }
+
+  .sidebarFooter .helpButton {
+    width: 48px;
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .sidebarFooter .helpButton > svg {
+    display: none;
+  }
+
+  .profileCard {
+    padding: 12px 0 0;
+    justify-content: center;
+  }
+
+  .profileCard > div {
+    display: none;
+  }
+}
+
+/* The indicator sits inside the highlighted item, not against the sidebar edge. */
+.navItem::before {
+  top: 12px;
+  bottom: 12px;
+  left: 0;
+}
+
+@media (max-width: 1023px) {
+  .navItem::before {
+    left: 0;
+  }
+}
