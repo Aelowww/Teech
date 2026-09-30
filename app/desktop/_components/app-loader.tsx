@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { AppShell } from "./app-shell";
 import { Backdrop } from "./backdrop";
-import { WritingLogo } from "./writing-logo";
+import { LoaderLogo } from "./loader-logo";
 import styles from "./app-loader.module.css";
 
 type Role = "student" | "faculty";
@@ -40,7 +40,7 @@ function Logo() {
   return (
     <div className={styles.loader} role="status" aria-live="polite">
       <span className={styles.srOnly}>Loading…</span>
-      <WritingLogo width={220} />
+      <LoaderLogo width={220} />
     </div>
   );
 }
