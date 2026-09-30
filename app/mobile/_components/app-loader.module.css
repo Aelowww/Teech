@@ -2,19 +2,143 @@
   --accent: #7772c9;
 }
 
-.loader {
+.page {
   flex: 1;
   min-height: 0;
   display: grid;
   place-items: center;
-  padding-bottom: 48px;
 }
 
-.srOnly {
+.visuallyHidden {
   position: absolute;
   width: 1px;
   height: 1px;
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+.loader {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  animation: loaderIn 420ms cubic-bezier(0.2, 0.8, 0.2, 1) 150ms both;
+}
+
+.logo {
+  position: relative;
+  isolation: isolate;
+  animation: float 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.logo::before {
+  content: "";
+  position: absolute;
+  inset: -40px -50px;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, rgba(220, 216, 251, 0.9) 0%, rgba(220, 216, 251, 0) 70%);
+  animation: glow 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.trail {
+  width: 132px;
+  height: auto;
+  overflow: visible;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+}
+
+.trail path {
+  stroke: var(--accent);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 5 7;
+  animation: march 900ms linear infinite;
+}
+
+.messages {
+  position: relative;
+  width: 260px;
+  height: 18px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.messages span {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: messageCycle 10s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i) * 2.5s) infinite;
+}
+
+@keyframes loaderIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.6;
+    scale: 0.95;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.05;
+  }
+}
+
+@keyframes march {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes messageCycle {
+  0% {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  5%,
+  25% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  30%,
+  100% {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader,
+  .logo,
+  .logo::before,
+  .trail path,
+  .messages span {
+    animation: none;
+  }
+
+  .messages span:first-child {
+    opacity: 1;
+  }
 }

@@ -108,6 +108,10 @@
   gap: 10px;
 }
 
+.actions > :only-child {
+  grid-column: 1 / -1;
+}
+
 .actions .cancel {
   color: #4a4b6a;
   background: #f4f4f8;

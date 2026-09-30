@@ -1,15 +1,23 @@
 "use client";
 
+import Image from "next/image";
+import type { CSSProperties } from "react";
 import { usePathname } from "next/navigation";
 import { AppShell } from "./app-shell";
 import { Backdrop } from "./backdrop";
-import { LoaderLogo } from "./loader-logo";
 import styles from "./app-loader.module.css";
 
 type Role = "student" | "faculty";
 
 const guestPages = ["sign-in", "create-account", "forgot-password", "password-reset", "account-created"];
 const bookingPages = ["calendar", "select-date-time", "appointment-info", "appointment-review"];
+
+const loadingMessages = [
+  "Getting things ready…",
+  "Syncing your schedule…",
+  "Checking the latest updates…",
+  "Tip: check in daily to keep your streak",
+];
 
 export function AppLoader() {
   const pathname = usePathname() || "/";
@@ -38,9 +46,21 @@ export function AppLoader() {
 
 function Logo() {
   return (
-    <div className={styles.loader} role="status" aria-live="polite">
-      <span className={styles.srOnly}>Loading…</span>
-      <LoaderLogo width={220} />
+    <div className={styles.status} role="status">
+      <span className={styles.srOnly}>Loading Teech</span>
+      <div className={styles.loader} aria-hidden="true">
+        <div className={styles.logo}>
+          <Image className={styles.logoImage} src="/logo/teech_logo.svg" alt="" width={1118} height={348} priority />
+        </div>
+        <svg className={styles.trail} viewBox="0 0 156 20" fill="none">
+          <path d="M3 10 Q 15.5 2 28 10 T 53 10 T 78 10 T 103 10 T 128 10 T 153 10" />
+        </svg>
+        <p className={styles.messages}>
+          {loadingMessages.map((message, index) => (
+            <span key={message} style={{ "--i": index } as CSSProperties}>{message}</span>
+          ))}
+        </p>
+      </div>
     </div>
   );
 }
