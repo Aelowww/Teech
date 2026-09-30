@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft,
+  ArrowRight,
+  CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -11,6 +13,7 @@ import {
   Inbox,
   LockKeyhole,
   Mail,
+  MapPin,
   Search,
   UserRound,
   X,
@@ -517,22 +520,36 @@ export function UpNextCard({
   actionLabel: string;
 }) {
   const day = new Date(`${date}T00:00:00`);
-  const month = day.toLocaleDateString("en-US", { month: "short" });
-  const weekday = day.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const shortDate = day.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  const longDate = day.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const [time, place] = meta;
+  const when = relativeDay(day);
   return (
-    <Link className={styles.upNext} href={href} aria-label={`${actionLabel}: ${title}, ${weekday}, ${meta.join(", ")}`}>
-      <span className={styles.upNextDate} aria-hidden="true">
-        <small>{month}</small>
-        <strong>{day.getDate()}</strong>
-      </span>
-      <span className={styles.upNextBody}>
+    <Link className={styles.upNext} href={href} aria-label={`${actionLabel}: ${title}, ${when}, ${longDate}, ${meta.join(", ")}`}>
+      <span className={styles.upNextTop} aria-hidden="true">
         <small>{eyebrow}</small>
-        <strong>{title}</strong>
-        <span>{meta.join(" · ")}</span>
+        <em className={when === "Today" ? styles.upNextToday : ""}>{when}</em>
       </span>
-      <ChevronRight className={styles.upNextChevron} size={18} aria-hidden="true" />
+      <strong className={styles.upNextTitle}>{title}</strong>
+      <span className={styles.upNextMeta} aria-hidden="true">
+        <span><CalendarDays size={14} />{shortDate}</span>
+        {time && <span><Clock3 size={14} />{time}</span>}
+        {place && <span><MapPin size={14} />{place}</span>}
+      </span>
+      <span className={styles.upNextGo} aria-hidden="true"><ArrowRight size={16} /></span>
     </Link>
   );
+}
+
+// "Today", "Tomorrow", "In 3 days", or the weekday for anything further out.
+function relativeDay(day: Date) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = Math.round((day.getTime() - today.getTime()) / 86400000);
+  if (days <= 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  if (days < 7) return `In ${days} days`;
+  return day.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 export const tagline = "Teacher within your reach";

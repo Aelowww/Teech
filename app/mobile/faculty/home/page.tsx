@@ -106,7 +106,7 @@ export default function Page() {
 
         {nextConsultation ? (
           <UpNextCard
-            eyebrow={nextConsultation.preferred_date === localDateValue() ? "Up next · Today" : "Up next"}
+            eyebrow="Up next"
             title={nextConsultation.student_name || "Student consultation"}
             date={nextConsultation.preferred_date}
             meta={[formatTime(nextConsultation.preferred_time), nextConsultation.meeting_location || "Location to be confirmed"]}
