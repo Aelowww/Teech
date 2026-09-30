@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
-import { getPasswordError, passwordRequirementText } from "@/lib/password";
+import { Check } from "lucide-react";
+import { getPasswordError, passwordRules } from "@/lib/password";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./profile-settings.module.css";
+import formStyles from "./change-password-form.module.css";
 
 type Role = "student" | "faculty";
 
@@ -20,6 +22,8 @@ export function ChangePasswordForm({ role }: { role: Role }) {
   const [saving, setSaving] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const profilePath = `/${role}/profile`;
+  const metCount = passwordRules.filter((rule) => rule.test(password)).length;
+  const matches = confirmation.length > 0 && confirmation === password;
 
   function requestPasswordChange(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,13 +52,31 @@ export function ChangePasswordForm({ role }: { role: Role }) {
     >
       <form className={styles.page} onSubmit={requestPasswordChange}>
         <PageHeading title="Change Password" subtitle="Choose a new password for your account." />
-        <div className={styles.form}>
+        <div className={formStyles.form}>
           <PasswordField label="New Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Create a new password" autoComplete="new-password" minLength={8} required />
-          <p className={styles.passwordHint}>{passwordRequirementText}</p>
+          <div className={formStyles.strength} aria-hidden="true">
+            {passwordRules.map((rule, index) => <i key={rule.id} className={index < metCount ? formStyles[`level${Math.min(metCount, 5)}`] : ""} />)}
+          </div>
+          <ul className={formStyles.rules} aria-label="Password requirements">
+            {passwordRules.map((rule) => {
+              const met = rule.test(password);
+              return (
+                <li key={rule.id} className={met ? formStyles.met : ""}>
+                  <span aria-hidden="true">{met && <Check size={10} strokeWidth={3.5} />}</span>
+                  {rule.label}<span className={formStyles.srOnly}>{met ? " (done)" : ""}</span>
+                </li>
+              );
+            })}
+          </ul>
           <PasswordField label="Confirm New Password" name="confirmation" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder="Re-enter your new password" autoComplete="new-password" minLength={8} required />
+          {confirmation.length > 0 && (
+            <p className={`${formStyles.match} ${matches ? formStyles.matchOk : ""}`} aria-live="polite">
+              {matches ? <><Check size={13} strokeWidth={3} aria-hidden="true" />Passwords match</> : "Passwords don't match yet"}
+            </p>
+          )}
         </div>
         {error && <Notice error>{error}</Notice>}
-        <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Updating..." : "Update Password"}</button></div>
+        <div className={formStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Updating..." : "Update Password"}</button></div>
       </form>
       <ConfirmationModal open={confirming} title="Update password?" description="Your new password will replace the current one for this account." confirmLabel="Update Password" onCancel={() => setConfirming(false)} onConfirm={changePassword} />
     </MobileLayout>
