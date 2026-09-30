@@ -1,0 +1,143 @@
+.screen {
+  --accent: #7772c9;
+}
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--accent);
+}
+.empty {
+  margin: auto 0;
+  padding: 40px 18px;
+  display: grid;
+  justify-items: center;
+  color: var(--accent);
+  text-align: center;
+}
+.empty strong {
+  margin-top: 14px;
+  color: #28294a;
+  font-size: 14px;
+}
+.empty p {
+  max-width: 220px;
+  color: #8586a0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.emptyState {
+  margin: 32px auto;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}
+.requests {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+  overflow: auto;
+  padding-bottom: 8px;
+}
+.requestCard {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 14px 12px;
+  border: 1px solid #e2e2ef;
+  border-radius: 8px;
+  background: #fff;
+}
+.requestIcon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0effd;
+  color: var(--accent);
+}
+.requestContent {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.requestContent strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+.requestContent span,
+.requestContent small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.requestContent em {
+  color: #288453;
+  font-size: 10px;
+  font-style: normal;
+}
+.statusPending {
+  color: #a16d1d !important;
+}
+.statusConfirmed {
+  color: #288453 !important;
+}
+.statusDeclined,
+.statusCancelled {
+  color: #b13a55 !important;
+}
+.cardActions {
+  min-width: 61px;
+  display: grid;
+  justify-items: stretch;
+  gap: 5px;
+}
+.viewButton,
+.cancelButton {
+  min-height: 28px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 700;
+}
+.viewButton {
+  color: var(--accent);
+  background: #f4f3fe;
+  border-color: #dedcf6;
+}
+.viewButton:hover,
+.viewButton:focus-visible {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cancelButton {
+  color: #b13a55;
+  background: #fff5f7;
+  border-color: #f0d5dd;
+  cursor: pointer;
+}
+.cancelButton:hover,
+.cancelButton:focus-visible {
+  color: #fff;
+  background: #b13a55;
+  border-color: #b13a55;
+}

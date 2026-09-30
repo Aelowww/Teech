@@ -5,14 +5,13 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/config";
 
+import { forcedLayout, layoutCookie, type Layout } from "@/lib/layout";
+
 // Public URLs are shared by both apps: /student/home is served from
-// app/mobile/student/home on phones and tablets, and from
-// app/desktop/student/home on computers once that page exists.
-//
-// Add a path here when its desktop page is ready. A path also covers
-// everything below it, so "/faculty" enables every /faculty/... page.
-// Anything not listed falls back to the mobile page.
-const desktopPages: string[] = [];
+// app/mobile/student/home on narrow screens and from
+// app/desktop/student/home on wide ones. The browser reports its width
+// through the layout cookie (see app/_components/layout-switch.tsx);
+// until it has, the device type from the user agent decides.
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -70,14 +69,16 @@ function serveLayout(request: NextRequest, response: NextResponse) {
     return response;
   }
 
-  const { device } = userAgent(request);
-  const isComputer = !device.type;
-  const hasDesktopPage = desktopPages.some((page) => pathname === page || pathname.startsWith(`${page}/`));
-  const layout = isComputer && hasDesktopPage ? "desktop" : "mobile";
+  const savedLayout = request.cookies.get(layoutCookie)?.value;
+  const layout: Layout = forcedLayout
+    ?? (savedLayout === "desktop" || savedLayout === "mobile" ? savedLayout : userAgent(request).device.type ? "mobile" : "desktop");
 
   const url = request.nextUrl.clone();
   url.pathname = `/${layout}${pathname === "/" ? "" : pathname}`;
-  return withCookies(NextResponse.rewrite(url, { request }), response);
+  const rewrite = withCookies(NextResponse.rewrite(url, { request }), response);
+  // Record the guess so the browser can tell whether it needs to switch.
+  if (savedLayout !== layout) rewrite.cookies.set(layoutCookie, layout, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
+  return rewrite;
 }
 
 // Carries refreshed Supabase session cookies over to a new response.

@@ -1,0 +1,264 @@
+/* Student > List of teachers (Figma node 616:621). */
+.screen {
+  --indigo-50: #f1f2fc;
+  --indigo-100: #e6e7f9;
+  --indigo-600: #676bc4;
+  --indigo-700: #565aac;
+  --indigo-900: #3f4170;
+  --border: #e5e7eb;
+  min-height: 100dvh;
+  padding: 48px 64px 132px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  font-family: "Poppins", "DM Sans", Arial, sans-serif;
+}
+
+.header {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header img {
+  width: 177px;
+}
+
+.header .bell {
+  width: 48px;
+  height: 48px;
+  color: var(--indigo-900);
+  background: #fff;
+  border: 1px solid var(--border);
+}
+
+.header .bell svg {
+  width: 24px;
+  height: 24px;
+}
+
+.searchAndFilters {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.search {
+  height: 56px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--indigo-900);
+  background: var(--indigo-50);
+  border: 1.5px solid var(--indigo-100);
+  border-radius: 10px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.search:focus-within {
+  border-color: var(--indigo-600);
+  box-shadow: 0 0 0 3px rgba(103, 107, 196, 0.14);
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+  color: var(--indigo-900);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.search input::placeholder {
+  color: var(--indigo-700);
+  opacity: 1;
+}
+
+.filters {
+  height: 44px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.filters a {
+  width: 140px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--indigo-600);
+  background: rgba(230, 231, 249, 0.5);
+  border: 1px solid rgba(210, 212, 243, 0.5);
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 500;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.filters a:hover {
+  background: var(--indigo-100);
+}
+
+.filters .filterSelected {
+  color: #fff;
+  background: var(--indigo-600);
+  border-color: var(--indigo-600);
+}
+
+.filters .filterSelected:hover {
+  background: var(--indigo-700);
+}
+
+.filters a:focus-visible,
+.view:focus-visible,
+.bottomNav a:focus-visible {
+  outline: 3px solid rgba(103, 107, 196, 0.35);
+  outline-offset: 2px;
+}
+
+.list {
+  margin: 32px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style: none;
+}
+
+.card {
+  min-height: 96px;
+  padding: 16px 64px 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(241, 242, 252, 0.3);
+  border: 1px solid #e7ebf2;
+  border-radius: 12px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  color: var(--indigo-600);
+  background: var(--indigo-100);
+  border-radius: 50%;
+}
+
+.avatar img {
+  object-fit: cover;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.info strong {
+  color: var(--indigo-900);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.info small {
+  margin-top: 2px;
+  color: var(--indigo-700);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.statusAvailable {
+  color: #00e63a;
+}
+
+.statusBusy {
+  color: #ff8810;
+}
+
+.view {
+  padding: 10px 16px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  color: var(--indigo-600);
+  background: var(--indigo-50);
+  border: 1px solid var(--indigo-100);
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 160ms ease;
+}
+
+a.view:hover {
+  background: var(--indigo-100);
+}
+
+.viewDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bottomNav {
+  position: fixed;
+  right: 64px;
+  bottom: 1px;
+  left: 64px;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(48px, 12vw, 200px);
+  background: #fff;
+  border-top: 1px solid var(--border);
+}
+
+.bottomNav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bottomNav .navActive {
+  color: var(--indigo-600);
+  font-weight: 600;
+}
