@@ -47,6 +47,10 @@ export function PasswordField({
           className={styles.passwordToggle}
           type="button"
           aria-label={visible ? "Hide password" : "Show password"}
+          aria-pressed={visible}
+          // Keep focus in the input: on phones, blurring it closes the keyboard and shifts the
+          // layout mid-tap, so the tap misses the button.
+          onPointerDown={(event) => event.preventDefault()}
           onClick={() => setVisible((current) => !current)}
         >
           {visible ? <EyeOff size={16} /> : <Eye size={16} />}

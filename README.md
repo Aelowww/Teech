@@ -1,6 +1,6 @@
 # Teech: Student–Faculty Consultation Booking System
 
-*Teach within your reach.*
+*Teacher within your reach.*
 
 ## About
 

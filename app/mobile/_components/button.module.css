@@ -1,0 +1,155 @@
+/*
+ * Shared buttons. Combine `.button` with one tone:
+ *   primary   – the main action on a screen (gradient)
+ *   secondary – a quieter alternative, e.g. "Back to Home" (soft lavender)
+ *   danger    – destructive actions, e.g. "Cancel Consultation" / "Sign Out"
+ * Add `.block` when the button should fill its container (lists, side-by-side rows).
+ * Sizes come from the --button-* tokens in app/globals.css; pages add only their own spacing.
+ */
+.button {
+  position: relative;
+  width: fit-content;
+  min-width: var(--button-min-width);
+  min-height: var(--button-height);
+  padding: 0 var(--button-padding-x);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  align-self: center;
+  gap: 8px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid transparent;
+  border-radius: var(--button-radius);
+  font: inherit;
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  letter-spacing: 0.1px;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 240ms var(--button-ease),
+    box-shadow 240ms var(--button-ease),
+    background-color 240ms var(--button-ease),
+    border-color 240ms var(--button-ease),
+    color 240ms var(--button-ease),
+    opacity 200ms ease;
+}
+
+/* Centres the button in plain block containers too (grid/flex parents use justify/align-self). */
+div > .button:only-child {
+  margin-inline: auto;
+}
+
+.block {
+  width: 100%;
+  min-width: 0;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+.primary {
+  color: #fff;
+  background: linear-gradient(135deg, #7c77cf 0%, #5a54a6 100%);
+  box-shadow:
+    0 3px 8px rgba(81, 75, 145, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* A soft light sweep that crosses the primary button on hover. */
+.primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+  translate: -120% 0;
+  pointer-events: none;
+}
+
+.secondary {
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border-color: #e1dff6;
+}
+
+.danger {
+  color: #b13a55;
+  background: #fff5f7;
+  border-color: #f0d5dd;
+}
+
+@media (hover: hover) {
+  .button:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .primary:hover:not(:disabled) {
+    box-shadow:
+      0 8px 16px rgba(81, 75, 145, 0.26),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .primary:hover:not(:disabled)::after {
+    translate: 120% 0;
+    transition: translate 700ms var(--button-ease);
+  }
+
+  .secondary:hover:not(:disabled) {
+    background: #e9e7fa;
+    border-color: #d4d1f1;
+    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.1);
+  }
+
+  .danger:hover:not(:disabled) {
+    background: #ffecf0;
+    border-color: #e9bfcb;
+    box-shadow: 0 6px 14px rgba(177, 58, 85, 0.12);
+  }
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+  transition-duration: 100ms;
+}
+
+.primary:active:not(:disabled) {
+  box-shadow:
+    0 2px 6px rgba(81, 75, 145, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.45);
+  outline-offset: 3px;
+}
+
+.danger:focus-visible {
+  outline-color: rgba(177, 58, 85, 0.35);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: opacity 200ms ease;
+  }
+
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+
+  .primary::after {
+    display: none;
+  }
+}

@@ -12,6 +12,7 @@ import {
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -84,7 +85,7 @@ export default function Page() {
           <FormField label="Additional Details" name="details" value={draft.details} onChange={updateField("details")} placeholder="" maxLength={1000} />
         </div>
         <div className={styles.submitArea}>
-          <button className={styles.submitButton} type="submit">Review Appointment</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit">Review Appointment</button>
         </div>
       </form>
     </MobileLayout>

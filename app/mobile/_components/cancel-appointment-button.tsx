@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./cancel-appointment-button.module.css";
 
 export function CancelAppointmentButton({ appointmentId, role }: { appointmentId: string; role: "student" | "faculty" }) {
@@ -29,7 +30,7 @@ export function CancelAppointmentButton({ appointmentId, role }: { appointmentId
 
   return (
     <>
-      <button className={styles.cancelButton} type="button" onClick={() => setConfirming(true)}><Ban size={15} />Cancel Consultation</button>
+      <button className={`${buttonStyles.button} ${buttonStyles.danger} ${styles.cancelButton}`} type="button" onClick={() => setConfirming(true)}><Ban size={15} />Cancel Consultation</button>
       <ConfirmationModal
         open={confirming}
         title="Cancel consultation?"

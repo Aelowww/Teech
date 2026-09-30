@@ -103,29 +103,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px;
 }
-.actions button {
-  min-height: 44px;
-  border-radius: 8px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.actions button:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
-.cancel {
-  color: #514c9a;
-  background: #f1f0fc;
-  border: 1px solid #e1e0f3;
-}
-.confirm {
-  color: #fff;
-  background: #7772c9;
-  border: 1px solid #7772c9;
-}
-.confirmDanger {
+/* Destructive confirmations use solid red instead of the purple gradient. */
+.actions .confirmDanger {
   background: #c94658;
   border-color: #c94658;
+  box-shadow: 0 3px 8px rgba(201, 70, 88, 0.22);
 }
+

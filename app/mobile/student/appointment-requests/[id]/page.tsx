@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
 import { CancelAppointmentButton } from "@/app/mobile/_components/cancel-appointment-button";
 import { createClient } from "@/lib/supabase/server";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
 type AppointmentStatus = "pending" | "confirmed" | "declined" | "cancelled";
@@ -62,7 +63,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <div className={styles.reason}><span>Reason</span><p>{request.reason}</p>{request.details && <small>{request.details}</small>}</div>
         </section>
         {(request.status === "pending" || request.status === "confirmed") && <CancelAppointmentButton appointmentId={request.id} role="student" />}
-        <Link className={styles.homeButton} href="/student/home">Back to Home</Link>
+        <Link className={`${buttonStyles.button} ${buttonStyles.secondary} ${styles.homeButton}`} href="/student/home">Back to Home</Link>
       </div>
     </MobileLayout>
   );

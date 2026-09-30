@@ -98,22 +98,6 @@
   margin-bottom: 12px;
   padding-top: 16px;
 }
-.saveButton {
-  width: 100%;
-  min-height: 56px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.saveButton:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
 @media (max-width: 340px) {
   .times {
     grid-template-columns: minmax(0, 1fr);
@@ -124,3 +108,4 @@
   color: #b13a55;
   font-weight: 600;
 }
+/*

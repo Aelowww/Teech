@@ -5,6 +5,7 @@ import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
 import { RequestDecisionButtons } from "@/app/mobile/_components/request-decision-buttons";
 import { CancelAppointmentButton } from "@/app/mobile/_components/cancel-appointment-button";
 import { createClient } from "@/lib/supabase/server";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "@/app/mobile/student/appointment-requests/[id]/page.module.css";
 
 type AppointmentStatus = "pending" | "confirmed" | "declined" | "cancelled";
@@ -72,7 +73,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <div className={styles.reason}><span>Reason</span><p>{request.reason}</p>{request.details && <small>{request.details}</small>}</div>
         </section>
         {request.status === "pending" && <RequestDecisionButtons requestId={request.id} canConfirm={!expired} />}
-        {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}        <Link className={styles.homeButton} href="/faculty/requests">Back to Requests</Link>
+        {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}        <Link className={`${buttonStyles.button} ${buttonStyles.secondary} ${styles.homeButton}`} href="/faculty/requests">Back to Requests</Link>
       </div>
     </MobileLayout>
   );

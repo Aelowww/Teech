@@ -15,28 +15,6 @@
   flex-direction: column;
   justify-content: center;
 }
-.welcome > :not(.circle):not(.circleBottom) {
-  position: relative;
-  z-index: 1;
-}
-.circle,
-.circleBottom {
-  position: absolute;
-  top: -72px;
-  right: -82px;
-  width: 245px;
-  height: 245px;
-  background: #e7e5fa;
-  border-radius: 50%;
-}
-.circleBottom {
-  top: auto;
-  right: auto;
-  bottom: -140px;
-  left: -118px;
-  width: 285px;
-  height: 285px;
-}
 .welcome > h1,
 .welcome > p {
   text-align: center;
@@ -49,68 +27,106 @@
 .brand img {
   width: 132px;
 }
+
 .roles {
-  z-index: 1;
   margin: 26px 0 auto;
   display: grid;
   gap: 12px;
 }
+
 .roleCard {
-  min-height: 68px;
-  padding: 14px 16px;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-height: 72px;
+  padding: 14px 18px 14px 14px;
   display: flex;
   align-items: center;
   gap: 14px;
   color: var(--ink);
   background: #fff;
-  border: 1px solid #dcd9f5;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(81, 76, 154, 0.08);
+  border: 1px solid #e8e6f4;
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(40, 41, 74, 0.04);
+  touch-action: manipulation;
   transition:
-    color 160ms ease,
-    background 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+    transform 220ms var(--ease-out),
+    border-color 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
 }
-.roleCard:hover,
-.roleCard:focus-visible {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 10px 24px rgba(81, 76, 154, 0.22);
-}
-.roleCard:hover .roleIcon,
-.roleCard:focus-visible .roleIcon {
-  transition:
-    color 160ms ease,
-    background 160ms ease;
-  color: var(--accent);
-  background: #fff;
-}
-.roleCard:hover .roleArrow,
-.roleCard:focus-visible .roleArrow {
-  color: #fff;
-}
-.roleCard:focus-visible {
-  outline: 3px solid rgba(119, 114, 201, 0.35);
-  outline-offset: 2px;
-}
+
 .roleIcon {
   width: 44px;
   height: 44px;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  border-radius: 12px;
+  color: var(--accent);
+  background: var(--accent-pale);
+  border-radius: 50%;
+  transition:
+    color 220ms var(--ease-out),
+    background-color 220ms var(--ease-out);
 }
+
 .roleTitle {
   min-width: 0;
   flex: 1;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
 }
+
 .roleArrow {
   flex: 0 0 auto;
-  color: var(--accent);
+  color: #b3b2c9;
+  transition:
+    color 220ms var(--ease-out),
+    transform 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .roleCard:hover {
+    transform: translateY(-1px);
+    border-color: #d4d1f1;
+    box-shadow: 0 8px 20px rgba(81, 76, 154, 0.08);
+  }
+
+  .roleCard:hover .roleIcon {
+    color: #fff;
+    background: var(--accent);
+  }
+
+  .roleCard:hover .roleArrow {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+}
+
+.roleCard:active {
+  transform: scale(0.98);
+  border-color: #d4d1f1;
+  transition-duration: 100ms;
+}
+
+.roleCard:active .roleIcon {
+  color: #fff;
+  background: var(--accent);
+}
+
+.roleCard:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roleCard,
+  .roleIcon,
+  .roleArrow {
+    transition: none;
+  }
+
+  .roleCard:hover,
+  .roleCard:active,
+  .roleCard:hover .roleArrow {
+    transform: none;
+  }
 }

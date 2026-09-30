@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["savorous-an-bilineate.ngrok-free.dev"],
+  // Any ngrok tunnel address (it changes between sessions) may load dev assets.
+  allowedDevOrigins: ["*.ngrok-free.dev"],
   turbopack: {
     root: process.cwd(),
   },

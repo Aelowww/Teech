@@ -176,21 +176,8 @@
   font-size: 10px;
   line-height: 1.4;
 }
+/* Size and look come from the shared button (button.module.css); this sets placement only. */
 .homeButton {
-  width: 100%;
-  min-height: 50px;
   margin-top: auto;
   margin-bottom: 12px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: #f1f0fc;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-}
-.homeButton:hover,
-.homeButton:focus-visible {
-  color: #fff;
-  background: var(--accent);
 }

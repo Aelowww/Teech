@@ -7,6 +7,7 @@ import { PasswordField } from "@/app/mobile/_components/password-field";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "@/app/mobile/_components/profile-settings.module.css";
 
 const emptyTrio = ["", "", ""];
@@ -109,7 +110,7 @@ export default function Page() {
         </div>
         {error && <Notice error>{error}</Notice>}
         {notice && <Notice>{notice}</Notice>}
-        <div className={styles.submitArea}><button className={styles.submitButton} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Security Questions"}</button></div>
+        <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Security Questions"}</button></div>
         <SignOutEverywhere />
       </form>
     </MobileLayout>
