@@ -5,7 +5,7 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/config";
 
-const desktopPages: string[] = [];
+import { forcedLayout, layoutCookie, type Layout } from "@/lib/layout";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -75,14 +75,15 @@ function serveLayout(request: NextRequest, response: NextResponse) {
     return response;
   }
 
-  const { device } = userAgent(request);
-  const isComputer = !device.type;
-  const hasDesktopPage = desktopPages.some((page) => pathname === page || pathname.startsWith(`${page}/`));
-  const layout = isComputer && hasDesktopPage ? "desktop" : "mobile";
+  const savedLayout = request.cookies.get(layoutCookie)?.value;
+  const layout: Layout = forcedLayout
+    ?? (savedLayout === "desktop" || savedLayout === "mobile" ? savedLayout : userAgent(request).device.type ? "mobile" : "desktop");
 
   const url = request.nextUrl.clone();
   url.pathname = `/${layout}${pathname === "/" ? "" : pathname}`;
-  return withCookies(NextResponse.rewrite(url, { request }), response);
+  const rewrite = withCookies(NextResponse.rewrite(url, { request }), response);
+  if (savedLayout !== layout) rewrite.cookies.set(layoutCookie, layout, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
+  return rewrite;
 }
 
 function withCookies(target: NextResponse, source: NextResponse) {

@@ -8,6 +8,37 @@ export async function signedAvatarUrl(supabase: SupabaseClient, path: string | n
   return data?.signedUrl || null;
 }
 
+export async function studentAvatarUrls(supabase: SupabaseClient, requestIds: string[]) {
+  const urls = new Map<string, string>();
+  if (!requestIds.length) return urls;
+  const { data: rows } = await supabase.rpc("request_student_avatars", { request_ids: requestIds });
+  const paths = ((rows || []) as { request_id: string; avatar_path: string }[]);
+  if (!paths.length) return urls;
+  const { data: signed } = await supabase.storage.from(avatarBucket).createSignedUrls([...new Set(paths.map((row) => row.avatar_path))], 60 * 60);
+  const byPath = new Map((signed || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
+  for (const row of paths) {
+    const url = byPath.get(row.avatar_path);
+    if (url) urls.set(row.request_id, url);
+  }
+  return urls;
+}
+
+export async function facultyAvatarUrls(supabase: SupabaseClient, facultyIds: string[]) {
+  const urls = new Map<string, string>();
+  const ids = [...new Set(facultyIds.filter(Boolean))];
+  if (!ids.length) return urls;
+  const { data: profiles } = await supabase.from("profiles").select("id, avatar_path").in("id", ids).not("avatar_path", "is", null);
+  const rows = (profiles || []) as { id: string; avatar_path: string }[];
+  if (!rows.length) return urls;
+  const { data: signed } = await supabase.storage.from(avatarBucket).createSignedUrls(rows.map((row) => row.avatar_path), 60 * 60);
+  const byPath = new Map((signed || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
+  for (const row of rows) {
+    const url = byPath.get(row.avatar_path);
+    if (url) urls.set(row.id, url);
+  }
+  return urls;
+}
+
 export async function toSquareJpeg(file: File, maxSize = 512) {
   const bitmap = await createImageBitmap(file);
   const side = Math.min(bitmap.width, bitmap.height);

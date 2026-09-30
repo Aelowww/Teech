@@ -42,7 +42,6 @@
     background-color 240ms var(--ease-out);
 }
 
-/* Phone-sized: spans the screen with a large tap target, label centred, arrow on the right. */
 .fullWidth {
   width: 100%;
   min-height: var(--button-height);
@@ -115,7 +114,6 @@
   }
 }
 
-/* The arrow darts forward as if heading to the next screen. */
 @keyframes launch {
   40% {
     transform: translateX(6px);

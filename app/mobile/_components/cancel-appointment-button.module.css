@@ -1,9 +1,7 @@
-/* Size and look come from the shared button (button.module.css); this sets placement only. */
 .cancelButton {
   margin-bottom: 10px;
 }
 
-/* Quiet variant: red text with a soft wash on hover. */
 .quiet {
   min-height: 40px;
   padding: 0 14px;

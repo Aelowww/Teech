@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LayoutSwitch } from "./_components/layout-switch";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,8 +13,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      {/* Browser extensions (e.g. Grammarly) inject attributes on <body> before hydration. */}
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <LayoutSwitch />
+        {children}
+      </body>
     </html>
   );
 }

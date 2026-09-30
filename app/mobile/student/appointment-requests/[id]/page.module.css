@@ -10,8 +10,6 @@
   flex-direction: column;
 }
 
-/* ---------- Status heading ---------- */
-
 .hero {
   margin: 4px 0 22px;
   display: grid;
@@ -61,8 +59,6 @@
   line-height: 1.5;
 }
 
-/* ---------- Progress ---------- */
-
 .timeline {
   --progress: 0.5;
   width: min(100%, 260px);
@@ -75,7 +71,6 @@
   text-align: center;
 }
 
-/* Track from the first dot to the last, with the filled part drawn on top. */
 .timeline::before,
 .timeline::after {
   content: "";
@@ -154,8 +149,6 @@
   font-weight: 600;
 }
 
-/* ---------- Faculty ---------- */
-
 .faculty {
   padding-bottom: 16px;
   display: flex;
@@ -176,7 +169,6 @@
   background: var(--accent-pale);
   border-radius: 50%;
 }
-
 .avatar img {
   object-fit: cover;
 }
@@ -200,8 +192,6 @@
   color: var(--muted);
   font-size: 12px;
 }
-
-/* ---------- Details: label on the left, value on the right, hairline between rows ---------- */
 
 .details {
   margin: 0;
@@ -261,8 +251,6 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
-
-/* ---------- Actions ---------- */
 
 .actions {
   margin-top: auto;

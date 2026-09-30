@@ -45,7 +45,6 @@
   color: var(--accent-dark);
   font-weight: 700;
 }
-/* Size and look come from the shared button (button.module.css); this sets placement only. */
 .submitButton {
   margin-top: auto;
   margin-bottom: 8px;

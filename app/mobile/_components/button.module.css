@@ -1,11 +1,3 @@
-/*
- * Shared buttons. Combine `.button` with one tone:
- *   primary   – the main action on a screen (gradient)
- *   secondary – a quieter alternative, e.g. "Back to Home" (soft lavender)
- *   danger    – destructive actions, e.g. "Cancel Consultation" / "Sign Out"
- * Add `.block` when the button should fill its container (lists, side-by-side rows).
- * Sizes come from the --button-* tokens in app/globals.css; pages add only their own spacing.
- */
 .button {
   position: relative;
   width: fit-content;
@@ -41,7 +33,6 @@
     opacity 200ms ease;
 }
 
-/* Centres the button in plain block containers too (grid/flex parents use justify/align-self). */
 div > .button:only-child {
   margin-inline: auto;
 }
@@ -61,7 +52,6 @@ div > .button:only-child {
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-/* A soft light sweep that crosses the primary button on hover. */
 .primary::after {
   content: "";
   position: absolute;

@@ -8,7 +8,6 @@ import { createClient } from "@/lib/supabase/client";
 import { clearAppointmentDraft } from "@/lib/local-appointments";
 import styles from "./sign-out-everywhere.module.css";
 
-// A quiet row at the bottom of Account Recovery: sign out on every device, after a confirmation.
 export function SignOutEverywhere() {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);

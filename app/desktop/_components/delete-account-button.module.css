@@ -1,0 +1,20 @@
+button.deleteButton {
+  width: 100%;
+  color: #b13a55;
+  background: none;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.deleteButton > svg {
+  color: #b13a55;
+}
+
+button.deleteButton:focus-visible {
+  outline: 3px solid rgba(177, 58, 85, 0.3);
+  outline-offset: -3px;
+}

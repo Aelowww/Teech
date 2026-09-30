@@ -60,7 +60,6 @@
   opacity: 1;
 }
 
-/* Filter tabs: plain labels on a hairline, the selected one is underlined in purple. */
 .filters {
   width: 100%;
   max-width: 100%;
@@ -172,8 +171,6 @@
   }
 }
 
-/* ---------- Faculty list: a plain list with hairline dividers (matches Notifications) ---------- */
-
 .list {
   margin: 0;
   padding: 0;
@@ -216,13 +213,11 @@ a.row:focus-visible {
   outline-offset: -3px;
 }
 
-/* Can't be booked yet: shown, but quieter. */
 .rowUnavailable .avatar,
 .rowUnavailable .info {
   opacity: 0.6;
 }
 
-/* No arrow here, so leave its space to keep the right column aligned with bookable rows. */
 .rowUnavailable .next {
   margin-right: 24px;
 }

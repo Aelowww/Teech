@@ -1,0 +1,168 @@
+.screen {
+  gap: 24px;
+}
+
+.hero {
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.greetingText {
+  min-width: 0;
+  flex: 1;
+}
+
+.greetingText h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.greetingText p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.presence {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+}
+
+.presence small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.presenceError {
+  margin: 0;
+  color: #c2413a;
+  font-size: 12px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  align-items: start;
+  gap: 24px;
+}
+
+.mainColumn,
+.sideColumn {
+  min-width: 0;
+  display: grid;
+  gap: 24px;
+}
+
+.panel {
+  padding: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.panel .sectionTitle {
+  margin-top: 0;
+}
+
+.sectionTitle {
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.count {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  display: inline-grid;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.seeAll {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.emptyState {
+  margin: 0;
+  padding: 28px;
+  color: var(--muted);
+  background: var(--page);
+  border-radius: 14px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.availability {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #15934e;
+  background: #effcf5;
+  border: 1px solid #b8edcc;
+  border-radius: var(--radius);
+  transition: transform 0.15s ease;
+}
+
+.availability:hover {
+  transform: translateY(-2px);
+}
+
+.availability > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.availability strong,
+.availability small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.availability strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.availability small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 1180px) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1023px) {
+  .greetingText h1 {
+    font-size: 22px;
+  }
+}

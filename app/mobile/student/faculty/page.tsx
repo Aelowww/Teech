@@ -83,7 +83,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
           ? (
             <ul className={styles.list}>
               {facultyItems.map((item) => {
-                // In the Available view everyone is available, so presence only shows in All Faculty.
                 const showPresence = showingAll;
                 const content = <>
                   <span className={styles.avatar}>

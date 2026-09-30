@@ -276,7 +276,6 @@ export function CardList({ items }: { items: CardItem[] }) {
   );
 }
 
-// Green for good outcomes, red for closed/unavailable ones, amber for anything still in progress.
 function statusToneClass(status: string) {
   const value = status.toLowerCase();
   if (value === "available" || value === "confirmed") return styles.statusGood;
@@ -503,7 +502,6 @@ export function SpotlightCard({
   );
 }
 
-/** Compact "next consultation" card: a calendar tile for the date, then who, when and where. */
 export function UpNextCard({
   eyebrow,
   title,

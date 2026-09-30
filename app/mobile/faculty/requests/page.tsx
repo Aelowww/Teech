@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Ban, Check, CheckCircle2, Inbox, UserRound, X, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import { studentAvatarUrls } from "@/lib/avatar";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import { matchesTab, RequestTabs, type RequestTab } from "@/app/mobile/_components/request-tabs";
@@ -17,6 +19,7 @@ type Appointment = { id: string; student_name: string | null; student_number: st
 export default function Page() {
   const router = useRouter();
   const [requests, setRequests] = useState<Appointment[]>([]);
+  const [photoUrls, setPhotoUrls] = useState<Map<string, string>>(() => new Map());
   const [error, setError] = useState("");
   const [updating, setUpdating] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +43,7 @@ export default function Page() {
       if (!active) return;
       if (requestError) setError(requestError.message);
       else setRequests(data as Appointment[] || []);
+      if (data?.length) void studentAvatarUrls(supabase, data.map((request) => request.id)).then((urls) => { if (active) setPhotoUrls(urls); });
       setIsLoading(false);
 
       channel = supabase
@@ -50,7 +54,10 @@ export default function Page() {
           (payload) => {
             const changedRequest = payload.new as Appointment;
             setRequests((current) => {
-              if (payload.eventType === "INSERT") return [changedRequest, ...current];
+              if (payload.eventType === "INSERT") {
+                void studentAvatarUrls(supabase, [changedRequest.id]).then((urls) => { if (active && urls.size) setPhotoUrls((known) => new Map([...known, ...urls])); });
+                return [changedRequest, ...current];
+              }
               return current.map((request) => request.id === changedRequest.id ? { ...request, ...changedRequest } : request);
             });
           },
@@ -87,7 +94,7 @@ export default function Page() {
         {requests.length > 0 && <RequestTabs statuses={requests.map((request) => request.status)} active={tab} onChange={setTab} />}
         {error && <Notice error>{error}</Notice>}
         {sortedRequests.length ? <div className={styles.requests}>{list.visible.map((request) => <article className={styles.requestCard} key={request.id}>
-          <span className={styles.icon} aria-label="Student profile"><UserRound size={18} /></span>
+          <span className={styles.icon} aria-label="Student profile">{photoUrls.get(request.id) ? <Image className={styles.iconImage} src={photoUrls.get(request.id) as string} alt="" fill sizes="38px" unoptimized /> : <UserRound size={18} />}</span>
           <Link className={styles.copy} href={`/faculty/requests/${request.id}`} aria-label={`View request from ${request.student_name || "student"}`}><strong>{request.student_name || "Student"}</strong><span>{formatDate(request.preferred_date)} at {formatTime(request.preferred_time)}</span><small>{request.student_number || ""}{request.student_number && request.reason ? " - " : ""}{request.reason}</small><em className={styles[`status${capitalize(request.status)}`]}>{request.status === "pending" && isPastDate(request.preferred_date) ? "expired" : request.status}</em></Link>
           {request.status === "pending" && <div className={styles.actions}>{!isPastDate(request.preferred_date) && <button type="button" onClick={() => setPendingAction({ id: request.id, status: "confirmed" })} disabled={updating === request.id} aria-label="Confirm request"><Check size={16} /></button>}<button type="button" onClick={() => setPendingAction({ id: request.id, status: "declined" })} disabled={updating === request.id} aria-label="Decline request"><X size={16} /></button></div>}
           {request.status !== "pending" && <span className={`${styles.statusIcon} ${styles[`statusIcon${capitalize(request.status)}`]}`} title={`Request ${request.status}`} aria-label={`Request ${request.status}`}>{request.status === "confirmed" ? <CheckCircle2 size={21} /> : request.status === "declined" ? <XCircle size={21} /> : <Ban size={20} />}</span>}

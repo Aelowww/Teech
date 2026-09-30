@@ -68,8 +68,6 @@
   }
 }
 
-/* ---------- Compact (My Profile): larger photo, camera sits on its lower-right edge ---------- */
-
 .compact .photo > div:first-child {
   width: 88px;
   height: 88px;
@@ -116,8 +114,6 @@
     transform: none;
   }
 }
-
-/* ---------- Photo source menu (opens from the camera button) ---------- */
 
 .menu {
   position: absolute;

@@ -3,7 +3,6 @@ import type { CSSProperties } from "react";
 import { badgeIcon } from "@/app/mobile/_components/badge-icons";
 import styles from "./badge-grid.module.css";
 
-// Soft pastel per badge: [background, icon]. Anything not listed uses lavender.
 const badgeColors: Record<string, [string, string]> = {
   photo: ["#ffe3ee", "#d8508a"],
   "streak-7": ["#ffe9d6", "#e0782e"],
@@ -20,7 +19,6 @@ const badgeColors: Record<string, [string, string]> = {
   "shop-legend": ["#fff1cc", "#c28a0e"],
 };
 
-// A scalloped rosette: 12 soft bumps around a circle, in a 40x40 box.
 const rosette = (() => {
   const bumps = 12;
   const outer = 19.5;
@@ -37,8 +35,6 @@ const rosette = (() => {
   return `${points.join(" ")}Z`;
 })();
 
-// The badges a user chose to show, under their name on My Profile: little rosettes, no text.
-// The name appears in a bubble on hover and is always there for screen readers.
 export function ShowcasedBadges({ badges, href }: { badges: { id: string; name: string }[]; href: string }) {
   if (!badges.length) return null;
   return (

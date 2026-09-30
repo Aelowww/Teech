@@ -85,7 +85,6 @@
   transition: transform 320ms var(--button-ease);
 }
 
-/* Clickable points pill: lifts, deepens and gives the coin a little spin. */
 @media (hover: hover) {
   .points:hover {
     transform: translateY(-1px);
@@ -200,7 +199,6 @@
   box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--accent);
 }
 
-/* Hover: the circle lifts and grows slightly; faded future days brighten. */
 @media (hover: hover) {
   .days button:hover span {
     transform: translateY(-2px) scale(1.1);
@@ -230,7 +228,6 @@
   box-shadow: 0 0 0 3px rgba(119, 114, 201, 0.35);
 }
 
-/* Selected day: bold label and a small underline dot. */
 .days .daySelected small {
   color: var(--accent-dark);
   font-weight: 700;
@@ -293,7 +290,6 @@
   }
 }
 
-/* A quiet footer row instead of a heavy bar: the card's main job is the streak itself. */
 .exchange {
   margin: 0 -10px;
   padding: 11px 10px;

@@ -1,0 +1,26 @@
+.bell {
+  width: 38px;
+  height: 38px;
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--accent);
+  border-radius: 50%;
+}
+
+.bell:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+.unread {
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  background: #db5368;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}

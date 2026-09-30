@@ -9,7 +9,6 @@ export function getPasswordError(password: string) {
   return "";
 }
 
-// The same rules as getPasswordError, listed for a live checklist.
 export const passwordRules = [
   { id: "length", label: "At least 8 characters", test: (password: string) => password.length >= 8 },
   { id: "upper", label: "An uppercase letter", test: (password: string) => /[A-Z]/.test(password) },

@@ -1,0 +1,23 @@
+.cancelButton {
+  width: 100%;
+  min-height: 48px;
+  margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #b13a55;
+  background: #fff5f7;
+  border: 1px solid #f0d5dd;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cancelButton:hover,
+.cancelButton:focus-visible {
+  color: #fff;
+  background: #b13a55;
+  border-color: #b13a55;
+}

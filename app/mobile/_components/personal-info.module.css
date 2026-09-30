@@ -6,8 +6,6 @@
   flex-direction: column;
 }
 
-/* ---------- Details: [icon tile] label over value, hairline between rows ---------- */
-
 .list {
   margin: 8px 0 0;
 }
@@ -62,7 +60,6 @@
   font-weight: 500;
 }
 
-/* Size and look come from the shared button (button.module.css); this sets placement only. */
 .edit {
   margin-top: 28px;
 }

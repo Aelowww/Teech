@@ -1,0 +1,89 @@
+.screen {
+  --accent: #7772c9;
+  --accent-dark: #514c9a;
+  --ink: #28294a;
+  --muted: #77788f;
+  position: relative;
+  min-height: 100dvh;
+  padding: 0 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  color: var(--ink);
+  background: #fff;
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.circle,
+.circleBottom {
+  position: absolute;
+  width: clamp(360px, 34vw, 620px);
+  aspect-ratio: 1;
+  background: #e7e5f9;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.circle {
+  top: clamp(-260px, -14vw, -140px);
+  right: clamp(-220px, -10vw, -110px);
+}
+
+.circleBottom {
+  bottom: clamp(-300px, -16vw, -170px);
+  left: clamp(-240px, -11vw, -120px);
+}
+
+.screen > :not(.circle):not(.circleBottom) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  width: min(880px, 100%);
+  padding: clamp(40px, 9vh, 110px) 0 56px;
+  text-align: center;
+}
+
+.hero > div > div:first-child {
+  width: clamp(300px, 28vw, 420px);
+}
+
+.tagline {
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 18px;
+  font-style: italic;
+}
+
+.heroActions {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.primary {
+  min-height: 56px;
+  padding: 0 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.primary {
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 14px 30px rgba(119, 114, 201, 0.32);
+}
+
+.primary:hover {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+}

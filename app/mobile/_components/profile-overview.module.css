@@ -15,8 +15,6 @@
   text-align: center;
 }
 
-/* ---------- Who you are ---------- */
-
 .identity {
   margin: 20px 0 8px;
   display: grid;
@@ -40,8 +38,6 @@
   font-size: 12px;
 }
 
-/* ---------- Settings groups ---------- */
-
 .group {
   margin-top: 20px;
 }
@@ -55,11 +51,6 @@
   text-transform: uppercase;
 }
 
-/*
- * One row: [icon tile] label ........ chevron.
- * The support, sign-out and delete buttons render their own <span><icon/>label</span><chevron/>,
- * so the styles key off that shape rather than extra class names.
- */
 .row {
   position: relative;
   width: calc(100% + 16px);
@@ -85,12 +76,10 @@
     background-color 200ms var(--button-ease);
 }
 
-/* Beats the support and delete buttons' own `width: 100%`, so every chevron lines up. */
 .rows > .row {
   width: calc(100% + 16px);
 }
 
-/* Hairline between rows, inset so it stays straight while the hover area is rounded. */
 .rows > .row + .row::before {
   content: "";
   position: absolute;
@@ -108,7 +97,6 @@
   gap: 14px;
 }
 
-/* The row's own icon: plain and grey, picks up the accent on hover or tap. */
 .row > span > svg {
   width: 18px;
   height: 18px;
@@ -117,11 +105,6 @@
   transition: color 220ms var(--button-ease);
 }
 
-/*
- * Filled icons on hover and tap. Lucide only draws outlines, so each icon's main shape gets a
- * fill and its inner details (question marks, ticks, lines, the key hole) are redrawn in white
- * so they stay visible. (The bin's inner lines sit under its body, so it fills solid.) Parts are picked by Lucide's own class names and drawing order.
- */
 .row > span > svg > * {
   fill: currentColor;
   fill-opacity: 0;
@@ -130,7 +113,6 @@
     stroke 220ms var(--button-ease);
 }
 
-/* Parts that must never fill: open strokes whose fill would look wrong. */
 .row > span > :global(.lucide-log-out) > :nth-child(-n + 2),
 .row > span > :global(.lucide-trash-2) > :nth-child(4),
 .row > span > :global(.lucide-trash-2) > :nth-child(5) {
@@ -141,7 +123,6 @@
   fill-opacity: 1;
 }
 
-/* Details drawn in white once filled. */
 .row:active > span > :global(.lucide-key-round) > :nth-child(2),
 .row:active > span > :global(.lucide-shield-question-mark) > :nth-child(n + 2),
 .row:active > span > :global(.lucide-message-circle-question-mark) > :nth-child(n + 2),
@@ -166,7 +147,6 @@
   }
 }
 
-/* Chevron. */
 .row > svg {
   flex: 0 0 auto;
   color: #c9c8d8;
@@ -175,7 +155,6 @@
     transform 220ms var(--button-ease);
 }
 
-/* Hover: no block of colour. The icon tile fills in, the label turns purple, the arrow nudges forward. */
 @media (hover: hover) {
   .row:hover {
     color: var(--accent-dark);
@@ -191,7 +170,6 @@
   }
 }
 
-/* Tap: a brief soft highlight, and the icon picks up the accent, so touch users still get feedback. */
 .row:active {
   background: #f6f5fc;
 }
@@ -205,7 +183,6 @@
   outline-offset: -3px;
 }
 
-/* Delete account: the one destructive row. */
 .row.danger,
 .row.danger > svg {
   color: #b13a55;

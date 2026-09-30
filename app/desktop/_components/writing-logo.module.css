@@ -1,0 +1,91 @@
+.intro {
+  display: grid;
+  justify-items: center;
+}
+
+.logo {
+  position: relative;
+  width: 250px;
+  aspect-ratio: 402 / 125;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.strokeFrame {
+  clip-path: inset(0 100% 0 0);
+}
+
+.finalFrame {
+  opacity: 0;
+}
+
+.playing .strokeFrame {
+  animation:
+    writeStroke var(--duration) cubic-bezier(0.45, 0.05, 0.35, 1) var(--start) forwards,
+    liftInk 220ms ease-out var(--written) forwards;
+}
+
+.playing .finalFrame {
+  animation: settleInk 220ms ease-out var(--written) forwards;
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.playing .reveal {
+  animation: fadeUp 500ms ease-out calc(var(--written) + 250ms) forwards;
+}
+
+@keyframes writeStroke {
+  from {
+    clip-path: inset(0 var(--hidden-from) 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes liftInk {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes settleInk {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playing .strokeFrame,
+  .playing .finalFrame,
+  .playing .reveal {
+    animation: none;
+  }
+
+  .strokeFrame {
+    opacity: 0;
+  }
+
+  .finalFrame,
+  .reveal {
+    opacity: 1;
+  }
+}

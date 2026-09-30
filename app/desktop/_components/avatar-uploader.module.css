@@ -1,0 +1,69 @@
+.uploader {
+  display: grid;
+  justify-items: center;
+}
+
+.photo {
+  position: relative;
+}
+
+.cameraButton {
+  width: 38px;
+  height: 38px;
+  position: absolute;
+  right: -2px;
+  bottom: 18px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(81, 76, 154, 0.25);
+  cursor: pointer;
+}
+
+.cameraButton:disabled {
+  cursor: wait;
+}
+
+.cameraButton:focus-visible,
+.removeButton:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+.input {
+  display: none;
+}
+
+.removeButton {
+  margin: -6px 0 8px;
+  padding: 4px 8px;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.error {
+  max-width: 320px;
+  margin: 0 0 8px;
+  color: #c2413b;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.spinner {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

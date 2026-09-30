@@ -9,7 +9,6 @@ import styles from "./notification-bell.module.css";
 
 export function NotificationBell({ href, className }: { href: string; className?: string }) {
   const [hasUnread, setHasUnread] = useState(false);
-  // Filled while the tap plays out and the notifications page loads, and whenever we're on it.
   const [pressed, setPressed] = useState(false);
   const pathname = usePathname();
   const filled = pressed || pathname === href;

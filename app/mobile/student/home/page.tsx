@@ -7,14 +7,15 @@ import { UsersRound } from "lucide-react";
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
+import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
-import { signedAvatarUrl } from "@/lib/avatar";
+import { facultyAvatarUrls, signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
 
 type Profile = { id: string; full_name: string; avatar_path: string | null };
-type Appointment = { id: string; faculty_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
+type Appointment = { id: string; faculty_profile_id: string; faculty_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
 const pendingPreviewLimit = 1;
 
@@ -23,6 +24,7 @@ export default function Page() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [facultyPhotos, setFacultyPhotos] = useState<Map<string, string>>(() => new Map());
   const [facultyCount, setFacultyCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -47,13 +49,14 @@ export default function Page() {
         return;
       }
       const [requestsResult, facultyResult] = await Promise.all([
-        supabase.from("appointment_requests").select("id, faculty_name, preferred_date, preferred_time, reason, status, meeting_location").eq("student_profile_id", currentProfile.id).order("created_at", { ascending: false }),
+        supabase.from("appointment_requests").select("id, faculty_profile_id, faculty_name, preferred_date, preferred_time, reason, status, meeting_location").eq("student_profile_id", currentProfile.id).order("created_at", { ascending: false }),
         supabase.from("faculty_availability").select("faculty_profile_id").eq("is_available", true).not("available_date", "is", null).gte("available_date", localDateValue()),
       ]);
       if (!active) return;
       setProfile(currentProfile);
       void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setAppointments(requestsResult.data as Appointment[] || []);
+      void facultyAvatarUrls(supabase, ((requestsResult.data || []) as Appointment[]).map((appointment) => appointment.faculty_profile_id)).then((urls) => { if (active) setFacultyPhotos(urls); });
       setFacultyCount(new Set(facultyResult.data?.map((slot) => slot.faculty_profile_id) || []).size);
       setIsLoading(false);
       channel = supabase
@@ -90,6 +93,7 @@ export default function Page() {
     title: appointment.faculty_name || "Faculty",
     description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
     status: "Pending",
+    imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
     href: `/student/appointment-requests/${appointment.id}`,
   }));
 
@@ -103,6 +107,7 @@ export default function Page() {
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
           <div><small>{getGreeting()}</small><strong>{profile?.full_name || "Student"}</strong></div>
+          <FactCard role="student" />
         </div>
 
         {nextAppointment ? (

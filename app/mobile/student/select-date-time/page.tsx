@@ -11,7 +11,6 @@ import { slotsFor } from "@/lib/time-slots";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
-
 export default function Page() {
   const router = useRouter();
   const [draft, setDraft] = useState<AppointmentDraft | null>(null);
