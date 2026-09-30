@@ -17,19 +17,6 @@
   margin-bottom: 12px;
   padding-top: 16px;
 }
-.submitButton {
-  width: 100%;
-  min-height: 56px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
 .checkbox {
   display: flex;
   align-items: flex-start;

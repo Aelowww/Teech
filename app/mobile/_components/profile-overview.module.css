@@ -1,0 +1,221 @@
+.page {
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 4px 0 0;
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.identity {
+  margin: 20px 0 8px;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.photo {
+  margin-bottom: 14px;
+}
+
+.identity strong {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.identity > span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.group {
+  margin-top: 20px;
+}
+
+.group h2 {
+  margin: 0 0 4px;
+  color: #a9a8bd;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.row {
+  position: relative;
+  width: calc(100% + 16px);
+  min-height: 52px;
+  margin: 0 -8px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 220ms var(--button-ease),
+    background-color 200ms var(--button-ease);
+}
+
+.rows > .row {
+  width: calc(100% + 16px);
+}
+
+.rows > .row + .row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 8px;
+  left: 8px;
+  height: 1px;
+  background: #f2f1f8;
+}
+
+.row > span {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.row > span > svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: #a9a8bd;
+  transition: color 220ms var(--button-ease);
+}
+
+.row > span > svg > * {
+  fill: currentColor;
+  fill-opacity: 0;
+  transition:
+    fill-opacity 220ms var(--button-ease),
+    stroke 220ms var(--button-ease);
+}
+
+.row > span > :global(.lucide-log-out) > :nth-child(-n + 2),
+.row > span > :global(.lucide-trash-2) > :nth-child(4),
+.row > span > :global(.lucide-trash-2) > :nth-child(5) {
+  fill: none;
+}
+
+.row:active > span > svg > * {
+  fill-opacity: 1;
+}
+
+.row:active > span > :global(.lucide-key-round) > :nth-child(2),
+.row:active > span > :global(.lucide-shield-question-mark) > :nth-child(n + 2),
+.row:active > span > :global(.lucide-message-circle-question-mark) > :nth-child(n + 2),
+.row:active > span > :global(.lucide-shield-check) > :nth-child(2),
+.row:active > span > :global(.lucide-file-text) > :nth-child(n + 2) {
+  fill: #fff;
+  stroke: #fff;
+}
+
+@media (hover: hover) {
+  .row:hover > span > svg > * {
+    fill-opacity: 1;
+  }
+
+  .row:hover > span > :global(.lucide-key-round) > :nth-child(2),
+  .row:hover > span > :global(.lucide-shield-question-mark) > :nth-child(n + 2),
+  .row:hover > span > :global(.lucide-message-circle-question-mark) > :nth-child(n + 2),
+  .row:hover > span > :global(.lucide-shield-check) > :nth-child(2),
+  .row:hover > span > :global(.lucide-file-text) > :nth-child(n + 2) {
+    fill: #fff;
+    stroke: #fff;
+  }
+}
+
+.row > svg {
+  flex: 0 0 auto;
+  color: #c9c8d8;
+  transition:
+    color 220ms var(--button-ease),
+    transform 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    color: var(--accent-dark);
+  }
+
+  .row:hover > span > svg {
+    color: var(--accent);
+  }
+
+  .row:hover > svg {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+}
+
+.row:active {
+  background: #f6f5fc;
+}
+
+.row:active > span > svg {
+  color: var(--accent);
+}
+
+.row:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: -3px;
+}
+
+.row.danger,
+.row.danger > svg {
+  color: #b13a55;
+}
+
+.row.danger:active {
+  background: #fff5f7;
+}
+
+.row.danger:active > span > svg {
+  color: #b13a55;
+}
+
+@media (hover: hover) {
+  .row.danger:hover,
+  .row.danger:hover > svg {
+    color: #b13a55;
+  }
+
+  .row.danger:hover > span > svg {
+    color: #b13a55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .row > svg,
+  .row > span > svg,
+  .row > span > svg > * {
+    transition: none;
+  }
+
+  .row:hover > svg {
+    transform: none;
+  }
+}

@@ -14,25 +14,6 @@
   line-height: 1.5;
   text-align: center;
 }
-.continueButton {
-  width: 100%;
-  min-height: 56px;
-  margin-top: auto;
-  margin-bottom: 12px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.continueButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
 .selectionSummary {
   margin: 20px 0 0;
   padding: 12px;
@@ -56,4 +37,8 @@
 .selectionSummary strong {
   color: var(--accent-dark);
   font-size: 12px;
+}
+.continueButton {
+  margin-top: auto;
+  margin-bottom: 12px;
 }

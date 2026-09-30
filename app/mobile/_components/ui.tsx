@@ -2,24 +2,21 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft,
-  CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
-  ClipboardList,
-  CircleUserRound,
   Clock3,
   GraduationCap,
-  House,
   Info,
   Inbox,
   LockKeyhole,
   Mail,
   Search,
   UserRound,
-  UsersRound,
   X,
 } from "lucide-react";
+import { NavIcon } from "./nav-icons";
+import buttonStyles from "./button.module.css";
 import styles from "./ui.module.css";
 
 export type Action = {
@@ -47,12 +44,14 @@ export function MobileLayout({
   backTo,
   role,
   activeNav,
+  fadeIn = true,
 }: {
   children: React.ReactNode;
   className?: string;
   backTo?: string;
   role?: "student" | "faculty";
   activeNav?: string;
+  fadeIn?: boolean;
 }) {
   return (
     <main className={styles.stage}>
@@ -62,9 +61,8 @@ export function MobileLayout({
             <ArrowLeft size={19} />
           </Link>
         )}
-        <div className={styles.content}>{children}</div>
+        <div className={`${styles.content} ${fadeIn ? styles.contentFadeIn : ""}`}>{children}</div>
         {role && <BottomNavigation role={role} active={activeNav || ""} />}
-        <footer className={styles.footer}>Teech <span>•</span> Student &amp; Faculty Portal</footer>
       </article>
     </main>
   );
@@ -111,7 +109,7 @@ export function ActionLink({
 }) {
   return (
     <Link
-      className={`${styles.action} ${primary ? styles.actionPrimary : ""} ${action.tone === "danger" ? styles.actionDanger : ""}`}
+      className={`${buttonStyles.button} ${primary ? buttonStyles.primary : action.tone === "danger" ? buttonStyles.danger : buttonStyles.secondary}`}
       href={action.href}
     >
       {action.label}
@@ -221,7 +219,7 @@ export function EmptyState({
       {icon ? <span className={styles.emptyIcon} aria-hidden="true">{icon}</span> : <Inbox size={28} aria-hidden="true" />}
       <strong>{title}</strong>
       <p>{description}</p>
-      {action && <Link className={styles.emptyAction} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
+      {action && <Link className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.emptyAction}`} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
     </section>
   );
 }
@@ -262,9 +260,9 @@ export function CardList({ items }: { items: CardItem[] }) {
           <div>
             <strong>{item.title}</strong>
             <small>{item.description}</small>
-            {item.status && <em className={item.status === "Available" || item.status === "Confirmed" ? styles.statusGood : styles.statusBad}>{item.status}</em>}
+            {item.status && <em className={`${styles.statusPill} ${statusToneClass(item.status)}`}>{item.status}</em>}
           </div>
-          {item.href && <ChevronRight size={16} />}
+          {item.href && <ChevronRight className={styles.listChevron} size={16} />}
         </>;
 
         return item.href
@@ -273,6 +271,13 @@ export function CardList({ items }: { items: CardItem[] }) {
       })}
     </div>
   );
+}
+
+function statusToneClass(status: string) {
+  const value = status.toLowerCase();
+  if (value === "available" || value === "confirmed") return styles.statusGood;
+  if (value.startsWith("busy") || value === "declined" || value === "cancelled" || value === "expired") return styles.statusDanger;
+  return styles.statusBad;
 }
 
 export function FilterTabs({
@@ -400,10 +405,10 @@ export function AvailabilitySlots({
   );
 }
 
-export function ProfilePhoto({ inline = false, src }: { inline?: boolean; src?: string | null }) {
+export function ProfilePhoto({ inline = false, small = false, src }: { inline?: boolean; small?: boolean; src?: string | null }) {
   return (
-    <div className={`${styles.avatar} ${inline ? styles.avatarInline : ""}`}>
-      {src ? <Image className={styles.avatarImage} src={src} alt="Profile photo" fill sizes="120px" unoptimized /> : <UserRound size={31} />}
+    <div className={`${styles.avatar} ${inline ? styles.avatarInline : ""} ${small ? styles.avatarSmall : ""}`}>
+      {src ? <Image className={styles.avatarImage} src={src} alt="Profile photo" fill sizes="120px" unoptimized /> : <UserRound size={small ? 22 : 31} />}
     </div>
   );
 }
@@ -446,22 +451,22 @@ export function BottomNavigation({
 }) {
   const items = role === "faculty"
     ? [
-        { label: "Home", href: "/faculty/home", Icon: House },
-        { label: "Calendar", href: "/faculty/calendar", Icon: CalendarDays },
-        { label: "Requests", href: "/faculty/requests", Icon: ClipboardList },
-        { label: "Profile", href: "/faculty/profile", Icon: CircleUserRound },
+        { label: "Home", href: "/faculty/home", icon: "house" as const },
+        { label: "Calendar", href: "/faculty/calendar", icon: "calendar" as const },
+        { label: "Requests", href: "/faculty/requests", icon: "clipboard" as const },
+        { label: "Profile", href: "/faculty/profile", icon: "profile" as const },
       ]
     : [
-        { label: "Home", href: "/student/home", Icon: House },
-        { label: "Faculty", href: "/student/faculty", Icon: UsersRound },
-        { label: "Requests", href: "/student/appointment-requests", Icon: ClipboardList },
-        { label: "Profile", href: "/student/profile", Icon: CircleUserRound },
+        { label: "Home", href: "/student/home", icon: "house" as const },
+        { label: "Faculty", href: "/student/faculty", icon: "users" as const },
+        { label: "Requests", href: "/student/appointment-requests", icon: "clipboard" as const },
+        { label: "Profile", href: "/student/profile", icon: "profile" as const },
       ];
   return (
     <nav className={styles.bottomNav} aria-label="Main navigation">
-      {items.map(({ label, href, Icon }) => (
-        <Link key={label} href={href} className={`${styles.navItem} ${active === label.toLowerCase() ? styles.navActive : ""}`}>
-          <Icon size={19} strokeWidth={1.8} />
+      {items.map(({ label, href, icon }) => (
+        <Link key={label} href={href} className={`${styles.navItem} ${active === label.toLowerCase() ? styles.navActive : ""}`} aria-current={active === label.toLowerCase() ? "page" : undefined}>
+          <span className={styles.navIcon}><NavIcon name={icon} filled={active === label.toLowerCase()} /></span>
           <span>{label}</span>
         </Link>
       ))}
@@ -494,7 +499,41 @@ export function SpotlightCard({
   );
 }
 
-export const tagline = "Teach within your reach";
+export function UpNextCard({
+  eyebrow,
+  title,
+  date,
+  meta,
+  href,
+  actionLabel,
+}: {
+  eyebrow: string;
+  title: string;
+  date: string;
+  meta: string[];
+  href: string;
+  actionLabel: string;
+}) {
+  const day = new Date(`${date}T00:00:00`);
+  const month = day.toLocaleDateString("en-US", { month: "short" });
+  const weekday = day.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  return (
+    <Link className={styles.upNext} href={href} aria-label={`${actionLabel}: ${title}, ${weekday}, ${meta.join(", ")}`}>
+      <span className={styles.upNextDate} aria-hidden="true">
+        <small>{month}</small>
+        <strong>{day.getDate()}</strong>
+      </span>
+      <span className={styles.upNextBody}>
+        <small>{eyebrow}</small>
+        <strong>{title}</strong>
+        <span>{meta.join(" · ")}</span>
+      </span>
+      <ChevronRight className={styles.upNextChevron} size={18} aria-hidden="true" />
+    </Link>
+  );
+}
+
+export const tagline = "Teacher within your reach";
 
 export function BrandHeader() {
   return (
