@@ -20,7 +20,6 @@ type Profile = { id: string; full_name: string; avatar_path: string | null; cour
 type Appointment = { id: string; faculty_profile_id: string; faculty_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
 const pendingPreviewLimit = 3;
-const upcomingLimit = 4;
 
 export default function Page() {
   const router = useRouter();
@@ -108,13 +107,6 @@ export default function Page() {
     imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
     href: `/student/appointment-requests/${appointment.id}`,
   }));
-  const upcomingItems = confirmed.slice(1, upcomingLimit + 1).map((appointment) => ({
-    title: appointment.faculty_name || "Faculty",
-    description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)} · ${appointment.meeting_location || "Location to be confirmed"}`,
-    status: "Confirmed",
-    imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
-    href: `/student/appointment-requests/${appointment.id}`,
-  }));
 
   return (
     <AppShell
@@ -168,16 +160,6 @@ export default function Page() {
               </h2>
               {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
             </section>
-
-            {upcomingItems.length > 0 && (
-              <section className={styles.section}>
-                <h2 className={styles.sectionTitle}>
-                  Upcoming consultations
-                  {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>}
-                </h2>
-                <CardList items={upcomingItems} />
-              </section>
-            )}
           </div>
 
           <aside className={styles.rail}>
