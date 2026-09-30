@@ -243,12 +243,6 @@
   }
 }
 
-.dashboard .summary {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 14px;
-}
-
 .split {
   height: 8px;
   display: flex;

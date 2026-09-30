@@ -101,9 +101,6 @@ export default function Page() {
     { label: "Closed", count: closedCount, tone: styles.dotClosed, href: "/student/appointment-requests?status=closed" },
   ];
   const overviewTotal = overview.reduce((total, item) => total + item.count, 0);
-  const summary = pendingAppointments.length
-    ? `${pendingAppointments.length} ${pendingAppointments.length === 1 ? "request" : "requests"} awaiting response`
-    : nextAppointment ? "You're all set for your next consultation" : "No consultations booked yet";
   const pendingItems = pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => ({
     title: appointment.faculty_name || "Faculty",
     description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
@@ -131,12 +128,15 @@ export default function Page() {
         <header className={styles.header}>
           <div className={styles.greeting}>
             <ProfilePhoto inline small src={photoUrl} />
-            <div><small>{getGreeting()}</small><strong>{fullName}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>          </div>
+            <div><small>{getGreeting()}</small><strong>{fullName}</strong></div>
+          </div>
           <Link className={`${buttonStyles.button} ${buttonStyles.primary}`} href="/student/faculty">
             <Plus size={16} strokeWidth={2.25} />
             Book consultation
           </Link>
         </header>
+
+        <FactCard role="student" />
 
         <div className={styles.layout}>
           <div className={styles.main}>
@@ -160,8 +160,6 @@ export default function Page() {
                 actionLabel="Find faculty"
               />
             )}
-
-            <FactCard role="student" />
 
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>
@@ -212,7 +210,6 @@ export default function Page() {
 
 function formatLongDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
-function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();
