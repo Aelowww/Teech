@@ -10,7 +10,9 @@ import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
+import { CountUp } from "@/app/desktop/_components/count-up";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { facultyAvatarUrls, signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
 
@@ -61,7 +63,7 @@ export default function Page() {
       setFacultyCount(new Set(facultyResult.data?.map((slot) => slot.faculty_profile_id) || []).size);
       setIsLoading(false);
       channel = supabase
-        .channel(`student-dashboard-${currentProfile.id}`)
+        .channel(uniqueChannelName(`student-dashboard-${currentProfile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `student_profile_id=eq.${currentProfile.id}` },
@@ -98,6 +100,10 @@ export default function Page() {
     { label: "Confirmed", count: confirmed.length, tone: styles.dotConfirmed, href: "/student/appointment-requests?status=confirmed" },
     { label: "Closed", count: closedCount, tone: styles.dotClosed, href: "/student/appointment-requests?status=closed" },
   ];
+  const overviewTotal = overview.reduce((total, item) => total + item.count, 0);
+  const summary = pendingAppointments.length
+    ? `${pendingAppointments.length} ${pendingAppointments.length === 1 ? "request" : "requests"} awaiting response`
+    : nextAppointment ? "You're all set for your next consultation" : "No consultations booked yet";
   const pendingItems = pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => ({
     title: appointment.faculty_name || "Faculty",
     description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
@@ -125,7 +131,7 @@ export default function Page() {
         <header className={styles.header}>
           <div className={styles.greeting}>
             <ProfilePhoto inline small src={photoUrl} />
-            <div><small>{getGreeting()}</small><strong>{fullName}</strong></div>
+            <div><small>{getGreeting()}</small><strong>{fullName}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
             <FactCard role="student" />
           </div>
           <Link className={`${buttonStyles.button} ${buttonStyles.primary}`} href="/student/faculty">
@@ -180,11 +186,18 @@ export default function Page() {
             <LoginStreakCard role="student" />
             <section className={styles.overview} aria-label="Your requests">
               <h2>Your requests</h2>
+              {overviewTotal > 0 && (
+                <div className={styles.split} aria-hidden="true">
+                  {overview.filter((item) => item.count > 0).map(({ label, count, tone }) => (
+                    <i key={label} className={tone} style={{ flexGrow: count }} />
+                  ))}
+                </div>
+              )}
               <div className={styles.overviewList}>
                 {overview.map(({ label, count, tone, href }) => (
                   <Link className={styles.overviewRow} href={href} key={label}>
                     <span><i className={tone} aria-hidden="true" />{label}</span>
-                    <b>{count}</b>
+                    <b><CountUp value={count} /></b>
                   </Link>
                 ))}
               </div>
@@ -199,6 +212,7 @@ export default function Page() {
 
 function formatLongDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();

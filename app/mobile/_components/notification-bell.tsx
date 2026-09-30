@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import styles from "./notification-bell.module.css";
 
 export function NotificationBell({ href, className }: { href: string; className?: string }) {
@@ -34,10 +35,11 @@ export function NotificationBell({ href, className }: { href: string; className?
         .select("id", { count: "exact", head: true })
         .eq("recipient_profile_id", profile.id)
         .eq("is_read", false);
-      if (active) setHasUnread((count || 0) > 0);
+      if (!active) return;
+      setHasUnread((count || 0) > 0);
 
       channel = supabase
-        .channel(`notifications-${profile.id}`)
+        .channel(uniqueChannelName(`notifications-${profile.id}`))
         .on(
           "postgres_changes",
           { event: "INSERT", schema: "public", table: "notifications", filter: `recipient_profile_id=eq.${profile.id}` },

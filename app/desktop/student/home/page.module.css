@@ -243,3 +243,79 @@
     transform: none;
   }
 }
+
+/* ---------- Header summary ---------- */
+
+.dashboard .summary {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ---------- Requests split bar ---------- */
+
+.split {
+  height: 8px;
+  display: flex;
+  gap: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.split i {
+  flex-basis: 0;
+  min-width: 6px;
+  border-radius: 999px;
+  transform-origin: left center;
+  animation: splitGrow 700ms var(--ease) 250ms both;
+}
+
+@keyframes splitGrow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------- Staggered entrance ---------- */
+
+.header,
+.main > *,
+.rail > * {
+  animation: riseIn 420ms var(--ease) backwards;
+}
+
+.main > :nth-child(1) {
+  animation-delay: 60ms;
+}
+
+.main > :nth-child(2) {
+  animation-delay: 140ms;
+}
+
+.main > :nth-child(3) {
+  animation-delay: 220ms;
+}
+
+.rail > :nth-child(1) {
+  animation-delay: 100ms;
+}
+
+.rail > :nth-child(2) {
+  animation-delay: 180ms;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .main > *,
+  .rail > *,
+  .split i {
+    animation: none;
+  }
+}

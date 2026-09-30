@@ -2,12 +2,166 @@
   display: block;
 }
 
-.form {
+/* "Requesting as": read-only identity, shown as a quiet strip rather than fields. */
+.identity {
+  margin-top: 4px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fafafd;
+  border: 1px solid #f0eff7;
+  border-radius: var(--radius-md);
+}
+
+.identityIcon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-pale);
+  border-radius: 50%;
+}
+
+.identityName {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.identityName small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.identityName strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.identityMeta {
+  margin: 0 0 0 auto;
+  display: flex;
+  gap: 28px;
+}
+
+.identityMeta div {
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.identityMeta dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.identityMeta dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Editable fields */
+.form {
+  margin-top: 24px;
+  display: grid;
   gap: 20px;
 }
 
-.fullRow {
-  grid-column: 1 / -1;
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.labelRow em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.labelRow small {
+  margin-left: auto;
+  color: #a9a8bd;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  outline: 0;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  transition:
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease);
+}
+
+.field textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #a9a8bd;
+}
+
+@media (hover: hover) {
+  .field input:hover,
+  .field textarea:hover {
+    border-color: var(--line-hover);
+  }
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-pale);
+}
+
+@media (max-width: 900px) {
+  .identity {
+    flex-wrap: wrap;
+  }
+
+  .identityMeta {
+    margin-left: 0;
+  }
+
+  .identityMeta div {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field input,
+  .field textarea {
+    transition: none;
+  }
 }
