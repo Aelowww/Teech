@@ -1,5 +1,6 @@
 .page {
   width: min(880px, 100%);
+  margin-inline: auto;
   padding: 36px 40px;
   display: flex;
   flex-direction: column;
