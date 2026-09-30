@@ -11,8 +11,6 @@ import styles from "./avatar-uploader.module.css";
 
 const maxUploadBytes = 10 * 1024 * 1024;
 
-// One hidden input per source. `capture` opens the camera on phones; the image/* input opens the
-// photo library; listing file extensions makes phones show their file browser instead.
 const sources = [
   { id: "camera", label: "Take photo", icon: Camera, accept: "image/*", capture: "user" },
   { id: "photos", label: "Upload from photos", icon: Images, accept: "image/*" },
@@ -21,8 +19,6 @@ const sources = [
 
 type Source = (typeof sources)[number]["id"];
 
-// `initialUrl` lets a server page pass the already-signed photo so it shows at once.
-// `compact` is the My Profile version: a larger photo with the camera on its edge and no "Remove photo" link.
 export function AvatarUploader({ initialPath, initialUrl = null, compact = false }: { initialPath: string | null; initialUrl?: string | null; compact?: boolean }) {
   const router = useRouter();
   const inputRefs = useRef<Partial<Record<Source, HTMLInputElement | null>>>({});
@@ -41,7 +37,6 @@ export function AvatarUploader({ initialPath, initialUrl = null, compact = false
   const [saving, setSaving] = useState(false);
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
 
-  // Close the menu on an outside tap or Escape.
   useEffect(() => {
     if (!menuOpen) return;
     function onPointer(event: PointerEvent) {

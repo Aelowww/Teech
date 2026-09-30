@@ -28,7 +28,6 @@
   justify-content: center;
 }
 
-/* Occasional light sweep across the button once the logo has finished writing. */
 .cta a::after {
   content: "";
   position: absolute;

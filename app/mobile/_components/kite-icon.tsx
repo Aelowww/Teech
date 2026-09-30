@@ -2,9 +2,6 @@
 
 import { useId } from "react";
 
-// The kite from the Teech logo, redrawn as a vector so it stays crisp at icon sizes.
-// It paints in `currentColor`; the two cross spars are cut out (not painted white),
-// so whatever is behind the icon shows through them.
 const kite = "M46.3 3 L96.5 29.6 Q73 60 56.2 97 L3.2 53.9 Z";
 const verticalSpar = "M46.5 3 C33 35 36 70 56 97 C49 68 51 34 46.5 3 Z";
 const horizontalSpar = "M3 54 C35 35 65 31 97 29.5 C65 43 35 49 3 54 Z";

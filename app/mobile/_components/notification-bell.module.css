@@ -13,7 +13,6 @@
     transform 200ms var(--button-ease);
 }
 
-/* The bell is always painted with its own colour; opacity decides whether it looks filled. */
 .icon {
   fill: currentColor;
   fill-opacity: 0;
@@ -31,7 +30,6 @@
   }
 }
 
-/* Fills the instant it's pressed, then stays filled once clicked (see .filled). */
 .bell:active {
   transform: scale(0.92);
   transition-duration: 100ms;

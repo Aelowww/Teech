@@ -1,0 +1,31 @@
+.screen {
+  display: block;
+}
+
+.emptyState {
+  margin: 0;
+  padding: 32px;
+  color: var(--muted);
+  background: var(--page);
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.editButton {
+  width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.editButton:hover {
+  background: var(--indigo-100);
+}

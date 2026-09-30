@@ -33,7 +33,6 @@
   animation: settleInk 220ms ease-out var(--written) forwards;
 }
 
-/* Once written, the kite drifts gently like it's catching a breeze. */
 .playing .logo {
   animation: kiteFloat 5.5s ease-in-out calc(var(--written) + 700ms) infinite;
 }
@@ -42,7 +41,6 @@
   opacity: 0;
 }
 
-/* Safety net: if JavaScript never starts the animation, show the finished logo anyway. */
 .intro:not(.playing) .finalFrame,
 .intro:not(.playing) .reveal {
   animation: settleInk 400ms ease-out 3s forwards;

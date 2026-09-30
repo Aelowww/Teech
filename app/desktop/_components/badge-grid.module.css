@@ -1,0 +1,131 @@
+.section {
+  margin-top: 8px;
+  scroll-margin-top: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.badge {
+  min-width: 0;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #f8f8fc;
+  border: 1px dashed #dcdce9;
+  border-radius: 18px;
+}
+
+.badge > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.badge strong {
+  color: #9a9bb3;
+  font-size: 15px;
+}
+
+.badge small {
+  color: #aaaac0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #b4b4c8;
+  background: #eeeef4;
+  border-radius: 50%;
+}
+
+.earned {
+  background: var(--accent-pale);
+  border: 1px solid #dcd9f5;
+}
+
+.earned strong {
+  color: var(--ink);
+}
+
+.earned small {
+  color: var(--muted);
+}
+
+.earned .icon {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  box-shadow: 0 4px 10px rgba(81, 76, 154, 0.25);
+}
+
+.error {
+  margin: 0 0 10px;
+  color: #c2413b;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.showcase {
+  margin-top: 8px;
+  padding: 6px 12px;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent-dark);
+  background: #fff;
+  border: 1px solid #dcd9f5;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.showcaseOn {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.showcase:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.showcase:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+.chips {
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  list-style: none;
+}
+
+.chips li {
+  padding: 5px 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border: 1px solid #dcd9f5;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}

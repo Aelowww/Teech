@@ -37,7 +37,6 @@ function RequestsPage() {
   const [tab, setTab] = useState<RequestTab>(() => parseTab(searchParams.get("status")));
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [error, setError] = useState("");
-  // Faculty profile id -> signed photo URL.
   const [photos, setPhotos] = useState<Map<string, string>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
 

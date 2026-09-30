@@ -7,10 +7,11 @@ import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react"
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
+import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
-import { signedAvatarUrl } from "@/lib/avatar";
+import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
 
@@ -24,6 +25,7 @@ export default function Page() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [requests, setRequests] = useState<Request[]>([]);
+  const [studentPhotos, setStudentPhotos] = useState<Map<string, string>>(() => new Map());
   const [openDates, setOpenDates] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [presence, setPresence] = useState<PresenceStatus>("available");
@@ -47,6 +49,7 @@ export default function Page() {
       setPresence(currentProfile.presence_status || "available");
       void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setRequests(requestsResult.data as Request[] || []);
+      if (requestsResult.data?.length) void studentAvatarUrls(supabase, requestsResult.data.map((request) => request.id)).then((urls) => { if (active) setStudentPhotos(urls); });
       setOpenDates([...new Set((availabilityResult.data || []).map((slot) => slot.available_date as string))]);
       setIsLoading(false);
 
@@ -94,13 +97,14 @@ export default function Page() {
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
     status: "Pending",
+    imageUrl: studentPhotos.get(request.id),
     href: `/faculty/requests/${request.id}`,
   }));
 
   return (
     <MobileLayout className={styles.screen} role="faculty" activeNav="home">
       <div className={styles.page}>
-        <header className={styles.header}><BrandLogo /><NotificationBell href="/faculty/notifications" /></header>
+        <header className={styles.header}><BrandLogo /><div className={styles.headerActions}><FactCard role="faculty" /><NotificationBell href="/faculty/notifications" /></div></header>
         <div className={styles.greeting}><ProfilePhoto inline small src={photoUrl} /><div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong></div><PresenceSelect value={presence} onChange={(next) => void changePresence(next)} /></div>
         {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
 
@@ -118,7 +122,7 @@ export default function Page() {
             muted
             eyebrow="No upcoming consultation"
             title={pending.length ? "Review your requests" : "Open dates for booking"}
-            details={[{ icon: <Inbox size={13} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : "Students can book once you publish dates" }]}
+            details={[{ icon: <Inbox size={13} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : openDates.length ? "Students can book your open dates" : "Students can book once you publish dates" }]}
             href={pending.length ? "/faculty/requests" : "/faculty/availability"}
             actionLabel={pending.length ? "View requests" : "Manage availability"}
           />

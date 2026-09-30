@@ -18,7 +18,6 @@
   white-space: nowrap;
 }
 
-/* Short delay so fast loads never flash the loader. */
 .loader {
   display: grid;
   justify-items: center;
@@ -41,7 +40,6 @@
   animation: glow 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
-/* Dashed "kite trail" that marches along like a progress indicator. */
 .trail {
   width: 132px;
   height: auto;
@@ -114,7 +112,6 @@
   }
 }
 
-/* Each message overlaps the next slightly, so they crossfade with no blank gap. */
 @keyframes messageCycle {
   0% {
     opacity: 0;

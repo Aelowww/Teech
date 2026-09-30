@@ -8,7 +8,6 @@ import styles from "./cta-link.module.css";
 
 type Ripple = { id: number; x: number; y: number; size: number };
 
-// Long enough for the press + ripple to register, short enough not to feel slow.
 const defaultNavigationDelayMs = 220;
 
 export function CtaLink({
@@ -35,7 +34,6 @@ export function CtaLink({
   }, []);
 
   function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
-    // Let the browser handle new-tab / new-window clicks untouched.
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

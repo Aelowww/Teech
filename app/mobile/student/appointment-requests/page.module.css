@@ -45,8 +45,6 @@
   padding-bottom: 8px;
 }
 
-/* ---------- Request list: a plain list with hairline dividers (matches Faculty and Notifications) ---------- */
-
 .list {
   margin: 0;
   padding: 0;
@@ -106,7 +104,6 @@
   object-fit: cover;
 }
 
-/* Declined, cancelled and expired: still listed, but quieter. */
 .rowClosed .avatar {
   opacity: 0.6;
 }

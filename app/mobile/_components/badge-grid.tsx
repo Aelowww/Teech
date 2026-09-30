@@ -11,7 +11,6 @@ export type Badge = { id: string; name: string; description: string };
 
 const maxShowcased = 3;
 
-// Earned badges first (each can be shown on the profile), then the locked ones with how to earn them.
 export function BadgeGrid({ badges, earnedIds, showcasedIds }: { badges: Badge[]; earnedIds: string[]; showcasedIds: string[] }) {
   const router = useRouter();
   const earned = new Set(earnedIds);

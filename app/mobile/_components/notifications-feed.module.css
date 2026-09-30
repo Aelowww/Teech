@@ -8,8 +8,6 @@
   flex-direction: column;
 }
 
-/* ---------- Toolbar ---------- */
-
 .toolbar {
   margin: 4px 0 14px;
   display: flex;
@@ -44,8 +42,6 @@
   }
 }
 
-/* ---------- Day groups ---------- */
-
 .updates {
   display: grid;
   gap: 18px;
@@ -58,14 +54,11 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-/* A plain list per day: no outer border, just hairline dividers between items. */
 .groupList {
   overflow: hidden;
   background: #fff;
   border-radius: 12px;
 }
-
-/* ---------- Items ---------- */
 
 .item {
   width: 100%;
@@ -106,7 +99,6 @@
   background: #f6f5fc;
 }
 
-/* Quiet arrow on notifications that open something. */
 .chevron {
   flex: 0 0 auto;
   align-self: center;
@@ -117,7 +109,6 @@
     transform 200ms var(--button-ease);
 }
 
-/* Unread marker: a small dot in the left gutter, level with the title. */
 .dot {
   position: absolute;
   top: 29px;

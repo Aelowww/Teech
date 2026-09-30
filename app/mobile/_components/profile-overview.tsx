@@ -9,7 +9,6 @@ import styles from "./profile-overview.module.css";
 
 type Role = "student" | "faculty";
 
-// The My Profile screen, shared by students and faculty: who you are, then settings in small groups.
 export function ProfileOverview({ role, name, avatarPath, photoUrl, badges }: { role: Role; name: string; avatarPath: string | null; photoUrl: string | null; badges: { id: string; name: string }[] }) {
   const base = `/${role}/profile`;
   return (

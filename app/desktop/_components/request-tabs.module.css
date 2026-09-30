@@ -1,0 +1,60 @@
+.tabs {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 20px;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid var(--line, #e2e2ef);
+  border-radius: 16px;
+}
+
+.tabs button {
+  min-height: 40px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-soft, #77788f);
+  background: none;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tabs button:hover {
+  color: var(--accent-dark, #514c9a);
+  background: var(--page, #f8f9fc);
+}
+
+.tabs button span {
+  min-width: 24px;
+  padding: 2px 8px;
+  color: var(--text-soft, #77788f);
+  background: var(--indigo-50, #f1f0fc);
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.tabs .active,
+.tabs .active:hover {
+  color: #fff;
+  background: var(--accent, #7772c9);
+}
+
+.tabs .active span {
+  color: var(--accent, #7772c9);
+  background: #fff;
+}
+
+.tabs button:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 1px;
+}

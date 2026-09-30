@@ -48,7 +48,6 @@
   color: var(--accent-dark);
   font-size: 12px;
 }
-/* Size and look come from the shared button (button.module.css); this sets placement only. */
 .continueButton {
   margin-top: auto;
   margin-bottom: 12px;

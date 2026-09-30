@@ -1,0 +1,219 @@
+.dashboard {
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+}
+
+.center,
+.side {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard h1,
+.dashboard h2,
+.dashboard p {
+  margin: 0;
+  line-height: normal;
+}
+
+.hero {
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.heroCopy {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 6px;
+}
+
+.heroCopy h1 {
+  color: var(--indigo-900);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.heroCopy p {
+  color: var(--text-soft);
+  font-size: 15px;
+}
+
+.outlineButton {
+  height: 44px;
+  padding: 0 20px;
+  display: grid;
+  place-items: center;
+  color: var(--indigo-800);
+  background: #fff;
+  border: 1px solid var(--indigo-300);
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.outlineButton:hover {
+  border-color: var(--indigo-600);
+}
+
+.card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cardHeader h2 {
+  color: var(--indigo-900);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.emptyText {
+  padding: 20px;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.requestList {
+  display: grid;
+  gap: 12px;
+}
+
+.requestRow {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--indigo-50);
+  border-radius: 16px;
+}
+
+.requestRow:hover {
+  background: var(--indigo-100);
+}
+
+.requestRow > div,
+.appointmentPerson > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.requestRow strong,
+.requestRow small,
+.appointmentPerson strong,
+.appointmentPerson small {
+  display: block;
+  overflow: hidden;
+  line-height: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.requestRow strong,
+.appointmentPerson strong {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.requestRow small,
+.appointmentPerson small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.requestRow em {
+  padding: 6px 12px;
+  color: var(--blue-800);
+  background: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.personIcon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--blue-800);
+  background: var(--blue-100);
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.personImage {
+  object-fit: cover;
+}
+
+.seeAll {
+  color: var(--indigo-600);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.appointment {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  background: var(--indigo-50);
+  border-radius: 16px;
+}
+
+.appointment .outlineButton {
+  justify-self: start;
+}
+
+.appointmentPerson {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.appointmentMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
+}
+
+.rowMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
+  white-space: nowrap;
+}
+@media (max-width: 1400px) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -105,7 +105,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   );
 }
 
-/* Sent -> Pending -> Confirmed. A declined or cancelled request ends on a crossed-out last step. */
 function StatusTimeline({ status }: { status: AppointmentStatus }) {
   const closed = status === "declined" || status === "cancelled";
   const steps = [
@@ -113,7 +112,6 @@ function StatusTimeline({ status }: { status: AppointmentStatus }) {
     { label: "Pending", state: status === "pending" ? "current" : "done" },
     { label: closed ? capitalize(status) : "Confirmed", state: status === "confirmed" ? "done" : closed ? "stopped" : "next" },
   ] as const;
-  // How much of the line is filled: halfway while pending, all the way once decided.
   const progress = status === "pending" ? 0.5 : 1;
   return (
     <ol className={styles.timeline} style={{ "--progress": progress } as CSSProperties} aria-label={`Request status: ${status}`}>

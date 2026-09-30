@@ -8,7 +8,6 @@ import { createClient } from "@/lib/supabase/client";
 import { clearAppointmentDraft } from "@/lib/local-appointments";
 import buttonStyles from "./button.module.css";
 
-// `variant="row"` renders a settings-list row (icon + label) instead of the full button.
 export function SignOutButton({ redirectTo, variant = "button", className }: { redirectTo: string; variant?: "button" | "row"; className?: string }) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);

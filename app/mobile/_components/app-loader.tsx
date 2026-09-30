@@ -11,9 +11,6 @@ const loadingMessages = [
   "Tip: check in daily to keep your streak",
 ];
 
-// A route's loading.tsx is usually replaced by the page's own data loader a moment later.
-// Loaders that hand off like this share one animation clock, so the motion continues
-// instead of restarting (no second fade-in, no jump in the float or the messages).
 const handoffWindowMs = 200;
 let clockStart = 0;
 let mountedLoaders = 0;
@@ -38,7 +35,6 @@ export function AppLoader() {
     const now = timelineNow();
 
     if (mountedLoaders === 0 && now - lastUnmountAt > handoffWindowMs) {
-      // A server-rendered loader has already been animating before hydration; keep its start.
       const started = animations.map((animation) => milliseconds(animation.startTime)).filter((time): time is number => time !== null);
       clockStart = started.length > 0 ? Math.min(...started) : now;
     }

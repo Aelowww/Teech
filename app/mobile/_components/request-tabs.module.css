@@ -1,5 +1,3 @@
-/* Filter tabs: plain labels on a hairline, the selected one is underlined in purple
-   (same style as the Faculty page filter). */
 .tabs {
   margin: 14px 0 6px;
   display: flex;
@@ -93,7 +91,6 @@
   border-radius: 6px;
 }
 
-/* Small phones: slightly smaller type so all four tabs fit without scrolling. */
 @media (max-width: 374px) {
   .tabs button {
     font-size: 12px;

@@ -1,0 +1,152 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  align-items: start;
+  gap: 24px;
+}
+
+.side {
+  position: sticky;
+  top: 112px;
+  padding: 24px;
+  display: grid;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.editor h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.selectedDate {
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  color: var(--accent-dark);
+  background: var(--indigo-50);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.times {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.times label,
+.location {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.location {
+  margin-top: 16px;
+}
+
+.times input,
+.location input {
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 0 14px;
+  color: var(--ink);
+  background: #f8f8fc;
+  border: 1px solid #dcdce9;
+  border-radius: 14px;
+  outline: 0;
+  font: inherit;
+  font-size: 15px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.times input:focus,
+.location input:focus {
+  background: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--indigo-50);
+}
+
+.times input:disabled,
+.location input:disabled {
+  color: #a4a4b5;
+  background: #f1f0f6;
+  cursor: not-allowed;
+}
+
+.required {
+  color: #b13a55;
+  font-weight: 500;
+}
+
+.removeButton {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 16px;
+  color: #bd4050;
+  background: #fff5f6;
+  border: 1px solid #ffc6cc;
+  border-radius: 22px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.removeButton:hover {
+  background: #ffe9ec;
+}
+
+.removeButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.saveArea {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.saveButton {
+  width: 100%;
+  min-height: 52px;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(81, 76, 154, 0.22);
+}
+
+.saveButton:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
+.saveButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+@media (max-width: 1100px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    position: static;
+  }
+}

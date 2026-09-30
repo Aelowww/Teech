@@ -1,5 +1,3 @@
-/* ---------- Triggers ---------- */
-
 .floating {
   position: absolute;
   z-index: 20;
@@ -77,8 +75,6 @@ button.row {
   cursor: pointer;
 }
 
-/* ---------- Chat sheet ---------- */
-
 .backdrop {
   position: fixed;
   z-index: 100;
@@ -105,7 +101,6 @@ button.row {
   animation: slideUp 320ms var(--button-ease);
 }
 
-/* Sheet grab handle: signals the panel slides up from the bottom. */
 .handle {
   position: absolute;
   top: 8px;
@@ -189,8 +184,6 @@ button.row {
     transform: rotate(90deg);
   }
 }
-
-/* ---------- Messages ---------- */
 
 .thread {
   flex: 1;
@@ -300,8 +293,6 @@ button.row {
   animation-delay: 0.3s;
 }
 
-/* ---------- Suggested questions ---------- */
-
 .suggestions {
   margin-top: 6px;
   display: grid;
@@ -366,8 +357,6 @@ button.row {
   transform: scale(0.98);
 }
 
-/* ---------- Composer ---------- */
-
 .composer {
   padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
   display: grid;
@@ -375,7 +364,6 @@ button.row {
   border-top: 1px solid #f0eff7;
 }
 
-/* One rounded field with the send button tucked inside. */
 .composerField {
   padding: 4px 4px 4px 16px;
   display: flex;
@@ -459,8 +447,6 @@ button.row {
   flex: 0 0 auto;
   margin-top: 1px;
 }
-
-/* ---------- Motion ---------- */
 
 @keyframes fadeIn {
   from {

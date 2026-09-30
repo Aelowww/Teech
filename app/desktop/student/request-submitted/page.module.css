@@ -1,0 +1,68 @@
+.page {
+  width: min(760px, 100%);
+  margin: 24px auto 0;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+}
+
+.page > h1,
+.page > p {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.steps {
+  margin: 8px 0 0;
+  text-align: left;
+}
+
+.steps h2 {
+  margin: 0 0 14px;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.steps ol {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  padding: 18px;
+  color: var(--text);
+  background: var(--page);
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  counter-increment: step;
+}
+
+.steps li::before {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  content: counter(step);
+}
+
+.page > div:last-child {
+  justify-content: center;
+}

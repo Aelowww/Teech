@@ -10,14 +10,6 @@ const outlineIcons: Record<NavIconName, LucideIcon> = {
   calendar: CalendarDays,
 };
 
-// Filled versions of the same Lucide shapes. Lucide only ships outlines, and simply
-// filling those hides their inner details, so each part is drawn as one of:
-//   solid  – filled shape in the icon colour
-//   line   – outline in the icon colour
-//   cut    – detail drawn in the bar's background colour, so it reads as cut out
-//   cutFill – filled detail in the background colour
-//   cutShape – like cutFill but without an edge, for details that must stay inside the shape
-//   ring   – filled shape with a background-coloured edge, to separate touching parts
 type Part = ["path" | "circle" | "rect", Record<string, string | number>, "solid" | "line" | "cut" | "cutFill" | "cutShape" | "ring"];
 
 const filledIcons: Record<NavIconName, Part[]> = {

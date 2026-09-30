@@ -6,7 +6,6 @@ import styles from "./personal-info.module.css";
 
 export type PersonalInfoField = { icon: LucideIcon; label: string; value: string | null };
 
-// Personal Information screen body, shared by students and faculty: one row per detail, then an Edit button.
 export function PersonalInfo({ fields, editHref }: { fields: PersonalInfoField[]; editHref: string }) {
   return (
     <div className={styles.page}>

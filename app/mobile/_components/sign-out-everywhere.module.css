@@ -13,7 +13,6 @@
   text-transform: uppercase;
 }
 
-/* Same row style as My Profile: [icon tile] text ......... chevron. */
 .row {
   width: calc(100% + 16px);
   margin: 0 -8px;
@@ -40,7 +39,6 @@
   transition: color 220ms var(--button-ease);
 }
 
-/* Filled on hover and tap: the screen fills in, the phone fills with a white edge to separate it. */
 .icon > * {
   fill: currentColor;
   fill-opacity: 0;

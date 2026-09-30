@@ -29,7 +29,12 @@
   place-items: center;
   color: var(--accent);
   background: #f0effd;
+  position: relative;
+  overflow: hidden;
   border-radius: 50%;
+}
+.iconImage {
+  object-fit: cover;
 }
 .copy {
   min-width: 0;

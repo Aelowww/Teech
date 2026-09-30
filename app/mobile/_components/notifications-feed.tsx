@@ -132,7 +132,6 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
                       </div>
                       {href && <ChevronRight className={styles.chevron} size={16} aria-hidden="true" />}
                     </>;
-                    // Linked notifications open what they're about (and count as read); others just mark read.
                     return href
                       ? <Link className={className} href={href} key={notification.id} onClick={markThisRead} aria-label={label}>{content}</Link>
                       : <button className={className} type="button" key={notification.id} onClick={markThisRead} aria-label={label}>{content}</button>;
@@ -172,7 +171,6 @@ function appearanceFor(kind: string) {
   return appearances[kind] || { Icon: Bell, tone: "accent" as Tone };
 }
 
-// Where each kind of notification leads. Request updates open that consultation's details.
 function destinationFor(notification: Notification, role: "student" | "faculty") {
   if (notification.kind.startsWith("request_")) {
     const requestsPath = role === "student" ? "/student/appointment-requests" : "/faculty/requests";
@@ -184,7 +182,6 @@ function destinationFor(notification: Notification, role: "student" | "faculty")
   return null;
 }
 
-// Splits the (already newest-first) list into Today / Yesterday / Earlier, keeping order.
 function groupByDay(items: Notification[]) {
   const today = new Date().toDateString();
   const yesterdayDate = new Date();
@@ -209,7 +206,6 @@ function formatTimestamp(value: string) {
   if (minutes < 24 * 60) return `${Math.floor(minutes / 60)}h ago`;
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  // Already grouped under "Yesterday", so show the time of day instead of repeating it.
   if (date.toDateString() === yesterday.toDateString()) return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric", ...(date.getFullYear() === new Date().getFullYear() ? {} : { year: "numeric" }) });
 }
