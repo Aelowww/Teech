@@ -40,7 +40,7 @@ export default function Page() {
           <p>If you forget your password, tap <b>Forgot Password</b> on the sign-in screen and we&apos;ll email a reset link to this address.</p>
           <Link className={styles.textAction} href="/faculty/profile/edit">Change email</Link>
         </section>
-        <SignOutEverywhere role="faculty" />
+        <SignOutEverywhere />
       </div>
     </DesktopLayout>
   );

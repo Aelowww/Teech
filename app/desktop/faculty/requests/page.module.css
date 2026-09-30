@@ -1,118 +1,184 @@
-.screen {
-  --accent: #7772c9;
-}
+/* Faculty requests: tabs, then one wide row per request (student / when / status / actions). */
+
 .page {
-  flex: 1;
-  min-height: 0;
   display: flex;
   flex-direction: column;
 }
+
 .requests {
   display: grid;
-  gap: 10px;
-  margin-top: 4px;
-  overflow: auto;
+  gap: 12px;
 }
+
 .requestCard {
+  padding: 18px 20px;
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: start;
-  padding: 13px 12px;
-  border: 1px solid #e2e2ef;
-  border-radius: 8px;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
+.requestCard:hover {
+  border-color: var(--indigo-300);
+  box-shadow: 0 12px 28px rgba(63, 65, 112, 0.07);
+}
+
 .icon {
-  width: 38px;
-  height: 38px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
   color: var(--accent);
-  background: #f0effd;
+  background: var(--indigo-50);
   border-radius: 50%;
 }
+
+/* Student + ID/reason on the left, date in the middle, status on the right */
 .copy {
   min-width: 0;
   display: grid;
-  gap: 3px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 120px;
+  grid-template-areas:
+    "name date status"
+    "reason date status";
+  align-items: center;
+  gap: 4px 20px;
 }
+
 .copy strong {
-  color: var(--ink);
-  font-size: 13px;
-}
-.copy span,
-.copy small {
+  grid-area: name;
   overflow: hidden;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.copy small {
+  grid-area: reason;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy span {
+  grid-area: date;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .copy em {
-  font-size: 10px;
+  grid-area: status;
+  justify-self: start;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
   font-style: normal;
+  font-weight: 600;
+  text-transform: capitalize;
 }
-.statusPending {
+
+.copy:hover strong {
+  color: var(--accent);
+}
+
+.copy .statusPending {
   color: #a16d1d;
+  background: #fff4e3;
 }
-.statusConfirmed {
+
+.copy .statusConfirmed {
   color: #288453;
+  background: #e8f8ef;
 }
-.statusDeclined,
-.statusCancelled {
+
+.copy .statusDeclined,
+.copy .statusCancelled {
   color: #b13a55;
+  background: #fff0f3;
 }
+
+/* Confirm / decline buttons */
 .actions {
   display: flex;
-  gap: 5px;
+  gap: 8px;
 }
+
 .actions button {
-  width: 31px;
-  height: 31px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
-  border: 1px solid #c6edda;
-  border-radius: 6px;
   color: #25804e;
   background: #effdf5;
+  border: 1px solid #c6edda;
+  border-radius: 50%;
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 }
+
+.actions button:hover {
+  color: #fff;
+  background: #25804e;
+}
+
 .actions button:last-child {
   color: #b13a55;
   background: #fff2f5;
   border-color: #f1cbd6;
 }
+
+.actions button:last-child:hover {
+  color: #fff;
+  background: #b13a55;
+}
+
 .actions button:disabled {
   opacity: 0.55;
   cursor: wait;
 }
+
 .statusIcon {
-  width: 31px;
-  height: 31px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   border: 1px solid;
   border-radius: 50%;
 }
+
 .statusIconConfirmed {
   color: #25804e;
   background: #effdf5;
   border-color: #c6edda;
 }
+
 .statusIconDeclined {
   color: #b13a55;
   background: #fff2f5;
   border-color: #f1cbd6;
 }
+
 .statusIconCancelled {
   color: #77788f;
   background: #f5f5f9;
   border-color: #dedee8;
 }
-.empty {
-  margin: 32px auto;
-  color: var(--muted);
-  font-size: 12px;
-  text-align: center;
+
+@media (max-width: 1100px) {
+  .copy {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name status"
+      "date status"
+      "reason status";
+  }
 }

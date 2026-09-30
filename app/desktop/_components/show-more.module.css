@@ -1,23 +1,27 @@
+/* "Show more / Show less" under long lists. */
+
 .button {
-  width: 100%;
-  min-height: 40px;
-  margin-top: 10px;
+  min-width: 200px;
+  min-height: 44px;
+  margin: 16px auto;
+  padding: 0 22px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  color: #7772c9;
-  background: #f4f3fc;
-  border: 1px solid #e1dff6;
-  border-radius: 12px;
+  justify-self: center;
+  gap: 6px;
+  color: var(--accent, #7772c9);
+  background: #fff;
+  border: 1px solid var(--indigo-200, #e1dff6);
+  border-radius: 22px;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .button:hover {
-  background: #ebe9fa;
+  background: var(--accent-pale, #ebe9fa);
 }
 
 .button:focus-visible {

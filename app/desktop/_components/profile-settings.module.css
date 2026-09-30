@@ -1,148 +1,259 @@
-.screen {
-  --accent: #7772c9;
-}
+/*
+ * Settings sub-pages (personal info, edit profile, change password, account recovery,
+ * privacy / terms, badges). Each page is one white panel at a comfortable reading width.
+ */
+
 .page {
-  flex: 1;
-  min-height: 0;
+  width: min(880px, 100%);
+  padding: 36px 40px;
   display: flex;
   flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
+
+/* Forms */
 .form {
   display: grid;
-  gap: 14px;
-  margin-top: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
+
+.form > :only-child,
+.form > p,
+.form > section,
+.form > div:has(> label > select) {
+  grid-column: 1 / -1;
+}
+
+/* Single-column forms (password change): keep fields at a readable width */
+.form:has(> p:nth-child(2)) {
+  width: min(520px, 100%);
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .passwordHint {
-  margin: -7px 0 0;
+  margin: -8px 0 0;
   color: var(--muted);
-  font-size: 9px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.5;
 }
+
 .submitArea {
-  margin-top: auto;
-  margin-bottom: 12px;
-  padding-top: 20px;
+  margin-top: 28px;
+  padding-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--line-soft);
 }
+
 .submitButton {
-  width: 100%;
-  min-height: 56px;
+  min-width: 220px;
+  min-height: 50px;
+  padding: 0 28px;
   color: #fff;
   background: var(--accent);
   border: 0;
   border-radius: 999px;
   font: inherit;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 10px 22px rgba(81, 76, 154, 0.22);
 }
+
+.submitButton:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
 .submitButton:disabled {
   cursor: wait;
   opacity: 0.65;
 }
-.legalContent {
-  margin-top: 12px;
-  display: grid;
-  gap: 11px;
-}
-.legalContent section {
-  padding: 14px;
-  background: #f8f8fc;
-  border: 1px solid #e1e0ee;
-  border-radius: 8px;
-}
-.legalContent h2 {
-  margin: 0 0 6px;
-  color: var(--ink);
-  font-size: 12px;
-}
-.legalContent p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.55;
+
+/* Profile photo editor */
+.photoEditor {
+  margin: 0 0 28px;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  background: var(--page);
+  border-radius: 16px;
 }
 
-.securityStatus {
-  margin: 14px 0 0;
-  padding: 10px 12px;
+/* Personal information */
+.informationCard {
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+}
+
+.informationHeader {
+  padding: 16px 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #cd8a2d;
-  background: #fff8ec;
-  border: 1px solid #f3d9ad;
-  border-radius: 10px;
-  font-size: 11px;
-  line-height: 1.4;
+  justify-content: space-between;
+  background: var(--page);
+  border-bottom: 1px solid var(--line-soft);
 }
-.securityStatusReady {
-  color: #15934e;
-  background: #effcf5;
-  border-color: #b8edcc;
-}
-.securityQuestion {
-  padding: 12px;
-  display: grid;
-  gap: 10px;
-  border: 1px solid #e7e6f1;
-  border-radius: 12px;
-}
-.securityQuestion label:first-child {
-  display: grid;
-  gap: 6px;
-  color: #77788f;
-  font-size: 10px;
+
+.informationHeader h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
   font-weight: 600;
 }
+
+.editLink {
+  min-height: 38px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 19px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.editLink:hover {
+  background: var(--accent-dark);
+}
+
+.details {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.details div {
+  min-width: 0;
+  padding: 20px 24px;
+  border-right: 1px solid var(--line-soft);
+}
+
+.details div:last-child {
+  border-right: 0;
+}
+
+.details dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.details dd {
+  margin: 6px 0 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* Legal pages */
+.legalContent {
+  display: grid;
+  gap: 14px;
+}
+
+.legalContent section {
+  padding: 20px 24px;
+  background: var(--page);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+}
+
+.legalContent h2 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.legalContent p {
+  margin: 0;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Account recovery: question + answer side by side */
+.securityQuestion {
+  grid-column: 1 / -1;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  background: var(--page);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+}
+
+.securityQuestion label:first-child {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .select {
   width: 100%;
-  min-height: 43px;
-  padding: 0 10px;
+  min-height: 52px;
+  padding: 0 14px;
   color: var(--ink);
-  background: #f8f8fc;
+  background: #fff;
   border: 1px solid #dcdce9;
-  border-radius: 10px;
+  border-radius: 14px;
   font: inherit;
-  font-size: 12px;
+  font-size: 15px;
 }
+
 .select:focus-visible {
-  outline: 3px solid rgba(119, 114, 201, 0.35);
-  outline-offset: 1px;
+  border-color: var(--accent);
+  outline: 0;
+  box-shadow: 0 0 0 4px var(--indigo-50);
 }
-.photoEditor {
-  margin-top: 16px;
-}
+
+/* Active sessions card */
 .securityCard {
-  margin-top: 16px;
-  padding: 14px;
+  margin-top: 24px;
+  padding: 20px 24px;
   display: grid;
-  gap: 7px;
-  background: #f8f8fc;
-  border: 1px solid #e1e0ee;
-  border-radius: 12px;
+  gap: 8px;
+  background: var(--page);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
 }
+
 .securityCard h2 {
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 600;
 }
+
 .securityCard h2 svg {
   color: var(--accent);
 }
+
 .securityCard p {
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.5;
 }
+
 .securityValue {
   color: var(--ink);
-  font-size: 13px;
+  font-size: 15px;
   overflow-wrap: anywhere;
 }
+
 .textAction {
   justify-self: start;
   padding: 2px 0;
@@ -150,11 +261,12 @@
   background: none;
   border: 0;
   font: inherit;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: underline;
   cursor: pointer;
 }
+
 .textAction:disabled {
   cursor: wait;
   opacity: 0.6;

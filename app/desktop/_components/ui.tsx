@@ -2,24 +2,20 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft,
-  CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
-  ClipboardList,
-  CircleUserRound,
   Clock3,
   GraduationCap,
-  House,
   Info,
   Inbox,
   LockKeyhole,
   Mail,
   Search,
   UserRound,
-  UsersRound,
   X,
 } from "lucide-react";
+import { AppShell } from "./app-shell";
 import styles from "./ui.module.css";
 
 export type Action = {
@@ -38,6 +34,7 @@ export type CardItem = {
   description: string;
   status?: string;
   href?: string;
+  imageUrl?: string | null;
 };
 
 export function DesktopLayout({
@@ -53,18 +50,27 @@ export function DesktopLayout({
   role?: "student" | "faculty";
   activeNav?: string;
 }) {
+  // Signed-in pages: header + sidebar website frame.
+  if (role) {
+    return (
+      <AppShell role={role} active={activeNav || ""} backTo={backTo} className={[styles.shellContent, className].filter(Boolean).join(" ")}>
+        {children}
+      </AppShell>
+    );
+  }
+
+  // Guest pages (splash, password reset, account created): centered card on the lavender canvas.
   return (
-    <main className={styles.stage}>
-      <article className={`${styles.phone} ${className || ""}`}>
-        {backTo && (
-          <Link className={styles.back} href={backTo} aria-label="Go back">
-            <ArrowLeft size={19} />
-          </Link>
-        )}
-        <div className={styles.content}>{children}</div>
-        {role && <BottomNavigation role={role} active={activeNav || ""} />}
-        <footer className={styles.footer}>Teech <span>•</span> Student &amp; Faculty Portal</footer>
-      </article>
+    <main className={styles.guest}>
+      <div className={styles.circle} aria-hidden="true" />
+      <div className={styles.circleBottom} aria-hidden="true" />
+      {backTo && (
+        <Link className={styles.back} href={backTo} aria-label="Go back">
+          <ArrowLeft size={20} />
+        </Link>
+      )}
+      <div className={[styles.guestCard, className].filter(Boolean).join(" ")}>{children}</div>
+      <footer className={styles.footer}>Teech <span>•</span> Student &amp; Faculty Portal</footer>
     </main>
   );
 }
@@ -147,6 +153,8 @@ export function FormField({
   required = false,
   readOnly = false,
   maxLength,
+  inputMode,
+  pattern,
 }: {
   label: string;
   placeholder: string;
@@ -157,6 +165,8 @@ export function FormField({
   required?: boolean;
   readOnly?: boolean;
   maxLength?: number;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  pattern?: string;
 }) {
   const labelLower = label.toLowerCase();
   const Icon = labelLower.includes("mail") || labelLower.includes("email")
@@ -183,6 +193,8 @@ export function FormField({
           required={required}
           readOnly={readOnly}
           maxLength={maxLength}
+          inputMode={inputMode}
+          pattern={pattern}
         />
       </div>
     </label>
@@ -201,15 +213,20 @@ export function Notice({ children, error = false }: { children: React.ReactNode;
 export function EmptyState({
   title,
   description,
+  icon,
+  action,
 }: {
   title: string;
   description: string;
+  icon?: React.ReactNode;
+  action?: { label: string; href: string };
 }) {
   return (
     <section className={styles.emptyState}>
-      <Inbox size={28} aria-hidden="true" />
+      {icon ? <span className={styles.emptyIcon} aria-hidden="true">{icon}</span> : <Inbox size={28} aria-hidden="true" />}
       <strong>{title}</strong>
       <p>{description}</p>
+      {action && <Link className={styles.emptyAction} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
     </section>
   );
 }
@@ -246,7 +263,7 @@ export function CardList({ items }: { items: CardItem[] }) {
     <div className={styles.list}>
       {items.map((item) => {
         const card = <>
-          <span className={styles.itemAvatar}><UserRound size={18} /></span>
+          <span className={styles.itemAvatar}>{item.imageUrl ? <Image className={styles.avatarImage} src={item.imageUrl} alt="" fill sizes="35px" unoptimized /> : <UserRound size={18} />}</span>
           <div>
             <strong>{item.title}</strong>
             <small>{item.description}</small>
@@ -425,37 +442,6 @@ export function SearchField({ placeholder }: { placeholder: string }) {
   );
 }
 
-export function BottomNavigation({
-  role,
-  active,
-}: {
-  role: "student" | "faculty";
-  active: string;
-}) {
-  const items = role === "faculty"
-    ? [
-        { label: "Home", href: "/faculty/home", Icon: House },
-        { label: "Calendar", href: "/faculty/calendar", Icon: CalendarDays },
-        { label: "Requests", href: "/faculty/requests", Icon: ClipboardList },
-        { label: "Profile", href: "/faculty/profile", Icon: CircleUserRound },
-      ]
-    : [
-        { label: "Home", href: "/student/home", Icon: House },
-        { label: "Faculty", href: "/student/faculty", Icon: UsersRound },
-        { label: "Requests", href: "/student/appointment-requests", Icon: ClipboardList },
-        { label: "Profile", href: "/student/profile", Icon: CircleUserRound },
-      ];
-  return (
-    <nav className={styles.bottomNav} aria-label="Main navigation">
-      {items.map(({ label, href, Icon }) => (
-        <Link key={label} href={href} className={`${styles.navItem} ${active === label.toLowerCase() ? styles.navActive : ""}`}>
-          <Icon size={19} strokeWidth={1.8} />
-          <span>{label}</span>
-        </Link>
-      ))}
-    </nav>
-  );
-}
 
 export function SpotlightCard({
   eyebrow,
@@ -481,3 +467,5 @@ export function SpotlightCard({
     </Link>
   );
 }
+
+export const tagline = "Teach within your reach";

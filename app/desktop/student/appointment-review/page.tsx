@@ -13,6 +13,8 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
+import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
 
 type SlotCheck =
@@ -140,17 +142,23 @@ export default function Page() {
   }
 
   return (
-    <DesktopLayout className={styles.screen} backTo="/student/appointment-info">
-      <div className={styles.page}>
-        <PageHeading title="Review Appointment" subtitle="Review the information you entered before submitting." />
-        {details.length > 0
-          ? <DetailList details={details} />
-          : <p className={styles.emptyState}>No appointment information has been entered yet.</p>}
-        {error && <Notice error>{error}</Notice>}
-        <div className={styles.actions}>
-          <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
-          <button className={styles.submitButton} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
-        </div>
+    <DesktopLayout className={styles.screen} backTo="/student/appointment-info" role="student" activeNav="faculty">
+      <BookingSteps current={4} />
+      <div className={booking.layout}>
+        <section className={booking.main}>
+          <PageHeading title="Review Appointment" subtitle="Review the information you entered before submitting." />
+          {details.length > 0
+            ? <DetailList details={details} />
+            : <p className={styles.emptyState}>No appointment information has been entered yet.</p>}
+        </section>
+
+        <aside className={booking.side}>
+          <h2>Ready to send?</h2>
+          <p className={booking.hint}>Your request goes to {draft.facultyName || "the faculty member"}, who can confirm or decline it. You&apos;ll get a notification either way.</p>
+          {error && <Notice error>{error}</Notice>}
+          <button className={booking.continueButton} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
+          <Link className={styles.editButton} href="/student/appointment-info">Edit details</Link>
+        </aside>
       </div>
       <ConfirmationModal open={confirming} title="Submit consultation request?" description="Your request will be sent to the selected faculty member for review." confirmLabel="Submit Request" onCancel={() => setConfirming(false)} onConfirm={handleSubmit} />
     </DesktopLayout>

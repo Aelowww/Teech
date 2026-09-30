@@ -37,20 +37,26 @@ export default function Page() {
 
   if (isLoading) return <AppLoader />;
 
+  const today = new Date();
+  const todayValue = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const upcomingCount = new Set(availability.filter((slot) => slot.available_date >= todayValue).map((slot) => slot.available_date)).size;
+
   return (
     <DesktopLayout className={styles.screen} role="faculty" activeNav="calendar">
+      <PageHeading title="Calendar" subtitle="Your published consultation dates." />
       <div className={styles.page}>
-        <PageHeading title="Calendar" subtitle="Your published consultation dates." />
         <MonthCalendar month={month} selectedDates={availability.map((slot) => slot.available_date)} legend="Available to students" onMonthChange={setMonth} />
-        {error && <Notice error>{error}</Notice>}
-        <section className={styles.summary}>
-          <span className={styles.summaryIcon}><CalendarDays size={19} /></span>
-          <div>
-            <strong>{availability.length} {availability.length === 1 ? "date" : "dates"} published</strong>
-            <p>{availability.length ? "Students can request the marked dates." : "Publish dates so students can request a consultation."}</p>
-          </div>
-        </section>
-        <ActionButtons actions={[{ label: "Manage Availability", href: "/faculty/availability" }]} primaryLabel="Manage Availability" />
+        <aside className={styles.side}>
+          {error && <Notice error>{error}</Notice>}
+          <section className={styles.summary}>
+            <span className={styles.summaryIcon}><CalendarDays size={22} /></span>
+            <div>
+              <strong>{upcomingCount} upcoming {upcomingCount === 1 ? "date" : "dates"} published</strong>
+              <p>{upcomingCount ? "Students can request the marked dates." : "Publish dates so students can request a consultation."}</p>
+            </div>
+          </section>
+          <ActionButtons actions={[{ label: "Manage Availability", href: "/faculty/availability" }]} primaryLabel="Manage Availability" />
+        </aside>
       </div>
     </DesktopLayout>
   );

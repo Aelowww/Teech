@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Clock3, MapPin } from "lucide-react";
+import { ArrowRight, CalendarDays, Clock3, MapPin, UserRound } from "lucide-react";
 import { DesktopLayout, Notice, PageHeading, AvailabilitySlots } from "@/app/desktop/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
+import { slotsFor } from "@/lib/time-slots";
+import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
-
-const timeSlots = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
 
 export default function Page() {
   const router = useRouter();
@@ -55,10 +56,7 @@ export default function Page() {
           .filter((slot) => slot.preferred_date === storedDraft.preferredDate)
           .map((slot) => slot.preferred_time.slice(0, 5)),
       );
-      const times = timeSlots.filter((time) =>
-        availabilityResult.data?.some((slot) => isWithinAvailability(time, slot.start_time, slot.end_time))
-        && !isPastTimeToday(storedDraft.preferredDate, time),
-      );
+      const times = slotsFor(availabilityResult.data || []).filter((time) => !isPastTimeToday(storedDraft.preferredDate, time));
       const unavailable = times.filter((time) => bookedTimes.has(toDatabaseTime(time)));
       const locations = times.reduce<Record<string, string>>((current, time) => {
         const matchingAvailability = availabilityResult.data?.find((slot) => isWithinAvailability(time, slot.start_time, slot.end_time));
@@ -103,22 +101,29 @@ export default function Page() {
     : "Choose a date on the calendar first.";
 
   return (
-    <DesktopLayout className={styles.screen} backTo="/student/calendar">
-      <div className={styles.page}>
-        <PageHeading title="Choose a time" subtitle={selectedDate} />
-        {error && <Notice error>{error}</Notice>}
-        {unavailableNotice && <Notice error>This time is no longer available. Please choose another time.</Notice>}
-        {!error && availableTimes.length > 0 && availableTimes.every((time) => unavailableTimes.includes(time)) && <Notice>This date is fully booked. Choose another available date.</Notice>}
-        {draft?.facultyId && draft.preferredDate && !error && availableTimes.length === 0
-          ? <p className={styles.emptyState}>This faculty member has no availability on the selected date.</p>
-          : <AvailabilitySlots times={availableTimes} unavailableTimes={unavailableTimes} selectedTime={draft?.preferredTime} onSelectTime={selectTime} disabled={!draft?.facultyId || !draft?.preferredDate} />}
-        {draft?.preferredDate && <div className={styles.selectionSummary}>
-          <CalendarDays size={16} />
-          <div><span>Selected date</span><strong>{selectedDate}</strong></div>
-          {draft.preferredTime && <><Clock3 size={16} /><div><span>Selected time</span><strong>{draft.preferredTime}</strong></div></>}
-          {draft.meetingLocation && <><MapPin size={16} /><div><span>Meeting location</span><strong>{draft.meetingLocation}</strong></div></>}
-        </div>}
-        <button className={styles.continueButton} type="button" onClick={continueToInformation} disabled={!draft?.facultyId || !draft?.preferredDate || !draft.preferredTime}>Continue</button>
+    <DesktopLayout className={styles.screen} backTo="/student/calendar" role="student" activeNav="faculty">
+      <BookingSteps current={2} />
+      <div className={booking.layout}>
+        <section className={booking.main}>
+          <PageHeading title="Choose a time" subtitle={selectedDate} />
+          {error && <Notice error>{error}</Notice>}
+          {unavailableNotice && <Notice error>This time is no longer available. Please choose another time.</Notice>}
+          {!error && availableTimes.length > 0 && availableTimes.every((time) => unavailableTimes.includes(time)) && <Notice>This date is fully booked. Choose another available date.</Notice>}
+          {draft?.facultyId && draft.preferredDate && !error && availableTimes.length === 0
+            ? <p className={styles.emptyState}>This faculty member has no availability on the selected date.</p>
+            : <AvailabilitySlots times={availableTimes} unavailableTimes={unavailableTimes} selectedTime={draft?.preferredTime} onSelectTime={selectTime} disabled={!draft?.facultyId || !draft?.preferredDate} />}
+        </section>
+
+        <aside className={booking.side}>
+          <h2>Your consultation</h2>
+          <dl className={booking.summaryList}>
+            <div><UserRound size={18} /><dt>Faculty</dt><dd>{draft?.facultyName || <span className={booking.placeholder}>Not selected</span>}</dd></div>
+            <div><CalendarDays size={18} /><dt>Date</dt><dd>{draft?.preferredDate ? selectedDate : <span className={booking.placeholder}>Pick a date</span>}</dd></div>
+            <div><Clock3 size={18} /><dt>Time</dt><dd>{draft?.preferredTime || <span className={booking.placeholder}>Pick a time</span>}</dd></div>
+            {draft?.meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{draft.meetingLocation}</dd></div>}
+          </dl>
+          <button className={booking.continueButton} type="button" onClick={continueToInformation} disabled={!draft?.facultyId || !draft?.preferredDate || !draft.preferredTime}>Continue<ArrowRight size={17} /></button>
+        </aside>
       </div>
     </DesktopLayout>
   );

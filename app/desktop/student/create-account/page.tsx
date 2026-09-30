@@ -9,6 +9,7 @@ import { AuthFrame } from "@/app/desktop/_components/auth-frame";
 import { createClient } from "@/lib/supabase/client";
 import { studentAuthEmail } from "@/lib/student-auth";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
+import { SupportChat } from "@/app/desktop/_components/support-chat";
 import styles from "@/app/desktop/_components/auth.module.css";
 
 type SignUpForm = {
@@ -37,6 +38,10 @@ export default function Page() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    if (!/^\d{6}$/.test(form.studentNumber)) {
+      setError("Student ID must be exactly 6 digits.");
+      return;
+    }
     const passwordError = getPasswordError(form.password);
     if (passwordError) {
       setError(passwordError);
@@ -75,12 +80,12 @@ export default function Page() {
   }
 
   return (
-    <AuthFrame onSubmit={handleSubmit} backTo="/student/sign-in" wide>
+    <AuthFrame onSubmit={handleSubmit} backTo="/student/sign-in" wide below={<SupportChat audience="guest" variant="link" />}>
       <div className={`${styles.form} ${styles.formColumns}`}>
         <div className={styles.fullRow}>
           <FormField label="Full Name" name="fullName" value={form.fullName} onChange={updateField("fullName")} placeholder="Enter your full name" required />
         </div>
-        <FormField label="Student ID" name="studentNumber" value={form.studentNumber} onChange={updateField("studentNumber")} placeholder="Enter your student ID" required />
+        <FormField label="Student ID" name="studentNumber" value={form.studentNumber} onChange={(event) => setForm((current) => ({ ...current, studentNumber: onlyDigits(event.target.value) }))} placeholder="Enter your student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
         <FormField label="Course and Year" name="courseYear" value={form.courseYear} onChange={updateField("courseYear")} placeholder="Enter your course and year" required />
         <PasswordField label="Password" name="password" value={form.password} onChange={updateField("password")} placeholder="Create a password" autoComplete="new-password" minLength={8} required />
         <PasswordField label="Confirm Password" name="confirmPassword" value={form.confirmPassword} onChange={updateField("confirmPassword")} placeholder="Re-enter your password" autoComplete="new-password" minLength={8} required />
@@ -95,4 +100,8 @@ export default function Page() {
       <p className={styles.formNote}>Already have an account? <Link href="/student/sign-in">Sign In</Link></p>
     </AuthFrame>
   );
+}
+
+function onlyDigits(value: string) {
+  return value.replace(/\D/g, "").slice(0, 6);
 }

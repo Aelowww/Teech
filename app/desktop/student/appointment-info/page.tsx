@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowRight, CalendarDays, Clock3, MapPin, UserRound } from "lucide-react";
 import { DesktopLayout, PageHeading, FormField } from "@/app/desktop/_components/ui";
 import {
   emptyAppointmentDraft,
@@ -12,6 +13,8 @@ import {
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
+import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -72,21 +75,40 @@ export default function Page() {
   }
 
   return (
-    <DesktopLayout className={styles.screen} backTo="/student/select-date-time">
-      <form className={styles.page} onSubmit={handleSubmit}>
-        <PageHeading title="Appointment Information" subtitle="Enter the details for your consultation request." />
-        <div className={styles.form}>
-          <FormField label="Student Name" name="studentName" value={draft.studentName} placeholder="" readOnly required />
-          <FormField label="Student ID" name="studentId" value={draft.studentId} placeholder="" readOnly required />
-          <FormField label="Course and Year" name="courseYear" value={draft.courseYear} placeholder="" readOnly required />
-          <FormField label="Faculty Member" name="facultyName" value={draft.facultyName} placeholder="" readOnly required />
-          <FormField label="Reason for Consultation" name="reason" value={draft.reason} onChange={updateField("reason")} placeholder="" maxLength={200} required />
-          <FormField label="Additional Details" name="details" value={draft.details} onChange={updateField("details")} placeholder="" maxLength={1000} />
-        </div>
-        <div className={styles.submitArea}>
-          <button className={styles.submitButton} type="submit">Review Appointment</button>
-        </div>
+    <DesktopLayout className={styles.screen} backTo="/student/select-date-time" role="student" activeNav="faculty">
+      <BookingSteps current={3} />
+      <form className={booking.layout} onSubmit={handleSubmit}>
+        <section className={booking.main}>
+          <PageHeading title="Appointment Information" subtitle="Enter the details for your consultation request." />
+          <div className={styles.form}>
+            <FormField label="Student Name" name="studentName" value={draft.studentName} placeholder="" readOnly required />
+            <FormField label="Student ID" name="studentId" value={draft.studentId} placeholder="" readOnly required />
+            <FormField label="Course and Year" name="courseYear" value={draft.courseYear} placeholder="" readOnly required />
+            <FormField label="Faculty Member" name="facultyName" value={draft.facultyName} placeholder="" readOnly required />
+            <div className={styles.fullRow}>
+              <FormField label="Reason for Consultation" name="reason" value={draft.reason} onChange={updateField("reason")} placeholder="e.g. Thesis chapter 2 feedback" maxLength={200} required />
+            </div>
+            <div className={styles.fullRow}>
+              <FormField label="Additional Details" name="details" value={draft.details} onChange={updateField("details")} placeholder="Anything the faculty member should know beforehand (optional)" maxLength={1000} />
+            </div>
+          </div>
+        </section>
+
+        <aside className={booking.side}>
+          <h2>Your consultation</h2>
+          <dl className={booking.summaryList}>
+            <div><UserRound size={18} /><dt>Faculty</dt><dd>{draft.facultyName}</dd></div>
+            <div><CalendarDays size={18} /><dt>Date</dt><dd>{draft.preferredDate ? formatLongDate(draft.preferredDate) : ""}</dd></div>
+            <div><Clock3 size={18} /><dt>Time</dt><dd>{draft.preferredTime}</dd></div>
+            {draft.meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{draft.meetingLocation}</dd></div>}
+          </dl>
+          <button className={booking.continueButton} type="submit">Review Appointment<ArrowRight size={17} /></button>
+        </aside>
       </form>
     </DesktopLayout>
   );
+}
+
+function formatLongDate(value: string) {
+  return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 }

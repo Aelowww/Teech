@@ -8,11 +8,11 @@
 }
 
 .cameraButton {
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   position: absolute;
   right: -2px;
-  bottom: 12px;
+  bottom: 18px;
   display: grid;
   place-items: center;
   color: #fff;
@@ -44,16 +44,16 @@
   background: none;
   border: 0;
   font: inherit;
-  font-size: 10px;
+  font-size: 13px;
   text-decoration: underline;
   cursor: pointer;
 }
 
 .error {
-  max-width: 240px;
+  max-width: 320px;
   margin: 0 0 8px;
   color: #c2413b;
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.4;
   text-align: center;
 }

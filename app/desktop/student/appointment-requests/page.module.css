@@ -1,143 +1,171 @@
-.screen {
-  --accent: #7772c9;
-}
+/* Student requests: tabs, then one wide row per request (who / when / status / actions). */
+
 .page {
-  flex: 1;
-  min-height: 0;
   display: flex;
   flex-direction: column;
 }
-.header {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--accent);
-}
-.empty {
-  margin: auto 0;
-  padding: 40px 18px;
-  display: grid;
-  justify-items: center;
-  color: var(--accent);
-  text-align: center;
-}
-.empty strong {
-  margin-top: 14px;
-  color: #28294a;
-  font-size: 14px;
-}
-.empty p {
-  max-width: 220px;
-  color: #8586a0;
-  font-size: 10px;
-  line-height: 1.5;
-}
-.emptyState {
-  margin: 32px auto;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-  text-align: center;
-}
+
 .requests {
   display: grid;
-  gap: 10px;
-  margin-top: 22px;
-  overflow: auto;
-  padding-bottom: 8px;
+  gap: 12px;
 }
+
 .requestCard {
+  padding: 18px 20px;
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: start;
-  padding: 14px 12px;
-  border: 1px solid #e2e2ef;
-  border-radius: 8px;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
   background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
+.requestCard:hover {
+  border-color: var(--indigo-300);
+  box-shadow: 0 12px 28px rgba(63, 65, 112, 0.07);
+}
+
 .requestIcon {
+  width: 48px;
+  height: 48px;
   display: grid;
-  width: 38px;
-  height: 38px;
   place-items: center;
-  border-radius: 50%;
-  background: #f0effd;
   color: var(--accent);
+  background: var(--indigo-50);
+  border-radius: 50%;
 }
+
+/* Name + reason on the left, date in the middle, status on the right */
 .requestContent {
   min-width: 0;
   display: grid;
-  gap: 3px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 120px;
+  grid-template-areas:
+    "name date status"
+    "reason date status";
+  align-items: center;
+  gap: 4px 20px;
 }
+
 .requestContent strong {
-  color: var(--ink);
-  font-size: 13px;
-}
-.requestContent span,
-.requestContent small {
+  grid-area: name;
   overflow: hidden;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.4;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.requestContent small {
+  grid-area: reason;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.requestContent span {
+  grid-area: date;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .requestContent em {
+  grid-area: status;
+  justify-self: start;
+  padding: 5px 12px;
   color: #288453;
-  font-size: 10px;
+  background: #e8f8ef;
+  border-radius: 999px;
+  font-size: 12px;
   font-style: normal;
+  font-weight: 600;
+  text-transform: capitalize;
 }
-.statusPending {
-  color: #a16d1d !important;
+
+.requestContent .statusPending {
+  color: #a16d1d;
+  background: #fff4e3;
 }
-.statusConfirmed {
-  color: #288453 !important;
+
+.requestContent .statusConfirmed {
+  color: #288453;
+  background: #e8f8ef;
 }
-.statusDeclined,
-.statusCancelled {
-  color: #b13a55 !important;
+
+.requestContent .statusDeclined,
+.requestContent .statusCancelled {
+  color: #b13a55;
+  background: #fff0f3;
 }
+
 .cardActions {
-  min-width: 61px;
-  display: grid;
-  justify-items: stretch;
-  gap: 5px;
+  display: flex;
+  gap: 8px;
 }
+
 .viewButton,
 .cancelButton {
-  min-height: 28px;
-  padding: 0 6px;
+  min-height: 40px;
+  padding: 0 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 6px;
   border: 1px solid;
-  border-radius: 6px;
-  font-size: 9px;
-  font-weight: 700;
+  border-radius: 20px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
+
 .viewButton {
   color: var(--accent);
-  background: #f4f3fe;
-  border-color: #dedcf6;
+  background: var(--indigo-50);
+  border-color: var(--indigo-100);
 }
+
 .viewButton:hover,
 .viewButton:focus-visible {
   color: #fff;
   background: var(--accent);
   border-color: var(--accent);
 }
+
 .cancelButton {
   color: #b13a55;
   background: #fff5f7;
   border-color: #f0d5dd;
   cursor: pointer;
 }
+
 .cancelButton:hover,
 .cancelButton:focus-visible {
   color: #fff;
   background: #b13a55;
   border-color: #b13a55;
+}
+
+.cancelButton:disabled,
+.cancelButton:disabled:hover {
+  color: #aaaac0;
+  background: #f4f4f8;
+  border-color: #e4e4ec;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1100px) {
+  .requestContent {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name status"
+      "date status"
+      "reason status";
+  }
 }

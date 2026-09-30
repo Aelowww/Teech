@@ -8,12 +8,12 @@
   flex-direction: column;
 }
 .info {
-  margin: 18px 0;
+  margin: 20px 0;
   padding: 14px;
   display: grid;
   gap: 10px;
   color: #5f607b;
   background: #f7f6fd;
   border-radius: 13px;
-  font-size: 10px;
+  font-size: 14px;
 }
