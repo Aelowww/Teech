@@ -93,9 +93,6 @@ export default function Page() {
   const pending = upcoming.filter((request) => request.status === "pending");
   const confirmed = upcoming.filter((request) => request.status === "confirmed");
   const nextConsultation = confirmed[0];
-  const summary = pending.length
-    ? `${pending.length} ${pending.length === 1 ? "request needs" : "requests need"} your response`
-    : confirmed.length ? `${confirmed.length} upcoming ${confirmed.length === 1 ? "consultation" : "consultations"}` : "You're all caught up";
   const pendingItems = pending.slice(0, pendingPreviewLimit).map((request) => ({
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
@@ -116,12 +113,15 @@ export default function Page() {
       <header className={styles.header}>
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
-          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>        </div>
+          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong></div>
+        </div>
         <div className={styles.presence}>
           <PresenceSelect value={presence} onChange={(next) => void changePresence(next)} />
           {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
         </div>
       </header>
+
+      <FactCard role="faculty" />
 
       <div className={styles.layout}>
         <div className={styles.main}>
@@ -145,8 +145,6 @@ export default function Page() {
             actionLabel={pending.length ? "View requests" : "Manage availability"}
           />
         )}
-
-        <FactCard role="faculty" />
 
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>
@@ -187,7 +185,6 @@ export default function Page() {
 
 function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
-function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();
