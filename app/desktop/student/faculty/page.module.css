@@ -407,3 +407,32 @@ a.row:focus-visible {
     transform: none;
   }
 }
+
+/* Clickable card: shared hover lift and press (tokens in globals.css). */
+a.row {
+  transition:
+    transform var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease),
+    background-color var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  a.row:hover {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+}
+
+a.row:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: var(--motion-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.row:hover,
+  a.row:active {
+    transform: none;
+  }
+}

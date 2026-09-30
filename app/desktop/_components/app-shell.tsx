@@ -59,7 +59,7 @@ export function AppShell({
 
         <nav className={styles.nav} aria-label="Main navigation">
           {navItems[role].map(({ key, label, href, icon }) => (
-            <Link key={key} href={href} className={`${styles.navItem} ${active === key ? styles.navActive : ""}`} aria-current={active === key ? "page" : undefined}>
+            <Link key={key} href={href} className={`${styles.navItem} ${active === key ? styles.navActive : ""}`} aria-current={active === key ? "page" : undefined} title={label}>
               <NavIcon name={icon} filled={active === key} size={19} />
               <span>{label}</span>
             </Link>

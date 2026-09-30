@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, UsersRound } from "lucide-react";
+import { ChevronRight, Plus, UsersRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
 import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
@@ -92,6 +92,12 @@ export default function Page() {
     .sort((first, second) => `${first.preferred_date}T${first.preferred_time}`.localeCompare(`${second.preferred_date}T${second.preferred_time}`));
   const nextAppointment = confirmed[0];
   const fullName = profile?.full_name || "Student";
+  const closedCount = appointments.filter((appointment) => appointment.status === "declined" || appointment.status === "cancelled").length;
+  const overview = [
+    { label: "Pending", count: pendingAppointments.length, tone: styles.dotPending, href: "/student/appointment-requests?status=pending" },
+    { label: "Confirmed", count: confirmed.length, tone: styles.dotConfirmed, href: "/student/appointment-requests?status=confirmed" },
+    { label: "Closed", count: closedCount, tone: styles.dotClosed, href: "/student/appointment-requests?status=closed" },
+  ];
   const pendingItems = pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => ({
     title: appointment.faculty_name || "Faculty",
     description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
@@ -128,47 +134,64 @@ export default function Page() {
           </Link>
         </header>
 
-        <div className={styles.top}>
-          {nextAppointment ? (
-            <UpNextCard
-              eyebrow="Up next"
-              title={nextAppointment.faculty_name || "Faculty consultation"}
-              date={nextAppointment.preferred_date}
-              meta={[formatTime(nextAppointment.preferred_time), nextAppointment.meeting_location || "Location to be confirmed"]}
-              href={`/student/appointment-requests/${nextAppointment.id}`}
-              actionLabel="View details"
-              avatar={facultyPhotos.get(nextAppointment.faculty_profile_id) ?? null}
-            />
-          ) : (
-            <SpotlightCard
-              muted
-              eyebrow="No upcoming consultation"
-              title="Book a consultation"
-              details={[{ icon: <UsersRound size={15} />, text: facultyCount === 1 ? "1 faculty member has open dates" : `${facultyCount} faculty members have open dates` }]}
-              href="/student/faculty"
-              actionLabel="Find faculty"
-            />
-          )}
-          <LoginStreakCard role="student" />
+        <div className={styles.layout}>
+          <div className={styles.main}>
+            {nextAppointment ? (
+              <UpNextCard
+                eyebrow="Up next"
+                title={nextAppointment.faculty_name || "Faculty consultation"}
+                date={nextAppointment.preferred_date}
+                meta={[formatTime(nextAppointment.preferred_time), nextAppointment.meeting_location || "Location to be confirmed"]}
+                href={`/student/appointment-requests/${nextAppointment.id}`}
+                actionLabel="View details"
+                avatar={facultyPhotos.get(nextAppointment.faculty_profile_id) ?? null}
+              />
+            ) : (
+              <SpotlightCard
+                muted
+                eyebrow="No upcoming consultation"
+                title="Book a consultation"
+                details={[{ icon: <UsersRound size={15} />, text: facultyCount === 1 ? "1 faculty member has open dates" : `${facultyCount} faculty members have open dates` }]}
+                href="/student/faculty"
+                actionLabel="Find faculty"
+              />
+            )}
+
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>
+                Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
+                {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
+              </h2>
+              {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+            </section>
+
+            {upcomingItems.length > 0 && (
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>
+                  Upcoming consultations
+                  {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>}
+                </h2>
+                <CardList items={upcomingItems} />
+              </section>
+            )}
+          </div>
+
+          <aside className={styles.rail}>
+            <LoginStreakCard role="student" />
+            <section className={styles.overview} aria-label="Your requests">
+              <h2>Your requests</h2>
+              <div className={styles.overviewList}>
+                {overview.map(({ label, count, tone, href }) => (
+                  <Link className={styles.overviewRow} href={href} key={label}>
+                    <span><i className={tone} aria-hidden="true" />{label}</span>
+                    <b>{count}</b>
+                  </Link>
+                ))}
+              </div>
+              <Link className={styles.overviewAll} href="/student/appointment-requests">View all requests<ChevronRight size={15} /></Link>
+            </section>
+          </aside>
         </div>
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>
-            Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
-            {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
-          </h2>
-          {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
-        </section>
-
-        {upcomingItems.length > 0 && (
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>
-              Upcoming consultations
-              {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>}
-            </h2>
-            <CardList items={upcomingItems} />
-          </section>
-        )}
       </div>
     </AppShell>
   );

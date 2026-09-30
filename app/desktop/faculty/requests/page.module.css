@@ -17,7 +17,7 @@
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 18px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
 }
 
 .requestCard:hover {
@@ -123,7 +123,7 @@
   border: 1px solid #c6edda;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background var(--motion) var(--ease), color var(--motion) var(--ease);
 }
 
 .actions button:hover {

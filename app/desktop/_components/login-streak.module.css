@@ -363,3 +363,23 @@
   margin: 0 -14px;
   padding: 14px;
 }
+
+/* Keep every day column the same height so the letters line up. */
+.days button {
+  position: relative;
+  grid-template-rows: auto 14px auto;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.days em {
+  min-height: 14px;
+  line-height: 14px;
+}
+
+.days .daySelected::after {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  margin: 0 0 0 -2px;
+}

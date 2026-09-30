@@ -135,7 +135,7 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: background var(--motion) var(--ease), color var(--motion) var(--ease), transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
 }
 
 .action:hover {
@@ -190,7 +190,7 @@
   background: #f8f8fc;
   border: 1px solid #dcdce9;
   border-radius: 14px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease), background var(--motion) var(--ease);
 }
 
 .inputWrap:focus-within {
@@ -439,7 +439,7 @@
   border: 1px solid #e6e7f3;
   border-radius: 18px;
   box-shadow: var(--shadow, none);
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--motion) var(--ease), transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
 }
 
 a.listCard:hover {
@@ -627,7 +627,7 @@ a.listCard:hover {
   font: inherit;
   font-size: 15px;
   cursor: pointer;
-  transition: background 0.12s ease;
+  transition: background var(--motion) var(--ease);
 }
 
 button.day:hover {
@@ -695,7 +695,7 @@ button.daySelected:hover {
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color var(--motion) var(--ease), background var(--motion) var(--ease);
 }
 
 .timeToggle:hover {
@@ -1358,6 +1358,45 @@ button.day:active,
   .upNext:hover,
   .upNext:active,
   .upNext:hover .upNextGo svg {
+    transform: none;
+  }
+}
+
+/* Clickable card: shared hover lift and press (tokens in globals.css). */
+a.listCard,
+.spotlight,
+.upNext {
+  transition:
+    transform var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease),
+    background-color var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  a.listCard:hover,
+  .spotlight:hover,
+  .upNext:hover {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+}
+
+a.listCard:active,
+.spotlight:active,
+.upNext:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: var(--motion-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.listCard:hover,
+  .spotlight:hover,
+  .upNext:hover,
+  a.listCard:active,
+  .spotlight:active,
+  .upNext:active {
     transform: none;
   }
 }
