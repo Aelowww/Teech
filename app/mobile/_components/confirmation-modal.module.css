@@ -5,108 +5,150 @@
   padding: 20px;
   display: grid;
   place-items: center;
-  background: rgba(32, 33, 63, 0.48);
+  background: rgba(32, 33, 63, 0.32);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: fadeIn 200ms ease both;
 }
+
 .dialog {
-  width: min(100%, 344px);
-  padding: 23px 20px 20px;
-  position: relative;
-  color: #28294a;
+  width: min(100%, 340px);
+  padding: 28px 22px 22px;
+  color: var(--ink, #28294a);
   background: #fff;
-  border: 1px solid #e1e0ef;
-  border-radius: 12px;
-  box-shadow: 0 20px 48px rgba(31, 31, 57, 0.24);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(31, 31, 57, 0.2);
   text-align: center;
   font-family: "DM Sans", Arial, sans-serif;
+  animation: dialogIn 280ms var(--button-ease, cubic-bezier(0.2, 0.8, 0.2, 1)) both;
 }
+
 .icon {
-  width: 45px;
-  height: 45px;
-  margin: 0 auto 12px;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
   display: grid;
   place-items: center;
-  color: #514c9a;
-  background: #eeedfa;
+  color: var(--accent, #7772c9);
+  background: var(--accent-pale, #f1f0fc);
   border-radius: 50%;
 }
-.iconDanger {
-  color: #b5394b;
-  background: #fff0f1;
+
+.danger .icon {
+  color: #c2413b;
+  background: #fdeeec;
 }
-.close {
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: grid;
-  place-items: center;
-  color: #77788f;
-  background: transparent;
-  border: 0;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.close:hover,
-.close:focus-visible {
-  color: #514c9a;
-  background: #f4f3fb;
-}
-.close:disabled {
-  cursor: wait;
-  opacity: 0.5;
-}
+
 .dialog h2 {
   margin: 0;
-  font-size: 17px;
-  line-height: 1.25;
+  color: var(--ink, #28294a);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  text-transform: none;
 }
+
 .dialog > p {
+  max-width: 260px;
   margin: 8px auto 0;
-  color: #77788f;
-  font-size: 11px;
+  color: var(--muted, #6f7090);
+  font-size: 13px;
   line-height: 1.55;
 }
+
+/* ---------- Type-to-confirm (delete account) ---------- */
+
 .confirmationField {
-  margin-top: 15px;
+  margin-top: 18px;
   display: grid;
-  gap: 6px;
-  color: #77788f;
-  font-size: 10px;
-  font-weight: 600;
+  gap: 8px;
+  color: var(--muted, #6f7090);
+  font-size: 12px;
   text-align: left;
 }
+
+.confirmationField b {
+  color: var(--ink, #28294a);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .confirmationField input {
   width: 100%;
-  min-height: 42px;
-  padding: 0 11px;
-  color: #28294a;
-  background: #f8f8fc;
-  border: 1px solid #dcdce9;
-  border-radius: 8px;
-  font: inherit;
-  font-size: 12px;
+  min-height: 46px;
+  padding: 0 14px;
+  color: var(--ink, #28294a);
+  background: #fff;
+  border: 1px solid #e7e6f1;
+  border-radius: 12px;
   outline: 0;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
+
 .confirmationField input:focus {
-  border-color: #7772c9;
-  box-shadow: 0 0 0 3px #eeedfa;
+  border-color: #c2413b;
+  box-shadow: 0 0 0 3px rgba(194, 65, 59, 0.12);
 }
-.error {
-  margin-top: 10px !important;
-  color: #b5394b !important;
+
+.dialog > .error {
+  margin-top: 12px;
+  color: #c2413b;
+  font-size: 12px;
 }
+
+/* ---------- Actions ---------- */
+
 .actions {
-  margin-top: 19px;
+  margin-top: 24px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
+  gap: 10px;
 }
+
+/* Cancel is the quiet choice: plain grey, no border. */
+.actions .cancel {
+  color: #4a4b6a;
+  background: #f4f4f8;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) {
+  .actions .cancel:hover {
+    background: #ebebf2;
+  }
+}
+
 /* Destructive confirmations use solid red instead of the purple gradient. */
 .actions .confirmDanger {
   background: #c94658;
   border-color: #c94658;
-  box-shadow: 0 3px 8px rgba(201, 70, 88, 0.22);
+  box-shadow: 0 3px 8px rgba(201, 70, 88, 0.2);
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .dialog {
+    animation: none;
+  }
+}

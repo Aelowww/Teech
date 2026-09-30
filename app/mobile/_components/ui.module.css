@@ -944,103 +944,116 @@ a.listCard:active {
 }
 
 /* Up next: white card with a calendar tile, matching the other Home cards. */
+/* ---------- Up Next: soft lavender card, relative-day chip, one tidy row of details ---------- */
+
 .upNext {
-  padding: 14px 14px 14px 12px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  position: relative;
+  padding: 16px 16px 16px 18px;
+  display: grid;
+  gap: 4px;
   color: var(--ink);
-  background: #fff;
-  border: 1px solid #ebe9f5;
-  border-radius: 16px;
-  box-shadow: 0 1px 2px rgba(40, 41, 74, 0.04);
+  background: linear-gradient(135deg, #f5f4fe 0%, #efeefb 100%);
+  border-radius: 18px;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
   transition:
     transform 220ms var(--button-ease),
-    border-color 220ms var(--button-ease),
     box-shadow 220ms var(--button-ease);
 }
 
-.upNextDate {
-  width: 52px;
-  height: 56px;
-  flex: 0 0 auto;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 1px;
-  background: var(--accent-pale);
-  border-radius: 12px;
+.upNextTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.upNextDate small {
+.upNextTop small {
   color: var(--accent);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.upNextDate strong {
+.upNextTop em {
+  padding: 3px 9px;
   color: var(--accent-dark);
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1;
+  background: #fff;
+  border-radius: 999px;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
 }
 
-.upNextBody {
-  min-width: 0;
-  flex: 1;
-  display: grid;
-  gap: 2px;
+.upNextTop .upNextToday {
+  color: #fff;
+  background: var(--accent);
 }
 
-.upNextBody small {
-  color: var(--accent);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.upNextBody strong {
+.upNextTitle {
   overflow: hidden;
-  font-size: 15px;
+  padding-right: 44px;
+  font-size: 18px;
   font-weight: 700;
+  letter-spacing: -0.01em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.upNextBody span {
-  overflow: hidden;
-  color: var(--muted);
+.upNextMeta {
+  margin-top: 6px;
+  padding-right: 44px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  color: #5d5e7e;
   font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.upNextChevron {
+.upNextMeta span {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.upNextMeta svg {
   flex: 0 0 auto;
-  color: #c2c1d4;
+  color: var(--accent);
+}
+
+/* Round arrow, bottom right. */
+.upNextGo {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 50%;
   transition:
-    color 220ms var(--button-ease),
-    transform 220ms var(--button-ease);
+    transform 220ms var(--button-ease),
+    background-color 220ms var(--button-ease);
 }
 
 @media (hover: hover) {
   .upNext:hover {
+    box-shadow: 0 8px 20px rgba(81, 76, 154, 0.12);
     transform: translateY(-1px);
-    border-color: #d9d6f2;
-    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.08);
   }
 
-  .upNext:hover .upNextChevron {
-    color: var(--accent);
+  .upNext:hover .upNextGo {
+    background: var(--accent-dark);
     transform: translateX(2px);
   }
 }
 
 .upNext:active {
-  transform: scale(0.99);
+  transform: scale(0.985);
 }
 
 .upNext:focus-visible {
@@ -1050,13 +1063,13 @@ a.listCard:active {
 
 @media (prefers-reduced-motion: reduce) {
   .upNext,
-  .upNextChevron {
+  .upNextGo {
     transition: none;
   }
 
   .upNext:hover,
   .upNext:active,
-  .upNext:hover .upNextChevron {
+  .upNext:hover .upNextGo {
     transform: none;
   }
 }
