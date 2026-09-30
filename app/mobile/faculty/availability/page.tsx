@@ -6,6 +6,7 @@ import { MonthCalendar, MobileLayout, Notice, PageHeading } from "@/app/mobile/_
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
 type Availability = { id: string; available_date: string; start_time: string; end_time: string; meeting_location: string | null };
@@ -111,7 +112,7 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         {savedCount > 0 && <Notice>{savedCount} {savedCount === 1 ? "date has" : "dates have"} been saved.</Notice>}
         <div className={styles.saveArea}>
-          <button className={styles.saveButton} type="button" onClick={savedCount > 0 ? () => router.push("/faculty/calendar") : saveAvailability} disabled={saving || (!selectedDates.length && savedCount === 0)}>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={savedCount > 0 ? () => router.push("/faculty/calendar") : saveAvailability} disabled={saving || (!selectedDates.length && savedCount === 0)}>
             {saving ? "Saving..." : savedCount > 0 ? "View Calendar" : "Save Selected Dates"}
           </button>
         </div>

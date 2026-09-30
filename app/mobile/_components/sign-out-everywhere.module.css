@@ -1,0 +1,130 @@
+.section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f2f1f8;
+}
+
+.section h2 {
+  margin: 0 0 4px;
+  color: #a9a8bd;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.row {
+  width: calc(100% + 16px);
+  margin: 0 -8px;
+  padding: 12px 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 200ms var(--button-ease);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: #a9a8bd;
+  transition: color 220ms var(--button-ease);
+}
+
+.icon > * {
+  fill: currentColor;
+  fill-opacity: 0;
+  transition:
+    fill-opacity 220ms var(--button-ease),
+    stroke 220ms var(--button-ease);
+}
+
+.row:active .icon > * {
+  fill-opacity: 1;
+}
+
+.row:active .icon > rect {
+  stroke: #fff;
+}
+
+@media (hover: hover) {
+  .row:hover .icon > * {
+    fill-opacity: 1;
+  }
+
+  .row:hover .icon > rect {
+    stroke: #fff;
+  }
+}
+
+.row > span {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+
+.row strong {
+  color: #b13a55;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.chevron {
+  flex: 0 0 auto;
+  color: #c9c8d8;
+  transition:
+    color 220ms var(--button-ease),
+    transform 220ms var(--button-ease);
+}
+
+.row:active {
+  background: #fff5f7;
+}
+
+.row:active .icon {
+  color: #b13a55;
+}
+
+@media (hover: hover) {
+  .row:hover .icon {
+    color: #b13a55;
+  }
+
+  .row:hover .chevron {
+    color: #b13a55;
+    transform: translateX(3px);
+  }
+}
+
+.row:focus-visible {
+  outline: 3px solid rgba(177, 58, 85, 0.3);
+  outline-offset: -3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .icon,
+  .icon > *,
+  .chevron {
+    transition: none;
+  }
+
+  .row:hover .chevron {
+    transform: none;
+  }
+}

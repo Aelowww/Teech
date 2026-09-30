@@ -8,6 +8,7 @@ import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { isPastSlotToday, slotsFor } from "@/lib/time-slots";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
 type Availability = { available_date: string; start_time: string; end_time: string; meeting_location: string | null };
@@ -117,7 +118,7 @@ export default function Page() {
           </aside>
         )}
         {draft?.facultyId && !error && availableDates.length === 0 && <p className={styles.emptyState}>This faculty member has not published any upcoming dates.</p>}
-        <button className={styles.continueButton} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue</button>
+        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.continueButton}`} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue</button>
       </div>
     </MobileLayout>
   );

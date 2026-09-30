@@ -1,5 +1,6 @@
-import { MobileLayout, ActionButtons, tagline } from "@/app/mobile/_components/ui";
+import { MobileLayout, tagline } from "@/app/mobile/_components/ui";
 import { WritingLogo } from "@/app/mobile/_components/writing-logo";
+import { CtaLink } from "@/app/mobile/_components/cta-link";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -9,7 +10,9 @@ export default function Page() {
         <div className={styles.splash}>
           <WritingLogo>
             <p className={styles.tagline}>{tagline}</p>
-            <ActionButtons actions={[{ label: "Get started", href: "/welcome" }]} primaryLabel="Get started" />
+            <div className={styles.cta}>
+              <CtaLink href="/welcome">Get started</CtaLink>
+            </div>
           </WritingLogo>
         </div>
       </div>

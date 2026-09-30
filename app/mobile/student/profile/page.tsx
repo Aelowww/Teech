@@ -1,12 +1,7 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Award, ChevronRight, FileText, KeyRound, ShieldCheck, ShieldQuestion, UserRound } from "lucide-react";
-import { MobileLayout, PageHeading, ProfilePhoto } from "@/app/mobile/_components/ui";
+import { MobileLayout } from "@/app/mobile/_components/ui";
+import { ProfileOverview } from "@/app/mobile/_components/profile-overview";
 import { signedAvatarUrl } from "@/lib/avatar";
-import { ShowcasedBadges } from "@/app/mobile/_components/showcased-badges";
-import { SignOutButton } from "@/app/mobile/_components/sign-out-button";
-import { DeleteAccountButton } from "@/app/mobile/_components/delete-account-button";
-import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./page.module.css";
 
@@ -34,25 +29,7 @@ export default async function Page() {
 
   return (
     <MobileLayout className={styles.screen} role="student" activeNav="profile">
-      <div className={styles.page}>
-        <PageHeading title="My Profile" />
-        <div className={styles.identity}>
-          <ProfilePhoto src={photoUrl} />
-          <strong>{profile.full_name}</strong>
-          <ShowcasedBadges badges={showcasedBadges} />
-        </div>
-        <section className={styles.actionList} aria-label="Profile settings">
-          <Link className={styles.settingLink} href="/student/profile/info"><span><UserRound size={15} />Personal Information</span><ChevronRight size={16} /></Link>
-          <Link className={styles.settingLink} href="/student/profile/badges"><span><Award size={15} />Badges</span><ChevronRight size={16} /></Link>
-          <Link className={styles.settingLink} href="/student/profile/password"><span><KeyRound size={15} />Change Password</span><ChevronRight size={16} /></Link>
-          <Link className={styles.settingLink} href="/student/profile/security"><span><ShieldQuestion size={15} />Account Recovery</span><ChevronRight size={16} /></Link>
-          <SupportChat audience="student" variant="row" className={styles.settingLink} />
-          <Link className={styles.settingLink} href="/student/profile/privacy"><span><ShieldCheck size={15} />Privacy Policy</span><ChevronRight size={16} /></Link>
-          <Link className={styles.settingLink} href="/student/profile/terms"><span><FileText size={15} />Terms of Service</span><ChevronRight size={16} /></Link>
-          <DeleteAccountButton role="student" className={styles.settingLink} />
-        </section>
-        <div className={styles.signOut}><SignOutButton redirectTo="/welcome" /></div>
-      </div>
+      <ProfileOverview role="student" name={profile.full_name} avatarPath={profile.avatar_path} photoUrl={photoUrl} badges={showcasedBadges} />
     </MobileLayout>
   );
 }

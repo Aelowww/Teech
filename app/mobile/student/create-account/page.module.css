@@ -46,21 +46,6 @@
   font-weight: 700;
 }
 .submitButton {
-  width: 100%;
-  min-height: 56px;
   margin-top: auto;
   margin-bottom: 8px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.submitButton:disabled {
-  cursor: wait;
-  opacity: 0.65;
 }

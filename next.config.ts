@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["savorous-an-bilineate.ngrok-free.dev"],
+  allowedDevOrigins: ["*.ngrok-free.dev"],
   turbopack: {
     root: process.cwd(),
   },

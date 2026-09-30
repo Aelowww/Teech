@@ -1,22 +1,36 @@
 .cancelButton {
-  width: 100%;
-  min-height: 46px;
   margin-bottom: 10px;
+}
+
+.quiet {
+  min-height: 40px;
+  padding: 0 14px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 7px;
   color: #b13a55;
-  background: #fff5f7;
-  border: 1px solid #f0d5dd;
+  background: none;
+  border: 0;
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 200ms var(--button-ease);
 }
-.cancelButton:hover,
-.cancelButton:focus-visible {
-  color: #fff;
-  background: #b13a55;
-  border-color: #b13a55;
+
+@media (hover: hover) {
+  .quiet:hover {
+    background: #fdeef1;
+  }
+}
+
+.quiet:active {
+  background: #fbe1e7;
+}
+
+.quiet:focus-visible {
+  outline: 3px solid rgba(177, 58, 85, 0.3);
+  outline-offset: 2px;
 }

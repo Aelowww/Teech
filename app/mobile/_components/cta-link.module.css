@@ -1,0 +1,138 @@
+.button {
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  min-height: var(--button-height);
+  padding: 0 6px 0 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+  background: linear-gradient(135deg, #7c77cf 0%, #5a54a6 100%);
+  border-radius: 999px;
+  box-shadow:
+    0 10px 24px rgba(81, 75, 145, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  letter-spacing: 0.2px;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out);
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  transition:
+    transform 240ms var(--ease-out),
+    background-color 240ms var(--ease-out);
+}
+
+.fullWidth {
+  width: 100%;
+  min-height: var(--button-height);
+  padding: 0 10px;
+  justify-content: space-between;
+  font-size: var(--button-font-size);
+}
+
+.fullWidth .label {
+  flex: 1;
+  margin-left: 32px;
+  text-align: center;
+}
+
+.fullWidth .icon {
+  width: 32px;
+  height: 32px;
+}
+
+@media (hover: hover) {
+  .button:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 32px rgba(81, 75, 145, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .button:hover .icon {
+    transform: translateX(3px);
+    background: rgba(255, 255, 255, 0.28);
+  }
+}
+
+.button:active,
+.pressed {
+  transform: scale(0.96);
+  box-shadow:
+    0 5px 12px rgba(81, 75, 145, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition-duration: 100ms;
+}
+
+.pressed .icon {
+  animation: launch 320ms var(--ease-out) forwards;
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.45);
+  outline-offset: 3px;
+}
+
+.ripple {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  z-index: -1;
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.18) 45%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 600ms var(--ease-out) forwards;
+}
+
+@keyframes ripple {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes launch {
+  40% {
+    transform: translateX(6px);
+    background: rgba(255, 255, 255, 0.32);
+  }
+  100% {
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .icon {
+    transition: none;
+  }
+
+  .button:hover,
+  .button:hover .icon {
+    transform: none;
+  }
+}

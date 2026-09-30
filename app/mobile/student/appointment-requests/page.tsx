@@ -4,11 +4,10 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Ban, CalendarPlus, CheckCircle2, Eye, UserRound } from "lucide-react";
+import { CalendarPlus, CheckCircle2, ChevronRight, UserRound } from "lucide-react";
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
-import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
-import { facultyAvatarUrls } from "@/lib/avatar";
+import { avatarBucket } from "@/lib/avatar";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import { matchesTab, parseTab, RequestTabs, type RequestTab } from "@/app/mobile/_components/request-tabs";
@@ -16,7 +15,7 @@ import styles from "./page.module.css";
 
 type Appointment = {
   id: string;
-  faculty_profile_id: string;
+  faculty_profile_id: string | null;
   faculty_name: string | null;
   preferred_date: string;
   preferred_time: string;
@@ -37,9 +36,8 @@ function RequestsPage() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<RequestTab>(() => parseTab(searchParams.get("status")));
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [facultyPhotos, setFacultyPhotos] = useState<Map<string, string>>(() => new Map());
   const [error, setError] = useState("");
-  const [cancellingId, setCancellingId] = useState("");
+  const [photos, setPhotos] = useState<Map<string, string>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -73,8 +71,8 @@ function RequestsPage() {
       if (!active) return;
       if (requestError) setError(requestError.message);
       else setAppointments(data as Appointment[] || []);
-      if (data?.length) void facultyAvatarUrls(supabase, (data as Appointment[]).map((appointment) => appointment.faculty_profile_id)).then((urls) => { if (active) setFacultyPhotos(urls); });
       setIsLoading(false);
+      if (data?.length) void loadPhotos(supabase, data as Appointment[]);
 
       channel = supabase
         .channel(`student-requests-${profile.id}`)
@@ -91,6 +89,22 @@ function RequestsPage() {
         )
         .subscribe();
     }
+    async function loadPhotos(supabase: ReturnType<typeof createClient>, rows: Appointment[]) {
+      const facultyIds = [...new Set(rows.map((row) => row.faculty_profile_id).filter((id): id is string => Boolean(id)))];
+      if (!facultyIds.length) return;
+      const { data: faculty } = await supabase.from("profiles").select("id, avatar_path").in("id", facultyIds).not("avatar_path", "is", null);
+      const withPhotos = (faculty || []) as { id: string; avatar_path: string }[];
+      if (!withPhotos.length) return;
+      const { data: signed } = await supabase.storage.from(avatarBucket).createSignedUrls(withPhotos.map((profile) => profile.avatar_path), 60 * 60);
+      const urlByPath = new Map((signed || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
+      const next = new Map<string, string>();
+      for (const profile of withPhotos) {
+        const url = urlByPath.get(profile.avatar_path);
+        if (url) next.set(profile.id, url);
+      }
+      if (active) setPhotos(next);
+    }
+
     void loadAppointments();
     return () => {
       active = false;
@@ -103,20 +117,6 @@ function RequestsPage() {
 
   if (isLoading) return <AppLoader />;
 
-  async function cancelRequest(id: string) {
-    const { data: cancelled, error: cancelError } = await createClient()
-      .from("appointment_requests")
-      .update({ status: "cancelled" })
-      .eq("id", id)
-      .in("status", ["pending", "confirmed"])
-      .select("id");
-    if (cancelError) return cancelError.message;
-    if (!cancelled?.length) return "This request can no longer be cancelled.";
-    setAppointments((current) => current.map((appointment) => appointment.id === id ? { ...appointment, status: "cancelled" } : appointment));
-  }
-
-  const cancellingAppointment = appointments.find((appointment) => appointment.id === cancellingId);
-
   return (
     <MobileLayout className={styles.screen} backTo="/student/home" role="student" activeNav="requests">
       <div className={styles.page}>
@@ -125,21 +125,32 @@ function RequestsPage() {
         {error && <Notice error>{error}</Notice>}
         {filteredAppointments.length > 0 ? (
           <div className={styles.requests}>
-            {list.visible.map((appointment) => (
-              <article className={styles.requestCard} key={appointment.id}>
-                <div className={styles.requestIcon} aria-label="Faculty profile">{facultyPhotos.get(appointment.faculty_profile_id) ? <Image className={styles.requestImage} src={facultyPhotos.get(appointment.faculty_profile_id) as string} alt="" fill sizes="48px" unoptimized /> : <UserRound size={18} />}</div>
-                <div className={styles.requestContent}>
-                  <strong>{appointment.faculty_name || "Faculty"}</strong>
-                  <span>{formatDate(appointment.preferred_date)} at {formatTime(appointment.preferred_time)}</span>
-                  <small>{appointment.reason}</small>
-                  <em className={styles[`status${capitalize(appointment.status)}`]}>{appointment.status === "pending" && isPastDate(appointment.preferred_date) ? "expired" : appointment.status}</em>
-                </div>
-                <div className={styles.cardActions}>
-                  <Link className={styles.viewButton} href={`/student/appointment-requests/${appointment.id}`}><Eye size={14} /><span>View</span></Link>
-                  <button type="button" className={styles.cancelButton} onClick={() => setCancellingId(appointment.id)} disabled={appointment.status !== "pending" && appointment.status !== "confirmed"}><Ban size={12} />Cancel</button>
-                </div>
-              </article>
-            ))}
+            <ul className={styles.list}>
+              {list.visible.map((appointment) => {
+                const status = appointment.status === "pending" && isPastDate(appointment.preferred_date) ? "expired" : appointment.status;
+                const date = new Date(`${appointment.preferred_date}T00:00:00`);
+                const photo = appointment.faculty_profile_id ? photos.get(appointment.faculty_profile_id) : undefined;
+                const closed = status !== "pending" && status !== "confirmed";
+                return (
+                  <li key={appointment.id}>
+                    <Link className={`${styles.row} ${closed ? styles.rowClosed : ""}`} href={`/student/appointment-requests/${appointment.id}`}>
+                      <span className={styles.avatar} aria-hidden="true">
+                        {photo
+                          ? <Image src={photo} alt="" fill sizes="44px" unoptimized />
+                          : <UserRound size={20} />}
+                      </span>
+                      <span className={styles.info}>
+                        <strong>{appointment.faculty_name || "Faculty"}</strong>
+                        <span>{date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} · {formatTime(appointment.preferred_time)}</span>
+                        <small>{appointment.reason}</small>
+                      </span>
+                      <em className={`${styles.status} ${styles[status]}`}>{status}</em>
+                      <ChevronRight className={styles.chevron} size={16} aria-hidden="true" />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
             <ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} />
           </div>
         ) : tab === "pending"
@@ -150,21 +161,12 @@ function RequestsPage() {
               ? <EmptyState icon={<CheckCircle2 size={30} />} title="Nothing closed yet" description="Declined and cancelled requests will show up here." />
               : <EmptyState icon={<CalendarPlus size={30} />} title="No consultations yet" description="Stuck on a lesson, project, or thesis? Book a one-on-one consultation with a faculty member." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
       </div>
-      <ConfirmationModal open={Boolean(cancellingId)} title="Cancel consultation?" description={cancellingAppointment?.status === "confirmed" ? "This will cancel your confirmed consultation and notify the faculty member." : "This will cancel your pending consultation request and notify the faculty member."} confirmLabel="Cancel Consultation" tone="danger" onCancel={() => setCancellingId("")} onConfirm={() => cancelRequest(cancellingId)} />
     </MobileLayout>
   );
 }
 
-function formatDate(value: string) {
-  return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-}
-
 function formatTime(value: string) {
   return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-}
-
-function capitalize(value: string) {
-  return `${value[0].toUpperCase()}${value.slice(1)}` as "Pending" | "Confirmed" | "Declined" | "Cancelled";
 }
 
 function isPastDate(value: string) {

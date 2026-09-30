@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Pencil } from "lucide-react";
-import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
+import { GraduationCap, IdCard, UserRound } from "lucide-react";
+import { MobileLayout } from "@/app/mobile/_components/ui";
+import { PersonalInfo } from "@/app/mobile/_components/personal-info";
 import { createClient } from "@/lib/supabase/server";
 import styles from "../page.module.css";
 
@@ -12,27 +12,21 @@ export default async function Page() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, student_number, course_year, role, avatar_path")
+    .select("full_name, student_number, course_year, role")
     .eq("auth_user_id", user.id)
     .maybeSingle();
   if (!profile || profile.role !== "student") redirect("/student/sign-in");
 
   return (
     <MobileLayout className={styles.screen} backTo="/student/profile" role="student" activeNav="profile">
-      <div className={styles.page}>
-        <PageHeading title="Personal Information" subtitle="The details shown in your portal." />
-        <section className={styles.informationCard}>
-          <div className={styles.informationHeader}>
-            <h2>Your Details</h2>
-            <Link className={styles.editLink} href="/student/profile/edit"><Pencil size={14} />Edit</Link>
-          </div>
-          <dl className={styles.details}>
-            <div><dt>Full Name</dt><dd>{profile.full_name || "Not set"}</dd></div>
-            <div><dt>Student ID</dt><dd>{profile.student_number || "Not set"}</dd></div>
-            <div><dt>Course and Year</dt><dd>{profile.course_year || "Not set"}</dd></div>
-          </dl>
-        </section>
-      </div>
+      <PersonalInfo
+        editHref="/student/profile/edit"
+        fields={[
+          { icon: UserRound, label: "Full Name", value: profile.full_name },
+          { icon: IdCard, label: "Student ID", value: profile.student_number },
+          { icon: GraduationCap, label: "Course and Year", value: profile.course_year },
+        ]}
+      />
     </MobileLayout>
   );
 }

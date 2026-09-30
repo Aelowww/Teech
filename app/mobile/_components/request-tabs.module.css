@@ -1,51 +1,113 @@
 .tabs {
-  margin: 14px 0 4px;
-  padding: 4px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 4px;
-  background: #f4f3fb;
-  border-radius: 12px;
+  margin: 14px 0 6px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid #efeef6;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tabs button {
-  min-height: 34px;
-  padding: 0 4px;
+  position: relative;
+  flex: 0 0 auto;
+  padding: 10px 0 11px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  color: #77788f;
+  gap: 5px;
+  color: #8a8aa2;
   background: none;
   border: 0;
-  border-radius: 9px;
   font: inherit;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms var(--button-ease);
+}
+
+.tabs button::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transition: transform 260ms var(--button-ease);
 }
 
 .tabs button span {
-  min-width: 16px;
-  padding: 1px 4px;
-  color: #77788f;
-  background: #e7e6f1;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-grid;
+  place-items: center;
+  color: #9d9cb4;
+  background: #f3f3f8;
   border-radius: 999px;
-  font-size: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition:
+    color 200ms var(--button-ease),
+    background-color 200ms var(--button-ease);
 }
 
 .tabs .active {
-  color: #514c9a;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(81, 76, 154, 0.12);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.tabs .active::after {
+  transform: scaleX(1);
 }
 
 .tabs .active span {
-  color: #fff;
-  background: #7772c9;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+}
+
+@media (hover: hover) {
+  .tabs button:not(.active):hover {
+    color: #4a4b6a;
+  }
+
+  .tabs button:not(.active):hover::after {
+    background: #dcdbea;
+    transform: scaleX(1);
+  }
 }
 
 .tabs button:focus-visible {
   outline: 3px solid rgba(119, 114, 201, 0.35);
-  outline-offset: 1px;
+  outline-offset: -3px;
+  border-radius: 6px;
+}
+
+@media (max-width: 374px) {
+  .tabs button {
+    font-size: 12px;
+  }
+
+  .tabs button span {
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs button,
+  .tabs button::after,
+  .tabs button span {
+    transition: none;
+  }
 }

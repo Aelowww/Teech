@@ -21,3 +21,39 @@
   font-size: 12px;
   letter-spacing: 1px;
 }
+
+.cta {
+  margin: 24px 0 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.cta a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  translate: -120% 0;
+  pointer-events: none;
+}
+
+[data-playing] .cta a::after {
+  animation: shimmer 3.6s ease-in-out calc(var(--written) + 1400ms) infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    translate: -120% 0;
+  }
+  35%,
+  100% {
+    translate: 120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-playing] .cta a::after {
+    animation: none;
+  }
+}
