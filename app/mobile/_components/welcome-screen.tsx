@@ -1,42 +1,38 @@
-"use client";
-
 import Link from "next/link";
-import { BriefcaseBusiness, GraduationCap } from "lucide-react";
-import { useEffect, useSyncExternalStore } from "react";
-import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
+import { BriefcaseBusiness, ChevronRight, GraduationCap } from "lucide-react";
+import { BrandLogo, MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
 import styles from "@/app/mobile/welcome/page.module.css";
 
-const welcomeVisitKey = "teech-welcome-seen";
-
-function subscribe() {
-  return () => {};
-}
-
-function getVisitStatus() {
-  return window.localStorage.getItem(welcomeVisitKey) === "true";
-}
+const portals = [
+  {
+    href: "/student/sign-in",
+    title: "I am a student",
+    Icon: GraduationCap,
+  },
+  {
+    href: "/faculty/sign-in",
+    title: "I am a faculty",
+    Icon: BriefcaseBusiness,
+  },
+];
 
 export function WelcomeScreen() {
-  const hasVisited = useSyncExternalStore(subscribe, getVisitStatus, () => false);
-
-  useEffect(() => {
-    window.localStorage.setItem(welcomeVisitKey, "true");
-  }, []);
-
   return (
     <MobileLayout className={styles.screen}>
       <div className={styles.page}>
         <div className={styles.welcome}>
           <div className={styles.circle} />
-          <PageHeading
-            title={hasVisited ? "Welcome back." : "Welcome."}
-            subtitle={hasVisited ? "Choose your portal to continue." : "Tell us who is joining, so we can set things up right away."}
-            display
-          />
-          <div className={styles.roles}>
-            <Link className={styles.roleLink} href="/student/sign-in"><GraduationCap size={18} /><span>{hasVisited ? "Student Portal" : "I'm a student"}</span></Link>
-            <Link className={styles.roleLink} href="/faculty/sign-in"><BriefcaseBusiness size={18} /><span>Faculty Portal</span></Link>
-          </div>
+          <div className={styles.brand}><BrandLogo /></div>
+          <PageHeading title={"Who's signing in?"} subtitle="Choose your role to continue." />
+          <nav className={styles.roles} aria-label="Choose a portal">
+            {portals.map(({ href, title, Icon }) => (
+              <Link className={styles.roleCard} href={href} key={href}>
+                <span className={styles.roleIcon}><Icon size={20} /></span>
+                <strong className={styles.roleTitle}>{title}</strong>
+                <ChevronRight className={styles.roleArrow} size={18} />
+              </Link>
+            ))}
+          </nav>
           <div className={styles.circleBottom} />
         </div>
       </div>

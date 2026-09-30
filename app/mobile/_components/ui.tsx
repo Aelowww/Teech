@@ -38,6 +38,7 @@ export type CardItem = {
   description: string;
   status?: string;
   href?: string;
+  imageUrl?: string | null;
 };
 
 export function MobileLayout({
@@ -147,6 +148,8 @@ export function FormField({
   required = false,
   readOnly = false,
   maxLength,
+  inputMode,
+  pattern,
 }: {
   label: string;
   placeholder: string;
@@ -157,6 +160,8 @@ export function FormField({
   required?: boolean;
   readOnly?: boolean;
   maxLength?: number;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  pattern?: string;
 }) {
   const labelLower = label.toLowerCase();
   const Icon = labelLower.includes("mail") || labelLower.includes("email")
@@ -183,6 +188,8 @@ export function FormField({
           required={required}
           readOnly={readOnly}
           maxLength={maxLength}
+          inputMode={inputMode}
+          pattern={pattern}
         />
       </div>
     </label>
@@ -201,15 +208,20 @@ export function Notice({ children, error = false }: { children: React.ReactNode;
 export function EmptyState({
   title,
   description,
+  icon,
+  action,
 }: {
   title: string;
   description: string;
+  icon?: React.ReactNode;
+  action?: { label: string; href: string };
 }) {
   return (
     <section className={styles.emptyState}>
-      <Inbox size={28} aria-hidden="true" />
+      {icon ? <span className={styles.emptyIcon} aria-hidden="true">{icon}</span> : <Inbox size={28} aria-hidden="true" />}
       <strong>{title}</strong>
       <p>{description}</p>
+      {action && <Link className={styles.emptyAction} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
     </section>
   );
 }
@@ -246,7 +258,7 @@ export function CardList({ items }: { items: CardItem[] }) {
     <div className={styles.list}>
       {items.map((item) => {
         const card = <>
-          <span className={styles.itemAvatar}><UserRound size={18} /></span>
+          <span className={styles.itemAvatar}>{item.imageUrl ? <Image className={styles.avatarImage} src={item.imageUrl} alt="" fill sizes="35px" unoptimized /> : <UserRound size={18} />}</span>
           <div>
             <strong>{item.title}</strong>
             <small>{item.description}</small>
@@ -479,5 +491,24 @@ export function SpotlightCard({
       {details.length > 0 && <ul>{details.map(({ icon, text }) => <li key={text}>{icon}<span>{text}</span></li>)}</ul>}
       <span className={styles.spotlightAction}>{actionLabel}<ChevronRight size={14} /></span>
     </Link>
+  );
+}
+
+export const tagline = "Teach within your reach";
+
+export function BrandHeader() {
+  return (
+    <div className={styles.brandHeader}>
+      <h1>Welcome to <BrandLogo /></h1>
+      <p>&ldquo;{tagline}&rdquo;</p>
+    </div>
+  );
+}
+
+export function FormCard({ children }: { children: React.ReactNode }) {
+  return (
+    <section className={styles.formCard}>
+      {children}
+    </section>
   );
 }

@@ -5,16 +5,18 @@ import { useRouter } from "next/navigation";
 import { MonitorSmartphone } from "lucide-react";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import { clearAppointmentDraft } from "@/lib/local-appointments";
 import styles from "./profile-settings.module.css";
 
-export function SignOutEverywhere({ role }: { role: "student" | "faculty" }) {
+export function SignOutEverywhere() {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
 
   async function signOutEverywhere() {
     const { error } = await createClient().auth.signOut({ scope: "global" });
     if (error) return error.message;
-    router.replace(`/${role}/sign-in`);
+    clearAppointmentDraft();
+    router.replace("/welcome");
     router.refresh();
   }
 

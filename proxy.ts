@@ -16,7 +16,6 @@ import { forcedLayout, layoutCookie, type Layout } from "@/lib/layout";
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // The layout folders are internal; always use the shared public URL.
   const layoutPrefix = pathname.match(/^\/(mobile|desktop)(?=\/|$)/);
   if (layoutPrefix) {
     return NextResponse.redirect(new URL(pathname.slice(layoutPrefix[0].length) || "/", request.url));
@@ -52,17 +51,30 @@ export async function proxy(request: NextRequest) {
   const portal = privatePortal(pathname);
   if (portal && !data?.claims) return redirectTo(`/${portal}/sign-in`);
 
-  // Signed-in users skip the splash and sign-in screens. The role claim only
-  // picks the destination; each page still verifies the role from the database.
   const role = (data?.claims?.user_metadata as { role?: string } | undefined)?.role;
-  if (data?.claims && (role === "student" || role === "faculty") && entryPages.has(pathname)) {
-    return redirectTo(`/${role}/home`);
+  const previewingSplash = pathname === "/splash" && request.nextUrl.searchParams.has("preview");
+  if (data?.claims && (role === "student" || role === "faculty") && entryPages.has(pathname) && !previewingSplash) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) return redirectTo(`/${role}/home`);
+    await supabase.auth.signOut({ scope: "local" });
   }
-  if (pathname === "/") return redirectTo("/splash");
-  return serveLayout(request, response);
+  const returning = request.cookies.has(visitedCookie);
+  if (pathname === "/") return redirectTo(returning ? "/welcome" : "/splash");
+  if (pathname === "/splash" && returning && !previewingSplash) return redirectTo("/welcome");
+
+  const page = serveLayout(request, response);
+  if (!returning) {
+    page.cookies.set(visitedCookie, "1", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: request.nextUrl.protocol === "https:",
+      maxAge: 60 * 60 * 24 * 365,
+      path: "/",
+    });
+  }
+  return page;
 }
 
-// Rewrites a page request to the mobile or desktop folder for this device.
 function serveLayout(request: NextRequest, response: NextResponse) {
   const pathname = request.nextUrl.pathname;
   if (sharedPaths.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)) || pathname.startsWith("/_") || pathname.startsWith("/.")) {
@@ -81,14 +93,14 @@ function serveLayout(request: NextRequest, response: NextResponse) {
   return rewrite;
 }
 
-// Carries refreshed Supabase session cookies over to a new response.
 function withCookies(target: NextResponse, source: NextResponse) {
   source.cookies.getAll().forEach((cookie) => target.cookies.set(cookie));
   return target;
 }
 
-// Routes that live at the app root and are shared by both layouts.
 const sharedPaths = ["/auth", "/api"];
+
+const visitedCookie = "teech_visited";
 
 const entryPages = new Set(["/", "/splash", "/welcome", "/student/sign-in", "/faculty/sign-in"]);
 
@@ -100,7 +112,6 @@ const publicPortalPages = new Set([
   "password-reset",
 ]);
 
-// Returns the portal a signed-out visitor must sign in to, or null for public pages.
 function privatePortal(pathname: string) {
   const [, portal, page] = pathname.split("/");
   if (portal !== "student" && portal !== "faculty") return null;

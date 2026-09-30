@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { MobileLayout, Notice, PageHeading, FormField } from "@/app/mobile/_components/ui";
+import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { createClient } from "@/lib/supabase/client";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
+import { SupportChat } from "@/app/mobile/_components/support-chat";
 import styles from "./page.module.css";
 
 type SignUpForm = {
@@ -76,7 +77,8 @@ export default function Page() {
   return (
     <MobileLayout className={styles.screen} backTo="/faculty/sign-in">
       <form className={styles.page} onSubmit={handleSubmit}>
-        <PageHeading title="Create Account" subtitle="Fill in your information to get started." />
+        <BrandHeader />
+        <FormCard>
         <div className={styles.form}>
           <FormField label="Full Name" name="fullName" value={form.fullName} onChange={updateField("fullName")} placeholder="Enter your full name" required />
           <FormField label="Faculty ID" name="facultyNumber" value={form.facultyNumber} onChange={updateField("facultyNumber")} placeholder="Enter your faculty ID" required />
@@ -93,6 +95,8 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Creating Account..." : "Create Account"}</button>
         <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign In</Link></p>
+      </FormCard>
+      <SupportChat audience="guest" variant="link" />
       </form>
     </MobileLayout>
   );

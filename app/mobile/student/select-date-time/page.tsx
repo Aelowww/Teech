@@ -7,9 +7,9 @@ import { MobileLayout, Notice, PageHeading, AvailabilitySlots } from "@/app/mobi
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { slotsFor } from "@/lib/time-slots";
 import styles from "./page.module.css";
 
-const timeSlots = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
 
 export default function Page() {
   const router = useRouter();
@@ -55,10 +55,7 @@ export default function Page() {
           .filter((slot) => slot.preferred_date === storedDraft.preferredDate)
           .map((slot) => slot.preferred_time.slice(0, 5)),
       );
-      const times = timeSlots.filter((time) =>
-        availabilityResult.data?.some((slot) => isWithinAvailability(time, slot.start_time, slot.end_time))
-        && !isPastTimeToday(storedDraft.preferredDate, time),
-      );
+      const times = slotsFor(availabilityResult.data || []).filter((time) => !isPastTimeToday(storedDraft.preferredDate, time));
       const unavailable = times.filter((time) => bookedTimes.has(toDatabaseTime(time)));
       const locations = times.reduce<Record<string, string>>((current, time) => {
         const matchingAvailability = availabilityResult.data?.find((slot) => isWithinAvailability(time, slot.start_time, slot.end_time));

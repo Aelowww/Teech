@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { MobileLayout, Notice, PageHeading, FormField } from "@/app/mobile/_components/ui";
+import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./page.module.css";
@@ -55,15 +55,17 @@ export default function Page() {
   return (
     <MobileLayout className={styles.screen} backTo="/welcome">
       <form className={styles.page} onSubmit={handleSubmit}>
-        <PageHeading title="Sign In" subtitle="Welcome back! Please enter your credentials." />
+        <BrandHeader />
+        <FormCard>
         <div className={styles.form}>
-          <FormField label="School Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@school.edu" type="email" required />
+          <FormField label="Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@school.edu" type="email" required />
           <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
           <Link className={styles.inlineLink} href="/faculty/forgot-password">Forgot Password?</Link>
         </div>
         {error && <Notice error>{error}</Notice>}
         <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Signing In..." : "Sign In"}</button>
         <p className={styles.formNote}>Don&apos;t have an account? <Link href="/faculty/create-account">Sign Up</Link></p>
+      </FormCard>
       </form>
     </MobileLayout>
   );

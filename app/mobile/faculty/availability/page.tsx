@@ -23,6 +23,7 @@ export default function Page() {
   const [saving, setSaving] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
+  const [bookedOnRemovedDates, setBookedOnRemovedDates] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const savedSelectedDates = useMemo(() => selectedDates.filter((date) => availability.some((slot) => slot.available_date === date)), [availability, selectedDates]);
 
@@ -55,6 +56,7 @@ export default function Page() {
 
   async function saveAvailability() {
     if (!facultyId || !selectedDates.length) { setError("Select one or more dates on the calendar first."); return; }
+    if (!meetingLocation.trim()) { setError("Add a meeting room or location so students know where to go."); return; }
     if (endTime <= startTime) { setError("End time must be after start time."); return; }
     setError("");
     setSaving(true);
@@ -67,6 +69,17 @@ export default function Page() {
     setAvailability((current) => [...current.filter((slot) => !selectedDates.includes(slot.available_date)), ...((data || []) as Availability[])].sort((a, b) => a.available_date.localeCompare(b.available_date)));
     setSavedCount(selectedDates.length);
     setSelectedDates([]);
+  }
+
+  async function startRemoval() {
+    const { count } = await createClient()
+      .from("appointment_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("faculty_profile_id", facultyId)
+      .in("preferred_date", savedSelectedDates)
+      .in("status", ["pending", "confirmed"]);
+    setBookedOnRemovedDates(count || 0);
+    setConfirmingRemoval(true);
   }
 
   async function removeAvailability() {
@@ -92,8 +105,8 @@ export default function Page() {
             <label>Start time<input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} disabled={!selectedDates.length} /></label>
             <label>End time<input type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} disabled={!selectedDates.length} /></label>
           </div>
-          <label className={styles.location}>Meeting room or location<input value={meetingLocation} onChange={(event) => setMeetingLocation(event.target.value)} placeholder="e.g. Faculty Office, Room 21" disabled={!selectedDates.length} /></label>
-          {savedSelectedDates.length > 0 && <button className={styles.removeButton} type="button" onClick={() => setConfirmingRemoval(true)} disabled={saving}>Make {savedSelectedDates.length === 1 ? "selected date" : "selected dates"} unavailable</button>}
+          <label className={styles.location}>Meeting room or location <span className={styles.required}>(required)</span><input required value={meetingLocation} onChange={(event) => setMeetingLocation(event.target.value)} placeholder="e.g. Faculty Office, Room 21" disabled={!selectedDates.length} /></label>
+          {savedSelectedDates.length > 0 && <button className={styles.removeButton} type="button" onClick={startRemoval} disabled={saving}>Make {savedSelectedDates.length === 1 ? "selected date" : "selected dates"} unavailable</button>}
         </section>
         {error && <Notice error>{error}</Notice>}
         {savedCount > 0 && <Notice>{savedCount} {savedCount === 1 ? "date has" : "dates have"} been saved.</Notice>}
@@ -103,7 +116,7 @@ export default function Page() {
           </button>
         </div>
       </div>
-      <ConfirmationModal open={confirmingRemoval} title="Remove availability?" description={`The selected ${savedSelectedDates.length === 1 ? "date will" : "dates will"} no longer be available for students to request.`} confirmLabel="Remove Dates" tone="danger" onCancel={() => setConfirmingRemoval(false)} onConfirm={removeAvailability} />
+      <ConfirmationModal open={confirmingRemoval} title="Remove availability?" description={`The selected ${savedSelectedDates.length === 1 ? "date will" : "dates will"} no longer be available for students to request.${bookedOnRemovedDates ? ` ${bookedOnRemovedDates} ${bookedOnRemovedDates === 1 ? "consultation is" : "consultations are"} already booked on ${savedSelectedDates.length === 1 ? "this date" : "these dates"} and will stay booked. Cancel or decline them from Requests if you can't attend.` : ""}`} confirmLabel="Remove Dates" tone="danger" onCancel={() => setConfirmingRemoval(false)} onConfirm={removeAvailability} />
     </MobileLayout>
   );
 }
