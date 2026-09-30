@@ -19,7 +19,7 @@ import styles from "./page.module.css";
 type Profile = { id: string; full_name: string; avatar_path: string | null; course_year: string | null };
 type Appointment = { id: string; faculty_profile_id: string; faculty_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
-const pendingPreviewLimit = 3;
+const pendingPreviewLimit = 1;
 
 export default function Page() {
   const router = useRouter();
