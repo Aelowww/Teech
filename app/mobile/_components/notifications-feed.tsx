@@ -5,7 +5,7 @@ import { Award, Ban, Bell, CalendarCheck, CheckCheck, CalendarX, ChevronRight, H
 import { useEffect, useState } from "react";
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { NotificationsSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import styles from "./notifications-feed.module.css";
 
@@ -84,7 +84,7 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
 
   const list = useShowMore(notifications, 6);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <NotificationsSkeleton role={role} />;
 
   const unreadCount = notifications.filter((notification) => !notification.is_read).length;
   const groups = groupByDay(list.visible);

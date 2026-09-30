@@ -9,7 +9,7 @@ import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { StudentHomeSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { createClient } from "@/lib/supabase/client";
 import { facultyAvatarUrls, signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
@@ -81,7 +81,7 @@ export default function Page() {
     };
   }, [router]);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <StudentHomeSkeleton />;
 
   const now = localDateTimeValue();
   const upcoming = appointments.filter((appointment) => `${appointment.preferred_date}T${appointment.preferred_time}` >= now);

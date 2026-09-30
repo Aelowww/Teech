@@ -6,7 +6,7 @@ import { CalendarDays, Clock3, MapPin } from "lucide-react";
 import { MobileLayout, Notice, PageHeading, AvailabilitySlots } from "@/app/mobile/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { SelectTimeSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { slotsFor } from "@/lib/time-slots";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
@@ -82,7 +82,7 @@ export default function Page() {
     return () => { active = false; };
   }, [router]);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <SelectTimeSkeleton />;
 
   function selectTime(preferredTime: string) {
     const updatedDraft = { ...(draft || getAppointmentDraft()), preferredTime, meetingLocation: locationsByTime[preferredTime] || "" };

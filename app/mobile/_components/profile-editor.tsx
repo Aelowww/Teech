@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { FormField, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { AvatarUploader } from "@/app/mobile/_components/avatar-uploader";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { ProfileEditSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./profile-settings.module.css";
@@ -58,7 +58,7 @@ export function ProfileEditor({ role }: { role: Role }) {
     return () => { active = false; };
   }, [role, router, signInPath]);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <ProfileEditSkeleton role={role} />;
 
   async function saveProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

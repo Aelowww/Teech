@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Mail } from "lucide-react";
 import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { FacultySecuritySkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
 import { createClient } from "@/lib/supabase/client";
 import styles from "@/app/mobile/_components/profile-settings.module.css";
@@ -28,7 +28,7 @@ export default function Page() {
     return () => { active = false; };
   }, [router]);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <FacultySecuritySkeleton />;
 
   return (
     <MobileLayout className={styles.screen} backTo="/faculty/profile" role="faculty" activeNav="profile">

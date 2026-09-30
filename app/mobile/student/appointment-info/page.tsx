@@ -11,7 +11,7 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { AppointmentInfoSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -54,7 +54,7 @@ export default function Page() {
     return () => { active = false; };
   }, []);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <AppointmentInfoSkeleton />;
 
   function updateField(field: keyof AppointmentDraft) {
     return (event: ChangeEvent<HTMLInputElement>) => {

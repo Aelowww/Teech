@@ -6,7 +6,7 @@ import { ChevronDown, Info, ShieldAlert, ShieldCheck } from "lucide-react";
 import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { StudentSecuritySkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "@/app/mobile/_components/profile-settings.module.css";
@@ -53,7 +53,7 @@ export default function Page() {
     return () => { active = false; };
   }, [router]);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <StudentSecuritySkeleton />;
 
   function updateAt(list: string[], index: number, value: string) {
     return list.map((item, itemIndex) => itemIndex === index ? value : item);

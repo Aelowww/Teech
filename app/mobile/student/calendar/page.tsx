@@ -6,7 +6,7 @@ import { MapPin } from "lucide-react";
 import { MobileLayout, Notice, PageHeading, MonthCalendar } from "@/app/mobile/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { StudentCalendarSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { isPastSlotToday, slotsFor } from "@/lib/time-slots";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
@@ -75,7 +75,7 @@ export default function Page() {
     return () => { active = false; window.clearTimeout(loadDraft); };
   }, []);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <StudentCalendarSkeleton />;
 
   function selectDate(preferredDate: string) {
     if (!availableDates.includes(preferredDate)) return;

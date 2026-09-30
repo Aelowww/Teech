@@ -9,7 +9,7 @@ import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { FacultyHomeSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { createClient } from "@/lib/supabase/client";
 import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
@@ -75,7 +75,7 @@ export default function Page() {
     };
   }, [router]);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <FacultyHomeSkeleton />;
 
   async function changePresence(next: PresenceStatus) {
     if (!profile || next === presence) return;

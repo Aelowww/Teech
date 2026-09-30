@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Check, ChevronRight, Coins, Flame, Gift, Snowflake } from "lucide-react";
+import { Bone, TextBone, skeletonStyles } from "@/app/mobile/_components/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./login-streak.module.css";
 
@@ -53,7 +54,7 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   }, []);
 
   if (failed) return null;
-  if (!streak) return <div className={`${styles.card} ${styles.loading}`} aria-hidden="true" />;
+  if (!streak) return <LoginStreakSkeleton />;
 
   const today = new Date();
   const todayValue = dateValue(today);
@@ -128,6 +129,35 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
         <ChevronRight size={14} />
       </Link>
     </section>
+  );
+}
+
+export function LoginStreakSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden="true">
+      <div className={styles.summary}>
+        <Bone height={40} round />
+        <div>
+          <TextBone size={15} width={110} />
+          <TextBone size={11} width={170} />
+        </div>
+        <Bone width={62} height={30} pill />
+      </div>
+      <div className={skeletonStyles.week}>
+        {Array.from({ length: 7 }, (_, index) => (
+          <div key={index}>
+            <Bone height={26} round />
+            <TextBone size={10} width={16} />
+            <TextBone size={10} width={10} />
+          </div>
+        ))}
+      </div>
+      <Bone width="100%" height={34} radius={12} style={{ marginTop: -4 }} />
+      <div className={skeletonStyles.exchange}>
+        <Bone height={14} round />
+        <TextBone size={12} width={104} />
+      </div>
+    </div>
   );
 }
 

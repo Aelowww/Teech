@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { MonthCalendar, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { AvailabilitySkeleton } from "@/app/mobile/_components/screen-skeletons";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -47,7 +47,7 @@ export default function Page() {
     return () => { active = false; };
   }, [router]);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <AvailabilitySkeleton />;
 
   function selectDate(date: string) {
     setError("");
