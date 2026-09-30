@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { CalendarPlus, CheckCircle2, ChevronRight, UserRound } from "lucide-react";
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { avatarBucket } from "@/lib/avatar";
 import { StudentRequestsSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
@@ -75,7 +76,7 @@ function RequestsPage() {
       if (data?.length) void loadPhotos(supabase, data as Appointment[]);
 
       channel = supabase
-        .channel(`student-requests-${profile.id}`)
+        .channel(uniqueChannelName(`student-requests-${profile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `student_profile_id=eq.${profile.id}` },

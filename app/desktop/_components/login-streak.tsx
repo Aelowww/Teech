@@ -29,6 +29,7 @@ type StreakRow = {
 export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   const [streak, setStreak] = useState<Streak | null>(null);
   const [failed, setFailed] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(() => dateValue(new Date()));
 
   useEffect(() => {
     let active = true;
@@ -55,6 +56,7 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   if (!streak) return <div className={`${styles.card} ${styles.loading}`} aria-hidden="true" />;
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const todayValue = dateValue(today);
   const monday = new Date(today);
   monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
@@ -75,11 +77,12 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
     };
   });
   const tomorrowReward = streak.upcomingRewards[0];
+  const selectedDetail = days.find((day) => day.value === selectedDay) || days.find((day) => day.isToday);
 
   return (
     <section className={styles.card} aria-label="Login streak">
       <div className={styles.summary}>
-        <span className={styles.flame}><Flame size={22} /></span>
+        <span className={styles.flame}><Flame size={20} /></span>
         <div>
           <strong>{streak.current} day{streak.current === 1 ? "" : "s"} streak</strong>
           <small>
@@ -87,27 +90,61 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
             {streak.freezes > 0 && <span className={styles.freezes}><Snowflake size={10} />{streak.freezes}</span>}
           </small>
         </div>
-        <span className={styles.points}><Coins size={16} /><b>{streak.points}</b><small>pts</small></span>
+        <Link className={styles.points} href={`/${role}/points`} aria-label={`${streak.points} points. View and exchange points`}>
+          <Coins size={14} /><b>{streak.points}</b><small>pts</small>
+        </Link>
       </div>
       <div className={styles.days}>
-        {days.map(({ value, label, active, frozen, isToday, isFuture, points }) => (
-          <div key={value} className={isFuture ? styles.dayFuture : ""} aria-label={`${value}${active ? ", checked in" : frozen ? ", covered by a streak freeze" : ""}${points ? `, ${points} points` : ""}`}>
-            <span className={`${active ? styles.dayActive : ""} ${frozen ? styles.dayFrozen : ""} ${isToday ? styles.dayToday : ""}`}>
-              {active && <Check size={15} strokeWidth={3} />}
-              {frozen && <Snowflake size={15} strokeWidth={2.5} />}
-            </span>
-            <em>{points ? `+${points}` : " "}</em>
-            <small>{label}</small>
-          </div>
-        ))}
+        {days.map((day) => {
+          const { value, label, active, frozen, isToday, isFuture, points } = day;
+          const selected = value === selectedDay;
+          return (
+            <button
+              key={value}
+              type="button"
+              className={`${isFuture ? styles.dayFuture : ""} ${selected ? styles.daySelected : ""}`}
+              aria-pressed={selected}
+              aria-label={`${dayName(value, isToday)}: ${dayStatus(day)}`}
+              onClick={() => setSelectedDay(value)}
+            >
+              <span className={`${active ? styles.dayActive : ""} ${frozen ? styles.dayFrozen : ""} ${isToday ? styles.dayToday : ""}`}>
+                {active && <Check size={11} strokeWidth={3} />}
+                {frozen && <Snowflake size={11} strokeWidth={2.5} />}
+              </span>
+              <em>{points ? `+${points}` : " "}</em>
+              <small>{label}</small>
+            </button>
+          );
+        })}
       </div>
+      {selectedDetail && (
+        <p className={styles.dayDetail} aria-live="polite" key={selectedDetail.value}>
+          <strong>{dayName(selectedDetail.value, selectedDetail.isToday)}</strong>
+          <span>{dayStatus(selectedDetail)}</span>
+        </p>
+      )}
       <Link className={styles.exchange} href={`/${role}/points`}>
-        <Gift size={18} />
+        <Gift size={14} />
         <span>Exchange points</span>
-        <ChevronRight size={18} />
+        <ChevronRight size={14} />
       </Link>
     </section>
   );
+}
+
+type StreakDay = { active: boolean; frozen: boolean; isToday: boolean; isFuture: boolean; points?: number };
+
+function dayName(value: string, isToday: boolean) {
+  if (isToday) return "Today";
+  return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+}
+
+function dayStatus({ active, frozen, isToday, isFuture, points }: StreakDay) {
+  if (active) return points ? `Checked in · earned +${points} pts` : "Checked in";
+  if (frozen) return "Covered by a streak freeze";
+  if (isFuture) return points ? `Check in to earn +${points} pts` : "Check in to keep your streak";
+  if (isToday) return "Not checked in yet";
+  return "Missed";
 }
 
 function dateValue(date: Date) {

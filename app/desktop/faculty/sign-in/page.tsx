@@ -5,7 +5,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Notice, FormField } from "@/app/desktop/_components/ui";
 import { PasswordField } from "@/app/desktop/_components/password-field";
-import { AuthFrame } from "@/app/desktop/_components/auth-frame";
+import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
 import { createClient } from "@/lib/supabase/client";
 import styles from "@/app/desktop/_components/auth.module.css";
 
@@ -58,11 +58,11 @@ export default function Page() {
       <div className={styles.form}>
         <FormField label="Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@school.edu" type="email" required />
         <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
-        <Link className={styles.inlineLink} href="/faculty/forgot-password">Forgot Password?</Link>
+        <Link className={styles.inlineLink} href="/faculty/forgot-password">Forgot password?</Link>
       </div>
       {error && <Notice error>{error}</Notice>}
-      <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Signing In..." : "Sign In"}</button>
-      <p className={styles.formNote}>Don&apos;t have an account? <Link href="/faculty/create-account">Sign Up</Link></p>
+      <AuthSubmit label="Sign in" pendingLabel="Signing in…" pending={submitting} />
+      <p className={styles.formNote}>Don&apos;t have an account? <Link href="/faculty/create-account">Sign up</Link></p>
     </AuthFrame>
   );
 }

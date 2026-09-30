@@ -45,7 +45,7 @@
   border: 1px solid var(--tone-line);
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background var(--motion) var(--ease), color var(--motion) var(--ease);
 }
 
 .triggerOpen {

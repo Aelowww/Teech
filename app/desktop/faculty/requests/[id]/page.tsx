@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { Ban, Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
+import type { CSSProperties } from "react";
+import { Ban, CalendarDays, Check, CheckCircle2, Clock3, FileText, Hash, MapPin, X, XCircle } from "lucide-react";
 import { redirect } from "next/navigation";
-import { DesktopLayout, PageHeading } from "@/app/desktop/_components/ui";
+import { DesktopLayout } from "@/app/desktop/_components/ui";
 import { RequestDecisionButtons } from "@/app/desktop/_components/request-decision-buttons";
 import { CancelAppointmentButton } from "@/app/desktop/_components/cancel-appointment-button";
 import { createClient } from "@/lib/supabase/server";
@@ -56,31 +57,83 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   return (
     <DesktopLayout className={styles.screen} backTo="/faculty/requests" role="faculty" activeNav="requests">
       <div className={styles.page}>
-        <aside className={styles.summary}>
-          <div className={styles.statusMark}><StatusIcon size={34} /></div>
-          <PageHeading title={copy.title} subtitle={copy.subtitle} />
-          <div className={styles.timeline} aria-label={`Request status: ${request.status}`}>
-            <div><span className={styles.complete}><Check size={13} /></span><small>Received</small></div>
-            <div><span className={request.status === "pending" ? styles.current : styles.complete}>{request.status === "pending" ? <Clock3 size={13} /> : <Check size={13} />}</span><small>Pending</small></div>
-            <div><span className={request.status === "confirmed" ? styles.complete : ""}>{request.status === "confirmed" ? <Check size={13} /> : <Building2 size={13} />}</span><small>Confirmed</small></div>
-          </div>
-          <div className={styles.summaryActions}>
-            {request.status === "pending" && <RequestDecisionButtons requestId={request.id} canConfirm={!expired} />}
-            {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}
-          </div>
+        <aside className={styles.statusCard}>
+          <header className={styles.hero}>
+            <span className={`${styles.statusMark} ${styles[request.status]}`}><StatusIcon size={26} aria-hidden="true" /></span>
+            <h1>{copy.title}</h1>
+            <p>{copy.subtitle}</p>
+          </header>
+
+          <StatusTimeline status={request.status} />
+
+          {(request.status === "pending" || request.status === "confirmed") && (
+            <div className={styles.actions}>
+              {request.status === "pending" && <RequestDecisionButtons requestId={request.id} canConfirm={!expired} />}
+              {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}
+            </div>
+          )}
         </aside>
-        <section className={styles.detailsCard}>
-          <header><span>Appointment ID</span><strong>{request.appointment_code || request.id}</strong></header>
-          <div className={styles.faculty}><span className={styles.initials}>{photoUrl ? <Image className={styles.initialsImage} src={photoUrl} alt="" fill sizes="56px" unoptimized /> : initialsFor(request.student_name)}</span><div><strong>{request.student_name || "Student"}</strong><small>{request.student_number ? `Student ID ${request.student_number}` : "Consultation request"}</small></div></div>
-          <dl>
-            <div><CalendarDays size={15} /><dt>When</dt><dd>{formatDate(request.preferred_date)} - {formatTime(request.preferred_time)}</dd></div>
-            <div><MapPin size={15} /><dt>Where</dt><dd>{request.meeting_location || "No location set"}</dd></div>
-            <div><CircleAlert size={15} /><dt>Status</dt><dd><span className={`${styles.statusPill} ${styles[`status${capitalize(request.status)}`]}`}>{capitalize(request.status)}</span></dd></div>
-          </dl>
-          <div className={styles.reason}><span>Reason</span><p>{request.reason}</p>{request.details && <small>{request.details}</small>}</div>
+
+        <section className={styles.infoCard}>
+        <div className={styles.faculty}>
+          <span className={styles.avatar}>
+            {photoUrl
+              ? <Image src={photoUrl} alt="" fill sizes="48px" unoptimized />
+              : initialsFor(request.student_name)}
+          </span>
+          <div>
+            <strong>{request.student_name || "Student"}</strong>
+            <small>{request.student_number ? `Student ID ${request.student_number}` : "Consultation request"}</small>
+          </div>
+        </div>
+
+        <dl className={styles.details}>
+          <div>
+            <dt><CalendarDays size={16} aria-hidden="true" />When</dt>
+            <dd>{formatDate(request.preferred_date)} · {formatTime(request.preferred_time)}</dd>
+          </div>
+          <div>
+            <dt><MapPin size={16} aria-hidden="true" />Where</dt>
+            <dd className={request.meeting_location ? "" : styles.muted}>{request.meeting_location || "No location set"}</dd>
+          </div>
+          <div className={styles.wide}>
+            <dt><FileText size={16} aria-hidden="true" />Reason</dt>
+            <dd>
+              {request.reason}
+              {request.details && <small>{request.details}</small>}
+            </dd>
+          </div>
+          <div>
+            <dt><Hash size={16} aria-hidden="true" />Reference</dt>
+            <dd className={styles.code}>{request.appointment_code || request.id}</dd>
+          </div>
+        </dl>
         </section>
       </div>
     </DesktopLayout>
+  );
+}
+
+function StatusTimeline({ status }: { status: AppointmentStatus }) {
+  const closed = status === "declined" || status === "cancelled";
+  const steps = [
+    { label: "Received", state: "done" },
+    { label: "Pending", state: status === "pending" ? "current" : "done" },
+    { label: closed ? capitalize(status) : "Confirmed", state: status === "confirmed" ? "done" : closed ? "stopped" : "next" },
+  ] as const;
+  const progress = status === "pending" ? 0.5 : 1;
+  return (
+    <ol className={styles.timeline} style={{ "--progress": progress } as CSSProperties} aria-label={`Request status: ${status}`}>
+      {steps.map((step) => (
+        <li key={step.label} className={styles[step.state]}>
+          <span>
+            {step.state === "done" && <Check size={12} strokeWidth={3} aria-hidden="true" />}
+            {step.state === "stopped" && <X size={12} strokeWidth={3} aria-hidden="true" />}
+          </span>
+          <small>{step.label}</small>
+        </li>
+      ))}
+    </ol>
   );
 }
 

@@ -9,35 +9,13 @@
   --radius: 20px;
   position: relative;
   min-height: 100dvh;
-  padding: 72px 32px 0;
+  padding: 72px 32px;
   display: grid;
-  grid-template-rows: 1fr auto;
-  justify-items: center;
-  align-items: center;
+  place-items: center;
   overflow: hidden;
   color: var(--ink);
   background: #fff;
   font-family: "DM Sans", Arial, sans-serif;
-}
-
-.circle,
-.circleBottom {
-  position: absolute;
-  width: clamp(360px, 34vw, 620px);
-  aspect-ratio: 1;
-  background: #e7e5f9;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.circle {
-  top: clamp(-260px, -14vw, -140px);
-  right: clamp(-220px, -10vw, -110px);
-}
-
-.circleBottom {
-  bottom: clamp(-300px, -16vw, -170px);
-  left: clamp(-240px, -11vw, -120px);
 }
 
 .back {
@@ -76,20 +54,6 @@
 
 .guestCard > [class] {
   min-width: 0;
-}
-
-.footer {
-  position: relative;
-  z-index: 1;
-  padding: 0 0 28px;
-  color: var(--muted);
-  font-size: 13px;
-  text-align: center;
-}
-
-.footer span {
-  margin: 0 8px;
-  color: #c4c4d6;
 }
 
 .shellContent > [class] {
@@ -171,7 +135,7 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: background var(--motion) var(--ease), color var(--motion) var(--ease), transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
 }
 
 .action:hover {
@@ -226,7 +190,7 @@
   background: #f8f8fc;
   border: 1px solid #dcdce9;
   border-radius: 14px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease), background var(--motion) var(--ease);
 }
 
 .inputWrap:focus-within {
@@ -475,7 +439,7 @@
   border: 1px solid #e6e7f3;
   border-radius: 18px;
   box-shadow: var(--shadow, none);
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--motion) var(--ease), transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
 }
 
 a.listCard:hover {
@@ -663,7 +627,7 @@ a.listCard:hover {
   font: inherit;
   font-size: 15px;
   cursor: pointer;
-  transition: background 0.12s ease;
+  transition: background var(--motion) var(--ease);
 }
 
 button.day:hover {
@@ -731,7 +695,7 @@ button.daySelected:hover {
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color var(--motion) var(--ease), background var(--motion) var(--ease);
 }
 
 .timeToggle:hover {
@@ -831,40 +795,40 @@ button.daySelected:hover {
 .spotlight {
   padding: 28px 30px;
   display: grid;
-  align-content: start;
+  align-content: center;
   gap: 10px;
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   border-radius: var(--radius, 20px);
-  box-shadow: 0 16px 36px rgba(81, 76, 154, 0.24);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 10px 28px rgba(81, 76, 154, 0.18);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .spotlightWithAvatar {
   position: relative;
-  padding-right: 170px;
+  padding-right: 150px;
 }
 
 .spotlightAvatar {
   position: absolute;
   top: 50%;
-  right: 34px;
-  width: 104px;
-  height: 104px;
+  right: 32px;
+  width: 88px;
+  height: 88px;
   display: grid;
   place-items: center;
   overflow: hidden;
   color: #fff;
   background: rgba(255, 255, 255, 0.18);
-  border: 4px solid rgba(255, 255, 255, 0.85);
+  border: 3px solid rgba(255, 255, 255, 0.85);
   border-radius: 50%;
-  box-shadow: 0 12px 28px rgba(28, 26, 70, 0.28);
+  box-shadow: 0 8px 20px rgba(28, 26, 70, 0.22);
   transform: translateY(-50%);
 }
 
 .spotlight:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 40px rgba(81, 76, 154, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px rgba(81, 76, 154, 0.24);
 }
 
 .spotlight small {
@@ -932,4 +896,657 @@ button.daySelected:hover {
 .spotlightMuted .spotlightAction {
   color: #fff;
   background: var(--accent);
+}
+
+.action,
+.emptyAction,
+.filters a,
+.calendarHeader button,
+.passwordToggle,
+.back {
+  transition:
+    transform 220ms var(--button-ease),
+    background-color 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+.listCard,
+.spotlight {
+  transition:
+    transform 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+.listCard > svg {
+  transition:
+    color 220ms var(--button-ease),
+    transform 220ms var(--button-ease);
+}
+
+.day,
+.timeToggle {
+  transition:
+    transform 220ms var(--button-ease),
+    background-color 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .action:hover {
+    background: #e9e7fa;
+    border-color: #d4d1f1;
+    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .actionPrimary:hover,
+  .emptyAction:hover {
+    background: var(--accent-dark);
+    border-color: transparent;
+    box-shadow: 0 8px 16px rgba(81, 75, 145, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .actionDanger:hover {
+    background: #ffecf0;
+    border-color: #e9bfcb;
+    box-shadow: 0 6px 14px rgba(177, 58, 85, 0.12);
+  }
+
+  a.listCard:hover {
+    border-color: #d9d6f2;
+    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.07);
+    transform: none;
+  }
+
+  a.listCard:hover > svg {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+
+  .filters a:not(.filterSelected):hover {
+    color: var(--accent-dark);
+    background: var(--accent-pale);
+    border-color: #d4d1f1;
+  }
+
+  .calendarHeader button:not(:disabled):hover {
+    background: #e9e7fa;
+    transform: translateY(-1px);
+  }
+
+  button.day:not(.daySelected):hover {
+    background: var(--accent-pale);
+    transform: translateY(-1px);
+  }
+
+  .timeToggle:hover {
+    border-color: #d4d1f1;
+    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.08);
+  }
+
+  .spotlight:hover {
+    transform: translateY(-1px);
+  }
+
+  .spotlightMuted:hover {
+    border-color: #d9d6f2;
+    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.07);
+  }
+}
+
+.action:active,
+.emptyAction:active {
+  transform: scale(0.98);
+  transition-duration: 100ms;
+}
+
+.actionPrimary:active,
+.emptyAction:active {
+  box-shadow: 0 2px 6px rgba(81, 75, 145, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+a.listCard:active,
+.spotlight:active {
+  transform: scale(0.99);
+  transition-duration: 100ms;
+}
+
+.filters a:active,
+.timeToggle:active {
+  transform: scale(0.97);
+  transition-duration: 100ms;
+}
+
+.calendarHeader button:not(:disabled):active,
+button.day:active,
+.passwordToggle:active,
+.back:active {
+  transform: scale(0.92);
+  transition-duration: 100ms;
+}
+
+.action:focus-visible,
+.emptyAction:focus-visible,
+.filters a:focus-visible,
+.listCard:focus-visible,
+.spotlight:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.4);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action,
+  .emptyAction,
+  .filters a,
+  .calendarHeader button,
+  .passwordToggle,
+  .back,
+  .listCard,
+  .listCard > svg,
+  .spotlight,
+  .day,
+  .timeToggle {
+    transition: none;
+  }
+
+  .action:hover,
+  .actionPrimary:hover,
+  .emptyAction:hover,
+  a.listCard:hover > svg,
+  .calendarHeader button:hover,
+  button.day:hover,
+  .spotlight:hover,
+  .action:active,
+  .emptyAction:active,
+  a.listCard:active,
+  .spotlight:active,
+  .filters a:active,
+  .timeToggle:active,
+  .calendarHeader button:active,
+  button.day:active,
+  .passwordToggle:active,
+  .back:active {
+    transform: none;
+  }
+}
+
+.statusPill {
+  margin-top: 6px;
+  padding: 3px 10px;
+  display: inline-block;
+  border-radius: 999px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.statusGood {
+  color: #15834a;
+  background: #e8f7ee;
+}
+
+.statusBad {
+  color: #a8671a;
+  background: #fff4e3;
+}
+
+.statusDanger {
+  color: #b13a55;
+  background: #fdeef1;
+}
+
+.listChevron {
+  flex: 0 0 auto;
+  color: #c2c1d4;
+  transition:
+    color 220ms var(--button-ease),
+    transform 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  a.listCard:hover .listChevron {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+}
+
+.avatarSmall {
+  width: 64px;
+  height: 64px;
+  border-width: 2px;
+}
+
+.emptyAction {
+  margin-top: 12px;
+}
+
+.upNext {
+  height: 100%;
+  padding: 22px 24px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 18px;
+  overflow: hidden;
+  color: var(--ink);
+  background: linear-gradient(135deg, #f5f4fe 0%, #efeefb 100%);
+  border: 1px solid #e6e4f8;
+  border-radius: var(--radius, 20px);
+  transition:
+    transform 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+.upNextTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.upNextTop small {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.upNextTop em {
+  padding: 4px 11px;
+  color: var(--accent-dark);
+  background: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.upNextTop .upNextToday {
+  color: #fff;
+  background: var(--accent);
+}
+
+.upNextBody {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.upNextAvatar {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--accent);
+  background: #fff;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(81, 76, 154, 0.14);
+}
+
+.upNextText {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 12px;
+}
+
+.upNextTitle {
+  overflow: hidden;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upNextMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.upNextMeta span {
+  min-width: 0;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #4a4b6a;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.upNextMeta svg {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+.upNextDate {
+  width: 84px;
+  flex: 0 0 auto;
+  padding: 10px 0 12px;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(81, 76, 154, 0.08);
+}
+
+.upNextDate small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.upNextDate small:first-child {
+  color: var(--accent);
+}
+
+.upNextDate strong {
+  color: var(--ink);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.upNextFooter {
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(119, 114, 201, 0.14);
+}
+
+.upNextHint {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+  color: #5d5e7e;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upNextHint svg {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+.upNextGo {
+  height: 40px;
+  padding: 0 14px 0 18px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 220ms var(--button-ease);
+}
+
+.upNextGo svg {
+  transition: transform 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .upNext:hover {
+    box-shadow: 0 8px 20px rgba(81, 76, 154, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .upNext:hover .upNextGo {
+    background: var(--accent-dark);
+  }
+
+  .upNext:hover .upNextGo svg {
+    transform: translateX(3px);
+  }
+}
+
+.upNext:active {
+  transform: scale(0.985);
+  transition-duration: 100ms;
+}
+
+.upNext:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .upNextDate {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .upNext,
+  .upNextGo,
+  .upNextGo svg {
+    transition: none;
+  }
+
+  .upNext:hover,
+  .upNext:active,
+  .upNext:hover .upNextGo svg {
+    transform: none;
+  }
+}
+
+a.listCard,
+.spotlight,
+.upNext {
+  transition:
+    transform var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease),
+    background-color var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  a.listCard:hover,
+  .spotlight:hover,
+  .upNext:hover {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+}
+
+a.listCard:active,
+.spotlight:active,
+.upNext:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: var(--motion-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.listCard:hover,
+  .spotlight:hover,
+  .upNext:hover,
+  a.listCard:active,
+  .spotlight:active,
+  .upNext:active {
+    transform: none;
+  }
+}
+
+.upNextTop .upNextToday {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.upNextTop .upNextToday::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  animation: livePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+  }
+
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .upNextTop .upNextToday::before {
+    animation: none;
+  }
+}
+
+.slotGroup {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.slotLabel {
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.slotLabel svg {
+  color: var(--accent);
+}
+
+.slotLabel span {
+  padding: 2px 8px;
+  color: var(--muted);
+  background: #f1f1f7;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.timeToggle {
+  position: relative;
+  min-height: 48px;
+  padding: 0 14px;
+  justify-content: center;
+  gap: 8px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition:
+    transform var(--motion) var(--ease),
+    color var(--motion) var(--ease),
+    background-color var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease);
+}
+
+.timeToggle svg {
+  flex: 0 0 auto;
+  color: var(--inactive-icon);
+  transition: color var(--motion) var(--ease);
+}
+
+.slotInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+@media (hover: hover) {
+  .timeToggle:hover:not(:has(input:disabled)):not(:has(input:checked)) {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  .timeToggle:hover:not(:has(input:disabled)) svg {
+    color: var(--accent);
+  }
+}
+
+.timeToggle:active:not(:has(input:disabled)) {
+  transform: scale(0.97);
+  transition-duration: var(--motion-fast);
+}
+
+.timeToggle:has(input:focus-visible) {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+.timeToggle:has(input:checked) {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 8px 18px rgba(81, 76, 154, 0.24);
+}
+
+.timeToggle:has(input:checked) svg {
+  color: #fff;
+}
+
+.timeUnavailable {
+  color: #b9b8cb;
+  background: #fafafd;
+  border-color: #efeef6;
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.timeToggle:has(input:disabled) {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeToggle,
+  .timeToggle svg {
+    transition: none;
+  }
+
+  .timeToggle:hover,
+  .timeToggle:active {
+    transform: none;
+  }
 }

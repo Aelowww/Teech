@@ -3,7 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, Clock3, MapPin, UserRound } from "lucide-react";
-import { DesktopLayout, PageHeading, FormField } from "@/app/desktop/_components/ui";
+import { DesktopLayout, PageHeading } from "@/app/desktop/_components/ui";
 import {
   emptyAppointmentDraft,
   getAppointmentDraft,
@@ -14,6 +14,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
 
@@ -59,7 +60,7 @@ export default function Page() {
   if (isLoading) return <AppLoader />;
 
   function updateField(field: keyof AppointmentDraft) {
-    return (event: ChangeEvent<HTMLInputElement>) => {
+    return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setDraft((currentDraft) => ({ ...currentDraft, [field]: event.target.value }));
     };
   }
@@ -80,17 +81,27 @@ export default function Page() {
       <form className={booking.layout} onSubmit={handleSubmit}>
         <section className={booking.main}>
           <PageHeading title="Appointment Information" subtitle="Enter the details for your consultation request." />
+          <div className={styles.identity}>
+            <span className={styles.identityIcon}><UserRound size={20} aria-hidden="true" /></span>
+            <div className={styles.identityName}>
+              <small>Requesting as</small>
+              <strong>{draft.studentName || "Student"}</strong>
+            </div>
+            <dl className={styles.identityMeta}>
+              <div><dt>Student ID</dt><dd>{draft.studentId || "Not set"}</dd></div>
+              <div><dt>Course and Year</dt><dd>{draft.courseYear || "Not set"}</dd></div>
+            </dl>
+          </div>
+
           <div className={styles.form}>
-            <FormField label="Student Name" name="studentName" value={draft.studentName} placeholder="" readOnly required />
-            <FormField label="Student ID" name="studentId" value={draft.studentId} placeholder="" readOnly required />
-            <FormField label="Course and Year" name="courseYear" value={draft.courseYear} placeholder="" readOnly required />
-            <FormField label="Faculty Member" name="facultyName" value={draft.facultyName} placeholder="" readOnly required />
-            <div className={styles.fullRow}>
-              <FormField label="Reason for Consultation" name="reason" value={draft.reason} onChange={updateField("reason")} placeholder="e.g. Thesis chapter 2 feedback" maxLength={200} required />
-            </div>
-            <div className={styles.fullRow}>
-              <FormField label="Additional Details" name="details" value={draft.details} onChange={updateField("details")} placeholder="Anything the faculty member should know beforehand (optional)" maxLength={1000} />
-            </div>
+            <label className={styles.field}>
+              <span className={styles.labelRow}>Reason for consultation<small>{draft.reason.length}/200</small></span>
+              <input name="reason" value={draft.reason} onChange={updateField("reason")} placeholder="e.g. Thesis chapter 2 feedback" maxLength={200} required />
+            </label>
+            <label className={styles.field}>
+              <span className={styles.labelRow}>Additional details<em>Optional</em><small>{draft.details.length}/1000</small></span>
+              <textarea name="details" value={draft.details} onChange={updateField("details")} placeholder="Anything the faculty member should know beforehand" maxLength={1000} rows={6} />
+            </label>
           </div>
         </section>
 
@@ -102,7 +113,7 @@ export default function Page() {
             <div><Clock3 size={18} /><dt>Time</dt><dd>{draft.preferredTime}</dd></div>
             {draft.meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{draft.meetingLocation}</dd></div>}
           </dl>
-          <button className={booking.continueButton} type="submit">Review Appointment<ArrowRight size={17} /></button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="submit">Review Appointment<ArrowRight size={17} /></button>
         </aside>
       </form>
     </DesktopLayout>

@@ -6,6 +6,7 @@ import { DesktopLayout, PageHeading, FormField, Notice } from "@/app/desktop/_co
 import { PasswordField } from "@/app/desktop/_components/password-field";
 import { createClient } from "@/lib/supabase/client";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import styles from "./page.module.css";
 
 const resetMessages: Record<string, string> = {
@@ -75,7 +76,7 @@ export default function Page() {
           </div>
           <p className={styles.hint}>Haven&apos;t set up security questions? Ask your instructor or system administrator to reset your password.</p>
           {error && <Notice error>{error}</Notice>}
-          <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Loading..." : "Continue"}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Loading..." : "Continue"}</button>
         </form>
       </DesktopLayout>
     );
@@ -103,7 +104,7 @@ export default function Page() {
           <PasswordField label="Confirm New Password" name="confirmation" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder="Re-enter your new password" autoComplete="new-password" minLength={8} required />
         </div>
         {error && <Notice error>{error}</Notice>}
-        <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Resetting..." : "Reset Password"}</button>
+        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Resetting..." : "Reset Password"}</button>
         <button className={styles.textButton} type="button" onClick={startOver}>Use a different Student ID</button>
       </form>
     </DesktopLayout>

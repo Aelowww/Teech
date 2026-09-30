@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarCheck2, CalendarDays, ChevronRight, Clock3, Inbox, MapPin } from "lucide-react";
-import { DesktopLayout, CardList, ProfilePhoto, SpotlightCard } from "@/app/desktop/_components/ui";
+import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
+import { DesktopLayout, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
@@ -53,7 +54,7 @@ export default function Page() {
       setIsLoading(false);
 
       channel = supabase
-        .channel(`faculty-dashboard-${currentProfile.id}`)
+        .channel(uniqueChannelName(`faculty-dashboard-${currentProfile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `faculty_profile_id=eq.${currentProfile.id}` },
@@ -92,6 +93,9 @@ export default function Page() {
   const pending = upcoming.filter((request) => request.status === "pending");
   const confirmed = upcoming.filter((request) => request.status === "confirmed");
   const nextConsultation = confirmed[0];
+  const summary = pending.length
+    ? `${pending.length} ${pending.length === 1 ? "request needs" : "requests need"} your response`
+    : confirmed.length ? `${confirmed.length} upcoming ${confirmed.length === 1 ? "consultation" : "consultations"}` : "You're all caught up";
   const pendingItems = pending.slice(0, pendingPreviewLimit).map((request) => ({
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
@@ -109,68 +113,62 @@ export default function Page() {
 
   return (
     <DesktopLayout className={styles.screen} role="faculty" activeNav="home">
-      <section className={styles.hero}>
-        <ProfilePhoto inline src={photoUrl} />
-        <div className={styles.greetingText}>
-          <h1>{getGreeting()}</h1>
-          <p>{profile?.full_name || "Faculty"}</p>
+      <header className={styles.header}>
+        <div className={styles.greeting}>
+          <ProfilePhoto inline small src={photoUrl} />
+          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
+          <FactCard role="faculty" />
         </div>
         <div className={styles.presence}>
           <PresenceSelect value={presence} onChange={(next) => void changePresence(next)} />
           {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
         </div>
-      </section>
+      </header>
 
-      <div className={styles.dashboard}>
-        <div className={styles.mainColumn}>
-          {nextConsultation ? (
-            <SpotlightCard
-              eyebrow={nextConsultation.preferred_date === localDateValue() ? "Up next · Today" : "Up next"}
-              title={nextConsultation.student_name || "Student consultation"}
-              details={[
-                { icon: <CalendarDays size={15} />, text: formatLongDate(nextConsultation.preferred_date) },
-                { icon: <Clock3 size={15} />, text: formatTime(nextConsultation.preferred_time) },
-                { icon: <MapPin size={15} />, text: nextConsultation.meeting_location || "Location to be confirmed" },
-              ]}
-              href={`/faculty/requests/${nextConsultation.id}`}
-              avatar={studentPhotos.get(nextConsultation.id) ?? null}
-              actionLabel="View details"
-            />
-          ) : (
-            <SpotlightCard
-              muted
-              eyebrow="No upcoming consultation"
-              title={pending.length ? "Review your requests" : "Open dates for booking"}
-              details={[{ icon: <Inbox size={15} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : openDates.length ? "Students can book your open dates" : "Students can book once you publish dates" }]}
-              href={pending.length ? "/faculty/requests" : "/faculty/availability"}
-              actionLabel={pending.length ? "View requests" : "Manage availability"}
-            />
-          )}
+      <div className={styles.layout}>
+        <div className={styles.main}>
+        {nextConsultation ? (
+          <UpNextCard
+            eyebrow="Up next"
+            title={nextConsultation.student_name || "Student consultation"}
+            date={nextConsultation.preferred_date}
+            meta={[formatTime(nextConsultation.preferred_time), nextConsultation.meeting_location || "Location to be confirmed"]}
+            href={`/faculty/requests/${nextConsultation.id}`}
+            actionLabel="View details"
+            avatar={studentPhotos.get(nextConsultation.id) ?? null}
+          />
+        ) : (
+          <SpotlightCard
+            muted
+            eyebrow="No upcoming consultation"
+            title={pending.length ? "Review your requests" : "Open dates for booking"}
+            details={[{ icon: <Inbox size={15} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : openDates.length ? "Students can book your open dates" : "Students can book once you publish dates" }]}
+            href={pending.length ? "/faculty/requests" : "/faculty/availability"}
+            actionLabel={pending.length ? "View requests" : "Manage availability"}
+          />
+        )}
 
-          <FactCard role="faculty" />
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>
+            Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
+            {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
+          </h2>
+          {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+        </section>
 
-          <section className={styles.panel}>
+        {upcomingItems.length > 0 && (
+          <section className={styles.section}>
             <h2 className={styles.sectionTitle}>
-              Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
-              {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all<ChevronRight size={15} /></Link>}
+              Upcoming Consultations
+              {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
             </h2>
-            {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+            <CardList items={upcomingItems} />
           </section>
-
-          {upcomingItems.length > 0 && (
-            <section className={styles.panel}>
-              <h2 className={styles.sectionTitle}>
-                Upcoming Consultations
-                {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/faculty/requests">See all<ChevronRight size={15} /></Link>}
-              </h2>
-              <CardList items={upcomingItems} />
-            </section>
-          )}
+        )}
         </div>
 
-        <aside className={styles.sideColumn}>
+        <aside className={styles.rail}>
           <LoginStreakCard role="faculty" />
-
           {openDates.length > 0 && (
             <Link className={styles.availability} href="/faculty/availability">
               <CalendarCheck2 size={20} />
@@ -188,8 +186,8 @@ export default function Page() {
 }
 
 function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
-function formatLongDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();

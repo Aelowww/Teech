@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Award, CalendarCheck, Coins, Snowflake } from "lucide-react";
+import { Award, CalendarCheck, Check, Coins, Snowflake } from "lucide-react";
 import { DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { ShowMoreButton, useShowMore } from "@/app/desktop/_components/show-more";
 import { badgeIcons } from "@/app/desktop/_components/badge-icons";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "./button.module.css";
 import styles from "./points-shop.module.css";
 
 type ShopItem = { id: string; name: string; description: string; cost: number; kind: "freeze" | "badge"; badge_id: string | null; max_owned: number };
@@ -72,53 +73,85 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
     return { label: "Redeem", disabled: false };
   }
 
+  const nextReward = items
+    .filter((item) => item.cost > balance && !itemState(item).label.startsWith("Owned") && !itemState(item).label.startsWith("Max"))
+    .sort((first, second) => first.cost - second.cost)[0];
+
   return (
     <DesktopLayout className={styles.screen} role={role} activeNav="points">
       <PageHeading title="Points & Rewards" subtitle="Earn points by showing up. Spend them on rewards." />
       <div className={styles.page}>
         <div className={styles.mainColumn}>
-          <section className={styles.balance}>
-            <span><Coins size={22} /></span>
-            <div>
-              <small>Your balance</small>
-              <strong>{balance} <em>pts</em></strong>
+          <section className={styles.summary}>
+            <div className={styles.balance}>
+              <span className={styles.balanceIcon}><Coins size={22} /></span>
+              <div>
+                <small>Your balance</small>
+                <strong>{balance}<em>pts</em></strong>
+              </div>
+              {freezes > 0 && <p className={styles.freezes}><Snowflake size={12} />{freezes} {freezes === 1 ? "freeze" : "freezes"} ready</p>}
             </div>
-            {freezes > 0 && <p><Snowflake size={12} />{freezes} {freezes === 1 ? "freeze" : "freezes"} ready</p>}
+
+            <div className={styles.next}>
+              {nextReward ? (
+                <>
+                  <p><span>Next reward</span><strong>{nextReward.name}</strong></p>
+                  <div className={styles.track} role="progressbar" aria-valuemin={0} aria-valuemax={nextReward.cost} aria-valuenow={balance} aria-label={`Progress to ${nextReward.name}`}>
+                    <i style={{ width: `${Math.min(100, (balance / nextReward.cost) * 100)}%` }} />
+                  </div>
+                  <small>{nextReward.cost - balance} pts to go</small>
+                </>
+              ) : (
+                <p><span>Next reward</span><strong>{items.length ? "You can redeem everything available" : "Rewards are coming soon"}</strong></p>
+              )}
+            </div>
+
+            <div className={styles.earn} aria-label="How to earn">
+              <span><CalendarCheck size={15} />Daily check-in <b>+5 to +25</b></span>
+              <span><Award size={15} />Earn a badge <b>+20</b></span>
+            </div>
           </section>
 
           {error && <Notice error>{error}</Notice>}
           {notice && <Notice>{notice}</Notice>}
 
-          <h2 className={styles.sectionTitle}>Rewards</h2>
-          <div className={styles.items}>
-            {items.map((item) => {
-              const Icon = item.kind === "freeze" ? Snowflake : (item.badge_id && badgeIcons[item.badge_id]) || Award;
-              const state = itemState(item);
-              return (
-                <article className={styles.item} key={item.id}>
-                  <span className={`${styles.itemIcon} ${item.kind === "freeze" ? styles.itemFreeze : ""}`}><Icon size={18} /></span>
-                  <div>
-                    <strong>{item.name}</strong>
-                    <small>{item.description}</small>
-                    <em><Coins size={11} />{item.cost} pts</em>
-                  </div>
-                  <button type="button" onClick={() => { setNotice(""); setRedeeming(item); }} disabled={state.disabled}>{state.label}</button>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-
-        <aside className={styles.sideColumn}>
-          <section className={styles.panel}>
-            <h2 className={styles.sectionTitle}>How to earn</h2>
-            <div className={styles.earn}>
-              <div><CalendarCheck size={18} /><span>Daily check-in</span><b>+5 to +25</b></div>
-              <div><Award size={18} /><span>Earn a badge</span><b>+20</b></div>
+          <section className={styles.rewards}>
+            <h2 className={styles.sectionTitle}>Rewards</h2>
+            <div className={styles.items}>
+              {items.map((item) => {
+                const Icon = item.kind === "freeze" ? Snowflake : (item.badge_id && badgeIcons[item.badge_id]) || Award;
+                const state = itemState(item);
+                const owned = state.label === "Owned" || state.label.startsWith("Max");
+                const affordable = !state.disabled;
+                return (
+                  <article className={`${styles.item} ${owned ? styles.itemOwned : ""}`} key={item.id}>
+                    <span className={`${styles.itemIcon} ${item.kind === "freeze" ? styles.itemFreeze : ""}`}><Icon size={20} /></span>
+                    <div className={styles.itemText}>
+                      <strong>{item.name}</strong>
+                      <small>{item.description}</small>
+                    </div>
+                    <div className={styles.itemAction}>
+                      <em><Coins size={13} />{item.cost} pts</em>
+                      {affordable ? (
+                        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.redeem}`} type="button" onClick={() => { setNotice(""); setRedeeming(item); }}>Redeem</button>
+                      ) : owned ? (
+                        <span className={styles.ownedTag}><Check size={13} strokeWidth={2.75} />{state.label}</span>
+                      ) : (
+                        <span className={styles.needMore}>
+                          <span className={styles.miniTrack}><i style={{ width: `${Math.min(100, (balance / item.cost) * 100)}%` }} /></span>
+                          {state.label}
+                        </span>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
             <p className={styles.hint}>Check-in points rise each day of your streak and peak on day 7.</p>
           </section>
+        </div>
 
+        <aside className={styles.sideColumn}>
           <section className={styles.panel}>
             <h2 className={styles.sectionTitle}>History</h2>
             {ledger.length ? (

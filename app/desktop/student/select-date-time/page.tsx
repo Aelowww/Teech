@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { slotsFor } from "@/lib/time-slots";
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
 
@@ -122,7 +123,7 @@ export default function Page() {
             <div><Clock3 size={18} /><dt>Time</dt><dd>{draft?.preferredTime || <span className={booking.placeholder}>Pick a time</span>}</dd></div>
             {draft?.meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{draft.meetingLocation}</dd></div>}
           </dl>
-          <button className={booking.continueButton} type="button" onClick={continueToInformation} disabled={!draft?.facultyId || !draft?.preferredDate || !draft.preferredTime}>Continue<ArrowRight size={17} /></button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={continueToInformation} disabled={!draft?.facultyId || !draft?.preferredDate || !draft.preferredTime}>Continue<ArrowRight size={17} /></button>
         </aside>
       </div>
     </DesktopLayout>

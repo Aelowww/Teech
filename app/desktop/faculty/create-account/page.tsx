@@ -5,7 +5,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Notice, FormField } from "@/app/desktop/_components/ui";
 import { PasswordField } from "@/app/desktop/_components/password-field";
-import { AuthFrame } from "@/app/desktop/_components/auth-frame";
+import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
 import { createClient } from "@/lib/supabase/client";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/desktop/_components/support-chat";
@@ -91,8 +91,8 @@ export default function Page() {
         </label>
       </div>
       {error && <Notice error>{error}</Notice>}
-      <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Creating Account..." : "Create Account"}</button>
-      <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign In</Link></p>
+      <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} />
+      <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign in</Link></p>
     </AuthFrame>
   );
 }

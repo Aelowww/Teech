@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Clock3, MapPin, UserRound, UsersRound } from "lucide-react";
+import { ChevronRight, Plus, UsersRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
-import { ProfilePhoto, SpotlightCard } from "@/app/desktop/_components/ui";
+import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
+import { CountUp } from "@/app/desktop/_components/count-up";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { facultyAvatarUrls, signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
 
@@ -61,7 +63,7 @@ export default function Page() {
       setFacultyCount(new Set(facultyResult.data?.map((slot) => slot.faculty_profile_id) || []).size);
       setIsLoading(false);
       channel = supabase
-        .channel(`student-dashboard-${currentProfile.id}`)
+        .channel(uniqueChannelName(`student-dashboard-${currentProfile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `student_profile_id=eq.${currentProfile.id}` },
@@ -91,8 +93,31 @@ export default function Page() {
     .filter((appointment) => appointment.status === "confirmed")
     .sort((first, second) => `${first.preferred_date}T${first.preferred_time}`.localeCompare(`${second.preferred_date}T${second.preferred_time}`));
   const nextAppointment = confirmed[0];
-  const upcomingConfirmed = confirmed.slice(1);
   const fullName = profile?.full_name || "Student";
+  const closedCount = appointments.filter((appointment) => appointment.status === "declined" || appointment.status === "cancelled").length;
+  const overview = [
+    { label: "Pending", count: pendingAppointments.length, tone: styles.dotPending, href: "/student/appointment-requests?status=pending" },
+    { label: "Confirmed", count: confirmed.length, tone: styles.dotConfirmed, href: "/student/appointment-requests?status=confirmed" },
+    { label: "Closed", count: closedCount, tone: styles.dotClosed, href: "/student/appointment-requests?status=closed" },
+  ];
+  const overviewTotal = overview.reduce((total, item) => total + item.count, 0);
+  const summary = pendingAppointments.length
+    ? `${pendingAppointments.length} ${pendingAppointments.length === 1 ? "request" : "requests"} awaiting response`
+    : nextAppointment ? "You're all set for your next consultation" : "No consultations booked yet";
+  const pendingItems = pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => ({
+    title: appointment.faculty_name || "Faculty",
+    description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
+    status: "Pending",
+    imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
+    href: `/student/appointment-requests/${appointment.id}`,
+  }));
+  const upcomingItems = confirmed.slice(1, upcomingLimit + 1).map((appointment) => ({
+    title: appointment.faculty_name || "Faculty",
+    description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)} · ${appointment.meeting_location || "Location to be confirmed"}`,
+    status: "Confirmed",
+    imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
+    href: `/student/appointment-requests/${appointment.id}`,
+  }));
 
   return (
     <AppShell
@@ -103,98 +128,91 @@ export default function Page() {
       avatarSrc={photoUrl}
     >
       <div className={styles.dashboard}>
-        <div className={styles.center}>
-          <section className={styles.hero}>
-            <ProfilePhoto inline src={photoUrl} />
-            <div className={styles.heroCopy}>
-              <h1>{getGreeting()}</h1>
-              <p>{fullName}</p>
-            </div>
-          </section>
+        <header className={styles.header}>
+          <div className={styles.greeting}>
+            <ProfilePhoto inline small src={photoUrl} />
+            <div><small>{getGreeting()}</small><strong>{fullName}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
+            <FactCard role="student" />
+          </div>
+          <Link className={`${buttonStyles.button} ${buttonStyles.primary}`} href="/student/faculty">
+            <Plus size={16} strokeWidth={2.25} />
+            Book consultation
+          </Link>
+        </header>
 
-          {nextAppointment ? (
-            <SpotlightCard
-              eyebrow={nextAppointment.preferred_date === localDateValue() ? "Up next · Today" : "Up next"}
-              title={nextAppointment.faculty_name || "Faculty consultation"}
-              details={[
-                { icon: <CalendarDays size={15} />, text: formatLongDate(nextAppointment.preferred_date) },
-                { icon: <Clock3 size={15} />, text: formatTime(nextAppointment.preferred_time) },
-                { icon: <MapPin size={15} />, text: nextAppointment.meeting_location || "Location to be confirmed" },
-              ]}
-              href={`/student/appointment-requests/${nextAppointment.id}`}
-              avatar={facultyPhotos.get(nextAppointment.faculty_profile_id) ?? null}
-              actionLabel="View details"
-            />
-          ) : (
-            <SpotlightCard
-              muted
-              eyebrow="No upcoming consultation"
-              title="Book a consultation"
-              details={[{ icon: <UsersRound size={15} />, text: facultyCount === 1 ? "1 faculty member has open dates" : `${facultyCount} faculty members have open dates` }]}
-              href="/student/faculty"
-              actionLabel="Find faculty"
-            />
-          )}
-
-          <FactCard role="student" />
-
-          {upcomingConfirmed.length > 0 && (
-            <section className={styles.card}>
-              <div className={styles.cardHeader}>
-                <h2>Upcoming consultations</h2>
-                <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>
-              </div>
-              <div className={styles.requestList}>
-                {upcomingConfirmed.slice(0, upcomingLimit).map((appointment) => (
-                  <Link className={styles.requestRow} href={`/student/appointment-requests/${appointment.id}`} key={appointment.id}>
-                    <FacultyPhoto src={facultyPhotos.get(appointment.faculty_profile_id)} />
-                    <div><strong>{appointment.faculty_name || "Faculty"}</strong><small>{formatLongDate(appointment.preferred_date)} • {formatTime(appointment.preferred_time)}</small></div>
-                    <span className={styles.rowMeta}><MapPin size={14} />{appointment.meeting_location || "Location to be confirmed"}</span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
-
-        <div className={styles.side}>
-          <LoginStreakCard role="student" />
-
-          <section className={styles.card}>
-            <div className={styles.cardHeader}>
-              <h2>Awaiting Response</h2>
-              {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
-            </div>
-            {pendingAppointments.length > 0 ? (
-              <div className={styles.requestList}>
-                {pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => (
-                  <Link className={styles.requestRow} href={`/student/appointment-requests/${appointment.id}`} key={appointment.id}>
-                    <FacultyPhoto src={facultyPhotos.get(appointment.faculty_profile_id)} />
-                    <div><strong>{appointment.faculty_name || "Faculty"}</strong><small>{formatLongDate(appointment.preferred_date)} • {formatTime(appointment.preferred_time)}</small></div>
-                    <em>Pending</em>
-                  </Link>
-                ))}
-              </div>
+        <div className={styles.layout}>
+          <div className={styles.main}>
+            {nextAppointment ? (
+              <UpNextCard
+                eyebrow="Up next"
+                title={nextAppointment.faculty_name || "Faculty consultation"}
+                date={nextAppointment.preferred_date}
+                meta={[formatTime(nextAppointment.preferred_time), nextAppointment.meeting_location || "Location to be confirmed"]}
+                href={`/student/appointment-requests/${nextAppointment.id}`}
+                actionLabel="View details"
+                avatar={facultyPhotos.get(nextAppointment.faculty_profile_id) ?? null}
+              />
             ) : (
-              <p className={styles.emptyText}>No requests are waiting on faculty.</p>
+              <SpotlightCard
+                muted
+                eyebrow="No upcoming consultation"
+                title="Book a consultation"
+                details={[{ icon: <UsersRound size={15} />, text: facultyCount === 1 ? "1 faculty member has open dates" : `${facultyCount} faculty members have open dates` }]}
+                href="/student/faculty"
+                actionLabel="Find faculty"
+              />
             )}
-          </section>
+
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>
+                Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
+                {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
+              </h2>
+              {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+            </section>
+
+            {upcomingItems.length > 0 && (
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>
+                  Upcoming consultations
+                  {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>}
+                </h2>
+                <CardList items={upcomingItems} />
+              </section>
+            )}
+          </div>
+
+          <aside className={styles.rail}>
+            <LoginStreakCard role="student" />
+            <section className={styles.overview} aria-label="Your requests">
+              <h2>Your requests</h2>
+              {overviewTotal > 0 && (
+                <div className={styles.split} aria-hidden="true">
+                  {overview.filter((item) => item.count > 0).map(({ label, count, tone }) => (
+                    <i key={label} className={tone} style={{ flexGrow: count }} />
+                  ))}
+                </div>
+              )}
+              <div className={styles.overviewList}>
+                {overview.map(({ label, count, tone, href }) => (
+                  <Link className={styles.overviewRow} href={href} key={label}>
+                    <span><i className={tone} aria-hidden="true" />{label}</span>
+                    <b><CountUp value={count} /></b>
+                  </Link>
+                ))}
+              </div>
+              <Link className={styles.overviewAll} href="/student/appointment-requests">View all requests<ChevronRight size={15} /></Link>
+            </section>
+          </aside>
         </div>
       </div>
     </AppShell>
   );
 }
 
-function FacultyPhoto({ src }: { src?: string }) {
-  return (
-    <span className={styles.personIcon}>
-      {src ? <Image className={styles.personImage} src={src} alt="" fill sizes="40px" unoptimized /> : <UserRound size={20} />}
-    </span>
-  );
-}
-
 function formatLongDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();

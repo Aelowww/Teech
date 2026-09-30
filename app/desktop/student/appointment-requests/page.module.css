@@ -1,173 +1,274 @@
+.screen {
+  --accent: #7772c9;
+}
 .page {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
-
-.requests {
-  display: grid;
-  gap: 12px;
-}
-
-.requestCard {
-  padding: 18px 20px;
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) auto;
+.header {
+  margin-bottom: 20px;
+  display: flex;
   align-items: center;
-  gap: 18px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  justify-content: space-between;
+  color: var(--accent);
+}
+.empty {
+  margin: auto 0;
+  padding: 40px 18px;
+  display: grid;
+  justify-items: center;
+  color: var(--accent);
+  text-align: center;
+}
+.empty strong {
+  margin-top: 14px;
+  color: #28294a;
+  font-size: 15px;
+}
+.empty p {
+  max-width: 220px;
+  color: #8586a0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.emptyState {
+  margin: 32px auto;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+.requests {
+  margin-top: 8px;
+  padding-bottom: 8px;
 }
 
-.requestCard:hover {
-  border-color: var(--indigo-300);
-  box-shadow: 0 12px 28px rgba(63, 65, 112, 0.07);
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.requestIcon {
-  width: 48px;
-  height: 48px;
+.list li + li {
+  border-top: 1px solid #f2f1f8;
+}
+
+.row {
+  margin: 0 -8px;
+  padding: 14px 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 200ms var(--button-ease);
+}
+
+.row:active {
+  background: #f6f5fc;
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: #faf9fe;
+  }
+
+  .row:hover .chevron {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+}
+
+.row:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: -3px;
+}
+
+.avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: var(--accent);
-  background: var(--indigo-50);
-  position: relative;
   overflow: hidden;
+  color: var(--accent);
+  background: var(--accent-pale);
   border-radius: 50%;
 }
-.requestImage {
+
+.avatar img {
   object-fit: cover;
 }
 
-.requestContent {
-  min-width: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 120px;
-  grid-template-areas:
-    "name date status"
-    "reason date status";
-  align-items: center;
-  gap: 4px 20px;
+.rowClosed .avatar {
+  opacity: 0.6;
 }
 
-.requestContent strong {
-  grid-area: name;
+.rowClosed .info strong {
+  color: #4a4b6a;
+}
+
+.info {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+
+.info strong {
   overflow: hidden;
-  color: var(--ink);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.requestContent small {
-  grid-area: reason;
+.info span,
+.info small {
   overflow: hidden;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.requestContent span {
-  grid-area: date;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 500;
+.info small {
+  color: #a9a8bd;
 }
 
-.requestContent em {
-  grid-area: status;
-  justify-self: start;
-  padding: 5px 12px;
-  color: #288453;
-  background: #e8f8ef;
+.status {
+  flex: 0 0 auto;
+  padding: 3px 9px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   font-style: normal;
   font-weight: 600;
   text-transform: capitalize;
 }
 
-.requestContent .statusPending {
-  color: #a16d1d;
+.pending {
+  color: #a8671a;
   background: #fff4e3;
 }
 
-.requestContent .statusConfirmed {
-  color: #288453;
-  background: #e8f8ef;
+.confirmed {
+  color: #15834a;
+  background: #e8f7ee;
 }
 
-.requestContent .statusDeclined,
-.requestContent .statusCancelled {
-  color: #b13a55;
-  background: #fff0f3;
-}
-
-.cardActions {
-  display: flex;
-  gap: 8px;
-}
-
-.viewButton,
-.cancelButton {
-  min-height: 40px;
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border: 1px solid;
-  border-radius: 20px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-
-.viewButton {
-  color: var(--accent);
-  background: var(--indigo-50);
-  border-color: var(--indigo-100);
-}
-
-.viewButton:hover,
-.viewButton:focus-visible {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.cancelButton {
-  color: #b13a55;
-  background: #fff5f7;
-  border-color: #f0d5dd;
-  cursor: pointer;
-}
-
-.cancelButton:hover,
-.cancelButton:focus-visible {
-  color: #fff;
-  background: #b13a55;
-  border-color: #b13a55;
-}
-
-.cancelButton:disabled,
-.cancelButton:disabled:hover {
-  color: #aaaac0;
+.declined,
+.cancelled,
+.expired {
+  color: #9d9cb4;
   background: #f4f4f8;
-  border-color: #e4e4ec;
-  cursor: not-allowed;
 }
 
-@media (max-width: 1100px) {
-  .requestContent {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "name status"
-      "date status"
-      "reason status";
+.chevron {
+  flex: 0 0 auto;
+  margin-left: -4px;
+  color: #c9c8d8;
+  transition:
+    color 200ms var(--button-ease),
+    transform 200ms var(--button-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .chevron {
+    transition: none;
+  }
+
+  .row:hover .chevron {
+    transform: none;
+  }
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 14px;
+}
+
+.list li + li {
+  border-top: 0;
+}
+
+.row {
+  height: 100%;
+  margin: 0;
+  padding: 18px;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--line, #e7e6f1);
+  border-radius: 18px;
+  transition:
+    background-color 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease),
+    transform 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: #fff;
+    border-color: #d9d6f2;
+    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.07);
+  }
+}
+
+.row:active {
+  background: #fff;
+  transform: scale(0.99);
+  transition-duration: 100ms;
+}
+
+.row:focus-visible {
+  outline-offset: 2px;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+
+  .row:active {
+    transform: none;
+  }
+}
+
+.row {
+  transition:
+    transform var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease),
+    background-color var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+}
+
+.row:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: var(--motion-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row:hover,
+  .row:active {
+    transform: none;
   }
 }
