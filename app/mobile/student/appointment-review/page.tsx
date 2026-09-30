@@ -151,7 +151,7 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         <div className={styles.actions}>
           <Link className={`${buttonStyles.button} ${buttonStyles.secondary}`} href="/student/appointment-info">Edit</Link>
-          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : "Submit Request"}</button>
         </div>
       </div>
       <ConfirmationModal open={confirming} title="Submit consultation request?" description="Your request will be sent to the selected faculty member for review." confirmLabel="Submit Request" onCancel={() => setConfirming(false)} onConfirm={handleSubmit} />
