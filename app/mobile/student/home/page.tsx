@@ -103,12 +103,11 @@ export default function Page() {
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <NotificationBell href="/student/notifications" />
+          <div className={styles.headerActions}><FactCard role="student" /><NotificationBell href="/student/notifications" /></div>
         </header>
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
           <div><small>{getGreeting()}</small><strong>{profile?.full_name || "Student"}</strong></div>
-          <FactCard role="student" />
         </div>
 
         {nextAppointment ? (

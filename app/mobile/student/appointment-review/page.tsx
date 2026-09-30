@@ -149,7 +149,7 @@ export default function Page() {
           : <p className={styles.emptyState}>No appointment information has been entered yet.</p>}
         {error && <Notice error>{error}</Notice>}
         <div className={styles.actions}>
-          <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
+          <Link className={`${buttonStyles.button} ${buttonStyles.secondary}`} href="/student/appointment-info">Edit</Link>
           <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
         </div>
       </div>
