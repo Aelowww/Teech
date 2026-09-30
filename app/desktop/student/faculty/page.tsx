@@ -24,7 +24,7 @@ const presenceLabels: Record<PresenceStatus, string> = {
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ filter?: string }> }) {
   const { filter } = await searchParams;
-  const showingAll = filter === "all";
+  const showingAll = filter !== "available";
   const supabase = await createClient();
   const [{ data: faculty, error }, { data: availability }] = await Promise.all([
     supabase
@@ -71,10 +71,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
             <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
           </div>
           <nav className={styles.filters} aria-label="Faculty filters">
-            <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all" aria-current={showingAll ? "page" : undefined}>
+            <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={showingAll ? "page" : undefined}>
               All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
             </Link>
-            <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={!showingAll ? "page" : undefined}>
+            <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=available" aria-current={!showingAll ? "page" : undefined}>
               Available<span className={styles.filterCount}>{availableCount}</span>
             </Link>
           </nav>

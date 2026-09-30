@@ -6,6 +6,7 @@ import { FormField, MobileLayout, Notice, PageHeading } from "@/app/mobile/_comp
 import { AvatarUploader } from "@/app/mobile/_components/avatar-uploader";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
+import { SuccessModal } from "./success-modal";
 import styles from "./profile-settings.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 
@@ -22,6 +23,7 @@ export function ProfileEditor({ role }: { role: Role }) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const profilePath = `/${role}/profile/info`;
@@ -94,6 +96,11 @@ export function ProfileEditor({ role }: { role: Role }) {
       setSaving(false);
     }
 
+    setSaved(true);
+  }
+
+  function finishSave() {
+    setSaved(false);
     router.replace(profilePath);
     router.refresh();
   }
@@ -119,6 +126,7 @@ export function ProfileEditor({ role }: { role: Role }) {
         {notice && <Notice>{notice}</Notice>}
         <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</button></div>
       </form>
+      <SuccessModal open={saved} title="Profile updated" description="Your changes have been saved." onDone={finishSave} />
     </MobileLayout>
   );
 }

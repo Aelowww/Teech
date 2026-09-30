@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Info, ShieldAlert, ShieldCheck } from "lucide-react";
 import { DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
+import { SuccessModal } from "@/app/desktop/_components/success-modal";
 import { PasswordField } from "@/app/desktop/_components/password-field";
 import { SignOutEverywhere } from "@/app/desktop/_components/sign-out-everywhere";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -21,7 +22,7 @@ export default function Page() {
   const [answers, setAnswers] = useState(emptyTrio);
   const [currentPassword, setCurrentPassword] = useState("");
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSetUp, setIsSetUp] = useState(false);
@@ -62,7 +63,6 @@ export default function Page() {
   async function saveQuestions(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    setNotice("");
     if (questions.some((question) => !question) || new Set(questions).size !== 3) {
       setError("Choose three different questions.");
       return;
@@ -88,7 +88,7 @@ export default function Page() {
     setAnswers(emptyTrio);
     setCurrentPassword("");
     setIsSetUp(true);
-    setNotice("Your security questions have been saved.");
+    setSaved(true);
   }
 
   return (
@@ -125,10 +125,10 @@ export default function Page() {
           <PasswordField label="Confirm it's you" name="currentPassword" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Your current password" autoComplete="current-password" required />
         </div>
         {error && <Notice error>{error}</Notice>}
-        {notice && <Notice>{notice}</Notice>}
         <div className={pageStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save questions"}</button></div>
         <SignOutEverywhere />
       </form>
+      <SuccessModal open={saved} title="Security questions saved" description="You can now use them to recover your account if you forget your password." onDone={() => setSaved(false)} />
     </DesktopLayout>
   );
 }

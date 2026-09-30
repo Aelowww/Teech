@@ -9,6 +9,7 @@ import { Check } from "lucide-react";
 import { getPasswordError, passwordRules } from "@/lib/password";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
+import { SuccessModal } from "./success-modal";
 import styles from "./profile-settings.module.css";
 import formStyles from "./change-password-form.module.css";
 
@@ -21,6 +22,7 @@ export function ChangePasswordForm({ role }: { role: Role }) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [saved, setSaved] = useState(false);
   const profilePath = `/${role}/profile`;
   const metCount = passwordRules.filter((rule) => rule.test(password)).length;
   const matches = confirmation.length > 0 && confirmation === password;
@@ -39,6 +41,11 @@ export function ChangePasswordForm({ role }: { role: Role }) {
     const { error: updateError } = await createClient().auth.updateUser({ password });
     setSaving(false);
     if (updateError) return updateError.message;
+    setSaved(true);
+  }
+
+  function finishSave() {
+    setSaved(false);
     router.replace(profilePath);
     router.refresh();
   }
@@ -79,6 +86,7 @@ export function ChangePasswordForm({ role }: { role: Role }) {
         <div className={formStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Updating..." : "Update Password"}</button></div>
       </form>
       <ConfirmationModal open={confirming} title="Update password?" description="Your new password will replace the current one for this account." confirmLabel="Update Password" onCancel={() => setConfirming(false)} onConfirm={changePassword} />
+      <SuccessModal open={saved} title="Password changed" description="Use your new password the next time you sign in." onDone={finishSave} />
     </DesktopLayout>
   );
 }

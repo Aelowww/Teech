@@ -7,6 +7,7 @@ import { Ban, Check, CheckCircle2, Inbox, UserRound, X, XCircle } from "lucide-r
 import { useRouter } from "next/navigation";
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
+import { SuccessModal } from "@/app/mobile/_components/success-modal";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { studentAvatarUrls } from "@/lib/avatar";
@@ -26,6 +27,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
   const [tab, setTab] = useState<RequestTab>("all");
   const [pendingAction, setPendingAction] = useState<{ id: string; status: "confirmed" | "declined" } | null>(null);
+  const [done, setDone] = useState<"confirmed" | "declined" | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -86,6 +88,7 @@ export default function Page() {
     if (updateError) return updateError.message;
     if (!updated?.length) return "This request is no longer pending. Refresh to see its latest status.";
     setRequests((current) => current.map((request) => request.id === id ? { ...request, status } : request));
+    setDone(status);
   }
 
   return (
@@ -104,6 +107,7 @@ export default function Page() {
           : <EmptyState icon={<CheckCircle2 size={30} />} title={tab === "pending" ? "You're all caught up" : tab === "confirmed" ? "No confirmed consultations" : "Nothing closed yet"} description={tab === "pending" ? "No requests are waiting for your response." : tab === "confirmed" ? "Requests you confirm will show up here." : "Declined and cancelled requests will show up here."} />}
       </div>
       <ConfirmationModal open={Boolean(pendingAction)} title={pendingAction?.status === "confirmed" ? "Confirm request?" : "Decline request?"} description={pendingAction?.status === "confirmed" ? "The student will see that their consultation request has been confirmed." : "The student will see that their consultation request was declined."} confirmLabel={pendingAction?.status === "confirmed" ? "Confirm Request" : "Decline Request"} tone={pendingAction?.status === "declined" ? "danger" : "default"} onCancel={() => setPendingAction(null)} onConfirm={() => pendingAction ? updateStatus(pendingAction.id, pendingAction.status) : undefined} />
+      <SuccessModal open={Boolean(done)} title={done === "confirmed" ? "Request confirmed" : "Request declined"} description={done === "confirmed" ? "The student has been notified that their consultation is confirmed." : "The student has been notified that their request was declined."} onDone={() => setDone(null)} />
     </MobileLayout>
   );
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
+import { SuccessModal } from "./success-modal";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "./button.module.css";
 import styles from "./request-decision-buttons.module.css";
@@ -13,6 +14,7 @@ type Decision = "confirmed" | "declined";
 export function RequestDecisionButtons({ requestId, canConfirm = true }: { requestId: string; canConfirm?: boolean }) {
   const router = useRouter();
   const [decision, setDecision] = useState<Decision | null>(null);
+  const [done, setDone] = useState<Decision | null>(null);
 
   async function saveDecision() {
     if (!decision) return;
@@ -24,6 +26,11 @@ export function RequestDecisionButtons({ requestId, canConfirm = true }: { reque
       .select("id");
     if (error) return error.message;
     if (!updated?.length) return "This request is no longer pending. Refresh to see its latest status.";
+    setDone(decision);
+  }
+
+  function finish() {
+    setDone(null);
     router.refresh();
   }
 
@@ -42,6 +49,7 @@ export function RequestDecisionButtons({ requestId, canConfirm = true }: { reque
         onCancel={() => setDecision(null)}
         onConfirm={saveDecision}
       />
+      <SuccessModal open={Boolean(done)} title={done === "confirmed" ? "Request confirmed" : "Request declined"} description={done === "confirmed" ? "The student has been notified that their consultation is confirmed." : "The student has been notified that their request was declined."} onDone={finish} />
     </>
   );
 }
