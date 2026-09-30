@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Check, X } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "./button.module.css";
 import styles from "./request-decision-buttons.module.css";
 
 type Decision = "confirmed" | "declined";
@@ -29,8 +30,8 @@ export function RequestDecisionButtons({ requestId, canConfirm = true }: { reque
   return (
     <>
       <div className={`${styles.actions} ${canConfirm ? "" : styles.single}`}>
-        <button className={styles.decline} type="button" onClick={() => setDecision("declined")}><X size={15} />Decline</button>
-        {canConfirm && <button className={styles.confirm} type="button" onClick={() => setDecision("confirmed")}><Check size={15} />Confirm</button>}
+        <button className={`${buttonStyles.button} ${buttonStyles.danger} ${buttonStyles.block}`} type="button" onClick={() => setDecision("declined")}><X size={15} />Decline</button>
+        {canConfirm && <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block}`} type="button" onClick={() => setDecision("confirmed")}><Check size={15} />Confirm</button>}
       </div>
       <ConfirmationModal
         open={Boolean(decision)}

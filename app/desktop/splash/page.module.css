@@ -15,32 +15,9 @@
   font-family: "DM Sans", Arial, sans-serif;
 }
 
-.circle,
-.circleBottom {
-  position: absolute;
-  width: clamp(360px, 34vw, 620px);
-  aspect-ratio: 1;
-  background: #e7e5f9;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.circle {
-  top: clamp(-260px, -14vw, -140px);
-  right: clamp(-220px, -10vw, -110px);
-}
-
-.circleBottom {
-  bottom: clamp(-300px, -16vw, -170px);
-  left: clamp(-240px, -11vw, -120px);
-}
-
-.screen > :not(.circle):not(.circleBottom) {
+.hero {
   position: relative;
   z-index: 1;
-}
-
-.hero {
   width: min(880px, 100%);
   padding: clamp(40px, 9vh, 110px) 0 56px;
   text-align: center;
@@ -65,25 +42,41 @@
   gap: 14px;
 }
 
-.primary {
-  min-height: 56px;
-  padding: 0 30px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 999px;
-  font-size: 16px;
-  font-weight: 600;
-  transition: background 0.15s ease, transform 0.15s ease;
+/* Ported from mobile: CTA shimmer once the logo finishes writing. */
+.cta {
+  display: flex;
+  justify-content: center;
 }
 
-.primary {
-  color: #fff;
-  background: var(--accent);
-  box-shadow: 0 14px 30px rgba(119, 114, 201, 0.32);
+.cta a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  translate: -120% 0;
+  pointer-events: none;
 }
 
-.primary:hover {
-  background: var(--accent-dark);
-  transform: translateY(-2px);
+[data-playing] .cta a::after {
+  animation: shimmer 3.6s ease-in-out calc(var(--written) + 1400ms) infinite;
 }
+
+@keyframes shimmer {
+  0% {
+    translate: -120% 0;
+  }
+
+  35%,
+  100% {
+    translate: 120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-playing] .cta a::after {
+    animation: none;
+  }
+}
+
+/* The CTA's look comes from cta-link.module.css. */

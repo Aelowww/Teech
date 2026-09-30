@@ -1,8 +1,9 @@
 "use client";
 
-import { Award, Ban, Bell, CalendarCheck, CheckCheck, CalendarX, Hourglass, Inbox, PartyPopper, Send, UserCheck, type LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { Award, Ban, Bell, CalendarCheck, CheckCheck, CalendarX, ChevronRight, Hourglass, Inbox, PartyPopper, Send, UserCheck, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
+import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/desktop/_components/show-more";
@@ -13,6 +14,7 @@ type Notification = {
   kind: string;
   title: string;
   body: string;
+  appointment_request_id: string | null;
   is_read: boolean;
   created_at: string;
 };
@@ -46,7 +48,7 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
 
       const { data, error: notificationError } = await supabase
         .from("notifications")
-        .select("id, kind, title, body, is_read, created_at")
+        .select("id, kind, title, body, appointment_request_id, is_read, created_at")
         .order("created_at", { ascending: false })
         .limit(50);
       if (!active) return;
@@ -85,6 +87,7 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
   if (isLoading) return <AppLoader />;
 
   const unreadCount = notifications.filter((notification) => !notification.is_read).length;
+  const groups = groupByDay(list.visible);
 
   async function markRead(ids: string[]) {
     if (!ids.length) return;
@@ -105,24 +108,46 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
         {notifications.length > 0 && (
           <div className={styles.toolbar}>
             <span>{unreadCount ? `${unreadCount} unread` : "All caught up"}</span>
-            {unreadCount > 0 && <button type="button" onClick={() => void markRead(notifications.filter((notification) => !notification.is_read).map((notification) => notification.id))}><CheckCheck size={14} />Mark all as read</button>}
+            {unreadCount > 0 && <button type="button" onClick={() => void markRead(notifications.filter((notification) => !notification.is_read).map((notification) => notification.id))}><CheckCheck size={15} />Mark all as read</button>}
           </div>
         )}
         {notifications.length ? (
           <div className={styles.updates}>
-            {list.visible.map((notification) => {
-              const { Icon, tone } = appearanceFor(notification.kind);
-              return (
-                <button className={`${styles.item} ${notification.is_read ? "" : styles.unread}`} type="button" key={notification.id} onClick={() => !notification.is_read && void markRead([notification.id])} aria-label={`${notification.title}${notification.is_read ? "" : ", unread"}`}>
-                  <span className={`${styles.icon} ${styles[tone]}`}><Icon size={17} /></span>
-                  <div><strong>{notification.title}</strong><span>{notification.body}</span><small>{formatTimestamp(notification.created_at)}</small></div>
-                  {!notification.is_read && <i className={styles.dot} aria-hidden="true" />}
-                </button>
-              );
-            })}
+            {groups.map((group) => (
+              <section className={styles.group} key={group.label} aria-label={group.label}>
+                <h2 className={styles.groupLabel}>{group.label}</h2>
+                <div className={styles.groupList}>
+                  {group.items.map((notification) => {
+                    const { Icon, tone } = appearanceFor(notification.kind);
+                    const href = destinationFor(notification, role);
+                    const className = `${styles.item} ${notification.is_read ? "" : styles.unread} ${href ? styles.linked : ""}`;
+                    const label = `${notification.title}${notification.is_read ? "" : ", unread"}`;
+                    const markThisRead = () => { if (!notification.is_read) void markRead([notification.id]); };
+                    const content = <>
+                      {!notification.is_read && <i className={styles.dot} aria-hidden="true" />}
+                      <span className={`${styles.icon} ${styles[tone]}`}><Icon size={17} /></span>
+                      <div className={styles.text}>
+                        <div className={styles.titleRow}><strong>{notification.title}</strong><small>{formatTimestamp(notification.created_at)}</small></div>
+                        <span>{notification.body}</span>
+                      </div>
+                      {href && <ChevronRight className={styles.chevron} size={16} aria-hidden="true" />}
+                    </>;
+                    return href
+                      ? <Link className={className} href={href} key={notification.id} onClick={markThisRead} aria-label={label}>{content}</Link>
+                      : <button className={className} type="button" key={notification.id} onClick={markThisRead} aria-label={label}>{content}</button>;
+                  })}
+                </div>
+              </section>
+            ))}
             <ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} />
           </div>
-        ) : <p className={styles.empty}>No notifications yet.</p>}
+        ) : (
+          <EmptyState
+            icon={<Bell size={26} />}
+            title="You're all caught up"
+            description="Updates about your consultations and account will show up here."
+          />
+        )}
       </div>
     </DesktopLayout>
   );
@@ -146,6 +171,33 @@ function appearanceFor(kind: string) {
   return appearances[kind] || { Icon: Bell, tone: "accent" as Tone };
 }
 
+function destinationFor(notification: Notification, role: "student" | "faculty") {
+  if (notification.kind.startsWith("request_")) {
+    const requestsPath = role === "student" ? "/student/appointment-requests" : "/faculty/requests";
+    return notification.appointment_request_id ? `${requestsPath}/${notification.appointment_request_id}` : requestsPath;
+  }
+  if (notification.kind === "badge_earned") return `/${role}/profile/badges`;
+  if (notification.kind === "welcome") return `/${role}/profile/edit`;
+  if (notification.kind === "account_created") return `/${role}/profile`;
+  return null;
+}
+
+function groupByDay(items: Notification[]) {
+  const today = new Date().toDateString();
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterday = yesterdayDate.toDateString();
+  const groups: { label: string; items: Notification[] }[] = [];
+  for (const item of items) {
+    const day = new Date(item.created_at).toDateString();
+    const label = day === today ? "Today" : day === yesterday ? "Yesterday" : "Earlier";
+    const last = groups[groups.length - 1];
+    if (last?.label === label) last.items.push(item);
+    else groups.push({ label, items: [item] });
+  }
+  return groups;
+}
+
 function formatTimestamp(value: string) {
   const date = new Date(value);
   const minutes = Math.floor((Date.now() - date.getTime()) / 60000);
@@ -154,6 +206,6 @@ function formatTimestamp(value: string) {
   if (minutes < 24 * 60) return `${Math.floor(minutes / 60)}h ago`;
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+  if (date.toDateString() === yesterday.toDateString()) return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric", ...(date.getFullYear() === new Date().getFullYear() ? {} : { year: "numeric" }) });
 }

@@ -1,0 +1,56 @@
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(180deg, #fbfaff 0%, #ffffff 55%);
+}
+
+.backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(119, 114, 201, 0.16) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  background-position: center;
+  mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, #000 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, #000 0%, transparent 100%);
+}
+
+.glow {
+  position: absolute;
+  width: clamp(420px, 42vw, 760px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+.glowTop {
+  top: clamp(-360px, -20vw, -200px);
+  right: clamp(-320px, -16vw, -180px);
+  background: radial-gradient(circle, rgba(170, 164, 240, 0.34) 0%, rgba(170, 164, 240, 0) 68%);
+}
+
+.glowBottom {
+  bottom: clamp(-400px, -22vw, -220px);
+  left: clamp(-340px, -17vw, -190px);
+  background: radial-gradient(circle, rgba(214, 190, 245, 0.32) 0%, rgba(214, 190, 245, 0) 68%);
+  animation-delay: -11s;
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-24px, 18px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    animation: none;
+  }
+}

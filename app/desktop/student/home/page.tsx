@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Clock3, MapPin, UserRound, UsersRound } from "lucide-react";
+import { Plus, UsersRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
-import { ProfilePhoto, SpotlightCard } from "@/app/desktop/_components/ui";
+import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -91,8 +91,21 @@ export default function Page() {
     .filter((appointment) => appointment.status === "confirmed")
     .sort((first, second) => `${first.preferred_date}T${first.preferred_time}`.localeCompare(`${second.preferred_date}T${second.preferred_time}`));
   const nextAppointment = confirmed[0];
-  const upcomingConfirmed = confirmed.slice(1);
   const fullName = profile?.full_name || "Student";
+  const pendingItems = pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => ({
+    title: appointment.faculty_name || "Faculty",
+    description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
+    status: "Pending",
+    imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
+    href: `/student/appointment-requests/${appointment.id}`,
+  }));
+  const upcomingItems = confirmed.slice(1, upcomingLimit + 1).map((appointment) => ({
+    title: appointment.faculty_name || "Faculty",
+    description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)} · ${appointment.meeting_location || "Location to be confirmed"}`,
+    status: "Confirmed",
+    imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
+    href: `/student/appointment-requests/${appointment.id}`,
+  }));
 
   return (
     <AppShell
@@ -103,27 +116,28 @@ export default function Page() {
       avatarSrc={photoUrl}
     >
       <div className={styles.dashboard}>
-        <div className={styles.center}>
-          <section className={styles.hero}>
-            <ProfilePhoto inline src={photoUrl} />
-            <div className={styles.heroCopy}>
-              <h1>{getGreeting()}</h1>
-              <p>{fullName}</p>
-            </div>
-          </section>
+        <header className={styles.header}>
+          <div className={styles.greeting}>
+            <ProfilePhoto inline small src={photoUrl} />
+            <div><small>{getGreeting()}</small><strong>{fullName}</strong></div>
+            <FactCard role="student" />
+          </div>
+          <Link className={`${buttonStyles.button} ${buttonStyles.primary}`} href="/student/faculty">
+            <Plus size={16} strokeWidth={2.25} />
+            Book consultation
+          </Link>
+        </header>
 
+        <div className={styles.top}>
           {nextAppointment ? (
-            <SpotlightCard
-              eyebrow={nextAppointment.preferred_date === localDateValue() ? "Up next · Today" : "Up next"}
+            <UpNextCard
+              eyebrow="Up next"
               title={nextAppointment.faculty_name || "Faculty consultation"}
-              details={[
-                { icon: <CalendarDays size={15} />, text: formatLongDate(nextAppointment.preferred_date) },
-                { icon: <Clock3 size={15} />, text: formatTime(nextAppointment.preferred_time) },
-                { icon: <MapPin size={15} />, text: nextAppointment.meeting_location || "Location to be confirmed" },
-              ]}
+              date={nextAppointment.preferred_date}
+              meta={[formatTime(nextAppointment.preferred_time), nextAppointment.meeting_location || "Location to be confirmed"]}
               href={`/student/appointment-requests/${nextAppointment.id}`}
-              avatar={facultyPhotos.get(nextAppointment.faculty_profile_id) ?? null}
               actionLabel="View details"
+              avatar={facultyPhotos.get(nextAppointment.faculty_profile_id) ?? null}
             />
           ) : (
             <SpotlightCard
@@ -135,61 +149,28 @@ export default function Page() {
               actionLabel="Find faculty"
             />
           )}
-
-          <FactCard role="student" />
-
-          {upcomingConfirmed.length > 0 && (
-            <section className={styles.card}>
-              <div className={styles.cardHeader}>
-                <h2>Upcoming consultations</h2>
-                <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>
-              </div>
-              <div className={styles.requestList}>
-                {upcomingConfirmed.slice(0, upcomingLimit).map((appointment) => (
-                  <Link className={styles.requestRow} href={`/student/appointment-requests/${appointment.id}`} key={appointment.id}>
-                    <FacultyPhoto src={facultyPhotos.get(appointment.faculty_profile_id)} />
-                    <div><strong>{appointment.faculty_name || "Faculty"}</strong><small>{formatLongDate(appointment.preferred_date)} • {formatTime(appointment.preferred_time)}</small></div>
-                    <span className={styles.rowMeta}><MapPin size={14} />{appointment.meeting_location || "Location to be confirmed"}</span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
-
-        <div className={styles.side}>
           <LoginStreakCard role="student" />
-
-          <section className={styles.card}>
-            <div className={styles.cardHeader}>
-              <h2>Awaiting Response</h2>
-              {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
-            </div>
-            {pendingAppointments.length > 0 ? (
-              <div className={styles.requestList}>
-                {pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => (
-                  <Link className={styles.requestRow} href={`/student/appointment-requests/${appointment.id}`} key={appointment.id}>
-                    <FacultyPhoto src={facultyPhotos.get(appointment.faculty_profile_id)} />
-                    <div><strong>{appointment.faculty_name || "Faculty"}</strong><small>{formatLongDate(appointment.preferred_date)} • {formatTime(appointment.preferred_time)}</small></div>
-                    <em>Pending</em>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className={styles.emptyText}>No requests are waiting on faculty.</p>
-            )}
-          </section>
         </div>
+
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>
+            Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
+            {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
+          </h2>
+          {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+        </section>
+
+        {upcomingItems.length > 0 && (
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>
+              Upcoming consultations
+              {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>}
+            </h2>
+            <CardList items={upcomingItems} />
+          </section>
+        )}
       </div>
     </AppShell>
-  );
-}
-
-function FacultyPhoto({ src }: { src?: string }) {
-  return (
-    <span className={styles.personIcon}>
-      {src ? <Image className={styles.personImage} src={src} alt="" fill sizes="40px" unoptimized /> : <UserRound size={20} />}
-    </span>
   );
 }
 

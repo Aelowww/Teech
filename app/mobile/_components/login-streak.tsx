@@ -56,6 +56,7 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   if (!streak) return <div className={`${styles.card} ${styles.loading}`} aria-hidden="true" />;
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const todayValue = dateValue(today);
   const monday = new Date(today);
   monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));

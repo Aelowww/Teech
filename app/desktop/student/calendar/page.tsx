@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { isPastSlotToday, slotsFor } from "@/lib/time-slots";
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
 
@@ -121,7 +122,7 @@ export default function Page() {
           </dl>
           {error && <Notice error>{error}</Notice>}
           {draft?.facultyId && !error && availableDates.length === 0 && <p className={booking.hint}>This faculty member has not published any upcoming dates.</p>}
-          <button className={booking.continueButton} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue<ArrowRight size={17} /></button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue<ArrowRight size={17} /></button>
         </aside>
       </div>
     </DesktopLayout>

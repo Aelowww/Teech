@@ -1,60 +1,101 @@
+/* Underline tabs: matches the faculty directory filters. */
 .tabs {
-  width: fit-content;
-  max-width: 100%;
-  margin: 0 0 20px;
-  padding: 5px;
+  margin: 4px 0 20px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  background: #fff;
-  border: 1px solid var(--line, #e2e2ef);
-  border-radius: 16px;
+  gap: 32px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line, #e7e6f1);
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tabs button {
-  min-height: 40px;
-  padding: 0 18px;
+  position: relative;
+  flex: 0 0 auto;
+  padding: 12px 0 14px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  color: var(--text-soft, #77788f);
+  color: #8a8aa2;
   background: none;
   border: 0;
-  border-radius: 12px;
   font: inherit;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: color 200ms var(--button-ease);
 }
 
-.tabs button:hover {
-  color: var(--accent-dark, #514c9a);
-  background: var(--page, #f8f9fc);
+.tabs button::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--accent, #7772c9);
+  border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transition:
+    transform 260ms var(--button-ease),
+    background-color 200ms var(--button-ease);
 }
 
 .tabs button span {
-  min-width: 24px;
-  padding: 2px 8px;
-  color: var(--text-soft, #77788f);
-  background: var(--indigo-50, #f1f0fc);
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  display: inline-grid;
+  place-items: center;
+  color: #9d9cb4;
+  background: #f1f1f7;
   border-radius: 999px;
   font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition:
+    color 200ms var(--button-ease),
+    background-color 200ms var(--button-ease);
 }
 
-.tabs .active,
-.tabs .active:hover {
-  color: #fff;
-  background: var(--accent, #7772c9);
+.tabs .active {
+  color: var(--ink, #28294a);
+  font-weight: 600;
+}
+
+.tabs .active::after {
+  transform: scaleX(1);
 }
 
 .tabs .active span {
-  color: var(--accent, #7772c9);
-  background: #fff;
+  color: var(--accent-dark, #514c9a);
+  background: var(--accent-pale, #f1f0fc);
+}
+
+@media (hover: hover) {
+  .tabs button:not(.active):hover {
+    color: #4a4b6a;
+  }
+
+  .tabs button:not(.active):hover::after {
+    background: #dcdbea;
+    transform: scaleX(1);
+  }
 }
 
 .tabs button:focus-visible {
   outline: 3px solid rgba(119, 114, 201, 0.35);
-  outline-offset: 1px;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs button,
+  .tabs button::after,
+  .tabs button span {
+    transition: none;
+  }
 }

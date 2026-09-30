@@ -7,9 +7,9 @@ import styles from "./presence-select.module.css";
 export type PresenceStatus = "available" | "in_meeting" | "busy";
 
 const options: { value: PresenceStatus; label: string; description: string }[] = [
-  { value: "available", label: "Available", description: "Students can find you in the Available list" },
-  { value: "in_meeting", label: "In a meeting", description: "Shown to students, hidden from Available" },
-  { value: "busy", label: "Busy (in a class)", description: "Shown to students, hidden from Available" },
+  { value: "available", label: "Available", description: "Listed as available to students" },
+  { value: "in_meeting", label: "In a meeting", description: "Visible, but not listed as available" },
+  { value: "busy", label: "Busy (in a class)", description: "Visible, but not listed as available" },
 ];
 
 export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onChange: (next: PresenceStatus) => void }) {
@@ -45,7 +45,7 @@ export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onC
     <div className={styles.root} ref={rootRef}>
       <button
         type="button"
-        className={styles.trigger}
+        className={`${styles.trigger} ${styles[`trigger_${current.value}`]}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Your status: ${current.label}`}
@@ -53,10 +53,11 @@ export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onC
       >
         <span className={`${styles.dot} ${styles[current.value]}`} />
         <span className={styles.triggerLabel}>{current.label}</span>
-        <ChevronDown size={14} className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`} />
+        <ChevronDown size={14} strokeWidth={2.4} className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`} />
       </button>
       {open && (
         <div className={styles.menu} role="listbox" aria-label="Your status" onKeyDown={handleMenuKey}>
+          <p className={styles.menuTitle} aria-hidden="true">Set your status</p>
           {options.map((option, index) => (
             <button
               key={option.value}
@@ -72,7 +73,7 @@ export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onC
                 <strong>{option.label}</strong>
                 <small>{option.description}</small>
               </span>
-              {option.value === value && <Check size={14} className={styles.check} />}
+              {option.value === value && <Check size={16} strokeWidth={2.5} className={styles.check} />}
             </button>
           ))}
         </div>

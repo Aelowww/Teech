@@ -14,6 +14,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
 
@@ -102,7 +103,7 @@ export default function Page() {
             <div><Clock3 size={18} /><dt>Time</dt><dd>{draft.preferredTime}</dd></div>
             {draft.meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{draft.meetingLocation}</dd></div>}
           </dl>
-          <button className={booking.continueButton} type="submit">Review Appointment<ArrowRight size={17} /></button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="submit">Review Appointment<ArrowRight size={17} /></button>
         </aside>
       </form>
     </DesktopLayout>

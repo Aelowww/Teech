@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { AppShell } from "./app-shell";
+import { Backdrop } from "./backdrop";
 import styles from "./app-loader.module.css";
 
 type Role = "student" | "faculty";
@@ -105,21 +106,29 @@ function Calendar() {
 const skeletons: Record<Layout, () => React.ReactNode> = {
   dashboard: () => (
     <>
-      <Card className={styles.hero}>
-        <Bone w="45%" h={32} r={10} />
-        <Bone w="60%" h={14} />
-        <div className={styles.inline}><Bone w={190} h={46} r={23} /><Bone w={150} h={46} r={23} /></div>
-        <div className={styles.stats}>{[0, 1, 2].map((index) => <Bone key={index} h={72} r={14} />)}</div>
-      </Card>
-      <div className={styles.twoColumn}>
-        <div className={styles.stack24}>
-          <Card><Bone w={140} h={20} /><div className={styles.week}>{Array.from({ length: 7 }, (_, index) => <Bone key={index} h={70} r={14} />)}</div></Card>
-          <Card><Bone w={180} h={20} /><Row /><Row /></Card>
+      <div className={styles.headerRow}>
+        <div className={styles.inline}>
+          <Bone w={64} h={64} r={32} />
+          <div className={styles.stack}><Bone w={110} h={14} /><Bone w={220} h={26} r={8} /></div>
+          <Bone w={40} h={40} r={20} />
         </div>
-        <div className={styles.stack24}>
-          <Card className={styles.stack}><div className={styles.inline}><Bone w={48} h={48} r={24} /><div className={styles.grow}><Lines count={2} /></div></div><div className={styles.week}>{Array.from({ length: 7 }, (_, index) => <Bone key={index} w={34} h={34} r={17} />)}</div></Card>
-          <Card className={styles.stack}><Bone w="50%" h={18} /><Lines count={2} /><Bone h={46} r={23} /></Card>
-        </div>
+        <Bone w={190} h={44} r={22} />
+      </div>
+      <div className={styles.homeTop}>
+        <Card className={styles.stack}>
+          <div className={styles.headerRow}><Bone w={80} h={12} /><Bone w={70} h={24} r={12} /></div>
+          <div className={styles.inline}><Bone w={56} h={56} r={28} /><div className={styles.grow}><Bone w="55%" h={22} r={8} /><Bone w="75%" h={14} /></div></div>
+        </Card>
+        <Card className={styles.stack}>
+          <div className={styles.inline}><Bone w={44} h={44} r={22} /><div className={styles.grow}><Lines count={2} /></div><Bone w={70} h={30} r={15} /></div>
+          <div className={styles.week}>{Array.from({ length: 7 }, (_, index) => <Bone key={index} w={32} h={32} r={16} />)}</div>
+        </Card>
+      </div>
+      <Bone w={200} h={18} />
+      <div className={styles.cardGrid}>
+        {Array.from({ length: 3 }, (_, index) => (
+          <Card key={index} className={styles.inline}><Bone w={44} h={44} r={22} /><div className={styles.grow}><Bone w="55%" h={15} /><Bone w="75%" h={12} /><Bone w={64} h={20} r={10} /></div></Card>
+        ))}
       </div>
     </>
   ),
@@ -264,8 +273,7 @@ function GuestSkeleton() {
   return (
     <main className={styles.guest} aria-busy="true" aria-live="polite">
       <span className={styles.srOnly}>Loading…</span>
-      <div className={styles.circle} aria-hidden="true" />
-      <div className={styles.circleBottom} aria-hidden="true" />
+      <Backdrop />
       <div className={styles.guestContent}>
         <Bone w={320} h={40} r={12} />
         <Bone w={200} h={16} />

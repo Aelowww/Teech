@@ -274,25 +274,6 @@
   background: #fff;
 }
 
-.circle,
-.circleBottom {
-  position: absolute;
-  width: clamp(360px, 34vw, 620px);
-  aspect-ratio: 1;
-  background: #e7e5f9;
-  border-radius: 50%;
-}
-
-.circle {
-  top: clamp(-260px, -14vw, -140px);
-  right: clamp(-220px, -10vw, -110px);
-}
-
-.circleBottom {
-  bottom: clamp(-300px, -16vw, -170px);
-  left: clamp(-240px, -11vw, -120px);
-}
-
 .guestContent {
   position: relative;
   z-index: 1;
@@ -325,5 +306,31 @@
 @media (prefers-reduced-motion: reduce) {
   .bone {
     animation: none;
+  }
+}
+
+/* Home skeleton: mirrors the ported mobile home layout. */
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.homeTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 400px);
+  gap: 20px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .homeTop {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

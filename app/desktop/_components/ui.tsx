@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowLeft,
+  ArrowRight,
+  CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -11,11 +13,14 @@ import {
   Inbox,
   LockKeyhole,
   Mail,
+  MapPin,
   Search,
   UserRound,
   X,
 } from "lucide-react";
 import { AppShell } from "./app-shell";
+import { Backdrop } from "./backdrop";
+import buttonStyles from "./button.module.css";
 import styles from "./ui.module.css";
 
 export type Action = {
@@ -60,15 +65,13 @@ export function DesktopLayout({
 
   return (
     <main className={styles.guest}>
-      <div className={styles.circle} aria-hidden="true" />
-      <div className={styles.circleBottom} aria-hidden="true" />
+      <Backdrop />
       {backTo && (
         <Link className={styles.back} href={backTo} aria-label="Go back">
           <ArrowLeft size={20} />
         </Link>
       )}
       <div className={[styles.guestCard, className].filter(Boolean).join(" ")}>{children}</div>
-      <footer className={styles.footer}>Teech <span>•</span> Student &amp; Faculty Portal</footer>
     </main>
   );
 }
@@ -114,7 +117,7 @@ export function ActionLink({
 }) {
   return (
     <Link
-      className={`${styles.action} ${primary ? styles.actionPrimary : ""} ${action.tone === "danger" ? styles.actionDanger : ""}`}
+      className={`${buttonStyles.button} ${primary ? buttonStyles.primary : action.tone === "danger" ? buttonStyles.danger : buttonStyles.secondary}`}
       href={action.href}
     >
       {action.label}
@@ -224,7 +227,7 @@ export function EmptyState({
       {icon ? <span className={styles.emptyIcon} aria-hidden="true">{icon}</span> : <Inbox size={28} aria-hidden="true" />}
       <strong>{title}</strong>
       <p>{description}</p>
-      {action && <Link className={styles.emptyAction} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
+      {action && <Link className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.emptyAction}`} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
     </section>
   );
 }
@@ -265,9 +268,9 @@ export function CardList({ items }: { items: CardItem[] }) {
           <div>
             <strong>{item.title}</strong>
             <small>{item.description}</small>
-            {item.status && <em className={item.status === "Available" || item.status === "Confirmed" ? styles.statusGood : styles.statusBad}>{item.status}</em>}
+            {item.status && <em className={`${styles.statusPill} ${statusToneClass(item.status)}`}>{item.status}</em>}
           </div>
-          {item.href && <ChevronRight size={16} />}
+          {item.href && <ChevronRight className={styles.listChevron} size={16} />}
         </>;
 
         return item.href
@@ -276,6 +279,13 @@ export function CardList({ items }: { items: CardItem[] }) {
       })}
     </div>
   );
+}
+
+function statusToneClass(status: string) {
+  const value = status.toLowerCase();
+  if (value === "available" || value === "confirmed") return styles.statusGood;
+  if (value.startsWith("busy") || value === "declined" || value === "cancelled" || value === "expired") return styles.statusDanger;
+  return styles.statusBad;
 }
 
 export function FilterTabs({
@@ -403,10 +413,10 @@ export function AvailabilitySlots({
   );
 }
 
-export function ProfilePhoto({ inline = false, src }: { inline?: boolean; src?: string | null }) {
+export function ProfilePhoto({ inline = false, small = false, src }: { inline?: boolean; small?: boolean; src?: string | null }) {
   return (
-    <div className={`${styles.avatar} ${inline ? styles.avatarInline : ""}`}>
-      {src ? <Image className={styles.avatarImage} src={src} alt="Profile photo" fill sizes="120px" unoptimized /> : <UserRound size={31} />}
+    <div className={`${styles.avatar} ${inline ? styles.avatarInline : ""} ${small ? styles.avatarSmall : ""}`}>
+      {src ? <Image className={styles.avatarImage} src={src} alt="Profile photo" fill sizes="120px" unoptimized /> : <UserRound size={small ? 22 : 31} />}
     </div>
   );
 }
@@ -473,4 +483,70 @@ export function SpotlightCard({
   );
 }
 
-export const tagline = "Teach within your reach";
+export function UpNextCard({
+  eyebrow,
+  title,
+  date,
+  meta,
+  href,
+  actionLabel,
+  avatar,
+}: {
+  eyebrow: string;
+  title: string;
+  date: string;
+  meta: string[];
+  href: string;
+  actionLabel: string;
+  avatar?: string | null;
+}) {
+  const day = new Date(`${date}T00:00:00`);
+  const longDate = day.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const [time, place] = meta;
+  const when = relativeDay(day);
+  return (
+    <Link className={styles.upNext} href={href} aria-label={`${actionLabel}: ${title}, ${when}, ${longDate}, ${meta.join(", ")}`}>
+      <span className={styles.upNextTop} aria-hidden="true">
+        <small>{eyebrow}</small>
+        <em className={when === "Today" ? styles.upNextToday : ""}>{when}</em>
+      </span>
+
+      <span className={styles.upNextBody} aria-hidden="true">
+        {avatar !== undefined && (
+          <span className={styles.upNextAvatar}>
+            {avatar ? <Image className={styles.avatarImage} src={avatar} alt="" fill sizes="88px" unoptimized /> : <UserRound size={34} />}
+          </span>
+        )}
+        <span className={styles.upNextText}>
+          <strong className={styles.upNextTitle}>{title}</strong>
+          <span className={styles.upNextMeta}>
+            {time && <span><Clock3 size={15} />{time}</span>}
+            {place && <span><MapPin size={15} />{place}</span>}
+          </span>
+        </span>
+        <span className={styles.upNextDate}>
+          <small>{day.toLocaleDateString("en-US", { month: "short" })}</small>
+          <strong>{day.getDate()}</strong>
+          <small>{day.toLocaleDateString("en-US", { weekday: "short" })}</small>
+        </span>
+      </span>
+
+      <span className={styles.upNextFooter} aria-hidden="true">
+        <span className={styles.upNextHint}><CalendarDays size={15} />{longDate}</span>
+        <span className={styles.upNextGo}>{actionLabel}<ArrowRight size={16} /></span>
+      </span>
+    </Link>
+  );
+}
+
+// "Today", "Tomorrow", or "In N days".
+function relativeDay(day: Date) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = Math.round((day.getTime() - today.getTime()) / 86400000);
+  if (days <= 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  return `In ${days} days`;
+}
+
+export const tagline = "Teacher within your reach";

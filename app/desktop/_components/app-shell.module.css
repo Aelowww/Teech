@@ -21,106 +21,184 @@
   --accent-pale: var(--indigo-50);
   --ink: var(--indigo-900);
   --surface: #fff;
-  --page: #f4f3fb;
+  --page: #f6f5fb;
   --radius: 20px;
   --shadow: 0 1px 2px rgba(43, 41, 85, 0.04), 0 12px 32px rgba(43, 41, 85, 0.07);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --sidebar-width: 256px;
+  --main-pad-y: 32px;
+  --main-pad-x: 40px;
+  /* Offset for sticky panels inside pages. */
+  --sticky-top: var(--main-pad-y);
 
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   color: var(--text);
   background: var(--page);
   font-family: "DM Sans", Arial, sans-serif;
 }
 
-.header {
+.sidebar {
   position: sticky;
   top: 0;
-  z-index: 10;
-  height: 80px;
-  padding: 0 48px;
+  height: 100dvh;
+  padding: 24px 16px 16px;
   display: flex;
-  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 28px;
+  overflow-y: auto;
+  background: #fff;
+  border-right: 1px solid var(--line);
+}
+
+.sidebarTop {
+  padding: 0 4px 0 10px;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  background: rgba(255, 255, 255, 0.92);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(10px);
+  gap: 12px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 14px;
 }
 
 .brandLogo {
   display: block;
-  width: 128px;
+  width: 112px;
   height: auto;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.actions .iconButton {
-  width: 44px;
-  height: 44px;
+.sidebarTop .iconButton {
+  width: 38px;
+  height: 38px;
   display: grid;
   place-items: center;
-  color: var(--text);
+  color: var(--text-soft);
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: 50%;
+  transition:
+    color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out);
 }
 
-.actions .iconButton:hover {
+.sidebarTop .iconButton:hover {
+  color: var(--accent);
   border-color: var(--indigo-300);
 }
 
-.body {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  flex: 1;
-  padding: 32px 48px 40px;
-  display: flex;
-  align-items: flex-start;
-  gap: 32px;
+.nav {
+  display: grid;
+  gap: 2px;
 }
 
-.sidebar {
-  position: sticky;
-  top: 112px;
-  width: 272px;
-  max-height: calc(100dvh - 136px);
-  flex: 0 0 auto;
-  padding: 22px;
+.navItem {
+  height: 42px;
+  padding: 0 12px;
   display: flex;
-  flex-direction: column;
-  gap: 22px;
-  overflow-y: auto;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  align-items: center;
+  gap: 12px;
+  color: var(--text-soft);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.navItem svg {
+  flex: 0 0 auto;
+  color: var(--faint);
+  transition: color 200ms var(--ease-out);
+}
+
+.navItem:hover {
+  color: var(--indigo-900);
+  background: #f7f7fb;
+}
+
+.navItem:hover svg {
+  color: var(--text-soft);
+}
+
+.navActive,
+.navActive:hover {
+  color: var(--indigo-800);
+  background: var(--indigo-50);
+  font-weight: 600;
+}
+
+.navActive svg,
+.navActive:hover svg {
+  color: var(--accent);
+}
+
+.navItem:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 1px;
+}
+
+.sidebarFooter {
+  margin-top: auto;
+  display: grid;
+  gap: 8px;
+}
+
+.sidebarFooter .helpButton {
+  height: 42px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-soft);
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.sidebarFooter .helpButton span {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebarFooter .helpButton span svg {
+  width: 18px;
+  height: 18px;
+  color: var(--faint);
+}
+
+.sidebarFooter .helpButton > svg {
+  color: var(--faint);
+}
+
+.sidebarFooter .helpButton:hover {
+  color: var(--indigo-900);
+  background: #f7f7fb;
 }
 
 .profileCard {
-  padding: 14px;
+  padding: 12px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: var(--indigo-50);
-  border-radius: 16px;
+  gap: 12px;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
 }
 
 .avatar {
-  width: 52px;
-  height: 52px;
+  width: 38px;
+  height: 38px;
   position: relative;
   display: grid;
   flex: 0 0 auto;
@@ -150,95 +228,27 @@
 
 .profileCard strong {
   color: var(--indigo-900);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .profileCard small {
-  margin-top: 4px;
+  margin-top: 2px;
   color: var(--muted);
   font-size: 12px;
 }
 
 .skeleton {
-  width: 120px;
-  height: 14px;
+  width: 110px;
+  height: 12px;
   display: block;
   background: var(--indigo-100);
-  border-radius: 7px;
-}
-
-.nav {
-  display: grid;
-  gap: 4px;
-}
-
-.navItem {
-  height: 46px;
-  padding: 0 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-soft);
-  border-radius: 14px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.navItem:hover {
-  color: var(--indigo-800);
-  background: #f8f9fc;
-}
-
-.navActive,
-.navActive:hover {
-  color: var(--indigo-800);
-  background: var(--indigo-50);
-  font-weight: 600;
-}
-
-.sidebarFooter {
-  margin-top: auto;
-  padding-top: 18px;
-  display: grid;
-  gap: 10px;
-  border-top: 1px solid var(--line-soft);
-}
-
-.sidebarFooter small {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.sidebarFooter .helpButton {
-  min-height: 46px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--indigo-600);
-  background: var(--indigo-50);
-  border: 0;
-  border-radius: 23px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.sidebarFooter .helpButton span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sidebarFooter .helpButton:hover {
-  background: var(--indigo-100);
+  border-radius: 6px;
 }
 
 .main {
   min-width: 0;
-  flex: 1;
+  padding: var(--main-pad-y) var(--main-pad-x) 48px;
   display: flex;
   flex-direction: column;
 }
@@ -264,52 +274,141 @@
 }
 
 @media (max-width: 1280px) {
-  .header,
-  .body {
-    padding-right: 32px;
-    padding-left: 32px;
-  }
-
-  .body {
-    gap: 24px;
-  }
-
-  .sidebar {
-    width: 236px;
+  .shell {
+    --sidebar-width: 232px;
+    --main-pad-y: 28px;
+    --main-pad-x: 28px;
   }
 }
 
 @media (max-width: 1023px) {
-  .header {
-    padding-right: 20px;
-    padding-left: 20px;
-    gap: 16px;
-  }
-
-  .body {
-    padding: 20px 20px 32px;
-    gap: 16px;
+  .shell {
+    --sidebar-width: 208px;
+    --main-pad-y: 20px;
+    --main-pad-x: 20px;
   }
 
   .sidebar {
-    width: 216px;
-    padding: 16px 12px;
-    gap: 16px;
+    padding: 20px 10px 12px;
   }
 
-  .navItem {
+  .navItem,
+  .sidebarFooter .helpButton {
     padding: 0 10px;
     gap: 10px;
     font-size: 13px;
     white-space: nowrap;
   }
 
-  .helpButton {
-    font-size: 13px;
-    white-space: nowrap;
+  .brandLogo {
+    width: 96px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navItem,
+  .navItem svg,
+  .sidebarTop .iconButton,
+  .sidebarFooter .helpButton {
+    transition: none;
+  }
+}
+
+/* Interactions (mirrors mobile) */
+
+.sidebarTop .iconButton {
+  transition:
+    color 200ms var(--button-ease),
+    background-color 200ms var(--button-ease),
+    border-color 200ms var(--button-ease),
+    transform 200ms var(--button-ease);
+}
+
+.navItem svg,
+.sidebarFooter .helpButton span svg,
+.sidebarFooter .helpButton > svg {
+  transition:
+    color 220ms var(--button-ease),
+    transform 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .navItem:hover svg,
+  .sidebarFooter .helpButton:hover span svg {
+    color: var(--accent);
+    transform: translateY(-2px);
   }
 
-  .brandLogo {
-    width: 108px;
+  .sidebarFooter .helpButton:hover > svg {
+    color: var(--accent);
+    transform: translateX(2px);
   }
+
+  .back:hover svg {
+    transform: translateX(-2px);
+  }
+}
+
+.navItem:active svg,
+.sidebarFooter .helpButton:active span svg {
+  transform: scale(0.9);
+  transition-duration: 100ms;
+}
+
+.back {
+  transition:
+    color 200ms var(--button-ease),
+    border-color 200ms var(--button-ease),
+    transform 200ms var(--button-ease);
+}
+
+.back svg {
+  transition: transform 200ms var(--button-ease);
+}
+
+.back:active {
+  transform: scale(0.96);
+  transition-duration: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navItem svg,
+  .sidebarFooter .helpButton span svg,
+  .sidebarFooter .helpButton > svg,
+  .back,
+  .back svg {
+    transition: none;
+  }
+
+  .navItem:hover svg,
+  .navItem:active svg,
+  .sidebarFooter .helpButton:hover span svg,
+  .sidebarFooter .helpButton:active span svg,
+  .sidebarFooter .helpButton:hover > svg,
+  .back:hover svg,
+  .back:active {
+    transform: none;
+  }
+}
+
+/* Page content fades in on navigation (mirrors mobile). */
+.main {
+  animation: contentFadeIn 320ms var(--button-ease);
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main {
+    animation: none;
+  }
+}
+
+/* Active item: filled icon; its cut-outs match the active background. */
+.navActive {
+  --nav-icon-cut: var(--indigo-50);
 }
