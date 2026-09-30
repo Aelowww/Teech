@@ -1,5 +1,5 @@
-import { GenericSkeleton } from "@/app/mobile/_components/screen-skeletons";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 export default function Loading() {
-  return <GenericSkeleton backTo="/student/profile" role="student" activeNav="profile" />;
+  return <AppLoader />;
 }

@@ -5,7 +5,6 @@ import { ShowcasedBadges } from "@/app/mobile/_components/showcased-badges";
 import { SignOutButton } from "@/app/mobile/_components/sign-out-button";
 import { DeleteAccountButton } from "@/app/mobile/_components/delete-account-button";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
-import { Bone, TextBone } from "@/app/mobile/_components/skeleton";
 import styles from "./profile-overview.module.css";
 
 type Role = "student" | "faculty";
@@ -21,22 +20,6 @@ export function ProfileOverview({ role, name, avatarPath, photoUrl, badges }: { 
         <strong>{name}</strong>
         <span>{role === "faculty" ? "Faculty member" : "Student"}</span>
         <ShowcasedBadges badges={badges} href={`${base}/badges`} />
-      </header>
-
-      <ProfileMenu role={role} />
-    </div>
-  );
-}
-
-export function ProfileOverviewSkeleton({ role }: { role: Role }) {
-  return (
-    <div className={styles.page}>
-      <h1 className={styles.title}>My Profile</h1>
-
-      <header className={styles.identity}>
-        <div className={styles.photo}><Bone height={88} round /></div>
-        <TextBone size={17} width={150} />
-        <span>{role === "faculty" ? "Faculty member" : "Student"}</span>
       </header>
 
       <ProfileMenu role={role} />

@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { MonthCalendar, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
-import { AvailabilitySkeleton } from "@/app/mobile/_components/screen-skeletons";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Availability = { id: string; available_date: string; start_time: string; end_time: string; meeting_location: string | null };
 
@@ -47,7 +47,7 @@ export default function Page() {
     return () => { active = false; };
   }, [router]);
 
-  if (isLoading) return <AvailabilitySkeleton />;
+  if (isLoading) return <AppLoader />;
 
   function selectDate(date: string) {
     setError("");

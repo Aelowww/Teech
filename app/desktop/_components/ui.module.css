@@ -601,29 +601,32 @@ a.listCard:hover {
 }
 
 .calendarGrid {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  justify-items: center;
-  gap: 8px 0;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .weekday {
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
+  text-align: center;
 }
 
 .day {
-  width: 46px;
-  height: 46px;
+  width: 100%;
+  aspect-ratio: 1;
   padding: 0;
   display: grid;
   place-items: center;
   color: #4f5070;
   background: transparent;
   border: 0;
-  border-radius: 50%;
+  border-radius: 14px;
   font: inherit;
   font-size: 15px;
   cursor: pointer;

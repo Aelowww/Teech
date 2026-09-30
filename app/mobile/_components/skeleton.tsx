@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { MobileLayout } from "@/app/mobile/_components/ui";
 import styles from "./skeleton.module.css";
 
 type Size = number | string;
@@ -49,31 +48,6 @@ export function TextBone({
   const height = Math.round(size * 0.72);
   const gap = (size * lineHeight - height) / 2;
   return <Bone width={width} height={height} radius={4} center={center} onDark={onDark} style={{ marginBlock: gap }} />;
-}
-
-export function SkeletonScreen({
-  className,
-  pageClassName,
-  backTo,
-  role,
-  activeNav,
-  children,
-}: {
-  className?: string;
-  pageClassName?: string;
-  backTo?: string;
-  role?: "student" | "faculty";
-  activeNav?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <MobileLayout className={className} backTo={backTo} role={role} activeNav={activeNav} fadeIn={false}>
-      <div className={pageClassName} aria-busy="true">
-        <span className={styles.srOnly} role="status">Loading…</span>
-        {children}
-      </div>
-    </MobileLayout>
-  );
 }
 
 export { styles as skeletonStyles };

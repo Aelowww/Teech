@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Mail } from "lucide-react";
 import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
-import { FacultySecuritySkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
 import { createClient } from "@/lib/supabase/client";
 import styles from "@/app/mobile/_components/profile-settings.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 export default function Page() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function Page() {
     return () => { active = false; };
   }, [router]);
 
-  if (isLoading) return <FacultySecuritySkeleton />;
+  if (isLoading) return <AppLoader />;
 
   return (
     <MobileLayout className={styles.screen} backTo="/faculty/profile" role="faculty" activeNav="profile">

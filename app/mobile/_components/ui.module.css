@@ -483,27 +483,28 @@ a.listCard:active {
 }
 .calendarGrid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  justify-items: center;
-  gap: 5px 0;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
 }
 .weekday {
-  padding-bottom: 5px;
+  padding-bottom: 2px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
 }
 .day {
-  width: 28px;
-  height: 28px;
+  width: 100%;
+  aspect-ratio: 1;
   padding: 0;
   display: grid;
   place-items: center;
   color: #62637c;
   background: transparent;
   border: 0;
-  border-radius: 50%;
+  border-radius: 10px;
   font: inherit;
-  font-size: 10px;
+  font-size: 12px;
   cursor: pointer;
 }
 .daySelected {

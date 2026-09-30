@@ -7,9 +7,9 @@ import styles from "./presence-select.module.css";
 export type PresenceStatus = "available" | "in_meeting" | "busy";
 
 const options: { value: PresenceStatus; label: string; description: string }[] = [
-  { value: "available", label: "Available", description: "Listed as available to students" },
-  { value: "in_meeting", label: "In a meeting", description: "Visible, but not listed as available" },
-  { value: "busy", label: "Busy (in a class)", description: "Visible, but not listed as available" },
+  { value: "available", label: "Available", description: "Students can book any open time" },
+  { value: "in_meeting", label: "In a meeting", description: "Students can’t book the next hour" },
+  { value: "busy", label: "Busy (in a class)", description: "Students can’t book the next hour" },
 ];
 
 export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onChange: (next: PresenceStatus) => void }) {

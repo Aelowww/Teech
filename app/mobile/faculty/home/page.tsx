@@ -9,12 +9,12 @@ import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
-import { FacultyHomeSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Profile = { id: string; full_name: string; avatar_path: string | null; presence_status: PresenceStatus | null };
 type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
@@ -76,7 +76,7 @@ export default function Page() {
     };
   }, [router]);
 
-  if (isLoading) return <FacultyHomeSkeleton />;
+  if (isLoading) return <AppLoader />;
 
   async function changePresence(next: PresenceStatus) {
     if (!profile || next === presence) return;

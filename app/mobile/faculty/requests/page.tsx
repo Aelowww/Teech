@@ -10,10 +10,10 @@ import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { studentAvatarUrls } from "@/lib/avatar";
-import { FacultyRequestsSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import { matchesTab, RequestTabs, type RequestTab } from "@/app/mobile/_components/request-tabs";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Appointment = { id: string; student_name: string | null; student_number: string | null; preferred_date: string; preferred_time: string; reason: string; status: "pending" | "confirmed" | "declined" | "cancelled" };
 
@@ -77,7 +77,7 @@ export default function Page() {
     .sort((first, second) => Number(second.status === "pending") - Number(first.status === "pending"));
   const list = useShowMore(sortedRequests);
 
-  if (isLoading) return <FacultyRequestsSkeleton />;
+  if (isLoading) return <AppLoader />;
 
   async function updateStatus(id: string, status: "confirmed" | "declined") {
     setError(""); setUpdating(id);

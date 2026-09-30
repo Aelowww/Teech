@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { CalendarDays } from "lucide-react";
 import { ActionButtons, MobileLayout, MonthCalendar, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
-import { FacultyCalendarSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Availability = { id: string; available_date: string; start_time: string; end_time: string };
 
@@ -35,7 +35,7 @@ export default function Page() {
     return () => { active = false; };
   }, [router]);
 
-  if (isLoading) return <FacultyCalendarSkeleton />;
+  if (isLoading) return <AppLoader />;
 
   const today = new Date();
   const todayValue = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
