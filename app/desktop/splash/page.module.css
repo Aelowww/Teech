@@ -1,0 +1,23 @@
+.screen {
+  --accent: #514b91;
+}
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.splash {
+  min-height: 640px;
+  flex: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+.tagline {
+  margin: 17px 0;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1px;
+}

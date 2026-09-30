@@ -1,0 +1,55 @@
+.screen {
+  --accent: #7772c9;
+}
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.updates {
+  display: grid;
+  gap: 9px;
+  margin-top: 4px;
+}
+.updates article {
+  padding: 13px;
+  display: flex;
+  gap: 10px;
+  border: 1px solid #e2e2ef;
+  border-radius: 8px;
+}
+.icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--accent);
+  background: #f0effd;
+  border-radius: 50%;
+}
+.updates div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.updates strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+.updates span {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.updates small {
+  color: #aaaac0;
+  font-size: 9px;
+}
+.empty {
+  margin: 32px auto;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}

@@ -1,0 +1,323 @@
+/*
+ * Desktop sign-in and sign-up screens (student and faculty), used by
+ * auth-frame.tsx. Same look as the mobile screens and the desktop welcome
+ * page: white canvas, lavender corner circles, and a centered white card
+ * holding the form.
+ */
+
+.screen {
+  --accent: #7772c9;
+  --accent-dark: #514c9a;
+  --accent-pale: #f1f0fc;
+  --circle: #e7e5f9;
+  --line: #dcdcec;
+  --ink: #28294a;
+  --heading: #4c479a;
+  --muted: #77788f;
+  position: relative;
+  min-height: 100dvh;
+  padding: 0 32px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  overflow: hidden;
+  color: var(--ink);
+  background: #fff;
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+/* Decorative circles, matching the welcome page */
+.circle,
+.circleBottom {
+  position: absolute;
+  width: clamp(360px, 34vw, 620px);
+  aspect-ratio: 1;
+  background: var(--circle);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.circle {
+  top: clamp(-260px, -14vw, -140px);
+  right: clamp(-220px, -10vw, -110px);
+}
+
+.circleBottom {
+  bottom: clamp(-300px, -16vw, -170px);
+  left: clamp(-240px, -11vw, -120px);
+}
+
+/* Round back button in the top-left corner */
+.back {
+  position: absolute;
+  top: 32px;
+  left: 40px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: #5d5e78;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Centered column: heading, tagline, card */
+.content {
+  position: relative;
+  z-index: 1;
+  width: min(520px, 100%);
+  padding: clamp(48px, 9vh, 110px) 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--heading);
+  font-size: clamp(34px, 2.6vw, 44px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+}
+
+.logo {
+  width: clamp(140px, 10vw, 172px);
+  height: auto;
+  /* The logo art sits a little low in its box; nudge it onto the text line */
+  transform: translateY(-3px);
+}
+
+.tagline {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: clamp(16px, 1.1vw, 18px);
+  font-style: italic;
+}
+
+.card {
+  width: 100%;
+  margin-top: clamp(28px, 4.5vh, 44px);
+  padding: 40px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #ecebf6;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(81, 76, 154, 0.1);
+}
+
+/* Fields (FormField / PasswordField markup from ui.tsx) */
+.form {
+  display: grid;
+  gap: 22px;
+}
+
+.form label {
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form label > div {
+  min-height: 56px;
+  padding: 0 16px;
+  gap: 12px;
+  background: #f8f7fd;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.form label > div:focus-within {
+  background: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-pale);
+}
+
+.form label > div > svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.form label input {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.form label input::placeholder {
+  color: var(--muted);
+  opacity: 0.85;
+}
+
+.form label > div > button {
+  width: 36px;
+  height: 36px;
+  margin-right: -6px;
+  border-radius: 50%;
+}
+
+.form label > div > button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.inlineLink {
+  margin-top: -6px;
+  justify-self: start;
+  color: var(--accent-dark);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.inlineLink:hover {
+  color: var(--accent);
+}
+
+/* Error notice (Notice from ui.tsx) */
+.card > div:not(.form) {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.submitButton {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 28px;
+  padding: 0 16px;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(119, 114, 201, 0.3);
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.submitButton:hover:not(:disabled),
+.submitButton:focus-visible {
+  background: var(--accent-dark);
+  box-shadow: 0 14px 28px rgba(81, 76, 154, 0.35);
+  transform: translateY(-1px);
+}
+
+.submitButton:focus-visible {
+  outline: 3px solid var(--accent-pale);
+  outline-offset: 2px;
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.formNote {
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.formNote a {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.formNote a:hover {
+  text-decoration: underline;
+}
+
+/* Sign-up: wider card with the fields in two columns */
+.wide .content {
+  width: min(780px, 100%);
+}
+
+.wide .card {
+  padding: 40px 44px 32px;
+}
+
+.formColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 20px;
+}
+
+/* Children that take the whole row: wrapped fields, the password hint, the checkbox */
+.fullRow,
+.formColumns > p,
+.formColumns > .checkbox {
+  grid-column: 1 / -1;
+}
+
+.passwordHint {
+  margin: -10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.form .checkbox {
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #5d5e78;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.form .checkbox input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+@media (max-width: 860px) {
+  .formColumns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.footer {
+  position: relative;
+  z-index: 1;
+  padding: 0 0 28px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.footer span {
+  margin: 0 8px;
+  color: #c4c4d6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submitButton,
+  .back,
+  .form label > div {
+    transition: none;
+  }
+}

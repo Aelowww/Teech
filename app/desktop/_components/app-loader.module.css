@@ -1,0 +1,94 @@
+/* Desktop loading screen. Colors follow the desktop app shell (app-shell.module.css). */
+
+.screen {
+  --indigo-100: #e6e7f9;
+  --indigo-600: #676bc4;
+  --indigo-800: #484b8b;
+  --muted: #7991b8;
+  --faint: #93a7c7;
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  overflow: hidden;
+  background: #f8f9fc;
+  font-family: "Poppins", "DM Sans", Arial, sans-serif;
+}
+
+/* Thin progress line pinned to the top of the window, like a browser page load */
+.topBar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  overflow: hidden;
+  background: var(--indigo-100);
+}
+
+.topBar span {
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--indigo-600), var(--indigo-800));
+  border-radius: 0 3px 3px 0;
+  animation: slide 1.4s ease-in-out infinite;
+}
+
+/* Centered logo + progress track */
+.loader {
+  display: grid;
+  justify-items: center;
+  gap: 28px;
+}
+
+.track {
+  width: 240px;
+  height: 6px;
+  overflow: hidden;
+  background: var(--indigo-100);
+  border-radius: 999px;
+}
+
+.track span {
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: var(--indigo-600);
+  border-radius: inherit;
+  animation: slide 1.2s ease-in-out infinite;
+}
+
+.label {
+  margin: -8px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.footer {
+  padding: 0 0 32px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.footer span {
+  margin: 0 6px;
+}
+
+/* Moves the bar from off the left edge to off the right edge */
+@keyframes slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topBar span,
+  .track span {
+    width: 100%;
+    animation: none;
+  }
+}

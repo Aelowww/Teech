@@ -1,0 +1,436 @@
+/* Student home dashboard. Colors come from the variables on AppShell (_components/app-shell.module.css). */
+
+.dashboard {
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+}
+
+.center,
+.side {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard h1,
+.dashboard h2,
+.dashboard p {
+  margin: 0;
+  line-height: normal;
+}
+
+/* Hero */
+.hero {
+  min-height: 220px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: var(--indigo-50);
+  border-radius: 24px;
+}
+
+.heroCopy {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 12px;
+}
+
+.heroCopy h1 {
+  color: var(--indigo-900);
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.heroCopy p {
+  color: var(--text-soft);
+  font-size: 15px;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.heroActions .pillButton {
+  width: 224px;
+}
+
+.summary {
+  width: 360px;
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stat {
+  min-height: 96px;
+  padding: 16px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  border-radius: 16px;
+  line-height: normal;
+}
+
+.stat small {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stat strong {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.statBlue {
+  color: var(--blue-800);
+  background: var(--blue-50);
+}
+
+.statIndigo small {
+  color: var(--indigo-600);
+}
+
+.statIndigo strong,
+.statWhite strong {
+  color: var(--indigo-900);
+}
+
+.statWhite {
+  grid-column: 1 / -1;
+  background: #fff;
+  border: 1px solid var(--indigo-100);
+}
+
+.statWhite small {
+  color: var(--muted);
+}
+
+/* Shared buttons */
+.pillButton,
+.outlineButton {
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pillButton {
+  height: 48px;
+  color: var(--indigo-600);
+  background: var(--indigo-50);
+  border-radius: 30px;
+  font-size: 17px;
+}
+
+.pillButton:hover {
+  background: var(--indigo-100);
+}
+
+.outlineButton {
+  height: 44px;
+  padding: 0 20px;
+  color: var(--indigo-800);
+  background: #fff;
+  border: 1px solid var(--indigo-300);
+  border-radius: 22px;
+  font-size: 14px;
+}
+
+.heroActions .outlineButton {
+  height: 48px;
+  border-radius: 24px;
+}
+
+.outlineButton:hover {
+  border-color: var(--indigo-600);
+}
+
+/* Center cards */
+.card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cardHeader h2 {
+  color: var(--indigo-900);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.cardHeader small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 16px 12px;
+}
+
+.weekDay {
+  display: grid;
+  gap: 16px;
+}
+
+.weekDay span,
+.weekDay strong {
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.weekDay span {
+  height: 40px;
+  color: var(--faint);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.weekDay strong {
+  height: 56px;
+  color: var(--indigo-900);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.weekDay .today {
+  background: var(--indigo-200);
+  border-color: var(--indigo-200);
+  font-weight: 700;
+}
+
+.emptyState {
+  min-height: 90px;
+  padding: 20px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 8px;
+  color: var(--blue-800);
+  background: var(--blue-50);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.emptyState strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.emptyState small {
+  font-size: 13px;
+}
+
+.requestList {
+  display: grid;
+  gap: 12px;
+}
+
+.requestRow {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--indigo-50);
+  border-radius: 16px;
+}
+
+.requestRow:hover {
+  background: var(--indigo-100);
+}
+
+.requestRow > div,
+.appointmentPerson > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.requestRow strong,
+.requestRow small,
+.appointmentPerson strong,
+.appointmentPerson small {
+  display: block;
+  overflow: hidden;
+  line-height: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.requestRow strong,
+.appointmentPerson strong {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.requestRow small,
+.appointmentPerson small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.requestRow em {
+  padding: 6px 12px;
+  color: var(--blue-800);
+  background: var(--blue-50);
+  border-radius: 999px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.personIcon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--blue-800);
+  background: var(--blue-100);
+  border-radius: 50%;
+}
+
+.seeAll {
+  justify-self: end;
+  color: var(--indigo-600);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Right column */
+.sideCard {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+}
+
+.sideCard h2 {
+  color: var(--indigo-900);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sideCard p {
+  color: var(--text-soft);
+  font-size: 12px;
+}
+
+.sideCardTinted {
+  gap: 8px;
+  background: var(--indigo-50);
+  border-color: var(--indigo-50);
+}
+
+.sideCardTinted .outlineButton {
+  margin-top: 4px;
+}
+
+.status {
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text);
+  background: var(--indigo-50);
+  border: 1px solid var(--indigo-300);
+  border-radius: 22px;
+}
+
+.status span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.status i {
+  width: 14px;
+  height: 14px;
+  background: #1fcf4f;
+  border-radius: 50%;
+}
+
+.appointment {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  background: var(--indigo-50);
+  border-radius: 16px;
+}
+
+.appointmentPerson {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quickActions {
+  margin-top: auto;
+  gap: 12px;
+}
+
+.quickActions h2 {
+  font-size: 16px;
+}
+
+/* Narrower desktops: the right column moves under the main content. */
+@media (max-width: 1400px) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quickActions {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .summary {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .statWhite {
+    grid-column: auto;
+  }
+}
