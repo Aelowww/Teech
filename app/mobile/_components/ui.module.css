@@ -359,7 +359,7 @@ a.listCard:active {
 
 .listChevron {
   flex: 0 0 auto;
-  color: #c2c1d4;
+  color: rgba(255, 255, 255, 0.7);
   transition:
     color 220ms var(--button-ease),
     transform 220ms var(--button-ease);
@@ -940,11 +940,10 @@ a.listCard:active {
   display: flex;
   align-items: center;
   gap: 14px;
-  color: var(--ink);
-  background: #fff;
-  border: 1px solid #ebe9f5;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   border-radius: 16px;
-  box-shadow: 0 1px 2px rgba(40, 41, 74, 0.04);
+  box-shadow: 0 10px 24px rgba(81, 76, 154, 0.22);
   transition:
     transform 220ms var(--button-ease),
     border-color 220ms var(--button-ease),
@@ -959,12 +958,13 @@ a.listCard:active {
   align-content: center;
   justify-items: center;
   gap: 1px;
-  background: var(--accent-pale);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 12px;
 }
 
 .upNextDate small {
-  color: var(--accent);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -972,7 +972,7 @@ a.listCard:active {
 }
 
 .upNextDate strong {
-  color: var(--accent-dark);
+  color: #fff;
   font-size: 21px;
   font-weight: 700;
   line-height: 1;
@@ -986,7 +986,7 @@ a.listCard:active {
 }
 
 .upNextBody small {
-  color: var(--accent);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1003,7 +1003,7 @@ a.listCard:active {
 
 .upNextBody span {
   overflow: hidden;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1020,12 +1020,11 @@ a.listCard:active {
 @media (hover: hover) {
   .upNext:hover {
     transform: translateY(-1px);
-    border-color: #d9d6f2;
-    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.08);
+    box-shadow: 0 14px 28px rgba(81, 76, 154, 0.28);
   }
 
   .upNext:hover .upNextChevron {
-    color: var(--accent);
+    color: #fff;
     transform: translateX(2px);
   }
 }
