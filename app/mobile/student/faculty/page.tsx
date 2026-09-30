@@ -20,18 +20,22 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
     .select("id, full_name, department")
     .eq("role", "faculty")
     .order("full_name"),
-    supabase.from("faculty_availability").select("faculty_profile_id").eq("is_available", true).not("available_date", "is", null).gte("available_date", new Date().toISOString().slice(0, 10)),
+    supabase.from("faculty_availability").select("faculty_profile_id, available_date").eq("is_available", true).not("available_date", "is", null).gte("available_date", manilaToday()).order("available_date"),
   ]);
 
-  const availableFacultyIds = new Set(availability?.map((slot) => slot.faculty_profile_id) || []);
+  const nextOpenDates = new Map<string, string>();
+  for (const slot of availability || []) {
+    if (!nextOpenDates.has(slot.faculty_profile_id)) nextOpenDates.set(slot.faculty_profile_id, slot.available_date as string);
+  }
 
   const facultyItems = (faculty as FacultyProfile[] | null)
-    ?.filter((profile) => showingAll || availableFacultyIds.has(profile.id))
+    ?.filter((profile) => showingAll || nextOpenDates.has(profile.id))
     .map((profile) => {
-      const available = availableFacultyIds.has(profile.id);
+      const nextOpen = nextOpenDates.get(profile.id);
+      const available = Boolean(nextOpen);
       return {
         title: profile.full_name,
-        description: profile.department || "Faculty member",
+        description: nextOpen ? `${profile.department || "Faculty member"} · Next open ${formatDate(nextOpen)}` : profile.department || "Faculty member",
         status: available ? "Available" : "No upcoming dates",
         href: available ? `/student/calendar?facultyId=${profile.id}&facultyName=${encodeURIComponent(profile.full_name)}` : undefined,
       };
@@ -58,4 +62,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
       </div>
     </MobileLayout>
   );
+}
+
+function manilaToday() {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Manila" }).format(new Date());
+}
+
+function formatDate(value: string) {
+  return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 }
