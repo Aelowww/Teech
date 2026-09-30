@@ -38,6 +38,7 @@ export type CardItem = {
   description: string;
   status?: string;
   href?: string;
+  imageUrl?: string | null;
 };
 
 export function MobileLayout({
@@ -257,7 +258,7 @@ export function CardList({ items }: { items: CardItem[] }) {
     <div className={styles.list}>
       {items.map((item) => {
         const card = <>
-          <span className={styles.itemAvatar}><UserRound size={18} /></span>
+          <span className={styles.itemAvatar}>{item.imageUrl ? <Image className={styles.avatarImage} src={item.imageUrl} alt="" fill sizes="35px" unoptimized /> : <UserRound size={18} />}</span>
           <div>
             <strong>{item.title}</strong>
             <small>{item.description}</small>

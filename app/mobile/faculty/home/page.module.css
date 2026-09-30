@@ -107,3 +107,18 @@
   color: var(--muted);
   font-size: 10px;
 }
+.greetingText {
+  min-width: 0;
+  flex: 1;
+}
+.greetingText small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.presenceError {
+  margin: -8px 0 12px;
+  color: #c2413a;
+  font-size: 11px;
+  text-align: right;
+}

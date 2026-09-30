@@ -11,9 +11,10 @@ import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import { signedAvatarUrl } from "@/lib/avatar";
+import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
 
-type Profile = { id: string; full_name: string; avatar_path: string | null };
+type Profile = { id: string; full_name: string; avatar_path: string | null; presence_status: PresenceStatus | null };
 type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
 const pendingPreviewLimit = 1;
@@ -25,6 +26,8 @@ export default function Page() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [openDates, setOpenDates] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [presence, setPresence] = useState<PresenceStatus>("available");
+  const [presenceError, setPresenceError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -33,7 +36,7 @@ export default function Page() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.replace("/faculty/sign-in"); return; }
-      const { data: currentProfile } = await supabase.from("profiles").select("id, full_name, role, avatar_path").eq("auth_user_id", user.id).maybeSingle();
+      const { data: currentProfile } = await supabase.from("profiles").select("id, full_name, role, avatar_path, presence_status").eq("auth_user_id", user.id).maybeSingle();
       if (!currentProfile || currentProfile.role !== "faculty") { await supabase.auth.signOut(); router.replace("/faculty/sign-in"); return; }
       const [requestsResult, availabilityResult] = await Promise.all([
         supabase.from("appointment_requests").select("id, student_name, preferred_date, preferred_time, reason, status, meeting_location").eq("faculty_profile_id", currentProfile.id).in("status", ["pending", "confirmed"]).gte("preferred_date", localDateValue()).order("preferred_date").order("preferred_time"),
@@ -41,6 +44,7 @@ export default function Page() {
       ]);
       if (!active) return;
       setProfile(currentProfile);
+      setPresence(currentProfile.presence_status || "available");
       void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setRequests(requestsResult.data as Request[] || []);
       setOpenDates([...new Set((availabilityResult.data || []).map((slot) => slot.available_date as string))]);
@@ -70,6 +74,15 @@ export default function Page() {
 
   if (isLoading) return <AppLoader />;
 
+  async function changePresence(next: PresenceStatus) {
+    if (!profile || next === presence) return;
+    const previous = presence;
+    setPresence(next);
+    setPresenceError("");
+    const { error } = await createClient().from("profiles").update({ presence_status: next }).eq("id", profile.id);
+    if (error) { setPresence(previous); setPresenceError("Your status could not be updated. Try again."); }
+  }
+
   const now = localDateTimeValue();
   const upcoming = requests
     .filter((request) => `${request.preferred_date}T${request.preferred_time}` >= now)
@@ -88,7 +101,8 @@ export default function Page() {
     <MobileLayout className={styles.screen} role="faculty" activeNav="home">
       <div className={styles.page}>
         <header className={styles.header}><BrandLogo /><NotificationBell href="/faculty/notifications" /></header>
-        <div className={styles.greeting}><ProfilePhoto inline src={photoUrl} /><div><strong>{getGreeting()}</strong><small>{profile?.full_name || "Faculty"}</small></div></div>
+        <div className={styles.greeting}><ProfilePhoto inline src={photoUrl} /><div className={styles.greetingText}><strong>{getGreeting()}</strong><small>{profile?.full_name || "Faculty"}</small></div><PresenceSelect value={presence} onChange={(next) => void changePresence(next)} /></div>
+        {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
 
         {nextConsultation ? (
           <SpotlightCard
