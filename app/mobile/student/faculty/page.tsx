@@ -46,9 +46,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const avatarUrls = new Map((signedAvatars || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
 
   const allFaculty = (faculty as FacultyProfile[] | null) || [];
-  const availableCount = allFaculty.filter((profile) => nextOpenDates.has(profile.id)).length;
+  const isBookableNow = (profile: FacultyProfile) => (profile.presence_status || "available") === "available" && nextOpenDates.has(profile.id);
+  const availableCount = allFaculty.filter(isBookableNow).length;
   const facultyItems = allFaculty
-    .filter((profile) => showingAll || nextOpenDates.has(profile.id))
+    .filter((profile) => showingAll || isBookableNow(profile))
     .map((profile) => {
       const nextOpen = nextOpenDates.get(profile.id);
       const presence = profile.presence_status || "available";
