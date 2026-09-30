@@ -1,8 +1,12 @@
 .actions {
-  margin-top: 16px;
+  margin-bottom: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+.single {
+  grid-template-columns: 1fr;
 }
 
 .actions button {
@@ -13,7 +17,7 @@
   gap: 6px;
   border-radius: 999px;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -25,12 +29,20 @@
 
 .confirm {
   color: #fff;
-  background: #7772c9;
+  background: var(--accent, #7772c9);
   border: 0;
+}
+
+.confirm:hover {
+  background: var(--accent-dark, #514c9a);
 }
 
 .decline {
   color: #c2413b;
   background: #fff;
   border: 1px solid #f1c6c3;
+}
+
+.decline:hover {
+  background: #fff2f1;
 }

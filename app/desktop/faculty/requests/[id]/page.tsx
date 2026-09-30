@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Ban, Bell, Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
+import { Ban, Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { DesktopLayout, PageHeading } from "@/app/desktop/_components/ui";
 import { RequestDecisionButtons } from "@/app/desktop/_components/request-decision-buttons";
@@ -45,19 +45,29 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   if (!appointment) redirect("/faculty/requests");
 
   const request = appointment as Appointment;
-  const copy = statusCopy(request.status, request.cancelled_by);
+  const expired = request.status === "pending" && request.preferred_date < localDateValue();
+  const copy = expired
+    ? { title: "Request expired", subtitle: "This date has passed. You can decline it to clear it from your list." }
+    : statusCopy(request.status, request.cancelled_by);
   const StatusIcon = request.status === "confirmed" ? CheckCircle2 : request.status === "pending" ? Clock3 : request.status === "cancelled" ? Ban : XCircle;
 
   return (
     <DesktopLayout className={styles.screen} backTo="/faculty/requests" role="faculty" activeNav="requests">
       <div className={styles.page}>
-        <div className={styles.statusMark}><StatusIcon size={34} /></div>
-        <PageHeading title={copy.title} subtitle={copy.subtitle} />
-        <div className={styles.timeline} aria-label={`Request status: ${request.status}`}>
-          <div><span className={styles.complete}><Check size={13} /></span><small>Received</small></div>
-          <div><span className={request.status === "pending" ? styles.current : styles.complete}>{request.status === "pending" ? <Clock3 size={13} /> : <Check size={13} />}</span><small>Pending</small></div>
-          <div><span className={request.status === "confirmed" ? styles.complete : ""}>{request.status === "confirmed" ? <Check size={13} /> : <Building2 size={13} />}</span><small>Confirmed</small></div>
-        </div>
+        <aside className={styles.summary}>
+          <div className={styles.statusMark}><StatusIcon size={34} /></div>
+          <PageHeading title={copy.title} subtitle={copy.subtitle} />
+          <div className={styles.timeline} aria-label={`Request status: ${request.status}`}>
+            <div><span className={styles.complete}><Check size={13} /></span><small>Received</small></div>
+            <div><span className={request.status === "pending" ? styles.current : styles.complete}>{request.status === "pending" ? <Clock3 size={13} /> : <Check size={13} />}</span><small>Pending</small></div>
+            <div><span className={request.status === "confirmed" ? styles.complete : ""}>{request.status === "confirmed" ? <Check size={13} /> : <Building2 size={13} />}</span><small>Confirmed</small></div>
+          </div>
+          <div className={styles.summaryActions}>
+            {request.status === "pending" && <RequestDecisionButtons requestId={request.id} canConfirm={!expired} />}
+            {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}
+            <Link className={styles.homeButton} href="/faculty/requests">Back to Requests</Link>
+          </div>
+        </aside>
         <section className={styles.detailsCard}>
           <header><span>Appointment ID</span><strong>{request.appointment_code || request.id}</strong></header>
           <div className={styles.faculty}><span className={styles.initials}>{initialsFor(request.student_name)}</span><div><strong>{request.student_name || "Student"}</strong><small>{request.student_number ? `Student ID ${request.student_number}` : "Consultation request"}</small></div></div>
@@ -68,19 +78,20 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </dl>
           <div className={styles.reason}><span>Reason</span><p>{request.reason}</p>{request.details && <small>{request.details}</small>}</div>
         </section>
-        {request.status === "pending" && <RequestDecisionButtons requestId={request.id} />}
-        {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}
-        {request.status !== "pending" && <aside className={styles.notice}><Bell size={16} /><span>The student is notified whenever this request&apos;s status changes.</span></aside>}
-        <Link className={styles.homeButton} href="/faculty/requests">Back to Requests</Link>
       </div>
     </DesktopLayout>
   );
 }
 
+function localDateValue() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
 function statusCopy(status: AppointmentStatus, cancelledBy: string | null) {
   if (status === "confirmed") return { title: "Consultation confirmed", subtitle: "This consultation is on your schedule." };
   if (status === "declined") return { title: "Request declined", subtitle: "You declined this consultation request." };
-  if (status === "cancelled") return { title: "Request cancelled", subtitle: cancelledBy === "faculty" ? "You cancelled this consultation." : "The student cancelled this consultation." };
+  if (status === "cancelled") return { title: "Request cancelled", subtitle: cancelledBy === "system" ? "This request expired before you responded." : cancelledBy === "faculty" ? "You cancelled this consultation." : "The student cancelled this consultation." };
   return { title: "Needs your response", subtitle: "Confirm or decline this consultation request." };
 }
 

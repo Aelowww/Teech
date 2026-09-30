@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Camera, LoaderCircle } from "lucide-react";
 import { ProfilePhoto } from "@/app/desktop/_components/ui";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
-import { avatarBucket, avatarUrl, toSquareJpeg } from "@/lib/avatar";
+import { avatarBucket, signedAvatarUrl, toSquareJpeg } from "@/lib/avatar";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./avatar-uploader.module.css";
 
@@ -15,6 +15,13 @@ export function AvatarUploader({ initialPath }: { initialPath: string | null }) 
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [path, setPath] = useState(initialPath);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void signedAvatarUrl(createClient(), path).then((url) => { if (active) setPhotoUrl(url); });
+    return () => { active = false; };
+  }, [path]);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
@@ -67,7 +74,7 @@ export function AvatarUploader({ initialPath }: { initialPath: string | null }) 
   return (
     <div className={styles.uploader}>
       <div className={styles.photo}>
-        <ProfilePhoto src={avatarUrl(path)} />
+        <ProfilePhoto src={photoUrl} />
         <button className={styles.cameraButton} type="button" onClick={() => inputRef.current?.click()} disabled={saving} aria-label={path ? "Change profile photo" : "Upload profile photo"}>
           {saving ? <LoaderCircle className={styles.spinner} size={15} /> : <Camera size={15} />}
         </button>

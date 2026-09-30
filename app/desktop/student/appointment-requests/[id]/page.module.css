@@ -1,208 +1,303 @@
-.screen {
-  --accent: #7772c9;
-}
+/*
+ * Request details (student and faculty share this file).
+ * Left: summary panel with status, timeline and actions. Right: the appointment details card.
+ */
+
 .page {
-  flex: 1;
-  min-height: 0;
-  padding-bottom: 8px;
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+/* Summary panel */
+.summary {
+  position: sticky;
+  top: 112px;
+  padding: 32px 28px 28px;
   display: flex;
   flex-direction: column;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
+
+.summary h1,
+.summary p {
+  text-align: center;
+}
+
+.summary h1 {
+  font-size: 24px;
+}
+
+.summary p {
+  margin: 8px auto 24px;
+  font-size: 14px;
+}
+
 .statusMark {
-  width: 64px;
-  height: 64px;
-  margin: 4px auto 15px;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 18px;
   display: grid;
   place-items: center;
   color: var(--accent);
-  background: #eeedfc;
+  background: var(--indigo-50);
   border-radius: 50%;
+  box-shadow: 0 0 0 10px #f8f9fc;
 }
+
 .timeline {
-  width: min(100%, 235px);
-  margin: 2px auto 21px;
+  width: 100%;
+  margin: 0 auto 28px;
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
   text-align: center;
 }
+
 .timeline::before {
   content: "";
-  height: 1px;
+  height: 2px;
   position: absolute;
-  top: 10px;
+  top: 15px;
   right: 16.7%;
   left: 16.7%;
-  background: #deddf0;
+  background: var(--indigo-100);
 }
+
 .timeline div {
   position: relative;
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 5px;
-  color: #9a9ab2;
+  gap: 8px;
+  color: var(--faint);
 }
+
 .timeline span {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
-  color: #b4b3d8;
-  border: 1px solid #d6d5ed;
+  color: var(--indigo-300);
+  background: #fff;
+  border: 2px solid var(--indigo-100);
   border-radius: 50%;
 }
+
 .timeline .complete,
 .timeline .current {
   color: #fff;
   background: var(--accent);
   border-color: var(--accent);
 }
+
 .timeline .current {
-  box-shadow: 0 0 0 3px #eeedfc;
+  box-shadow: 0 0 0 4px var(--indigo-50);
 }
+
 .timeline small {
-  color: #777896;
-  font-size: 9px;
+  color: var(--text-soft);
+  font-size: 13px;
   white-space: nowrap;
 }
+
+.summaryActions {
+  padding-top: 20px;
+  display: grid;
+  border-top: 1px solid var(--line-soft);
+}
+
+.homeButton {
+  width: 100%;
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--indigo-50);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.homeButton:hover,
+.homeButton:focus-visible {
+  color: #fff;
+  background: var(--accent);
+}
+
+/* Details card */
 .detailsCard {
   overflow: hidden;
-  border: 1px solid #deddf0;
-  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
+
 .detailsCard > header {
-  padding: 13px 14px;
-  display: grid;
-  gap: 4px;
-  background: #f2f1fd;
-}
-.detailsCard > header span,
-.reason > span {
-  color: #7375a0;
-  font-size: 10px;
-}
-.detailsCard > header strong {
-  color: #474579;
-  font-size: 12px;
-}
-.faculty {
-  padding: 14px;
+  padding: 22px 28px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #edecf5;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--indigo-50);
 }
+
+.detailsCard > header span,
+.reason > span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.detailsCard > header strong {
+  color: var(--indigo-800);
+  font-size: 16px;
+  font-family: ui-monospace, "Cascadia Mono", monospace;
+}
+
+.faculty {
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
 .initials {
-  width: 30px;
-  height: 30px;
+  width: 56px;
+  height: 56px;
   display: grid;
   flex: 0 0 auto;
   place-items: center;
   color: var(--accent);
-  background: #f0effd;
+  background: var(--indigo-50);
   border-radius: 50%;
-  font-size: 10px;
+  font-size: 18px;
   font-weight: 700;
 }
+
 .faculty div {
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
+
 .faculty strong {
   color: var(--ink);
-  font-size: 12px;
-}
-.faculty small {
-  color: var(--muted);
-  font-size: 9px;
-}
-.detailsCard dl {
-  margin: 0;
-  padding: 3px 14px;
-  display: grid;
-}
-.detailsCard dl div {
-  min-height: 37px;
-  display: grid;
-  grid-template-columns: 20px 50px minmax(0, 1fr);
-  align-items: center;
-  color: #a2a2bc;
-}
-.detailsCard dt {
-  font-size: 11px;
-}
-.detailsCard dd {
-  margin: 0;
-  color: #45436d;
-  font-size: 11px;
+  font-size: 20px;
   font-weight: 600;
 }
+
+.faculty small {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* When / Where / Status as three tiles */
+.detailsCard dl {
+  margin: 0;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.detailsCard dl div {
+  min-width: 0;
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-areas:
+    "icon label"
+    "value value";
+  align-items: center;
+  gap: 10px 8px;
+  color: var(--accent);
+  background: var(--page);
+  border-radius: 16px;
+}
+
+.detailsCard dl svg {
+  grid-area: icon;
+}
+
+.detailsCard dt {
+  grid-area: label;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.detailsCard dd {
+  grid-area: value;
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .statusPill {
-  padding: 5px 9px;
+  padding: 5px 12px;
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
 }
+
 .statusPending {
   color: #a26015;
   background: #fff5df;
 }
+
 .statusConfirmed {
   color: #277d51;
   background: #edfbf3;
 }
+
 .statusDeclined,
 .statusCancelled {
   color: #b13a55;
   background: #fff0f3;
 }
+
 .reason {
-  padding: 10px 14px 13px;
-  border-top: 1px solid #edecf5;
+  padding: 0 28px 28px;
 }
+
 .reason p {
-  margin: 4px 0;
-  color: #45436d;
-  font-size: 11px;
+  margin: 8px 0;
+  color: var(--ink);
+  font-size: 16px;
   font-weight: 600;
+  line-height: 1.5;
 }
+
 .reason small {
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
+  display: block;
+  padding: 16px 18px;
+  color: var(--text);
+  background: var(--page);
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
 }
-.notice {
-  margin: 12px 0;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: #52527a;
-  background: #f1f0fc;
-  border: 1px solid #e2e0f5;
-  border-radius: 8px;
-  font-size: 10px;
-  line-height: 1.35;
-}
-.homeButton {
-  width: 100%;
-  min-height: 50px;
-  margin-top: auto;
-  margin-bottom: 12px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: #f1f0fc;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-}
-.homeButton:hover,
-.homeButton:focus-visible {
-  color: #fff;
-  background: var(--accent);
+
+@media (max-width: 1100px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary {
+    position: static;
+  }
+
+  .detailsCard dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

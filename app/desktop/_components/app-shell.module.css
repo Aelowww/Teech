@@ -1,4 +1,8 @@
-/* Desktop frame for signed-in pages. Values follow the "STUDENT/HOME - DESKTOP" Figma frame. */
+/*
+ * Desktop website frame for signed-in pages (app-shell.tsx).
+ * Values follow the "STUDENT/HOME - DESKTOP" Figma frame.
+ * The tokens on .shell are shared by every page and component rendered inside it.
+ */
 
 .shell {
   --indigo-50: #f1f2fc;
@@ -9,6 +13,7 @@
   --indigo-800: #484b8b;
   --indigo-900: #3f4170;
   --line: #d4dce9;
+  --line-soft: #e6ebf3;
   --text: #425066;
   --text-soft: #4e617f;
   --muted: #7991b8;
@@ -16,25 +21,40 @@
   --blue-50: #eff7ff;
   --blue-100: #daedff;
   --blue-800: #0068cd;
+
+  /* Tokens used by ui.tsx components and page styles */
+  --accent: var(--indigo-600);
+  --accent-dark: var(--indigo-800);
+  --accent-pale: var(--indigo-50);
+  --ink: var(--indigo-900);
+  --surface: #fff;
+  --page: #f8f9fc;
+  --radius: 20px;
+  --shadow: 0 1px 2px rgba(63, 65, 112, 0.04), 0 8px 24px rgba(63, 65, 112, 0.05);
+
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   color: var(--text);
-  background: #f8f9fc;
+  background: var(--page);
   font-family: "Poppins", "DM Sans", Arial, sans-serif;
 }
 
-/* Header */
+/* Header: pinned to the top while the page scrolls */
 .header {
-  height: 88px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 80px;
   padding: 0 48px;
   display: flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
 }
 
 .brand {
@@ -74,11 +94,11 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .search {
-  width: 320px;
+  width: 340px;
   height: 44px;
   padding: 0 16px;
   display: flex;
@@ -121,29 +141,36 @@
   border-color: var(--indigo-300);
 }
 
-/* Body */
+/* Body: sidebar + content */
 .body {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
   flex: 1;
-  padding: 40px 48px;
+  padding: 32px 48px 40px;
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   gap: 32px;
 }
 
 .sidebar {
-  width: 280px;
+  position: sticky;
+  top: 112px;
+  width: 272px;
+  max-height: calc(100dvh - 136px);
   flex: 0 0 auto;
-  padding: 24px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
+  overflow-y: auto;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--radius);
 }
 
 .profileCard {
-  padding: 16px;
+  padding: 14px;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -152,8 +179,8 @@
 }
 
 .avatar {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   position: relative;
   display: grid;
   flex: 0 0 auto;
@@ -175,12 +202,15 @@
 .profileCard strong,
 .profileCard small {
   display: block;
+  overflow: hidden;
   line-height: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .profileCard strong {
   color: var(--indigo-900);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -190,13 +220,22 @@
   font-size: 12px;
 }
 
+/* Placeholder bar while the name loads */
+.skeleton {
+  width: 120px;
+  height: 14px;
+  display: block;
+  background: var(--indigo-100);
+  border-radius: 7px;
+}
+
 .nav {
   display: grid;
-  gap: 8px;
+  gap: 4px;
 }
 
 .navItem {
-  height: 48px;
+  height: 46px;
   padding: 0 14px;
   display: flex;
   align-items: center;
@@ -205,9 +244,11 @@
   border-radius: 14px;
   font-size: 14px;
   font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .navItem:hover {
+  color: var(--indigo-800);
   background: #f8f9fc;
 }
 
@@ -220,8 +261,10 @@
 
 .sidebarFooter {
   margin-top: auto;
+  padding-top: 18px;
   display: grid;
-  gap: 12px;
+  gap: 10px;
+  border-top: 1px solid var(--line-soft);
 }
 
 .sidebarFooter small {
@@ -230,24 +273,67 @@
   font-weight: 600;
 }
 
-.pillButton {
-  height: 48px;
-  display: grid;
-  place-items: center;
+.sidebarFooter .helpButton {
+  min-height: 46px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   color: var(--indigo-600);
   background: var(--indigo-50);
-  border-radius: 30px;
-  font-size: 17px;
+  border: 0;
+  border-radius: 23px;
+  font-size: 14px;
   font-weight: 600;
 }
 
-.pillButton:hover {
+.sidebarFooter .helpButton span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebarFooter .helpButton:hover {
   background: var(--indigo-100);
 }
 
+/* Content area */
 .main {
   min-width: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.back {
+  width: fit-content;
+  margin-bottom: 18px;
+  padding: 8px 14px 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.back:hover {
+  color: var(--indigo-800);
+  border-color: var(--indigo-300);
+}
+
+.footer {
+  padding: 18px 48px 28px;
+  color: var(--faint);
+  font-size: 12px;
+  text-align: center;
+}
+
+.footer span {
+  margin: 0 6px;
 }
 
 @media (max-width: 1280px) {
@@ -262,7 +348,7 @@
   }
 
   .sidebar {
-    width: 240px;
+    width: 236px;
   }
 
   .search {

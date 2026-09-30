@@ -1,12 +1,7 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useSyncExternalStore } from "react";
 import { BriefcaseBusiness, ChevronRight, GraduationCap } from "lucide-react";
 import styles from "@/app/desktop/welcome/page.module.css";
-
-const welcomeVisitKey = "teech-welcome-seen";
 
 const roles = [
   {
@@ -23,21 +18,7 @@ const roles = [
   },
 ];
 
-function subscribe() {
-  return () => {};
-}
-
-function getVisitStatus() {
-  return window.localStorage.getItem(welcomeVisitKey) === "true";
-}
-
 export function WelcomeScreen() {
-  const hasVisited = useSyncExternalStore(subscribe, getVisitStatus, () => false);
-
-  useEffect(() => {
-    window.localStorage.setItem(welcomeVisitKey, "true");
-  }, []);
-
   return (
     <main className={styles.screen}>
       <div className={styles.circle} aria-hidden="true" />
@@ -46,9 +27,7 @@ export function WelcomeScreen() {
       <section className={styles.content}>
         <Image className={styles.logo} src="/logo/teech_logo.svg" alt="Teech" width={1118} height={348} priority />
         <h1 className={styles.title}>Who&apos;s signing in?</h1>
-        <p className={styles.subtitle}>
-          {hasVisited ? "Welcome back! Choose your role to continue." : "Choose your role to continue."}
-        </p>
+        <p className={styles.subtitle}>Choose your role to continue.</p>
 
         <nav className={styles.roles} aria-label="Choose your role">
           {roles.map(({ href, label, description, Icon }) => (

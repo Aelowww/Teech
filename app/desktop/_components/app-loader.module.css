@@ -1,94 +1,343 @@
-/* Desktop loading screen. Colors follow the desktop app shell (app-shell.module.css). */
+/*
+ * Skeleton loading screens (app-loader.tsx). Layout sizes mirror the real pages
+ * so nothing jumps when the content arrives.
+ */
 
-.screen {
-  --indigo-100: #e6e7f9;
-  --indigo-600: #676bc4;
-  --indigo-800: #484b8b;
-  --muted: #7991b8;
-  --faint: #93a7c7;
+/* Shimmering placeholder block */
+.bone {
+  display: block;
+  flex: 0 0 auto;
+  max-width: 100%;
+  background: linear-gradient(90deg, #eceef7 0%, #f6f7fc 40%, #eceef7 80%);
+  background-size: 300% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Layout helpers ---------- */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--line, #d4dce9);
+  border-radius: var(--radius, 20px);
+}
+
+.flush {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.padded {
+  padding: 24px 28px;
+  display: grid;
+  gap: 20px;
+}
+
+.band {
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--page, #f8f9fc);
+  border-bottom: 1px solid var(--line-soft, #e6ebf3);
+}
+
+.heading {
+  margin-bottom: 4px;
+  display: grid;
+  gap: 12px;
+}
+
+.stack,
+.stack12,
+.stack24 {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+}
+
+.stack {
+  gap: 10px;
+}
+
+.stack12 {
+  gap: 12px;
+}
+
+.stack24 {
+  gap: 24px;
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.grow {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 8px;
+}
+
+.centered {
+  justify-items: center;
+  text-align: center;
+}
+
+.center {
+  justify-self: center;
+}
+
+.spaced {
+  margin-bottom: 0;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: start;
+  gap: 24px;
+}
+
+.stats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  justify-items: center;
+  gap: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* ---------- Page-specific shapes ---------- */
+
+.hero {
+  padding: 28px 32px;
+  background: var(--indigo-50, #f1f2fc);
+  border-color: transparent;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.profileCard {
+  padding: 28px 22px 22px;
+  justify-items: center;
+  gap: 14px;
+}
+
+.row {
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.detail > .centered {
+  padding: 32px 28px;
+  gap: 18px;
+}
+
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-items: center;
+  gap: 12px 0;
+}
+
+.side {
+  gap: 14px;
+}
+
+.profile {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.profile > .centered {
+  padding: 32px 24px 24px;
+  gap: 12px;
+}
+
+.settingRow {
+  min-height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--line-soft, #e6ebf3);
+}
+
+.settingRow:last-child {
+  border-bottom: 0;
+}
+
+.panel {
+  width: min(880px, 100%);
+  padding: 36px 40px;
+  gap: 24px;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.panelFooter {
+  padding-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--line-soft, #e6ebf3);
+}
+
+.inbox {
+  width: min(960px, 100%);
+  display: grid;
+  gap: 24px;
+}
+
+.inboxRow {
+  padding: 18px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid var(--line-soft, #e6ebf3);
+}
+
+.inboxRow:last-child {
+  border-bottom: 0;
+}
+
+.confirmation {
+  width: min(760px, 100%);
+  margin: 24px auto 0;
+  padding: 48px 56px;
+  gap: 18px;
+}
+
+/* ---------- Guest skeleton (lavender canvas + white card) ---------- */
+
+.guest {
   position: relative;
   min-height: 100dvh;
+  padding: 0 32px;
   display: grid;
-  grid-template-rows: 1fr auto;
   place-items: center;
   overflow: hidden;
-  background: #f8f9fc;
-  font-family: "Poppins", "DM Sans", Arial, sans-serif;
+  background: #fff;
 }
 
-/* Thin progress line pinned to the top of the window, like a browser page load */
-.topBar {
+.circle,
+.circleBottom {
   position: absolute;
-  inset: 0 0 auto;
-  height: 3px;
-  overflow: hidden;
-  background: var(--indigo-100);
+  width: clamp(360px, 34vw, 620px);
+  aspect-ratio: 1;
+  background: #e7e5f9;
+  border-radius: 50%;
 }
 
-.topBar span {
-  display: block;
-  width: 35%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--indigo-600), var(--indigo-800));
-  border-radius: 0 3px 3px 0;
-  animation: slide 1.4s ease-in-out infinite;
+.circle {
+  top: clamp(-260px, -14vw, -140px);
+  right: clamp(-220px, -10vw, -110px);
 }
 
-/* Centered logo + progress track */
-.loader {
+.circleBottom {
+  bottom: clamp(-300px, -16vw, -170px);
+  left: clamp(-240px, -11vw, -120px);
+}
+
+.guestContent {
+  position: relative;
+  z-index: 1;
+  width: min(520px, 100%);
   display: grid;
   justify-items: center;
-  gap: 28px;
+  gap: 14px;
 }
 
-.track {
-  width: 240px;
-  height: 6px;
-  overflow: hidden;
-  background: var(--indigo-100);
-  border-radius: 999px;
+.guestCard {
+  width: 100%;
+  margin-top: 24px;
+  padding: 40px;
+  display: grid;
+  gap: 22px;
+  background: #fff;
+  border: 1px solid #ecebf6;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(81, 76, 154, 0.1);
 }
 
-.track span {
-  display: block;
-  width: 40%;
-  height: 100%;
-  background: var(--indigo-600);
-  border-radius: inherit;
-  animation: slide 1.2s ease-in-out infinite;
-}
+/* ---------- Responsive + reduced motion ---------- */
 
-.label {
-  margin: -8px 0 0;
-  color: var(--muted);
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.footer {
-  padding: 0 0 32px;
-  color: var(--faint);
-  font-size: 13px;
-}
-
-.footer span {
-  margin: 0 6px;
-}
-
-/* Moves the bar from off the left edge to off the right edge */
-@keyframes slide {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(300%);
+@media (max-width: 1180px) {
+  .twoColumn,
+  .detail,
+  .profile {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .topBar span,
-  .track span {
-    width: 100%;
+  .bone {
     animation: none;
   }
 }

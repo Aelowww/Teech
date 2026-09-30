@@ -23,11 +23,11 @@
 }
 
 /* Hero */
+/* Greeting on top, summary tiles in a compact row underneath */
 .hero {
-  min-height: 220px;
-  padding: 32px;
+  padding: 28px 32px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 24px;
   background: var(--indigo-50);
   border-radius: 24px;
@@ -42,7 +42,7 @@
 
 .heroCopy h1 {
   color: var(--indigo-900);
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
 }
 
@@ -62,20 +62,19 @@
 }
 
 .summary {
-  width: 360px;
-  flex: 0 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .stat {
-  min-height: 96px;
-  padding: 16px;
+  padding: 12px 16px;
   display: grid;
   align-content: start;
-  gap: 8px;
-  border-radius: 16px;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid var(--indigo-100);
+  border-radius: 14px;
   line-height: normal;
 }
 
@@ -85,13 +84,14 @@
 }
 
 .stat strong {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
 }
 
 .statBlue {
   color: var(--blue-800);
   background: var(--blue-50);
+  border-color: var(--blue-100);
 }
 
 .statIndigo small {
@@ -104,9 +104,7 @@
 }
 
 .statWhite {
-  grid-column: 1 / -1;
   background: #fff;
-  border: 1px solid var(--indigo-100);
 }
 
 .statWhite small {
@@ -353,33 +351,6 @@
   margin-top: 4px;
 }
 
-.status {
-  height: 44px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--text);
-  background: var(--indigo-50);
-  border: 1px solid var(--indigo-300);
-  border-radius: 22px;
-}
-
-.status span {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.status i {
-  width: 14px;
-  height: 14px;
-  background: #1fcf4f;
-  border-radius: 50%;
-}
-
 .appointment {
   padding: 16px;
   display: grid;
@@ -416,21 +387,5 @@
 
   .quickActions {
     margin-top: 0;
-  }
-}
-
-@media (max-width: 1200px) {
-  .hero {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .summary {
-    width: 100%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .statWhite {
-    grid-column: auto;
   }
 }

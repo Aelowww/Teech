@@ -1,40 +1,68 @@
-.screen {
-  --accent: #7772c9;
-}
+/* Faculty calendar: month view on the left, summary + actions on the right. */
+
 .page {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: start;
+  gap: 24px;
 }
+
+.side {
+  position: sticky;
+  top: 112px;
+  padding: 24px;
+  display: grid;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.side > div:last-child {
+  margin-top: 16px;
+}
+
+.side > div:last-child a {
+  width: 100%;
+}
+
 .summary {
-  margin: auto 0 16px;
-  padding: 14px;
   display: flex;
-  align-items: center;
-  gap: 11px;
-  background: #f7f6fe;
-  border: 1px solid #e3e1f1;
-  border-radius: 10px;
+  align-items: flex-start;
+  gap: 14px;
 }
+
 .summaryIcon {
-  width: 34px;
-  height: 34px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
   color: var(--accent);
-  background: #ecebfb;
-  border-radius: 9px;
+  background: var(--indigo-50);
+  border-radius: 14px;
 }
+
 .summary strong {
   display: block;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 17px;
+  font-weight: 600;
 }
+
 .summary p {
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1100px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    position: static;
+  }
 }

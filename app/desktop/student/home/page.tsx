@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Clock3, UserRound } from "lucide-react";
+import { Clock3, UserRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
+import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
-import { avatarUrl } from "@/lib/avatar";
+import { signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
 
 type Profile = { id: string; full_name: string; avatar_path: string | null; course_year: string | null };
@@ -18,6 +19,7 @@ const pendingPreviewLimit = 3;
 export default function Page() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [facultyCount, setFacultyCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +50,7 @@ export default function Page() {
       ]);
       if (!active) return;
       setProfile(currentProfile);
+      void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setAppointments(requestsResult.data as Appointment[] || []);
       setFacultyCount(new Set(facultyResult.data?.map((slot) => slot.faculty_profile_id) || []).size);
       setIsLoading(false);
@@ -91,7 +94,7 @@ export default function Page() {
       active="home"
       name={fullName}
       subtitle={profile?.course_year ? `Student • ${profile.course_year}` : "Student"}
-      avatarSrc={avatarUrl(profile?.avatar_path)}
+      avatarSrc={photoUrl}
     >
       <div className={styles.dashboard}>
         <div className={styles.center}>
@@ -150,13 +153,7 @@ export default function Page() {
         </div>
 
         <div className={styles.side}>
-          <section className={styles.sideCard}>
-            <h2>Status</h2>
-            <div className={styles.status}>
-              <span><i />Available</span>
-              <ChevronDown size={16} />
-            </div>
-          </section>
+          <LoginStreakCard role="student" />
 
           <section className={`${styles.sideCard} ${styles.sideCardTinted}`}>
             <h2>I&apos;m a student</h2>

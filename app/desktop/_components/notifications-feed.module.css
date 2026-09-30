@@ -1,55 +1,180 @@
-.screen {
-  --accent: #7772c9;
-}
+/* Notifications inbox: one panel with a toolbar and a divided list. */
+
 .page {
-  flex: 1;
-  min-height: 0;
+  width: min(960px, 100%);
   display: flex;
   flex-direction: column;
 }
-.updates {
-  display: grid;
-  gap: 9px;
-  margin-top: 4px;
+
+.inbox {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
-.updates article {
-  padding: 13px;
+
+.toolbar {
+  padding: 16px 24px;
   display: flex;
-  gap: 10px;
-  border: 1px solid #e2e2ef;
-  border-radius: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
 }
-.icon {
-  width: 32px;
-  height: 32px;
+
+.toolbar > span {
+  color: var(--text-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toolbar button {
+  min-height: 38px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  color: #fff;
+  background: var(--accent);
+}
+
+/* The list joins the toolbar into one panel */
+.updates {
+  overflow: hidden;
+  display: grid;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.toolbar + .updates {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.item {
+  width: 100%;
+  padding: 18px 56px 18px 24px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  color: inherit;
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+  font: inherit;
+  text-align: left;
+  cursor: default;
+  transition: background 0.15s ease;
+}
+
+.item:last-of-type {
+  border-bottom: 0;
+}
+
+.unread {
+  background: #f7f7fe;
+  cursor: pointer;
+}
+
+.unread:hover {
+  background: var(--accent-pale);
+}
+
+.unread strong {
+  font-weight: 700;
+}
+
+.dot {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.item:focus-visible,
+.toolbar button:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: -3px;
+}
+
+.updates .icon {
+  width: 42px;
+  height: 42px;
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  color: var(--accent);
-  background: #f0effd;
   border-radius: 50%;
 }
-.updates div {
+
+.updates .accent {
+  color: var(--accent);
+  background: #f0effd;
+}
+
+.updates .success {
+  color: #15934e;
+  background: #e6f8ee;
+}
+
+.updates .danger {
+  color: #c2413b;
+  background: #fdecea;
+}
+
+.updates .warning {
+  color: #cd8a2d;
+  background: #fff4e3;
+}
+
+.item > div {
   min-width: 0;
   display: grid;
-  gap: 3px;
+  gap: 4px;
 }
+
 .updates strong {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: 600;
 }
-.updates span {
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
+
+.item span {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
 }
+
 .updates small {
-  color: #aaaac0;
-  font-size: 9px;
-}
-.empty {
-  margin: 32px auto;
-  color: var(--muted);
+  color: var(--faint);
   font-size: 12px;
+}
+
+.empty {
+  margin: 0;
+  padding: 48px 24px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px dashed var(--indigo-200);
+  border-radius: var(--radius);
+  font-size: 15px;
   text-align: center;
 }

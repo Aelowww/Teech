@@ -17,14 +17,13 @@ export function ProfileEditor({ role }: { role: Role }) {
   const [initialEmail, setInitialEmail] = useState("");
   const [department, setDepartment] = useState("");
   const [courseYear, setCourseYear] = useState("");
-  // undefined until the profile loads, so the uploader starts from the saved photo.
   const [avatarPath, setAvatarPath] = useState<string | null | undefined>(undefined);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const profilePath = `/${role}/profile`;
+  const profilePath = `/${role}/profile/info`;
   const signInPath = `/${role}/sign-in`;
 
   useEffect(() => {

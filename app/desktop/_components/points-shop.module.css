@@ -1,0 +1,277 @@
+/* Points & Rewards: balance + rewards grid on the left, how-to-earn + history on the right. */
+
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: start;
+  gap: 24px;
+}
+
+.mainColumn,
+.sideColumn {
+  min-width: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.sideColumn {
+  position: sticky;
+  top: 112px;
+}
+
+.panel {
+  padding: 22px 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.panel .sectionTitle {
+  margin-top: 0;
+}
+
+/* Balance banner */
+.balance {
+  padding: 28px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border-radius: var(--radius);
+  box-shadow: 0 16px 36px rgba(81, 76, 154, 0.24);
+}
+
+.balance > span {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+}
+
+.balance div {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+}
+
+.balance small {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.balance strong {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.balance em {
+  font-size: 18px;
+  font-style: normal;
+  opacity: 0.85;
+}
+
+.balance p {
+  margin: 0;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sectionTitle {
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* How to earn */
+.earn {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.earn div {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--accent);
+  background: var(--accent-pale);
+  border-radius: 14px;
+}
+
+.earn span {
+  flex: 1;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.earn b {
+  color: var(--accent-dark);
+  font-size: 14px;
+}
+
+.hint {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Rewards grid */
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.item {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.item:hover {
+  border-color: var(--indigo-300);
+  transform: translateY(-2px);
+}
+
+.item > div {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+
+.item strong {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.item small {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.item em {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent-dark);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.itemIcon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border-radius: 14px;
+}
+
+.itemFreeze {
+  background: linear-gradient(135deg, #7fb8e6, #3a86c8);
+}
+
+.item button {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 16px;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.item button:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
+.item button:disabled {
+  color: var(--muted);
+  background: #f0f0f6;
+  cursor: default;
+}
+
+.item button:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+/* History */
+.history {
+  margin-top: 10px;
+  display: grid;
+}
+
+.history > div {
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.history span {
+  display: grid;
+  gap: 3px;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.history small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.history b {
+  font-size: 15px;
+}
+
+.earned {
+  color: #15934e;
+}
+
+.spent {
+  color: #c2413b;
+}
+
+@media (max-width: 1180px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sideColumn {
+    position: static;
+  }
+}

@@ -1,107 +1,137 @@
-.screen {
-  --accent: #7772c9;
-}
+/* Profile & Settings: identity card on the left, grouped settings on the right. */
+
 .page {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
 }
+
+/* Identity card */
 .identity {
-  width: 100%;
-  margin: 18px 0 12px;
+  position: sticky;
+  top: 112px;
+  padding: 32px 24px 24px;
   display: grid;
   justify-items: center;
-  color: var(--ink);
-  font-size: 15px;
+  gap: 4px;
   text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
-.identity strong {
-  font-weight: 700;
-}
-.informationCard {
-  margin-top: 17px;
-  border: 1px solid #e2e2ef;
-  border-radius: 8px;
-  overflow: hidden;
-}
-.informationHeader {
-  min-height: 43px;
-  padding: 0 13px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fafaff;
-  border-bottom: 1px solid #ececf4;
-}
-.informationHeader h2 {
-  margin: 0;
+
+.identity > strong {
   color: var(--ink);
-  font-size: 11px;
+  font-size: 20px;
   font-weight: 700;
 }
-.editLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 700;
-}
-.details {
-  width: 100%;
-  margin: 0;
-  display: grid;
-}
-.details div {
-  min-width: 0;
-  padding: 13px 14px;
-  border-bottom: 1px solid #ececf4;
-}
-.details div:last-child {
-  border-bottom: 0;
-}
-.details dt {
+
+.identity > small {
+  margin-bottom: 8px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 14px;
 }
-.details dd {
-  margin: 4px 0 0;
-  overflow-wrap: anywhere;
-  color: var(--ink);
+
+.editProfile {
+  margin-top: 12px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.editProfile:hover {
+  text-decoration: underline;
+}
+
+.signOut {
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.signOut button {
+  width: 100%;
+}
+
+/* Settings groups */
+.settings {
+  min-width: 0;
+  display: grid;
+  gap: 24px;
+}
+
+.group h2 {
+  margin: 0 0 10px 4px;
+  color: var(--muted);
   font-size: 13px;
   font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
+
 .actionList {
-  margin-top: 14px;
-  border: 1px solid #e2e2ef;
-  border-radius: 8px;
   overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
+
 .settingLink {
-  min-height: 48px;
-  padding: 0 13px;
+  width: 100%;
+  min-height: 64px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: var(--ink);
-  border-bottom: 1px solid #ececf4;
-  font-size: 12px;
-  font-weight: 600;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 0.15s ease;
 }
+
 .settingLink:last-child {
   border-bottom: 0;
 }
+
+.settingLink:hover {
+  background: var(--page);
+}
+
 .settingLink > span {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 14px;
 }
+
+.settingLink > span > svg {
+  color: var(--accent);
+}
+
 .settingLink > svg {
-  color: var(--muted);
+  color: var(--faint);
 }
-.signOut {
-  margin-top: auto;
-  margin-bottom: 12px;
-  padding-top: 18px;
+
+.danger h2 {
+  color: #b13a55;
+}
+
+.danger .actionList {
+  border-color: #f4d3da;
+}
+
+.danger .settingLink > span > svg {
+  color: #b13a55;
+}
+
+@media (max-width: 1100px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .identity {
+    position: static;
+  }
 }

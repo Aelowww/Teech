@@ -1,59 +1,16 @@
+/* Step 3 of booking. Layout comes from _components/booking.module.css. */
+
 .screen {
-  --accent: #7772c9;
+  display: block;
 }
-.page {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
+
+/* Read-only student fields in pairs, reason and details across the full width */
 .form {
   display: grid;
-  gap: 14px;
-  margin-top: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
-.submitArea {
-  margin-top: auto;
-  margin-bottom: 12px;
-  padding-top: 16px;
-}
-.submitButton {
-  width: 100%;
-  min-height: 56px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.checkbox {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  color: #64657f;
-  font-size: 10px;
-  line-height: 1.5;
-}
-.checkbox input {
-  accent-color: var(--accent);
-}
-.inlineLink {
-  align-self: end;
-  color: var(--accent-dark);
-  font-size: 11px;
-  text-decoration: underline;
-}
-.formNote {
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 10px;
-  text-align: center;
-}
-.formNote a {
-  color: var(--accent-dark);
-  font-weight: 700;
+
+.fullRow {
+  grid-column: 1 / -1;
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bell, Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
+import { Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { DesktopLayout, PageHeading } from "@/app/desktop/_components/ui";
 import { CancelAppointmentButton } from "@/app/desktop/_components/cancel-appointment-button";
@@ -48,9 +48,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   return (
     <DesktopLayout className={styles.screen} backTo="/student/appointment-requests" role="student" activeNav="requests">
       <div className={styles.page}>
-        <div className={styles.statusMark}><StatusIcon size={34} /></div>
-        <PageHeading title={copy.title} subtitle={copy.subtitle} />
-        <StatusTimeline status={request.status} />
+        <aside className={styles.summary}>
+          <div className={styles.statusMark}><StatusIcon size={34} /></div>
+          <PageHeading title={copy.title} subtitle={copy.subtitle} />
+          <StatusTimeline status={request.status} />
+          <div className={styles.summaryActions}>
+            {(request.status === "pending" || request.status === "confirmed") && <CancelAppointmentButton appointmentId={request.id} role="student" />}
+            <Link className={styles.homeButton} href="/student/home">Back to Home</Link>
+          </div>
+        </aside>
         <section className={styles.detailsCard}>
           <header><span>Appointment ID</span><strong>{request.appointment_code || request.id}</strong></header>
           <div className={styles.faculty}><span className={styles.initials}>{initialsFor(request.faculty_name)}</span><div><strong>{request.faculty_name || "Faculty member"}</strong><small>Consultation request</small></div></div>
@@ -61,9 +67,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </dl>
           <div className={styles.reason}><span>Reason</span><p>{request.reason}</p>{request.details && <small>{request.details}</small>}</div>
         </section>
-        <aside className={styles.notice}><Bell size={16} /><span>Updates to this request will appear in Notifications.</span></aside>
-        {(request.status === "pending" || request.status === "confirmed") && <CancelAppointmentButton appointmentId={request.id} role="student" />}
-        <Link className={styles.homeButton} href="/student/home">Back to Home</Link>
       </div>
     </DesktopLayout>
   );
@@ -81,7 +84,7 @@ function StatusTimeline({ status }: { status: AppointmentStatus }) {
 function statusCopy(status: AppointmentStatus, cancelledBy: string | null) {
   if (status === "confirmed") return { title: "Consultation confirmed", subtitle: "Your faculty member has confirmed this appointment." };
   if (status === "declined") return { title: "Request declined", subtitle: "This consultation request was not approved." };
-  if (status === "cancelled") return { title: "Request cancelled", subtitle: cancelledBy === "faculty" ? "Your faculty member cancelled this consultation." : "You cancelled this consultation request." };
+  if (status === "cancelled") return { title: "Request cancelled", subtitle: cancelledBy === "system" ? "This request expired without a response from your faculty member." : cancelledBy === "faculty" ? "Your faculty member cancelled this consultation." : "You cancelled this consultation request." };
   return { title: "Waiting for confirmation", subtitle: "We will notify you once your appointment has been confirmed." };
 }
 

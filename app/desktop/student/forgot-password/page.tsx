@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 
 const resetMessages: Record<string, string> = {
   invalid: "Those answers don't match our records. Check your Student ID and answers.",
-  locked: "Too many incorrect attempts. Please wait 15 minutes and try again.",
+  locked: "Too many incorrect attempts. Password reset is paused for now, so please try again later or ask your instructor for help.",
   weak_password: passwordRequirementText,
 };
 

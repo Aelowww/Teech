@@ -1,0 +1,65 @@
+.steps {
+  margin: 0 0 24px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.steps li {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  color: var(--faint);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Connector line between steps */
+.steps li:not(:last-child)::after {
+  height: 2px;
+  flex: 1;
+  background: var(--line-soft);
+  border-radius: 1px;
+  content: "";
+}
+
+.steps span {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--faint);
+  background: var(--page);
+  border: 2px solid var(--line-soft);
+  border-radius: 50%;
+  font-size: 13px;
+}
+
+.done,
+.current {
+  color: var(--ink);
+}
+
+.done span {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.done:not(:last-child)::after {
+  background: var(--accent);
+}
+
+.current span {
+  color: var(--accent);
+  background: var(--indigo-50);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--indigo-50);
+}
