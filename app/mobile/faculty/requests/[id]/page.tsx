@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { Ban, Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -75,7 +74,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <div className={styles.reason}><span>Reason</span><p>{request.reason}</p>{request.details && <small>{request.details}</small>}</div>
         </section>
         {request.status === "pending" && <RequestDecisionButtons requestId={request.id} canConfirm={!expired} />}
-        {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}        <Link className={styles.homeButton} href="/faculty/requests">Back to Requests</Link>
+        {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}
       </div>
     </MobileLayout>
   );

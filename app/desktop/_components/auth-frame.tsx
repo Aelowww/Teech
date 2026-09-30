@@ -4,9 +4,6 @@ import { ArrowLeft } from "lucide-react";
 import { tagline } from "./ui";
 import styles from "./auth.module.css";
 
-// Desktop sign-in / sign-up page frame: back button, "Welcome to Teech" heading, and the form card.
-// Pages pass their fields in as children. `wide` gives long forms (sign-up) room for two columns.
-// `below` renders under the card, outside the form (e.g. the help chat link, which has its own form).
 export function AuthFrame({
   children,
   onSubmit,

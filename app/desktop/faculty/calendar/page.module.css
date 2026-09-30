@@ -1,5 +1,3 @@
-/* Faculty calendar: month view on the left, summary + actions on the right. */
-
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;

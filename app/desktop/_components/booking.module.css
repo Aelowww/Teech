@@ -1,8 +1,3 @@
-/*
- * Shared layout for the student booking flow (calendar, time, details, review):
- * the main task on the left, a sticky summary panel with the Continue button on the right.
- */
-
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
@@ -36,7 +31,6 @@
   font-weight: 600;
 }
 
-/* Label / value rows in the summary panel */
 .summaryList {
   margin: 0;
   display: grid;

@@ -153,11 +153,9 @@ export default function Page() {
         </section>
 
         <aside className={booking.side}>
-          <h2>Ready to send?</h2>
-          <p className={booking.hint}>Your request goes to {draft.facultyName || "the faculty member"}, who can confirm or decline it. You&apos;ll get a notification either way.</p>
           {error && <Notice error>{error}</Notice>}
           <button className={booking.continueButton} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
-          <Link className={styles.editButton} href="/student/appointment-info">Edit details</Link>
+          <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
         </aside>
       </div>
       <ConfirmationModal open={confirming} title="Submit consultation request?" description="Your request will be sent to the selected faculty member for review." confirmLabel="Submit Request" onCancel={() => setConfirming(false)} onConfirm={handleSubmit} />

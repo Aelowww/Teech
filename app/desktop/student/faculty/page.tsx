@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Search, UserRound } from "lucide-react";
+import { ArrowRight, UserRound } from "lucide-react";
 import { DesktopLayout, EmptyState } from "@/app/desktop/_components/ui";
 import { createClient } from "@/lib/supabase/server";
 import { avatarBucket } from "@/lib/avatar";
@@ -21,7 +21,6 @@ const presenceLabels: Record<PresenceStatus, string> = {
   in_meeting: "In a meeting",
   busy: "Busy (in a class)",
 };
-
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ filter?: string }> }) {
   const { filter } = await searchParams;
@@ -65,19 +64,15 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
     <DesktopLayout className={styles.screen} role="student" activeNav="faculty">
       <header className={styles.pageHeader}>
         <div>
-          <h1>Find Faculty</h1>
-          <p>Browse faculty members and book a consultation on one of their open dates.</p>
+          <h1>Book a Consultation</h1>
+          <p>Choose an available faculty member for your consultation.</p>
         </div>
       </header>
 
       <section className={styles.toolbar}>
-        <label className={styles.search}>
-          <Search size={18} strokeWidth={2.2} />
-          <input type="search" placeholder="Search faculty" aria-label="Search faculty" />
-        </label>
         <div className={styles.filters} aria-label="Faculty filters">
+          <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all">All Faculty</Link>
           <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty">Available</Link>
-          <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all">All faculty</Link>
         </div>
       </section>
 

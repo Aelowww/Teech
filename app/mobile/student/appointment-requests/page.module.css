@@ -62,9 +62,14 @@
   width: 38px;
   height: 38px;
   place-items: center;
+  position: relative;
+  overflow: hidden;
   border-radius: 50%;
   background: #f0effd;
   color: var(--accent);
+}
+.requestImage {
+  object-fit: cover;
 }
 .requestContent {
   min-width: 0;

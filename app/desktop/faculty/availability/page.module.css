@@ -1,5 +1,3 @@
-/* Faculty availability: pick dates on the calendar (left), set time and place in the side panel (right). */
-
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 380px;

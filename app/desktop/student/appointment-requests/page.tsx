@@ -2,11 +2,13 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Ban, CalendarPlus, CheckCircle2, Eye, UserRound } from "lucide-react";
 import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import { facultyAvatarUrls } from "@/lib/avatar";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/desktop/_components/show-more";
 import { matchesTab, parseTab, RequestTabs, type RequestTab } from "@/app/desktop/_components/request-tabs";
@@ -14,6 +16,7 @@ import styles from "./page.module.css";
 
 type Appointment = {
   id: string;
+  faculty_profile_id: string;
   faculty_name: string | null;
   preferred_date: string;
   preferred_time: string;
@@ -34,6 +37,7 @@ function RequestsPage() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<RequestTab>(() => parseTab(searchParams.get("status")));
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [facultyPhotos, setFacultyPhotos] = useState<Map<string, string>>(() => new Map());
   const [error, setError] = useState("");
   const [cancellingId, setCancellingId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -63,12 +67,13 @@ function RequestsPage() {
       }
       const { data, error: requestError } = await supabase
         .from("appointment_requests")
-        .select("id, faculty_name, preferred_date, preferred_time, reason, status")
+        .select("id, faculty_profile_id, faculty_name, preferred_date, preferred_time, reason, status")
         .eq("student_profile_id", profile.id)
         .order("created_at", { ascending: false });
       if (!active) return;
       if (requestError) setError(requestError.message);
       else setAppointments(data as Appointment[] || []);
+      if (data?.length) void facultyAvatarUrls(supabase, (data as Appointment[]).map((appointment) => appointment.faculty_profile_id)).then((urls) => { if (active) setFacultyPhotos(urls); });
       setIsLoading(false);
 
       channel = supabase
@@ -122,7 +127,7 @@ function RequestsPage() {
           <div className={styles.requests}>
             {list.visible.map((appointment) => (
               <article className={styles.requestCard} key={appointment.id}>
-                <div className={styles.requestIcon} aria-label="Faculty profile"><UserRound size={18} /></div>
+                <div className={styles.requestIcon} aria-label="Faculty profile">{facultyPhotos.get(appointment.faculty_profile_id) ? <Image className={styles.requestImage} src={facultyPhotos.get(appointment.faculty_profile_id) as string} alt="" fill sizes="48px" unoptimized /> : <UserRound size={18} />}</div>
                 <div className={styles.requestContent}>
                   <strong>{appointment.faculty_name || "Faculty"}</strong>
                   <span>{formatDate(appointment.preferred_date)} at {formatTime(appointment.preferred_time)}</span>

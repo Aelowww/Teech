@@ -3,7 +3,6 @@ import styles from "./booking-steps.module.css";
 
 const steps = ["Date", "Time", "Details", "Review"];
 
-// Progress bar across the top of the booking pages. `current` is 1-based.
 export function BookingSteps({ current }: { current: number }) {
   return (
     <ol className={styles.steps} aria-label="Booking progress">

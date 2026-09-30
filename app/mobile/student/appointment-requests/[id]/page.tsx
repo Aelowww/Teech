@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
 import { CancelAppointmentButton } from "@/app/mobile/_components/cancel-appointment-button";
 import { createClient } from "@/lib/supabase/server";
+import { facultyAvatarUrls } from "@/lib/avatar";
 import styles from "./page.module.css";
 
 type AppointmentStatus = "pending" | "confirmed" | "declined" | "cancelled";
@@ -11,6 +13,7 @@ type AppointmentStatus = "pending" | "confirmed" | "declined" | "cancelled";
 type Appointment = {
   id: string;
   appointment_code: string | null;
+  faculty_profile_id: string;
   faculty_name: string | null;
   preferred_date: string;
   preferred_time: string;
@@ -36,12 +39,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const { data: appointment } = await supabase
     .from("appointment_requests")
-    .select("id, appointment_code, faculty_name, preferred_date, preferred_time, reason, details, meeting_location, status, cancelled_by")
+    .select("id, appointment_code, faculty_profile_id, faculty_name, preferred_date, preferred_time, reason, details, meeting_location, status, cancelled_by")
     .eq("id", id)
     .maybeSingle();
   if (!appointment) redirect("/student/appointment-requests");
 
   const request = appointment as Appointment;
+  const photoUrl = (await facultyAvatarUrls(supabase, [request.faculty_profile_id])).get(request.faculty_profile_id);
   const copy = statusCopy(request.status, request.cancelled_by);
   const StatusIcon = request.status === "confirmed" ? CheckCircle2 : request.status === "pending" ? Clock3 : XCircle;
 
@@ -53,7 +57,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <StatusTimeline status={request.status} />
         <section className={styles.detailsCard}>
           <header><span>Appointment ID</span><strong>{request.appointment_code || request.id}</strong></header>
-          <div className={styles.faculty}><span className={styles.initials}>{initialsFor(request.faculty_name)}</span><div><strong>{request.faculty_name || "Faculty member"}</strong><small>Consultation request</small></div></div>
+          <div className={styles.faculty}><span className={styles.initials}>{photoUrl ? <Image className={styles.initialsImage} src={photoUrl} alt="" fill sizes="56px" unoptimized /> : initialsFor(request.faculty_name)}</span><div><strong>{request.faculty_name || "Faculty member"}</strong><small>Consultation request</small></div></div>
           <dl>
             <div><CalendarDays size={15} /><dt>When</dt><dd>{formatDate(request.preferred_date)} - {formatTime(request.preferred_time)}</dd></div>
             <div><MapPin size={15} /><dt>Where</dt><dd>{request.meeting_location || "To be confirmed by faculty"}</dd></div>

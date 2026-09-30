@@ -1,10 +1,7 @@
-/* Step 3 of booking. Layout comes from _components/booking.module.css. */
-
 .screen {
   display: block;
 }
 
-/* Read-only student fields in pairs, reason and details across the full width */
 .form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

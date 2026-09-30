@@ -1,11 +1,3 @@
-/*
- * Shared desktop components (ui.tsx).
- * Signed-in pages render inside the AppShell website frame, which supplies the
- * colour tokens (--accent, --ink, --muted, ...). Guest pages use .guest below.
- */
-
-/* ---------- Guest frame (no role): centered card on the lavender canvas ---------- */
-
 .guest {
   --accent: #7772c9;
   --accent-dark: #514c9a;
@@ -100,13 +92,9 @@
   color: #c4c4d6;
 }
 
-/* ---------- Content area inside the AppShell ---------- */
-
 .shellContent > [class] {
   min-width: 0;
 }
-
-/* ---------- Brand ---------- */
 
 .logo {
   display: inline-flex;
@@ -126,8 +114,6 @@
 .logoLarge .logoImage {
   width: 280px;
 }
-
-/* ---------- Page heading ---------- */
 
 .title {
   margin: 0;
@@ -157,8 +143,6 @@
   margin-left: auto;
   text-align: center;
 }
-
-/* ---------- Buttons ---------- */
 
 .actions {
   margin-top: 28px;
@@ -215,7 +199,6 @@
   background: #ffe3e6;
 }
 
-/* Guest cards: full-width stacked buttons */
 .guestCard .actions {
   flex-direction: column;
 }
@@ -223,8 +206,6 @@
 .guestCard .action {
   width: 100%;
 }
-
-/* ---------- Form fields ---------- */
 
 .field {
   min-width: 0;
@@ -311,8 +292,6 @@
   margin: 0;
 }
 
-/* ---------- Notices and empty states ---------- */
-
 .message {
   margin: 16px 0 0;
   padding: 12px 16px;
@@ -397,8 +376,6 @@
   background: var(--accent-dark);
 }
 
-/* ---------- Status mark (success / pending / error screens) ---------- */
-
 .statusMark {
   width: 96px;
   height: 96px;
@@ -422,8 +399,6 @@
   background: var(--accent-pale);
   border-color: #e5e3f9;
 }
-
-/* ---------- Detail list: a grid of labelled values ---------- */
 
 .detailsCard {
   margin-top: 20px;
@@ -481,8 +456,6 @@
   font-size: 15px;
   font-weight: 600;
 }
-
-/* ---------- Card list: responsive grid of person / request cards ---------- */
 
 .list {
   min-width: 0;
@@ -568,8 +541,6 @@ a.listCard:hover {
   background: #fff4e3;
 }
 
-/* ---------- Filter pills ---------- */
-
 .filters {
   margin: 0 0 24px;
   display: flex;
@@ -599,8 +570,6 @@ a.listCard:hover {
   background: var(--accent);
   border-color: var(--accent);
 }
-
-/* ---------- Month calendar ---------- */
 
 .calendar {
   padding: 24px;
@@ -723,8 +692,6 @@ button.daySelected:hover {
   cursor: default;
 }
 
-/* ---------- Time slots ---------- */
-
 .availabilityForm {
   width: 100%;
   min-width: 0;
@@ -796,8 +763,6 @@ button.daySelected:hover {
   text-decoration: line-through;
 }
 
-/* ---------- Profile photo ---------- */
-
 .avatar {
   width: 112px;
   height: 112px;
@@ -823,8 +788,6 @@ button.daySelected:hover {
 .avatarImage {
   object-fit: cover;
 }
-
-/* ---------- Dialog card ---------- */
 
 .dialogCard {
   padding: 32px 28px;
@@ -865,8 +828,6 @@ button.daySelected:hover {
   line-height: 1.55;
 }
 
-/* ---------- Spotlight card (next consultation) ---------- */
-
 .spotlight {
   padding: 28px 30px;
   display: grid;
@@ -877,6 +838,28 @@ button.daySelected:hover {
   border-radius: var(--radius, 20px);
   box-shadow: 0 16px 36px rgba(81, 76, 154, 0.24);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.spotlightWithAvatar {
+  position: relative;
+  padding-right: 170px;
+}
+
+.spotlightAvatar {
+  position: absolute;
+  top: 50%;
+  right: 34px;
+  width: 104px;
+  height: 104px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 4px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  box-shadow: 0 12px 28px rgba(28, 26, 70, 0.28);
+  transform: translateY(-50%);
 }
 
 .spotlight:hover {

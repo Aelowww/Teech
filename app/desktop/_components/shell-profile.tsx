@@ -9,7 +9,6 @@ import styles from "./app-shell.module.css";
 
 type Identity = { name: string; subtitle: string; avatarSrc: string | null };
 
-// Sidebar profile card. Uses the values the page passes in, or loads the signed-in profile when they are missing.
 export function ShellProfile({
   role,
   name,
