@@ -116,9 +116,7 @@ export default function Page() {
       <header className={styles.header}>
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
-          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
-          <FactCard role="faculty" />
-        </div>
+          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>        </div>
         <div className={styles.presence}>
           <PresenceSelect value={presence} onChange={(next) => void changePresence(next)} />
           {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
@@ -147,6 +145,8 @@ export default function Page() {
             actionLabel={pending.length ? "View requests" : "Manage availability"}
           />
         )}
+
+        <FactCard role="faculty" />
 
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>
