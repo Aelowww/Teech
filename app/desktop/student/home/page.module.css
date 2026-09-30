@@ -1,5 +1,3 @@
-/* Student home dashboard. Colors come from the variables on AppShell (_components/app-shell.module.css). */
-
 .dashboard {
   min-height: 100%;
   display: grid;
@@ -22,22 +20,21 @@
   line-height: normal;
 }
 
-/* Hero */
-/* Greeting on top, summary tiles in a compact row underneath */
 .hero {
-  padding: 28px 32px;
+  padding: 24px 28px;
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-  background: var(--indigo-50);
-  border-radius: 24px;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .heroCopy {
   min-width: 0;
   flex: 1;
   display: grid;
-  gap: 12px;
+  gap: 6px;
 }
 
 .heroCopy h1 {
@@ -51,107 +48,24 @@
   font-size: 15px;
 }
 
-.heroActions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.heroActions .pillButton {
-  width: 224px;
-}
-
-.summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.stat {
-  padding: 12px 16px;
-  display: grid;
-  align-content: start;
-  gap: 4px;
-  background: #fff;
-  border: 1px solid var(--indigo-100);
-  border-radius: 14px;
-  line-height: normal;
-}
-
-.stat small {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.stat strong {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.statBlue {
-  color: var(--blue-800);
-  background: var(--blue-50);
-  border-color: var(--blue-100);
-}
-
-.statIndigo small {
-  color: var(--indigo-600);
-}
-
-.statIndigo strong,
-.statWhite strong {
-  color: var(--indigo-900);
-}
-
-.statWhite {
-  background: #fff;
-}
-
-.statWhite small {
-  color: var(--muted);
-}
-
-/* Shared buttons */
-.pillButton,
-.outlineButton {
-  display: grid;
-  place-items: center;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.pillButton {
-  height: 48px;
-  color: var(--indigo-600);
-  background: var(--indigo-50);
-  border-radius: 30px;
-  font-size: 17px;
-}
-
-.pillButton:hover {
-  background: var(--indigo-100);
-}
-
 .outlineButton {
   height: 44px;
   padding: 0 20px;
+  display: grid;
+  place-items: center;
   color: var(--indigo-800);
   background: #fff;
   border: 1px solid var(--indigo-300);
   border-radius: 22px;
   font-size: 14px;
-}
-
-.heroActions .outlineButton {
-  height: 48px;
-  border-radius: 24px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .outlineButton:hover {
   border-color: var(--indigo-600);
 }
 
-/* Center cards */
 .card {
   padding: 24px;
   display: flex;
@@ -175,71 +89,11 @@
   font-weight: 600;
 }
 
-.cardHeader small {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.week {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 16px 12px;
-}
-
-.weekDay {
-  display: grid;
-  gap: 16px;
-}
-
-.weekDay span,
-.weekDay strong {
-  display: grid;
-  place-items: center;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-}
-
-.weekDay span {
-  height: 40px;
-  color: var(--faint);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.weekDay strong {
-  height: 56px;
-  color: var(--indigo-900);
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.weekDay .today {
-  background: var(--indigo-200);
-  border-color: var(--indigo-200);
-  font-weight: 700;
-}
-
-.emptyState {
-  min-height: 90px;
+.emptyText {
   padding: 20px;
-  display: grid;
-  justify-items: center;
-  align-content: center;
-  gap: 8px;
-  color: var(--blue-800);
-  background: var(--blue-50);
-  border-radius: 16px;
+  color: var(--muted);
+  font-size: 14px;
   text-align: center;
-}
-
-.emptyState strong {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.emptyState small {
-  font-size: 13px;
 }
 
 .requestList {
@@ -294,7 +148,7 @@
 .requestRow em {
   padding: 6px 12px;
   color: var(--blue-800);
-  background: var(--blue-50);
+  background: #fff;
   border-radius: 999px;
   font-size: 12px;
   font-style: normal;
@@ -309,46 +163,19 @@
   place-items: center;
   color: var(--blue-800);
   background: var(--blue-100);
+  position: relative;
+  overflow: hidden;
   border-radius: 50%;
 }
 
+.personImage {
+  object-fit: cover;
+}
+
 .seeAll {
-  justify-self: end;
   color: var(--indigo-600);
   font-size: 13px;
   font-weight: 600;
-}
-
-/* Right column */
-.sideCard {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: #fff;
-  border: 1.5px solid var(--line);
-  border-radius: 20px;
-}
-
-.sideCard h2 {
-  color: var(--indigo-900);
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.sideCard p {
-  color: var(--text-soft);
-  font-size: 12px;
-}
-
-.sideCardTinted {
-  gap: 8px;
-  background: var(--indigo-50);
-  border-color: var(--indigo-50);
-}
-
-.sideCardTinted .outlineButton {
-  margin-top: 4px;
 }
 
 .appointment {
@@ -359,33 +186,34 @@
   border-radius: 16px;
 }
 
+.appointment .outlineButton {
+  justify-self: start;
+}
+
 .appointmentPerson {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.quickActions {
-  margin-top: auto;
-  gap: 12px;
+.appointmentMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
 }
 
-.quickActions h2 {
-  font-size: 16px;
+.rowMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
+  white-space: nowrap;
 }
-
-/* Narrower desktops: the right column moves under the main content. */
 @media (max-width: 1400px) {
   .dashboard {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .side {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .quickActions {
-    margin-top: 0;
   }
 }

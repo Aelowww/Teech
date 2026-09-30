@@ -34,14 +34,12 @@ export default async function Page() {
 
   return (
     <DesktopLayout className={styles.screen} role="student" activeNav="profile">
-      <PageHeading title="Profile & Settings" subtitle="Manage your account, security, and preferences." />
+      <PageHeading title="My Profile" />
       <div className={styles.page}>
         <aside className={styles.identity}>
           <ProfilePhoto src={photoUrl} />
           <strong>{profile.full_name}</strong>
-          <small>Student</small>
           <ShowcasedBadges badges={showcasedBadges} />
-          <Link className={styles.editProfile} href="/student/profile/info">View personal information</Link>
           <div className={styles.signOut}><SignOutButton redirectTo="/welcome" /></div>
         </aside>
 

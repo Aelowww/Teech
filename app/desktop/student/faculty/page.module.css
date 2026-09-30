@@ -1,5 +1,3 @@
-/* Find Faculty: page header, search + filter toolbar, then a grid of faculty profile cards. */
-
 .pageHeader {
   margin-bottom: 24px;
 }
@@ -18,7 +16,6 @@
   font-size: 15px;
 }
 
-/* Toolbar */
 .toolbar {
   margin-bottom: 24px;
   padding: 16px;
@@ -29,39 +26,6 @@
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-}
-
-.search {
-  width: min(420px, 100%);
-  height: 46px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--muted);
-  background: var(--page);
-  border: 1px solid var(--line-soft);
-  border-radius: 23px;
-}
-
-.search:focus-within {
-  background: #fff;
-  border-color: var(--indigo-300);
-}
-
-.search input {
-  width: 100%;
-  min-width: 0;
-  color: var(--text);
-  background: transparent;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  font-size: 14px;
-}
-
-.search input::placeholder {
-  color: var(--faint);
 }
 
 .filters {
@@ -99,7 +63,6 @@
   outline-offset: 2px;
 }
 
-/* Faculty cards */
 .list {
   margin: 0;
   padding: 0;

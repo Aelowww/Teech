@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarCheck2, CalendarDays, CalendarPlus, ChevronRight, Clock3, Inbox, MapPin } from "lucide-react";
+import { CalendarCheck2, CalendarDays, ChevronRight, Clock3, Inbox, MapPin } from "lucide-react";
 import { DesktopLayout, CardList, ProfilePhoto, SpotlightCard } from "@/app/desktop/_components/ui";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
+import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
-import { signedAvatarUrl } from "@/lib/avatar";
+import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
 
@@ -16,12 +17,14 @@ type Profile = { id: string; full_name: string; avatar_path: string | null; pres
 type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
 const pendingPreviewLimit = 4;
+const upcomingLimit = 4;
 
 export default function Page() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [requests, setRequests] = useState<Request[]>([]);
+  const [studentPhotos, setStudentPhotos] = useState<Map<string, string>>(() => new Map());
   const [openDates, setOpenDates] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [presence, setPresence] = useState<PresenceStatus>("available");
@@ -45,6 +48,7 @@ export default function Page() {
       setPresence(currentProfile.presence_status || "available");
       void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setRequests(requestsResult.data as Request[] || []);
+      if (requestsResult.data?.length) void studentAvatarUrls(supabase, requestsResult.data.map((request) => request.id)).then((urls) => { if (active) setStudentPhotos(urls); });
       setOpenDates([...new Set((availabilityResult.data || []).map((slot) => slot.available_date as string))]);
       setIsLoading(false);
 
@@ -92,6 +96,14 @@ export default function Page() {
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
     status: "Pending",
+    imageUrl: studentPhotos.get(request.id),
+    href: `/faculty/requests/${request.id}`,
+  }));
+  const upcomingItems = confirmed.slice(1, upcomingLimit + 1).map((request) => ({
+    title: request.student_name || "Student",
+    description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)} · ${request.meeting_location || "Location to be confirmed"}`,
+    status: "Confirmed",
+    imageUrl: studentPhotos.get(request.id),
     href: `/faculty/requests/${request.id}`,
   }));
 
@@ -100,20 +112,13 @@ export default function Page() {
       <section className={styles.hero}>
         <ProfilePhoto inline src={photoUrl} />
         <div className={styles.greetingText}>
-          <h1>{getGreeting()} {profile?.full_name?.split(" ")[0] || "Faculty"}</h1>
-          <p>Here&apos;s what&apos;s happening with your consultations.</p>
+          <h1>{getGreeting()}</h1>
+          <p>{profile?.full_name || "Faculty"}</p>
         </div>
         <div className={styles.presence}>
-          <small>Your status</small>
           <PresenceSelect value={presence} onChange={(next) => void changePresence(next)} />
           {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
         </div>
-      </section>
-
-      <section className={styles.stats} aria-label="Summary">
-        <Link className={`${styles.stat} ${styles.statPending}`} href="/faculty/requests"><small>Pending requests</small><strong>{pending.length}</strong></Link>
-        <Link className={`${styles.stat} ${styles.statConfirmed}`} href="/faculty/requests"><small>Upcoming consultations</small><strong>{confirmed.length}</strong></Link>
-        <Link className={styles.stat} href="/faculty/availability"><small>Open dates</small><strong>{openDates.length}</strong></Link>
       </section>
 
       <div className={styles.dashboard}>
@@ -128,6 +133,7 @@ export default function Page() {
                 { icon: <MapPin size={15} />, text: nextConsultation.meeting_location || "Location to be confirmed" },
               ]}
               href={`/faculty/requests/${nextConsultation.id}`}
+              avatar={studentPhotos.get(nextConsultation.id) ?? null}
               actionLabel="View details"
             />
           ) : (
@@ -135,11 +141,13 @@ export default function Page() {
               muted
               eyebrow="No upcoming consultation"
               title={pending.length ? "Review your requests" : "Open dates for booking"}
-              details={[{ icon: <Inbox size={15} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : "Students can book once you publish dates" }]}
+              details={[{ icon: <Inbox size={15} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : openDates.length ? "Students can book your open dates" : "Students can book once you publish dates" }]}
               href={pending.length ? "/faculty/requests" : "/faculty/availability"}
               actionLabel={pending.length ? "View requests" : "Manage availability"}
             />
           )}
+
+          <FactCard role="faculty" />
 
           <section className={styles.panel}>
             <h2 className={styles.sectionTitle}>
@@ -148,12 +156,22 @@ export default function Page() {
             </h2>
             {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
           </section>
+
+          {upcomingItems.length > 0 && (
+            <section className={styles.panel}>
+              <h2 className={styles.sectionTitle}>
+                Upcoming Consultations
+                {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/faculty/requests">See all<ChevronRight size={15} /></Link>}
+              </h2>
+              <CardList items={upcomingItems} />
+            </section>
+          )}
         </div>
 
         <aside className={styles.sideColumn}>
           <LoginStreakCard role="faculty" />
 
-          {openDates.length > 0 ? (
+          {openDates.length > 0 && (
             <Link className={styles.availability} href="/faculty/availability">
               <CalendarCheck2 size={20} />
               <div>
@@ -162,23 +180,7 @@ export default function Page() {
               </div>
               <ChevronRight size={16} />
             </Link>
-          ) : (
-            <Link className={`${styles.availability} ${styles.availabilityEmpty}`} href="/faculty/availability">
-              <CalendarPlus size={20} />
-              <div>
-                <strong>Publish your availability</strong>
-                <small>Students can book once you add open dates.</small>
-              </div>
-              <ChevronRight size={16} />
-            </Link>
           )}
-
-          <section className={styles.quickActions}>
-            <h2>Quick Actions</h2>
-            <Link href="/faculty/availability"><CalendarPlus size={16} />Manage availability</Link>
-            <Link href="/faculty/calendar"><CalendarDays size={16} />Open calendar</Link>
-            <Link href="/faculty/requests"><Inbox size={16} />All requests</Link>
-          </section>
         </aside>
       </div>
     </DesktopLayout>

@@ -1,10 +1,7 @@
-/* Faculty dashboard: greeting bar, summary stats, then a main column and a side column. */
-
 .screen {
   gap: 24px;
 }
 
-/* Greeting bar */
 .hero {
   padding: 24px 28px;
   display: flex;
@@ -52,63 +49,9 @@
   font-size: 12px;
 }
 
-/* Summary stats */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.stat {
-  padding: 20px 24px;
-  display: grid;
-  gap: 6px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  transition: border-color 0.15s ease, transform 0.15s ease;
-}
-
-.stat:hover {
-  border-color: var(--indigo-300);
-  transform: translateY(-2px);
-}
-
-.stat small {
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.stat strong {
-  color: var(--ink);
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.statPending {
-  background: var(--blue-50);
-  border-color: var(--blue-100);
-}
-
-.statPending strong {
-  color: var(--blue-800);
-}
-
-.statConfirmed {
-  background: var(--indigo-50);
-  border-color: var(--indigo-100);
-}
-
-.statConfirmed strong {
-  color: var(--indigo-800);
-}
-
-/* Two-column dashboard */
 .dashboard {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   align-items: start;
   gap: 24px;
 }
@@ -173,7 +116,6 @@
   text-align: center;
 }
 
-/* Side column cards */
 .availability {
   padding: 18px 20px;
   display: flex;
@@ -213,47 +155,14 @@
   font-size: 13px;
 }
 
-.availabilityEmpty {
-  color: #b7761d;
-  background: #fff8ec;
-  border-color: #f6dfb5;
-}
-
-.quickActions {
-  padding: 22px;
-  display: grid;
-  gap: 8px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.quickActions h2 {
-  margin: 0 0 6px;
-  color: var(--ink);
-  font-size: 17px;
-  font-weight: 600;
-}
-
-.quickActions a {
-  min-height: 46px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--indigo-600);
-  background: var(--indigo-50);
-  border-radius: 23px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.quickActions a:hover {
-  background: var(--indigo-100);
-}
-
 @media (max-width: 1180px) {
   .dashboard {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1023px) {
+  .greetingText h1 {
+    font-size: 22px;
   }
 }

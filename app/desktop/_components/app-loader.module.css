@@ -1,9 +1,3 @@
-/*
- * Skeleton loading screens (app-loader.tsx). Layout sizes mirror the real pages
- * so nothing jumps when the content arrives.
- */
-
-/* Shimmering placeholder block */
 .bone {
   display: block;
   flex: 0 0 auto;
@@ -30,8 +24,6 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-
-/* ---------- Layout helpers ---------- */
 
 .content {
   display: flex;
@@ -147,8 +139,6 @@
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
 }
-
-/* ---------- Page-specific shapes ---------- */
 
 .hero {
   padding: 28px 32px;
@@ -274,8 +264,6 @@
   gap: 18px;
 }
 
-/* ---------- Guest skeleton (lavender canvas + white card) ---------- */
-
 .guest {
   position: relative;
   min-height: 100dvh;
@@ -325,8 +313,6 @@
   border-radius: 28px;
   box-shadow: 0 24px 60px rgba(81, 76, 154, 0.1);
 }
-
-/* ---------- Responsive + reduced motion ---------- */
 
 @media (max-width: 1180px) {
   .twoColumn,

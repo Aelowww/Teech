@@ -1,4 +1,3 @@
-/* Desktop: the chat button stays pinned to the bottom-right corner of the window */
 .floating {
   position: fixed;
   z-index: 20;

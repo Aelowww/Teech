@@ -101,7 +101,6 @@ export default function Page() {
         <MonthCalendar month={month} selectedDates={selectedDates} markedDates={availability.map((slot) => slot.available_date)} legend="Outlined dates are available to students" onSelectDate={selectDate} onMonthChange={setMonth} />
         <aside className={styles.side}>
           <section className={styles.editor} aria-label="Selected date availability">
-            <h2>Set time &amp; place</h2>
             <p className={styles.selectedDate}>{selectedDates.length ? `${selectedDates.length} ${selectedDates.length === 1 ? "date" : "dates"} selected` : "Select one or more dates from the calendar"}</p>
             <div className={styles.times}>
               <label>Start time<input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} disabled={!selectedDates.length} /></label>

@@ -1,5 +1,3 @@
-/* Points & Rewards: balance + rewards grid on the left, how-to-earn + history on the right. */
-
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
@@ -30,7 +28,6 @@
   margin-top: 0;
 }
 
-/* Balance banner */
 .balance {
   padding: 28px 32px;
   display: flex;
@@ -94,7 +91,6 @@
   font-weight: 600;
 }
 
-/* How to earn */
 .earn {
   margin-top: 14px;
   display: grid;
@@ -129,7 +125,6 @@
   line-height: 1.5;
 }
 
-/* Rewards grid */
 .items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -227,7 +222,6 @@
   outline-offset: 2px;
 }
 
-/* History */
 .history {
   margin-top: 10px;
   display: grid;

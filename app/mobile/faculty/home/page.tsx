@@ -7,6 +7,7 @@ import { CalendarCheck2, CalendarDays, ChevronRight, Clock3, Inbox, MapPin } fro
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
+import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
@@ -103,7 +104,7 @@ export default function Page() {
   return (
     <MobileLayout className={styles.screen} role="faculty" activeNav="home">
       <div className={styles.page}>
-        <header className={styles.header}><BrandLogo /><NotificationBell href="/faculty/notifications" /></header>
+        <header className={styles.header}><BrandLogo /><div className={styles.headerActions}><FactCard role="faculty" /><NotificationBell href="/faculty/notifications" /></div></header>
         <div className={styles.greeting}><ProfilePhoto inline src={photoUrl} /><div className={styles.greetingText}><strong>{getGreeting()}</strong><small>{profile?.full_name || "Faculty"}</small></div><PresenceSelect value={presence} onChange={(next) => void changePresence(next)} /></div>
         {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
 
@@ -124,7 +125,7 @@ export default function Page() {
             muted
             eyebrow="No upcoming consultation"
             title={pending.length ? "Review your requests" : "Open dates for booking"}
-            details={[{ icon: <Inbox size={13} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : "Students can book once you publish dates" }]}
+            details={[{ icon: <Inbox size={13} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : openDates.length ? "Students can book your open dates" : "Students can book once you publish dates" }]}
             href={pending.length ? "/faculty/requests" : "/faculty/availability"}
             actionLabel={pending.length ? "View requests" : "Manage availability"}
           />

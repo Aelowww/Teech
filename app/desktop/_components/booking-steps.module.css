@@ -20,7 +20,6 @@
   font-weight: 600;
 }
 
-/* Connector line between steps */
 .steps li:not(:last-child)::after {
   height: 2px;
   flex: 1;

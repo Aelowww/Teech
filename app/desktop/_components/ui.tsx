@@ -50,7 +50,6 @@ export function DesktopLayout({
   role?: "student" | "faculty";
   activeNav?: string;
 }) {
-  // Signed-in pages: header + sidebar website frame.
   if (role) {
     return (
       <AppShell role={role} active={activeNav || ""} backTo={backTo} className={[styles.shellContent, className].filter(Boolean).join(" ")}>
@@ -59,7 +58,6 @@ export function DesktopLayout({
     );
   }
 
-  // Guest pages (splash, password reset, account created): centered card on the lavender canvas.
   return (
     <main className={styles.guest}>
       <div className={styles.circle} aria-hidden="true" />
@@ -442,7 +440,6 @@ export function SearchField({ placeholder }: { placeholder: string }) {
   );
 }
 
-
 export function SpotlightCard({
   eyebrow,
   title,
@@ -450,6 +447,7 @@ export function SpotlightCard({
   href,
   actionLabel,
   muted = false,
+  avatar,
 }: {
   eyebrow: string;
   title: string;
@@ -457,9 +455,16 @@ export function SpotlightCard({
   href: string;
   actionLabel: string;
   muted?: boolean;
+  avatar?: string | null;
 }) {
+  const showAvatar = avatar !== undefined;
   return (
-    <Link className={`${styles.spotlight} ${muted ? styles.spotlightMuted : ""}`} href={href}>
+    <Link className={`${styles.spotlight} ${muted ? styles.spotlightMuted : ""} ${showAvatar ? styles.spotlightWithAvatar : ""}`} href={href}>
+      {showAvatar && (
+        <span className={styles.spotlightAvatar}>
+          {avatar ? <Image className={styles.avatarImage} src={avatar} alt="" fill sizes="104px" unoptimized /> : <UserRound size={40} />}
+        </span>
+      )}
       <small>{eyebrow}</small>
       <strong>{title}</strong>
       {details.length > 0 && <ul>{details.map(({ icon, text }) => <li key={text}>{icon}<span>{text}</span></li>)}</ul>}

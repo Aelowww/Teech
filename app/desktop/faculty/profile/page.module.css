@@ -1,13 +1,11 @@
-/* Profile & Settings: identity card on the left, grouped settings on the right. */
-
 .page {
+  margin-top: 20px;
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   align-items: start;
   gap: 24px;
 }
 
-/* Identity card */
 .identity {
   position: sticky;
   top: 112px;
@@ -55,7 +53,6 @@
   width: 100%;
 }
 
-/* Settings groups */
 .settings {
   min-width: 0;
   display: grid;

@@ -7,13 +7,11 @@ const roles = [
   {
     href: "/student/sign-in",
     label: "I am a student",
-    description: "Book a consultation appointment with your teacher.",
     Icon: GraduationCap,
   },
   {
     href: "/faculty/sign-in",
     label: "I am a faculty",
-    description: "Set your availability for student consultations.",
     Icon: BriefcaseBusiness,
   },
 ];
@@ -29,21 +27,18 @@ export function WelcomeScreen() {
         <h1 className={styles.title}>Who&apos;s signing in?</h1>
         <p className={styles.subtitle}>Choose your role to continue.</p>
 
-        <nav className={styles.roles} aria-label="Choose your role">
-          {roles.map(({ href, label, description, Icon }) => (
+        <nav className={styles.roles} aria-label="Choose a portal">
+          {roles.map(({ href, label, Icon }) => (
             <Link key={href} className={styles.roleCard} href={href}>
               <span className={styles.roleIcon}><Icon size={28} strokeWidth={1.8} /></span>
               <span className={styles.roleText}>
                 <strong>{label}</strong>
-                <span>{description}</span>
               </span>
               <ChevronRight className={styles.chevron} size={22} />
             </Link>
           ))}
         </nav>
       </section>
-
-      <footer className={styles.footer}>Teech <span>•</span> Student &amp; Faculty Portal</footer>
     </main>
   );
 }

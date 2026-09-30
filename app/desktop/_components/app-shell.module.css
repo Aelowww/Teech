@@ -1,46 +1,38 @@
-/*
- * Desktop website frame for signed-in pages (app-shell.tsx).
- * Values follow the "STUDENT/HOME - DESKTOP" Figma frame.
- * The tokens on .shell are shared by every page and component rendered inside it.
- */
-
 .shell {
-  --indigo-50: #f1f2fc;
-  --indigo-100: #e6e7f9;
-  --indigo-200: #d2d4f3;
-  --indigo-300: #b7b9ea;
-  --indigo-600: #676bc4;
-  --indigo-800: #484b8b;
-  --indigo-900: #3f4170;
-  --line: #d4dce9;
-  --line-soft: #e6ebf3;
-  --text: #425066;
-  --text-soft: #4e617f;
-  --muted: #7991b8;
-  --faint: #93a7c7;
-  --blue-50: #eff7ff;
-  --blue-100: #daedff;
-  --blue-800: #0068cd;
+  --indigo-50: #f1f0fc;
+  --indigo-100: #e6e4f8;
+  --indigo-200: #d6d3f3;
+  --indigo-300: #bdb9ea;
+  --indigo-600: #7772c9;
+  --indigo-800: #514c9a;
+  --indigo-900: #28294a;
+  --line: #e7e6f1;
+  --line-soft: #efeef7;
+  --text: #3c3d5c;
+  --text-soft: #5d5f80;
+  --muted: #8586a0;
+  --faint: #a3a4bd;
+  --blue-50: #f1f0fc;
+  --blue-100: #e6e4f8;
+  --blue-800: #514c9a;
 
-  /* Tokens used by ui.tsx components and page styles */
   --accent: var(--indigo-600);
   --accent-dark: var(--indigo-800);
   --accent-pale: var(--indigo-50);
   --ink: var(--indigo-900);
   --surface: #fff;
-  --page: #f8f9fc;
+  --page: #f4f3fb;
   --radius: 20px;
-  --shadow: 0 1px 2px rgba(63, 65, 112, 0.04), 0 8px 24px rgba(63, 65, 112, 0.05);
+  --shadow: 0 1px 2px rgba(43, 41, 85, 0.04), 0 12px 32px rgba(43, 41, 85, 0.07);
 
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   color: var(--text);
   background: var(--page);
-  font-family: "Poppins", "DM Sans", Arial, sans-serif;
+  font-family: "DM Sans", Arial, sans-serif;
 }
 
-/* Header: pinned to the top while the page scrolls */
 .header {
   position: sticky;
   top: 0;
@@ -63,66 +55,16 @@
   gap: 14px;
 }
 
-.brandIcon {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  color: var(--indigo-800);
-  background: var(--indigo-50);
-  border-radius: 14px;
-}
-
-.brand strong,
-.brand small {
+.brandLogo {
   display: block;
-  line-height: normal;
-}
-
-.brand strong {
-  color: var(--indigo-900);
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.brand small {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 12px;
+  width: 128px;
+  height: auto;
 }
 
 .actions {
   display: flex;
   align-items: center;
   gap: 14px;
-}
-
-.search {
-  width: 340px;
-  height: 44px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 22px;
-}
-
-.search input {
-  width: 100%;
-  min-width: 0;
-  color: var(--text);
-  background: transparent;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  font-size: 13px;
-}
-
-.search input::placeholder {
-  color: var(--faint);
 }
 
 .actions .iconButton {
@@ -136,12 +78,10 @@
   border-radius: 22px;
 }
 
-.actions .iconButton:hover,
-.search:focus-within {
+.actions .iconButton:hover {
   border-color: var(--indigo-300);
 }
 
-/* Body: sidebar + content */
 .body {
   width: 100%;
   max-width: 1600px;
@@ -220,7 +160,6 @@
   font-size: 12px;
 }
 
-/* Placeholder bar while the name loads */
 .skeleton {
   width: 120px;
   height: 14px;
@@ -297,7 +236,6 @@
   background: var(--indigo-100);
 }
 
-/* Content area */
 .main {
   min-width: 0;
   flex: 1;
@@ -325,17 +263,6 @@
   border-color: var(--indigo-300);
 }
 
-.footer {
-  padding: 18px 48px 28px;
-  color: var(--faint);
-  font-size: 12px;
-  text-align: center;
-}
-
-.footer span {
-  margin: 0 6px;
-}
-
 @media (max-width: 1280px) {
   .header,
   .body {
@@ -350,8 +277,39 @@
   .sidebar {
     width: 236px;
   }
+}
 
-  .search {
-    width: 240px;
+@media (max-width: 1023px) {
+  .header {
+    padding-right: 20px;
+    padding-left: 20px;
+    gap: 16px;
+  }
+
+  .body {
+    padding: 20px 20px 32px;
+    gap: 16px;
+  }
+
+  .sidebar {
+    width: 216px;
+    padding: 16px 12px;
+    gap: 16px;
+  }
+
+  .navItem {
+    padding: 0 10px;
+    gap: 10px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .helpButton {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .brandLogo {
+    width: 108px;
   }
 }

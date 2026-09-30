@@ -1,5 +1,3 @@
-/* Notifications inbox: one panel with a toolbar and a divided list. */
-
 .page {
   width: min(960px, 100%);
   display: flex;
@@ -52,7 +50,6 @@
   background: var(--accent);
 }
 
-/* The list joins the toolbar into one panel */
 .updates {
   overflow: hidden;
   display: grid;

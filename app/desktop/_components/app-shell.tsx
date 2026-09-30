@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Bell, CalendarDays, ClipboardList, GraduationCap, House, Search, Sparkles, UserRound, UsersRound } from "lucide-react";
+import { ArrowLeft, Bell, CalendarDays, ClipboardList, House, Sparkles, UserRound, UsersRound } from "lucide-react";
 import { NotificationBell } from "./notification-bell";
 import { ShellProfile } from "./shell-profile";
 import { SupportChat } from "./support-chat";
@@ -7,15 +8,14 @@ import styles from "./app-shell.module.css";
 
 type Role = "student" | "faculty";
 
-// `key` matches the `activeNav` / `active` value each page passes in.
 const navItems = {
   student: [
     { key: "home", label: "Home", href: "/student/home", Icon: House },
-    { key: "faculty", label: "Find Faculty", href: "/student/faculty", Icon: UsersRound },
-    { key: "requests", label: "My Requests", href: "/student/appointment-requests", Icon: ClipboardList },
+    { key: "faculty", label: "Faculty", href: "/student/faculty", Icon: UsersRound },
+    { key: "requests", label: "Requests", href: "/student/appointment-requests", Icon: ClipboardList },
     { key: "notifications", label: "Notifications", href: "/student/notifications", Icon: Bell },
     { key: "points", label: "Points & Rewards", href: "/student/points", Icon: Sparkles },
-    { key: "profile", label: "Profile & Settings", href: "/student/profile", Icon: UserRound },
+    { key: "profile", label: "Profile", href: "/student/profile", Icon: UserRound },
   ],
   faculty: [
     { key: "home", label: "Home", href: "/faculty/home", Icon: House },
@@ -23,12 +23,10 @@ const navItems = {
     { key: "requests", label: "Requests", href: "/faculty/requests", Icon: ClipboardList },
     { key: "notifications", label: "Notifications", href: "/faculty/notifications", Icon: Bell },
     { key: "points", label: "Points & Rewards", href: "/faculty/points", Icon: Sparkles },
-    { key: "profile", label: "Profile & Settings", href: "/faculty/profile", Icon: UserRound },
+    { key: "profile", label: "Profile", href: "/faculty/profile", Icon: UserRound },
   ],
 };
 
-// Desktop website frame for signed-in screens: sticky top header, left sidebar, and a wide content area.
-// Pages that already loaded the profile pass name/subtitle/avatarSrc; otherwise the sidebar loads it itself.
 export function AppShell({
   role,
   active,
@@ -52,16 +50,10 @@ export function AppShell({
     <div className={styles.shell}>
       <header className={styles.header}>
         <Link className={styles.brand} href={`/${role}/home`}>
-          <span className={styles.brandIcon}><GraduationCap size={22} /></span>
-          <div><strong>Teech</strong><small>{role === "student" ? "Student Portal" : "Faculty Portal"}</small></div>
+          <Image className={styles.brandLogo} src="/logo/teech_logo.svg" alt="Teech" width={1118} height={348} priority />
         </Link>
         <div className={styles.actions}>
-          <label className={styles.search}>
-            <Search size={18} />
-            <input type="search" placeholder={role === "student" ? "Search faculty, appointments..." : "Search requests, students..."} aria-label="Search" />
-          </label>
           <NotificationBell className={styles.iconButton} href={`/${role}/notifications`} />
-          <Link className={styles.iconButton} href={`/${role}/profile`} aria-label="Profile"><UserRound size={20} /></Link>
         </div>
       </header>
 
@@ -88,7 +80,6 @@ export function AppShell({
         </main>
       </div>
 
-      <footer className={styles.footer}>Teech <span>•</span> Student &amp; Faculty Portal</footer>
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import Link from "next/link";
+import Image from "next/image";
 import { Ban, Building2, CalendarDays, Check, CheckCircle2, CircleAlert, Clock3, MapPin, XCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { DesktopLayout, PageHeading } from "@/app/desktop/_components/ui";
 import { RequestDecisionButtons } from "@/app/desktop/_components/request-decision-buttons";
 import { CancelAppointmentButton } from "@/app/desktop/_components/cancel-appointment-button";
 import { createClient } from "@/lib/supabase/server";
+import { studentAvatarUrls } from "@/lib/avatar";
 import styles from "@/app/desktop/student/appointment-requests/[id]/page.module.css";
 
 type AppointmentStatus = "pending" | "confirmed" | "declined" | "cancelled";
@@ -45,6 +46,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   if (!appointment) redirect("/faculty/requests");
 
   const request = appointment as Appointment;
+  const photoUrl = (await studentAvatarUrls(supabase, [request.id])).get(request.id);
   const expired = request.status === "pending" && request.preferred_date < localDateValue();
   const copy = expired
     ? { title: "Request expired", subtitle: "This date has passed. You can decline it to clear it from your list." }
@@ -65,12 +67,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <div className={styles.summaryActions}>
             {request.status === "pending" && <RequestDecisionButtons requestId={request.id} canConfirm={!expired} />}
             {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}
-            <Link className={styles.homeButton} href="/faculty/requests">Back to Requests</Link>
           </div>
         </aside>
         <section className={styles.detailsCard}>
           <header><span>Appointment ID</span><strong>{request.appointment_code || request.id}</strong></header>
-          <div className={styles.faculty}><span className={styles.initials}>{initialsFor(request.student_name)}</span><div><strong>{request.student_name || "Student"}</strong><small>{request.student_number ? `Student ID ${request.student_number}` : "Consultation request"}</small></div></div>
+          <div className={styles.faculty}><span className={styles.initials}>{photoUrl ? <Image className={styles.initialsImage} src={photoUrl} alt="" fill sizes="56px" unoptimized /> : initialsFor(request.student_name)}</span><div><strong>{request.student_name || "Student"}</strong><small>{request.student_number ? `Student ID ${request.student_number}` : "Consultation request"}</small></div></div>
           <dl>
             <div><CalendarDays size={15} /><dt>When</dt><dd>{formatDate(request.preferred_date)} - {formatTime(request.preferred_time)}</dd></div>
             <div><MapPin size={15} /><dt>Where</dt><dd>{request.meeting_location || "No location set"}</dd></div>

@@ -10,8 +10,6 @@ type Layout = "dashboard" | "facultyGrid" | "requestList" | "requestDetail" | "b
 const guestPages = ["sign-in", "create-account", "forgot-password", "password-reset", "account-created"];
 const bookingPages = ["calendar", "select-date-time", "appointment-info", "appointment-review"];
 
-// Loading state shaped like the screen that is loading: the real header and sidebar,
-// with shimmering placeholder blocks where that page's content will appear.
 export function AppLoader() {
   const pathname = usePathname() || "/";
   const parts = pathname.split("/").filter(Boolean);
@@ -45,8 +43,6 @@ function layoutFor(role: Role, rest: string[]): { layout: Layout; active: string
   if (page === "profile") return { layout: sub ? "panel" : "profile", active: "profile" };
   return { layout: "panel", active: "" };
 }
-
-/* ---------- Building blocks ---------- */
 
 function Bone({ w = "100%", h = 14, r = 8, className }: { w?: number | string; h?: number | string; r?: number; className?: string }) {
   return <span className={`${styles.bone} ${className || ""}`} style={{ width: w, height: h, borderRadius: r }} aria-hidden="true" />;
@@ -105,8 +101,6 @@ function Calendar() {
     </Card>
   );
 }
-
-/* ---------- Page skeletons ---------- */
 
 const skeletons: Record<Layout, () => React.ReactNode> = {
   dashboard: () => (
@@ -266,7 +260,6 @@ const skeletons: Record<Layout, () => React.ReactNode> = {
   ),
 };
 
-/* Guest pages (sign-in, sign-up, password reset): the white card on the lavender canvas */
 function GuestSkeleton() {
   return (
     <main className={styles.guest} aria-busy="true" aria-live="polite">
