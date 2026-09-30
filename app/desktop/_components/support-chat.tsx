@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
-import { ChevronRight, MessageCircleQuestion, MessagesSquare, SendHorizontal, X } from "lucide-react";
+import { ArrowUp, ChevronRight, MessageCircleQuestion, ShieldCheck, X } from "lucide-react";
+import { KiteIcon } from "@/app/desktop/_components/kite-icon";
 import { answersFor, respond, type SupportAnswer, type SupportAudience } from "@/app/desktop/_components/support-answers";
 import styles from "./support-chat.module.css";
 
@@ -70,7 +71,7 @@ export function SupportChat({ audience, variant, className }: { audience: Suppor
   }
 
   const trigger = variant === "floating"
-    ? <button className={styles.floating} type="button" onClick={() => setOpen(true)} aria-label="Open help chat"><MessagesSquare size={22} /></button>
+    ? <button className={styles.floating} type="button" onClick={() => setOpen(true)} aria-label="Open help chat"><KiteIcon size={24} /></button>
     : variant === "row"
       ? <button className={`${className || ""} ${styles.row}`} type="button" onClick={() => setOpen(true)}><span><MessageCircleQuestion size={15} />Help &amp; Support</span><ChevronRight size={16} /></button>
       : <button className={`${className || ""} ${styles.link}`} type="button" onClick={() => setOpen(true)}><MessageCircleQuestion size={14} />Need help? Chat with us</button>;
@@ -81,32 +82,51 @@ export function SupportChat({ audience, variant, className }: { audience: Suppor
       {open && createPortal(
         <div className={styles.backdrop} role="presentation" onMouseDown={() => setOpen(false)}>
           <section className={styles.panel} role="dialog" aria-modal="true" aria-label="Teech help chat" onMouseDown={(event) => event.stopPropagation()}>
+            <span className={styles.handle} aria-hidden="true" />
             <header className={styles.header}>
-              <span className={styles.avatar}><MessagesSquare size={18} /></span>
+              <span className={styles.avatar}><KiteIcon size={20} /></span>
               <div>
                 <strong>Teech Support</strong>
-                <small>Instant answers to common questions</small>
+                <small><i className={styles.online} aria-hidden="true" />Instant answers to common questions</small>
               </div>
               <button type="button" onClick={() => setOpen(false)} aria-label="Close help chat"><X size={18} /></button>
             </header>
             <div className={styles.thread} ref={threadRef} aria-live="polite">
-              {messages.map((message) => (
-                <div className={message.from === "bot" ? styles.bot : styles.user} key={message.id}>
-                  <p>{message.text}</p>
-                  {message.action && <Link className={styles.action} href={message.action.href} onClick={() => setOpen(false)}>{message.action.label}<ChevronRight size={13} /></Link>}
+              {messages.map((message) => message.from === "bot"
+                ? (
+                  <div className={styles.botRow} key={message.id}>
+                    <span className={styles.botAvatar} aria-hidden="true"><KiteIcon size={13} /></span>
+                    <div className={styles.bot}>
+                      <p>{message.text}</p>
+                      {message.action && <Link className={styles.action} href={message.action.href} onClick={() => setOpen(false)}>{message.action.label}<ChevronRight size={13} /></Link>}
+                    </div>
+                  </div>
+                )
+                : <div className={styles.user} key={message.id}><p>{message.text}</p></div>)}
+              {typing && (
+                <div className={styles.botRow}>
+                  <span className={styles.botAvatar} aria-hidden="true"><KiteIcon size={13} /></span>
+                  <div className={`${styles.bot} ${styles.typing}`} aria-label="Typing"><span /><span /><span /></div>
                 </div>
-              ))}
-              {typing && <div className={`${styles.bot} ${styles.typing}`} aria-label="Typing"><span /><span /><span /></div>}
+              )}
               {!typing && suggestions.length > 0 && (
                 <div className={styles.suggestions}>
-                  {suggestions.map((entry) => <button type="button" key={entry.id} onClick={() => void reply(entry.question, entry)}>{entry.question}</button>)}
+                  <p className={styles.suggestionsLabel}>Suggested questions</p>
+                  {suggestions.map((entry) => (
+                    <button type="button" key={entry.id} onClick={() => void reply(entry.question, entry)}>
+                      <span>{entry.question}</span>
+                      <ChevronRight size={15} aria-hidden="true" />
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
-            <p className={styles.notice}>Questions I can&apos;t answer are sent to Google Gemini. Please don&apos;t share personal information.</p>
             <form className={styles.composer} onSubmit={submit}>
-              <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Type your question..." maxLength={200} aria-label="Your question" />
-              <button type="submit" disabled={!input.trim() || typing} aria-label="Send"><SendHorizontal size={17} /></button>
+              <div className={styles.composerField}>
+                <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask a question…" maxLength={200} aria-label="Your question" />
+                <button type="submit" disabled={!input.trim() || typing} aria-label="Send"><ArrowUp size={17} strokeWidth={2.4} /></button>
+              </div>
+              <p className={styles.notice}><ShieldCheck size={11} aria-hidden="true" />Questions I can&apos;t answer are sent to Google Gemini. Please don&apos;t share personal information.</p>
             </form>
           </section>
         </div>,

@@ -33,7 +33,7 @@ export function DeleteAccountButton({ role, className }: { role: "student" | "fa
   return (
     <>
       <button className={`${className || ""} ${styles.deleteButton}`} type="button" onClick={() => setConfirming(true)}><span><Trash2 size={15} />Delete Account</span><ChevronRight size={16} /></button>
-      <ConfirmationModal
+      <ConfirmationModal icon={Trash2}
         open={confirming}
         title="Delete your account?"
         description={role === "faculty"

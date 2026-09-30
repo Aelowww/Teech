@@ -33,10 +33,6 @@ export function Bone({
   return <span className={className} style={{ width: width ?? height, height, borderRadius: radius, ...style }} aria-hidden="true" />;
 }
 
-/**
- * A bone that stands in for one line of text. Its margins fill out the rest of the
- * line box, so it takes up the same height as the real text at that font size.
- */
 export function TextBone({
   size,
   width,
@@ -55,7 +51,6 @@ export function TextBone({
   return <Bone width={width} height={height} radius={4} center={center} onDark={onDark} style={{ marginBlock: gap }} />;
 }
 
-/** The real screen frame (back button, bottom nav) with placeholder content inside. */
 export function SkeletonScreen({
   className,
   pageClassName,

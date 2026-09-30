@@ -5,7 +5,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Notice, FormField } from "@/app/desktop/_components/ui";
 import { PasswordField } from "@/app/desktop/_components/password-field";
-import { AuthFrame } from "@/app/desktop/_components/auth-frame";
+import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
 import { createClient } from "@/lib/supabase/client";
 import { studentAuthEmail } from "@/lib/student-auth";
 import { clearAppointmentDraft } from "@/lib/local-appointments";
@@ -61,11 +61,11 @@ export default function Page() {
       <div className={styles.form}>
         <FormField label="Student ID" name="studentId" value={studentId} onChange={(event) => setStudentId(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="Enter your student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
         <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
-        <Link className={styles.inlineLink} href="/student/forgot-password">Forgot Password?</Link>
+        <Link className={styles.inlineLink} href="/student/forgot-password">Forgot password?</Link>
       </div>
       {error && <Notice error>{error}</Notice>}
-      <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Signing In..." : "Sign In"}</button>
-      <p className={styles.formNote}>Don&apos;t have an account? <Link href="/student/create-account">Sign Up</Link></p>
+      <AuthSubmit label="Sign in" pendingLabel="Signing in…" pending={submitting} />
+      <p className={styles.formNote}>Don&apos;t have an account? <Link href="/student/create-account">Sign up</Link></p>
     </AuthFrame>
   );
 }

@@ -31,7 +31,7 @@ export function SignOutEverywhere() {
         </span>
         <ChevronRight className={styles.chevron} size={16} aria-hidden="true" />
       </button>
-      <ConfirmationModal open={confirming} title="Sign out of all devices?" description="You'll need your password to sign in again on every device." confirmLabel="Sign Out Everywhere" tone="danger" onCancel={() => setConfirming(false)} onConfirm={signOutEverywhere} />
+      <ConfirmationModal icon={MonitorSmartphone} open={confirming} title="Sign out of all devices?" description="You'll need your password to sign in again on every device." confirmLabel="Sign Out Everywhere" tone="danger" onCancel={() => setConfirming(false)} onConfirm={signOutEverywhere} />
     </section>
   );
 }

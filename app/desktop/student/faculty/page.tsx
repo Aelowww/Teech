@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, UserRound } from "lucide-react";
-import { DesktopLayout, EmptyState } from "@/app/desktop/_components/ui";
+import { ArrowRight, CalendarDays, UserRound } from "lucide-react";
+import { DesktopLayout, EmptyState, PageHeading } from "@/app/desktop/_components/ui";
 import { createClient } from "@/lib/supabase/server";
 import { avatarBucket } from "@/lib/avatar";
 import styles from "./page.module.css";
@@ -44,62 +44,79 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const { data: signedAvatars } = avatarPaths.length ? await supabase.storage.from(avatarBucket).createSignedUrls(avatarPaths, 60 * 60) : { data: [] };
   const avatarUrls = new Map((signedAvatars || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
 
-  const facultyItems = (faculty as FacultyProfile[] | null)
-    ?.filter((profile) => showingAll || (profile.presence_status || "available") === "available")
+  const allFaculty = (faculty as FacultyProfile[] | null) || [];
+  const availableCount = allFaculty.filter((profile) => (profile.presence_status || "available") === "available").length;
+  const facultyItems = allFaculty
+    .filter((profile) => showingAll || (profile.presence_status || "available") === "available")
     .map((profile) => {
       const nextOpen = nextOpenDates.get(profile.id);
-      const department = profile.department || "Faculty member";
+      const presence = profile.presence_status || "available";
       return {
         id: profile.id,
         name: profile.full_name,
-        details: nextOpen ? `${department} · Next open ${formatDate(nextOpen)}` : `${department} · No upcoming dates`,
-        avatarSrc: profile.avatar_path ? avatarUrls.get(profile.avatar_path) : null,
-        available: (profile.presence_status || "available") === "available",
-        status: presenceLabels[profile.presence_status || "available"],
-        href: nextOpen ? `/student/calendar?facultyId=${profile.id}&facultyName=${encodeURIComponent(profile.full_name)}` : undefined,
+        department: profile.department || "Faculty member",
+        presence,
+        nextOpen: nextOpen ? formatDate(nextOpen) : null,
+        imageUrl: profile.avatar_path ? avatarUrls.get(profile.avatar_path) : null,
+        href: nextOpen ? `/student/calendar?facultyId=${profile.id}&facultyName=${encodeURIComponent(profile.full_name)}` : null,
       };
-    }) || [];
+    });
 
   return (
     <DesktopLayout className={styles.screen} role="student" activeNav="faculty">
-      <header className={styles.pageHeader}>
-        <div>
-          <h1>Book a Consultation</h1>
-          <p>Choose an available faculty member for your consultation.</p>
-        </div>
-      </header>
-
-      <section className={styles.toolbar}>
-        <div className={styles.filters} aria-label="Faculty filters">
-          <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all">All Faculty</Link>
-          <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty">Available</Link>
-        </div>
-      </section>
-
-      {facultyItems.length > 0
-        ? <ul className={styles.list}>
-            {facultyItems.map((item) => (
-              <li className={styles.card} key={item.id}>
-                <span className={styles.avatar}>
-                  {item.avatarSrc
-                    ? <Image src={item.avatarSrc} alt="" fill sizes="80px" unoptimized />
-                    : <UserRound size={32} />}
-                </span>
-                <div className={styles.info}>
-                  <strong>{item.name}</strong>
-                  <small>{item.details}</small>
-                </div>
-                <span className={`${styles.status} ${item.available ? styles.statusAvailable : styles.statusBusy}`}>{item.status}</span>
-                {item.href
-                  ? <Link className={styles.view} href={item.href} aria-label={`Book a consultation with ${item.name}`}>Book consultation <ArrowRight size={15} strokeWidth={2.5} /></Link>
-                  : <span className={`${styles.view} ${styles.viewDisabled}`} aria-disabled="true">No open dates</span>}
-              </li>
-            ))}
-          </ul>
-        : <EmptyState
-            title={error ? "Faculty could not be loaded" : showingAll ? "No faculty profiles" : "No faculty available"}
-            description={error ? "Check the database connection and faculty records." : showingAll ? "Faculty profiles will appear here after accounts are created." : "No faculty are available right now. Check All Faculty to see who is in a meeting or in class."}
-          />}
+      <div className={styles.page}>
+        <header className={styles.header}>
+          <div className={styles.heading}>
+            <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
+          </div>
+          <nav className={styles.filters} aria-label="Faculty filters">
+            <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all" aria-current={showingAll ? "page" : undefined}>
+              All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
+            </Link>
+            <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={!showingAll ? "page" : undefined}>
+              Available<span className={styles.filterCount}>{availableCount}</span>
+            </Link>
+          </nav>
+        </header>
+        {facultyItems.length > 0
+          ? (
+            <ul className={styles.grid}>
+              {facultyItems.map((item) => {
+                const content = <>
+                  <span className={styles.photo}>
+                    {item.imageUrl
+                      ? <Image src={item.imageUrl} alt="" fill sizes="88px" unoptimized />
+                      : <UserRound size={34} aria-hidden="true" />}
+                    <i className={`${styles.presenceDot} ${styles[item.presence]}`} aria-hidden="true" />
+                  </span>
+                  <span className={styles.identity}>
+                    <strong>{item.name}</strong>
+                    <span>{item.department}</span>
+                  </span>
+                  <span className={`${styles.presence} ${styles[item.presence]}`}>{presenceLabels[item.presence]}</span>
+                  <span className={styles.nextOpen}>
+                    <CalendarDays size={14} aria-hidden="true" />
+                    {item.nextOpen ? <>Next open <b>{item.nextOpen}</b></> : "No open dates"}
+                  </span>
+                  <span className={styles.book}>
+                    {item.href ? <>Book consultation<ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" /></> : "Not bookable yet"}
+                  </span>
+                </>;
+                return (
+                  <li key={item.id}>
+                    {item.href
+                      ? <Link className={styles.card} href={item.href} aria-label={`Book a consultation with ${item.name}`}>{content}</Link>
+                      : <div className={`${styles.card} ${styles.cardUnavailable}`}>{content}</div>}
+                  </li>
+                );
+              })}
+            </ul>
+          )
+          : <EmptyState
+              title={error ? "Faculty could not be loaded" : showingAll ? "No faculty profiles" : "No faculty available"}
+              description={error ? "Check the database connection and faculty records." : showingAll ? "Faculty profiles will appear here after accounts are created." : "No faculty are available right now. Check All Faculty to see who is in a meeting or in class."}
+            />}
+      </div>
     </DesktopLayout>
   );
 }

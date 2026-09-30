@@ -1,94 +1,229 @@
-.section {
-  margin-top: 8px;
-  scroll-margin-top: 16px;
-}
-
-.grid {
+.page {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  align-content: start;
+  gap: 28px;
 }
 
-.badge {
-  min-width: 0;
-  padding: 18px;
+.header {
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  background: #f8f8fc;
-  border: 1px dashed #dcdce9;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.heading > :last-child {
+  margin-bottom: 0;
+}
+
+.progress {
+  width: min(360px, 100%);
+  flex: 0 0 auto;
+  padding: 16px 20px;
+  display: grid;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--line, #e7e6f1);
   border-radius: 18px;
 }
 
-.badge > div {
+.progressTop {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.progressTop strong {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.progress small {
+  color: #a9a8bd;
+  font-size: 12px;
+}
+
+.progressTrack {
+  height: 8px;
+  overflow: hidden;
+  background: #f1f0f7;
+  border-radius: 999px;
+}
+
+.progressTrack i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+  border-radius: inherit;
+}
+
+.section {
+  display: grid;
+  gap: 28px;
+  scroll-margin-top: 16px;
+}
+
+.group h2 {
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a9a8bd;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.group h2 span {
+  min-width: 22px;
+  height: 20px;
+  padding: 0 7px;
+  display: inline-grid;
+  place-items: center;
+  color: #8a8aa2;
+  background: #f1f1f7;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  list-style: none;
+}
+
+.tile {
+  --badge-tint: #f4f4f8;
+  --badge-ink: #b9b8cb;
+  min-width: 0;
+  padding: 22px 20px 18px;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  grid-template-rows: auto auto 1fr;
+  gap: 14px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line, #e7e6f1);
+  border-radius: 20px;
+  transition:
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+.tileShown {
+  border-color: color-mix(in srgb, var(--badge-ink) 35%, #fff);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--badge-tint) 70%, transparent);
+}
+
+@media (hover: hover) {
+  .tile:not(.locked):hover {
+    border-color: color-mix(in srgb, var(--badge-ink) 30%, #fff);
+    box-shadow: 0 8px 20px rgba(81, 76, 154, 0.08);
+  }
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  color: var(--badge-ink);
+  background: var(--badge-tint);
+  border-radius: 50%;
+}
+
+.text {
   min-width: 0;
   display: grid;
   gap: 4px;
 }
 
-.badge strong {
-  color: #9a9bb3;
+.text strong {
+  color: var(--ink, #28294a);
   font-size: 15px;
+  font-weight: 600;
 }
 
-.badge small {
-  color: #aaaac0;
+.text small {
+  color: var(--muted);
   font-size: 13px;
   line-height: 1.45;
 }
 
-.icon {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  color: #b4b4c8;
-  background: #eeeef4;
-  border-radius: 50%;
+.locked {
+  background: #fbfbfd;
 }
 
-.earned {
-  background: var(--accent-pale);
-  border: 1px solid #dcd9f5;
+.locked .icon {
+  opacity: 0.85;
 }
 
-.earned strong {
-  color: var(--ink);
+.locked .text strong {
+  color: #8a8aa2;
+  font-weight: 500;
 }
 
-.earned small {
-  color: var(--muted);
+.locked .text small {
+  color: #a9a8bd;
 }
 
-.earned .icon {
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  box-shadow: 0 4px 10px rgba(81, 76, 154, 0.25);
-}
-
-.error {
-  margin: 0 0 10px;
-  color: #c2413b;
-  font-size: 14px;
-  line-height: 1.4;
+.lockTag {
+  align-self: end;
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #a9a8bd;
+  background: #f1f1f7;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .showcase {
-  margin-top: 8px;
-  padding: 6px 12px;
-  justify-self: start;
+  align-self: end;
+  height: 32px;
+  padding: 0 14px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 5px;
   color: var(--accent-dark);
   background: #fff;
-  border: 1px solid #dcd9f5;
+  border: 1px solid #e1dff6;
   border-radius: 999px;
   font: inherit;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  transition:
+    color 200ms var(--button-ease),
+    background-color 200ms var(--button-ease),
+    border-color 200ms var(--button-ease),
+    transform 200ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .showcase:not(:disabled):hover {
+    background: var(--accent-pale);
+    border-color: #d6d3f3;
+  }
+}
+
+.showcase:not(:disabled):active {
+  transform: scale(0.96);
+  transition-duration: 100ms;
 }
 
 .showcaseOn {
@@ -97,9 +232,18 @@
   border-color: var(--accent);
 }
 
+@media (hover: hover) {
+  .showcaseOn:not(:disabled):hover {
+    color: #fff;
+    background: var(--accent-dark);
+    border-color: var(--accent-dark);
+  }
+}
+
 .showcase:disabled {
-  cursor: wait;
-  opacity: 0.6;
+  color: #b9b8cb;
+  border-color: #efeef6;
+  cursor: not-allowed;
 }
 
 .showcase:focus-visible {
@@ -107,25 +251,146 @@
   outline-offset: 2px;
 }
 
-.chips {
-  margin: 8px 0 0;
+.error {
+  margin: 0;
+  color: #c2413b;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .progress {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .showcase {
+    transition: none;
+  }
+
+  .showcase:not(:disabled):active {
+    transform: none;
+  }
+}
+
+.showcased {
+  margin: 12px 0 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 6px;
+  gap: 10px;
   list-style: none;
 }
 
-.chips li {
-  padding: 5px 11px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--accent-dark);
-  background: var(--accent-pale);
-  border: 1px solid #dcd9f5;
-  border-radius: 999px;
-  font-size: 12px;
+.showcased li {
+  animation: rosettePop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--delay);
+}
+
+.showcased a {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rosette {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: var(--tint);
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rosetteIcon {
+  position: relative;
+  color: var(--ink);
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.showcased a::after {
+  content: attr(data-name);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 5;
+  padding: 5px 9px;
+  color: #fff;
+  background: var(--ink-bubble, #28294a);
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  pointer-events: none;
+  transition:
+    opacity 180ms var(--button-ease),
+    transform 180ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .showcased a:hover .rosette {
+    transform: rotate(30deg) scale(1.08);
+  }
+
+  .showcased a:hover .rosetteIcon {
+    transform: scale(1.12) rotate(-8deg);
+  }
+
+  .showcased a:hover::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.showcased a:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.showcased a:active .rosette {
+  transform: scale(0.92);
+}
+
+.showcased a:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+@keyframes rosettePop {
+  from {
+    opacity: 0;
+    transform: scale(0.4) rotate(-20deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcased li {
+    animation: none;
+  }
+
+  .rosette,
+  .rosetteIcon,
+  .showcased a::after {
+    transition: none;
+  }
+
+  .showcased a:hover .rosette,
+  .showcased a:hover .rosetteIcon,
+  .showcased a:active .rosette {
+    transform: none;
+  }
 }

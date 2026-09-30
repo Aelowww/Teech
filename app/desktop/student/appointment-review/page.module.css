@@ -29,3 +29,35 @@
 .editButton:hover {
   background: var(--indigo-100);
 }
+
+.editButton {
+  transition:
+    transform 220ms var(--button-ease),
+    color 220ms var(--button-ease),
+    background-color 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .editButton:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.editButton:active:not(:disabled) {
+  transform: scale(0.98);
+  transition-duration: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editButton {
+    transition: none;
+  }
+
+  .editButton:hover:not(:disabled),
+  .editButton:active:not(:disabled) {
+    transform: none;
+  }
+}

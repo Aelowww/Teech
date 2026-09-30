@@ -7,7 +7,7 @@
 
 .side {
   position: sticky;
-  top: 112px;
+  top: var(--sticky-top, 112px);
   padding: 24px;
   display: grid;
   gap: 4px;

@@ -46,12 +46,6 @@ import profileStyles from "@/app/mobile/student/profile/page.module.css";
 
 type Role = "student" | "faculty";
 
-// Skeletons for every mobile screen that waits on data. Each one renders the real
-// frame, headings and labels, and swaps only the data-driven parts for bones, so the
-// layout is already in place when the content arrives. Every screen imports its
-// skeleton twice: from its route's loading.tsx (shown while navigating there) and
-// in its page (shown while its own data loads).
-
 function repeat<T>(count: number, render: (index: number) => T) {
   return Array.from({ length: count }, (_, index) => render(index));
 }
@@ -557,7 +551,6 @@ export function FacultySecuritySkeleton() {
   );
 }
 
-/** Fallback for screens without their own skeleton: a heading and a few content blocks. */
 export function GenericSkeleton({ backTo, role, activeNav }: { backTo?: string; role?: Role; activeNav?: string }) {
   return (
     <SkeletonScreen backTo={backTo} role={role} activeNav={activeNav}>

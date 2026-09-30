@@ -7,7 +7,7 @@
 
 .side {
   position: sticky;
-  top: 112px;
+  top: var(--sticky-top, 112px);
   padding: 24px;
   display: grid;
   background: #fff;
@@ -66,7 +66,7 @@
   outline: 0;
   font: inherit;
   font-size: 15px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
 }
 
 .times input:focus,
@@ -117,30 +117,6 @@
   border-top: 1px solid var(--line-soft);
 }
 
-.saveButton {
-  width: 100%;
-  min-height: 52px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 10px 22px rgba(81, 76, 154, 0.22);
-}
-
-.saveButton:hover:not(:disabled) {
-  background: var(--accent-dark);
-}
-
-.saveButton:disabled {
-  cursor: wait;
-  opacity: 0.65;
-  box-shadow: none;
-}
-
 @media (max-width: 1100px) {
   .page {
     grid-template-columns: minmax(0, 1fr);
@@ -149,4 +125,16 @@
   .side {
     position: static;
   }
+}
+
+@media (hover: hover) {
+
+  .removeButton:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(177, 58, 85, 0.12);
+    transform: translateY(-2px);
+  }
+}
+
+.saveButton {
+  width: 100%;
 }

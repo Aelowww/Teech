@@ -7,6 +7,45 @@
   place-items: center;
   color: var(--accent);
   border-radius: 50%;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 200ms var(--button-ease),
+    transform 200ms var(--button-ease);
+}
+
+.icon {
+  fill: currentColor;
+  fill-opacity: 0;
+  transform-origin: 50% 12%;
+  transition: fill-opacity 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .bell:hover {
+    background: var(--accent-pale);
+  }
+
+  .bell:hover .icon {
+    animation: wiggle 500ms var(--button-ease);
+  }
+}
+
+.bell:active {
+  transform: scale(0.92);
+  transition-duration: 100ms;
+}
+
+.bell:active .icon,
+.filled .icon {
+  fill-opacity: 1;
+}
+
+.filled {
+  background: var(--accent-pale);
+}
+
+.ringing .icon {
+  animation: ring 620ms var(--button-ease);
 }
 
 .bell:focus-visible {
@@ -23,4 +62,54 @@
   background: #db5368;
   border: 2px solid #fff;
   border-radius: 50%;
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0);
+  }
+  20% {
+    transform: rotate(16deg);
+  }
+  40% {
+    transform: rotate(-12deg);
+  }
+  60% {
+    transform: rotate(7deg);
+  }
+  80% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  35% {
+    transform: rotate(9deg);
+  }
+  70% {
+    transform: rotate(-6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bell,
+  .icon {
+    transition: none;
+  }
+
+  .bell:active {
+    transform: none;
+  }
+
+  .bell:hover .icon,
+  .ringing .icon {
+    animation: none;
+  }
 }

@@ -17,7 +17,7 @@
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 18px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
 }
 
 .requestCard:hover {
@@ -123,7 +123,7 @@
   border: 1px solid #c6edda;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background var(--motion) var(--ease), color var(--motion) var(--ease);
 }
 
 .actions button:hover {
@@ -181,5 +181,53 @@
       "name status"
       "date status"
       "reason status";
+  }
+}
+
+.requestCard {
+  transition:
+    transform 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .requestCard:hover {
+    border-color: #d9d6f2;
+    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.07);
+    transform: none;
+  }
+}
+
+.actions button {
+  transition:
+    transform 220ms var(--button-ease),
+    color 220ms var(--button-ease),
+    background-color 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .actions button:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.actions button:active:not(:disabled) {
+  transform: scale(0.98);
+  transition-duration: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .requestCard,
+  .actions button {
+    transition: none;
+  }
+
+  .actions button:hover:not(:disabled),
+  .actions button:active:not(:disabled) {
+    transform: none;
   }
 }

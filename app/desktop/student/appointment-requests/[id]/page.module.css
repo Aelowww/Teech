@@ -1,193 +1,191 @@
-.page {
-  display: grid;
-  grid-template-columns: 360px minmax(0, 1fr);
-  align-items: start;
-  gap: 24px;
+.screen {
+  --accent: #7772c9;
 }
 
-.summary {
-  position: sticky;
-  top: 112px;
-  padding: 32px 28px 28px;
+.page {
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 12px;
   display: flex;
   flex-direction: column;
+}
+
+.hero {
+  margin: 4px 0 22px;
+  display: grid;
+  justify-items: center;
   text-align: center;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.summary h1,
-.summary p {
-  text-align: center;
-}
-
-.summary h1 {
-  font-size: 24px;
-}
-
-.summary p {
-  margin: 8px auto 24px;
-  font-size: 14px;
 }
 
 .statusMark {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 18px;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 14px;
   display: grid;
   place-items: center;
-  color: var(--accent);
-  background: var(--indigo-50);
   border-radius: 50%;
-  box-shadow: 0 0 0 10px #f8f9fc;
+}
+
+.statusMark.pending {
+  color: var(--accent);
+  background: var(--accent-pale);
+}
+
+.statusMark.confirmed {
+  color: #15834a;
+  background: #e8f7ee;
+}
+
+.statusMark.declined,
+.statusMark.cancelled {
+  color: #9d9cb4;
+  background: #f4f4f8;
+}
+
+.hero h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.hero p {
+  max-width: 280px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .timeline {
-  width: 100%;
-  margin: 0 auto 28px;
+  --progress: 0.5;
+  width: min(100%, 260px);
+  margin: 0 auto 26px;
+  padding: 0;
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: start;
+  list-style: none;
   text-align: center;
 }
 
-.timeline::before {
+.timeline::before,
+.timeline::after {
   content: "";
-  height: 2px;
   position: absolute;
-  top: 15px;
-  right: 16.7%;
-  left: 16.7%;
-  background: var(--indigo-100);
+  top: 9px;
+  left: 16.667%;
+  height: 2px;
+  border-radius: 2px;
 }
 
-.timeline div {
+.timeline::before {
+  right: 16.667%;
+  background: #efeef6;
+}
+
+.timeline::after {
+  width: calc(66.667% * var(--progress));
+  background: var(--accent);
+}
+
+.timeline li {
   position: relative;
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 8px;
-  color: var(--faint);
+  gap: 6px;
 }
 
 .timeline span {
-  width: 32px;
-  height: 32px;
+  width: 20px;
+  height: 20px;
   display: grid;
   place-items: center;
-  color: var(--indigo-300);
+  color: #fff;
   background: #fff;
-  border: 2px solid var(--indigo-100);
+  border: 2px solid #e4e3ef;
   border-radius: 50%;
 }
 
-.timeline .complete,
-.timeline .current {
-  color: #fff;
+.timeline .done span {
   background: var(--accent);
   border-color: var(--accent);
 }
 
-.timeline .current {
-  box-shadow: 0 0 0 4px var(--indigo-50);
+.timeline .current span {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-pale);
+}
+
+.timeline .current span::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.timeline .stopped span {
+  background: #b9b8cb;
+  border-color: #b9b8cb;
 }
 
 .timeline small {
-  color: var(--text-soft);
+  color: #a9a8bd;
   font-size: 13px;
+  font-weight: 500;
   white-space: nowrap;
 }
 
-.summaryActions {
-  padding-top: 20px;
-  display: grid;
-  border-top: 1px solid var(--line-soft);
+.timeline .done small {
+  color: var(--ink);
 }
 
-.homeButton {
-  width: 100%;
-  min-height: 48px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: var(--indigo-50);
-  border-radius: 999px;
-  font-size: 14px;
+.timeline .current small {
+  color: var(--accent-dark);
   font-weight: 600;
 }
 
-.homeButton:hover,
-.homeButton:focus-visible {
-  color: #fff;
-  background: var(--accent);
-}
-
-.detailsCard {
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.detailsCard > header {
-  padding: 22px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  background: var(--indigo-50);
-}
-
-.detailsCard > header span,
-.reason > span {
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.detailsCard > header strong {
-  color: var(--indigo-800);
-  font-size: 16px;
-  font-family: ui-monospace, "Cascadia Mono", monospace;
-}
-
 .faculty {
-  padding: 24px 28px;
+  padding-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  border-bottom: 1px solid var(--line-soft);
+  gap: 12px;
+  border-bottom: 1px solid #f2f1f8;
 }
 
-.initials {
-  width: 56px;
-  height: 56px;
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  color: var(--accent);
-  background: var(--indigo-50);
+.avatar {
   position: relative;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
   overflow: hidden;
+  color: var(--accent);
+  background: var(--accent-pale);
   border-radius: 50%;
-  font-size: 18px;
-  font-weight: 700;
 }
-.initialsImage {
+.avatar img {
   object-fit: cover;
 }
 
 .faculty div {
+  min-width: 0;
   display: grid;
-  gap: 4px;
+  gap: 2px;
 }
 
 .faculty strong {
+  overflow: hidden;
   color: var(--ink);
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .faculty small {
@@ -195,106 +193,340 @@
   font-size: 14px;
 }
 
-.detailsCard dl {
+.details {
   margin: 0;
-  padding: 24px 28px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
 }
 
-.detailsCard dl div {
+.details div {
+  padding: 14px 0;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.details div + div {
+  border-top: 1px solid #f2f1f8;
+}
+
+.details dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9d9cb4;
+  font-size: 14px;
+}
+
+.details dt svg {
+  flex: 0 0 auto;
+  color: #b9b8cb;
+}
+
+.details dd {
   min-width: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.details dd small {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.details .muted {
+  color: #9d9cb4;
+  font-weight: 500;
+}
+
+.details .code {
+  color: var(--muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.actions {
+  margin-top: auto;
+  padding-top: 24px;
+  display: grid;
+  justify-items: center;
+}
+
+.statusMark {
+  position: relative;
+  animation: markPop 460ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.statusMark.confirmed svg circle {
+  stroke-dasharray: 64;
+  stroke-dashoffset: 64;
+  animation: draw 520ms ease-out 180ms forwards;
+}
+
+.statusMark.confirmed svg path {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: draw 300ms ease-out 620ms forwards;
+}
+
+.statusMark.confirmed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid #26c07a;
+  border-radius: 50%;
+  opacity: 0;
+  animation: ripple 700ms ease-out 860ms;
+  pointer-events: none;
+}
+
+.statusMark.declined svg circle,
+.statusMark.cancelled svg circle {
+  stroke-dasharray: 64;
+  stroke-dashoffset: 64;
+  animation: draw 520ms ease-out 180ms forwards;
+}
+
+.statusMark.declined svg path,
+.statusMark.cancelled svg path {
+  stroke-dasharray: 9;
+  stroke-dashoffset: 9;
+  animation: draw 220ms ease-out 620ms forwards;
+}
+
+.statusMark.declined svg path:last-child,
+.statusMark.cancelled svg path:last-child {
+  animation-delay: 800ms;
+}
+
+.statusMark.declined svg,
+.statusMark.cancelled svg {
+  animation: shake 420ms ease-in-out 1040ms;
+}
+
+.timeline::after {
+  transform-origin: left center;
+  animation: lineGrow 600ms var(--button-ease) 200ms both;
+}
+
+.timeline li span {
+  animation: stepPop 360ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.timeline li:nth-child(1) span {
+  animation-delay: 150ms;
+}
+
+.timeline li:nth-child(2) span {
+  animation-delay: 350ms;
+}
+
+.timeline li:nth-child(3) span {
+  animation-delay: 550ms;
+}
+
+@keyframes markPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+@keyframes shake {
+  20% {
+    transform: translateX(-3px) rotate(-6deg);
+  }
+  45% {
+    transform: translateX(3px) rotate(6deg);
+  }
+  70% {
+    transform: translateX(-2px) rotate(-3deg);
+  }
+  90% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes lineGrow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes stepPop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusMark,
+  .statusMark.confirmed::after,
+  .timeline::after,
+  .timeline li span {
+    animation: none;
+  }
+
+  .statusMark.declined svg,
+  .statusMark.cancelled svg {
+    animation: none;
+  }
+
+  .statusMark.confirmed svg circle,
+  .statusMark.confirmed svg path,
+  .statusMark.declined svg circle,
+  .statusMark.declined svg path,
+  .statusMark.cancelled svg circle,
+  .statusMark.cancelled svg path {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
+.page {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  padding-bottom: 0;
+}
+
+.statusCard,
+.infoCard {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid var(--line, #e7e6f1);
+  border-radius: var(--radius, 20px);
+}
+
+.statusCard {
+  position: sticky;
+  top: var(--sticky-top, 32px);
+  padding: 32px 28px 26px;
+  display: grid;
+  gap: 26px;
+}
+
+.hero {
+  margin: 0;
+}
+
+.timeline {
+  width: min(100%, 300px);
+  margin: 0 auto;
+  justify-self: center;
+}
+
+.actions {
+  margin: 0;
+  padding: 20px 0 0;
+  border-top: 1px solid #f2f1f8;
+}
+
+.infoCard {
+  padding: 26px 28px 28px;
+  display: grid;
+  gap: 20px;
+}
+
+.faculty {
+  margin: 0;
+  padding-bottom: 20px;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+}
+
+.faculty strong {
+  font-size: 18px;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.details div {
   padding: 16px 18px;
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  grid-template-areas:
-    "icon label"
-    "value value";
-  align-items: center;
-  gap: 10px 8px;
-  color: var(--accent);
-  background: var(--page);
+  grid-template-columns: none;
+  align-content: start;
+  gap: 8px;
+  background: #fafafd;
+  border: 1px solid #f0eff7;
   border-radius: 16px;
 }
 
-.detailsCard dl svg {
-  grid-area: icon;
+.details div + div {
+  border-top: 1px solid #f0eff7;
 }
 
-.detailsCard dt {
-  grid-area: label;
-  color: var(--muted);
-  font-size: 13px;
+.details .wide {
+  grid-column: 1 / -1;
 }
 
-.detailsCard dd {
-  grid-area: value;
-  margin: 0;
-  color: var(--ink);
-  font-size: 15px;
+.details dt {
+  font-size: 12px;
   font-weight: 600;
-  line-height: 1.4;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.statusPill {
-  padding: 5px 12px;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
+.details dt svg {
+  color: var(--accent);
 }
 
-.statusPending {
-  color: #a26015;
-  background: #fff5df;
-}
-
-.statusConfirmed {
-  color: #277d51;
-  background: #edfbf3;
-}
-
-.statusDeclined,
-.statusCancelled {
-  color: #b13a55;
-  background: #fff0f3;
-}
-
-.reason {
-  padding: 0 28px 28px;
-}
-
-.reason p {
-  margin: 8px 0;
-  color: var(--ink);
+.details dd {
   font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
 }
 
-.reason small {
-  display: block;
-  padding: 16px 18px;
-  color: var(--text);
-  background: var(--page);
-  border-radius: 14px;
+.details dd small {
   font-size: 14px;
-  line-height: 1.6;
-  white-space: pre-wrap;
+  line-height: 1.55;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1000px) {
   .page {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .summary {
+  .statusCard {
     position: static;
   }
+}
 
-  .detailsCard dl {
+@media (max-width: 640px) {
+  .details {
     grid-template-columns: minmax(0, 1fr);
   }
 }

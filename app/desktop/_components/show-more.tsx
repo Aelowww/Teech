@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import styles from "./show-more.module.css";
 
 export const defaultPageSize = 5;
@@ -31,7 +32,7 @@ export function ShowMoreButton({
 }) {
   if (remaining > 0) {
     return (
-      <button className={styles.button} type="button" onClick={onShowMore}>
+      <button className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.block} ${styles.button}`} type="button" onClick={onShowMore}>
         Show more
         <ChevronDown size={15} />
       </button>
@@ -39,7 +40,7 @@ export function ShowMoreButton({
   }
   if (canCollapse) {
     return (
-      <button className={styles.button} type="button" onClick={onShowLess}>
+      <button className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.block} ${styles.button}`} type="button" onClick={onShowLess}>
         Show less
         <ChevronUp size={15} />
       </button>

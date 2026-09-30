@@ -258,3 +258,153 @@
   display: grid;
   justify-items: center;
 }
+
+.statusMark {
+  position: relative;
+  animation: markPop 460ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.statusMark.confirmed svg circle {
+  stroke-dasharray: 64;
+  stroke-dashoffset: 64;
+  animation: draw 520ms ease-out 180ms forwards;
+}
+
+.statusMark.confirmed svg path {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: draw 300ms ease-out 620ms forwards;
+}
+
+.statusMark.confirmed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid #26c07a;
+  border-radius: 50%;
+  opacity: 0;
+  animation: ripple 700ms ease-out 860ms;
+  pointer-events: none;
+}
+
+.statusMark.declined svg circle,
+.statusMark.cancelled svg circle {
+  stroke-dasharray: 64;
+  stroke-dashoffset: 64;
+  animation: draw 520ms ease-out 180ms forwards;
+}
+
+.statusMark.declined svg path,
+.statusMark.cancelled svg path {
+  stroke-dasharray: 9;
+  stroke-dashoffset: 9;
+  animation: draw 220ms ease-out 620ms forwards;
+}
+
+.statusMark.declined svg path:last-child,
+.statusMark.cancelled svg path:last-child {
+  animation-delay: 800ms;
+}
+
+.statusMark.declined svg,
+.statusMark.cancelled svg {
+  animation: shake 420ms ease-in-out 1040ms;
+}
+
+.timeline::after {
+  transform-origin: left center;
+  animation: lineGrow 600ms var(--button-ease) 200ms both;
+}
+
+.timeline li span {
+  animation: stepPop 360ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.timeline li:nth-child(1) span {
+  animation-delay: 150ms;
+}
+
+.timeline li:nth-child(2) span {
+  animation-delay: 350ms;
+}
+
+.timeline li:nth-child(3) span {
+  animation-delay: 550ms;
+}
+
+@keyframes markPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+@keyframes shake {
+  20% {
+    transform: translateX(-3px) rotate(-6deg);
+  }
+  45% {
+    transform: translateX(3px) rotate(6deg);
+  }
+  70% {
+    transform: translateX(-2px) rotate(-3deg);
+  }
+  90% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes lineGrow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes stepPop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusMark,
+  .statusMark.confirmed::after,
+  .timeline::after,
+  .timeline li span {
+    animation: none;
+  }
+
+  .statusMark.declined svg,
+  .statusMark.cancelled svg {
+    animation: none;
+  }
+
+  .statusMark.confirmed svg circle,
+  .statusMark.confirmed svg path,
+  .statusMark.declined svg circle,
+  .statusMark.declined svg path,
+  .statusMark.cancelled svg circle,
+  .statusMark.cancelled svg path {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}

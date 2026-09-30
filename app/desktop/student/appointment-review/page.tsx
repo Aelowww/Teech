@@ -14,6 +14,7 @@ import {
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
 
@@ -154,7 +155,7 @@ export default function Page() {
 
         <aside className={booking.side}>
           {error && <Notice error>{error}</Notice>}
-          <button className={booking.continueButton} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
           <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
         </aside>
       </div>

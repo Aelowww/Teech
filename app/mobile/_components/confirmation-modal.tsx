@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { AlertTriangle, CheckCircle2, X } from "lucide-react";
+import { useCallback, useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
+import { AlertTriangle, CircleHelp, type LucideIcon } from "lucide-react";
 import buttonStyles from "./button.module.css";
 import styles from "./confirmation-modal.module.css";
 
@@ -11,6 +12,7 @@ type ConfirmationModalProps = {
   description: string;
   confirmLabel: string;
   tone?: "default" | "danger";
+  icon?: LucideIcon;
   confirmationText?: string;
   onCancel: () => void;
   onConfirm: () => Promise<string | void> | string | void;
@@ -22,6 +24,7 @@ export function ConfirmationModal({
   description,
   confirmLabel,
   tone = "default",
+  icon,
   confirmationText,
   onCancel,
   onConfirm,
@@ -29,6 +32,8 @@ export function ConfirmationModal({
   const [typedText, setTypedText] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const titleId = useId();
+  const descriptionId = useId();
 
   const dismiss = useCallback(() => {
     setTypedText("");
@@ -67,34 +72,34 @@ export function ConfirmationModal({
     dismiss();
   }
 
-  return (
+  const Icon = icon || (tone === "danger" ? AlertTriangle : CircleHelp);
+
+  return createPortal(
     <div className={styles.backdrop} role="presentation" onMouseDown={() => !submitting && dismiss()}>
       <section
-        className={styles.dialog}
+        className={`${styles.dialog} ${tone === "danger" ? styles.danger : ""}`}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="confirmation-title"
-        aria-describedby="confirmation-description"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className={`${styles.icon} ${tone === "danger" ? styles.iconDanger : ""}`}>
-          {tone === "danger" ? <AlertTriangle size={22} /> : <CheckCircle2 size={22} />}
-        </div>
-        <button className={styles.close} type="button" onClick={dismiss} disabled={submitting} aria-label="Close confirmation"><X size={17} /></button>
-        <h2 id="confirmation-title">{title}</h2>
-        <p id="confirmation-description">{description}</p>
+        <span className={styles.icon} aria-hidden="true"><Icon size={22} /></span>
+        <h2 id={titleId}>{title}</h2>
+        <p id={descriptionId}>{description}</p>
         {confirmationText && (
           <label className={styles.confirmationField}>
-            <span>Type {confirmationText} to confirm</span>
-            <input value={typedText} onChange={(event) => setTypedText(event.target.value)} autoComplete="off" disabled={submitting} />
+            <span>Type <b>{confirmationText}</b> to confirm</span>
+            <input value={typedText} onChange={(event) => setTypedText(event.target.value)} autoComplete="off" autoCapitalize="characters" disabled={submitting} />
           </label>
         )}
         {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}>
-          <button className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.block}`} type="button" onClick={dismiss} disabled={submitting}>Cancel</button>
-          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${tone === "danger" ? styles.confirmDanger : ""}`} type="button" onClick={confirm} disabled={submitting}>{submitting ? "Please wait..." : confirmLabel}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.block} ${styles.cancel}`} type="button" onClick={dismiss} disabled={submitting}>Cancel</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${tone === "danger" ? styles.confirmDanger : ""}`} type="button" onClick={confirm} disabled={submitting} autoFocus>{submitting ? "Please wait..." : confirmLabel}</button>
         </div>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

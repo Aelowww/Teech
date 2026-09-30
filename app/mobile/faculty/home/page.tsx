@@ -11,6 +11,7 @@ import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { FacultyHomeSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
@@ -54,7 +55,7 @@ export default function Page() {
       setIsLoading(false);
 
       channel = supabase
-        .channel(`faculty-dashboard-${currentProfile.id}`)
+        .channel(uniqueChannelName(`faculty-dashboard-${currentProfile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `faculty_profile_id=eq.${currentProfile.id}` },
@@ -110,7 +111,7 @@ export default function Page() {
 
         {nextConsultation ? (
           <UpNextCard
-            eyebrow={nextConsultation.preferred_date === localDateValue() ? "Up next · Today" : "Up next"}
+            eyebrow="Up next"
             title={nextConsultation.student_name || "Student consultation"}
             date={nextConsultation.preferred_date}
             meta={[formatTime(nextConsultation.preferred_time), nextConsultation.meeting_location || "Location to be confirmed"]}
