@@ -136,10 +136,10 @@ export default function Page() {
           </Link>
         </header>
 
-        <FactCard role="student" />
-
         <div className={styles.layout}>
           <div className={styles.main}>
+            <FactCard role="student" />
+
             {nextAppointment ? (
               <UpNextCard
                 eyebrow="Up next"

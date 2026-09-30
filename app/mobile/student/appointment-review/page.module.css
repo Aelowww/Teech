@@ -21,8 +21,3 @@
   display: grid;
   gap: 12px;
 }
-.editButton,
-.editButton {
-  color: var(--accent-dark);
-  background: var(--accent-pale);
-}

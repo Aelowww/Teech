@@ -121,10 +121,10 @@ export default function Page() {
         </div>
       </header>
 
-      <FactCard role="faculty" />
-
       <div className={styles.layout}>
         <div className={styles.main}>
+        <FactCard role="faculty" />
+
         {nextConsultation ? (
           <UpNextCard
             eyebrow="Up next"
