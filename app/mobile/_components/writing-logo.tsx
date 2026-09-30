@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./writing-logo.module.css";
 
 const frames = [101, 165, 219, 278, 402, 402];
@@ -24,10 +24,13 @@ const writingTime = timeline[timeline.length - 1].start + timeline[timeline.leng
 export function WritingLogo({ children, width }: { children?: React.ReactNode; width?: number }) {
   const [loaded, setLoaded] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
+  const logoRef = useRef<HTMLDivElement>(null);
   const playing = loaded >= frames.length || timedOut;
 
   useEffect(() => {
-    const fallback = window.setTimeout(() => setTimedOut(true), 2500);
+    const images = Array.from(logoRef.current?.querySelectorAll("img") || []);
+    if (images.length === frames.length && images.every((image) => image.complete && image.naturalWidth > 0)) setLoaded(frames.length);
+    const fallback = window.setTimeout(() => setTimedOut(true), 1200);
     return () => window.clearTimeout(fallback);
   }, []);
 
@@ -37,7 +40,7 @@ export function WritingLogo({ children, width }: { children?: React.ReactNode; w
       data-playing={playing || undefined}
       style={{ "--written": `${writingTime}ms` } as CSSProperties}
     >
-      <div className={styles.logo} style={width ? { width } : undefined} role="img" aria-label="Teech">
+      <div ref={logoRef} className={styles.logo} style={width ? { width } : undefined} role="img" aria-label="Teech">
         {frames.map((width, index) => {
           const isFinal = index === frames.length - 1;
           const stroke = timeline[index];
