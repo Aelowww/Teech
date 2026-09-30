@@ -9,7 +9,7 @@ import styles from "./request-decision-buttons.module.css";
 
 type Decision = "confirmed" | "declined";
 
-export function RequestDecisionButtons({ requestId }: { requestId: string }) {
+export function RequestDecisionButtons({ requestId, canConfirm = true }: { requestId: string; canConfirm?: boolean }) {
   const router = useRouter();
   const [decision, setDecision] = useState<Decision | null>(null);
 
@@ -28,9 +28,9 @@ export function RequestDecisionButtons({ requestId }: { requestId: string }) {
 
   return (
     <>
-      <div className={styles.actions}>
+      <div className={`${styles.actions} ${canConfirm ? "" : styles.single}`}>
         <button className={styles.decline} type="button" onClick={() => setDecision("declined")}><X size={15} />Decline</button>
-        <button className={styles.confirm} type="button" onClick={() => setDecision("confirmed")}><Check size={15} />Confirm</button>
+        {canConfirm && <button className={styles.confirm} type="button" onClick={() => setDecision("confirmed")}><Check size={15} />Confirm</button>}
       </div>
       <ConfirmationModal
         open={Boolean(decision)}

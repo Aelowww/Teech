@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { MobileLayout, Notice, PageHeading, FormField } from "@/app/mobile/_components/ui";
+import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { createClient } from "@/lib/supabase/client";
 import { studentAuthEmail } from "@/lib/student-auth";
+import { clearAppointmentDraft } from "@/lib/local-appointments";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -49,6 +50,7 @@ export default function Page() {
       return;
     }
 
+    clearAppointmentDraft();
     router.replace("/student/home");
     router.refresh();
   }
@@ -56,15 +58,17 @@ export default function Page() {
   return (
     <MobileLayout className={styles.screen} backTo="/welcome">
       <form className={styles.page} onSubmit={handleSubmit}>
-        <PageHeading title="Sign In" subtitle="Welcome back! Please enter your credentials." />
+        <BrandHeader />
+        <FormCard>
         <div className={styles.form}>
-          <FormField label="Student ID" name="studentId" value={studentId} onChange={(event) => setStudentId(event.target.value)} placeholder="Enter your student ID" required />
+          <FormField label="Student ID" name="studentId" value={studentId} onChange={(event) => setStudentId(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="Enter your student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
           <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
           <Link className={styles.inlineLink} href="/student/forgot-password">Forgot Password?</Link>
         </div>
         {error && <Notice error>{error}</Notice>}
         <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Signing In..." : "Sign In"}</button>
         <p className={styles.formNote}>Don&apos;t have an account? <Link href="/student/create-account">Sign Up</Link></p>
+      </FormCard>
       </form>
     </MobileLayout>
   );

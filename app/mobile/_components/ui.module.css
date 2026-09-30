@@ -43,7 +43,6 @@
   display: none;
 }
 
-/* Let long page content extend the scroll area instead of painting behind the bottom navigation. */
 .content > [class] {
   min-width: 0;
   min-height: 100%;
@@ -565,7 +564,8 @@
   flex: 0 0 auto;
   margin: 0;
 }
-.avatar {
+.avatar,
+.itemAvatar {
   position: relative;
   overflow: hidden;
 }
@@ -714,4 +714,77 @@
 }
 .spotlightMuted .spotlightAction {
   color: var(--accent);
+}
+
+.brandHeader {
+  margin: 0 0 18px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.brandHeader h1 {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--accent-dark);
+  font-size: 22px;
+  font-weight: 800;
+}
+.brandHeader .logoImage {
+  width: 108px;
+}
+.brandHeader .logo {
+  transform: translateY(-8%);
+}
+.brandHeader p {
+  margin: 0;
+  color: #6f7091;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.formCard {
+  padding: 20px 18px 16px;
+  display: grid;
+  gap: 14px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(81, 76, 154, 0.1);
+}
+.formCard > * {
+  margin: 0;
+}
+
+.emptyIcon {
+  width: 68px;
+  height: 68px;
+  margin-bottom: 6px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-pale);
+  border-radius: 50%;
+  box-shadow: 0 0 0 8px #f8f7fe;
+}
+.emptyAction {
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(81, 76, 154, 0.22);
+}
+.emptyAction:hover,
+.emptyAction:focus-visible {
+  background: var(--accent-dark);
 }

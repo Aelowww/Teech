@@ -1,4 +1,3 @@
--- Users may update only the profile fields exposed in the portal.
 grant update (full_name, department, course_year) on public.profiles to authenticated;
 
 drop policy if exists "Users can update their own profile" on public.profiles;

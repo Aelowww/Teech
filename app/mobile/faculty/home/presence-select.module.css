@@ -1,0 +1,155 @@
+.root {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.trigger {
+  min-height: 34px;
+  padding: 0 10px 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(43, 41, 85, 0.05);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.trigger:hover {
+  border-color: #d3d1ea;
+}
+
+.trigger:focus-visible,
+.trigger[aria-expanded="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(119, 114, 201, 0.14);
+  outline: 0;
+}
+
+.triggerLabel {
+  white-space: nowrap;
+}
+
+.chevron {
+  color: var(--muted);
+  transition: transform 160ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.available {
+  background: #1fa45c;
+  box-shadow: 0 0 0 3px rgba(31, 164, 92, 0.16);
+}
+
+.in_meeting {
+  background: #e0a030;
+  box-shadow: 0 0 0 3px rgba(224, 160, 48, 0.18);
+}
+
+.busy {
+  background: #d9534f;
+  box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.16);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  width: min(248px, calc(100vw - 32px));
+  padding: 5px;
+  display: grid;
+  gap: 2px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(43, 41, 85, 0.16);
+  animation: menuIn 140ms ease-out;
+}
+
+.option {
+  width: 100%;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover,
+.option:focus-visible {
+  background: var(--accent-pale);
+  outline: 0;
+}
+
+.option[aria-selected="true"] {
+  background: #f7f7fd;
+}
+
+.optionText {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+
+.optionText strong {
+  font-size: 12px;
+}
+
+.optionText small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.check {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    animation: none;
+  }
+
+  .chevron,
+  .trigger {
+    transition: none;
+  }
+}

@@ -1,0 +1,51 @@
+.tabs {
+  margin: 14px 0 4px;
+  padding: 4px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  background: #f4f3fb;
+  border-radius: 12px;
+}
+
+.tabs button {
+  min-height: 34px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #77788f;
+  background: none;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tabs button span {
+  min-width: 16px;
+  padding: 1px 4px;
+  color: #77788f;
+  background: #e7e6f1;
+  border-radius: 999px;
+  font-size: 9px;
+}
+
+.tabs .active {
+  color: #514c9a;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(81, 76, 154, 0.12);
+}
+
+.tabs .active span {
+  color: #fff;
+  background: #7772c9;
+}
+
+.tabs button:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 1px;
+}

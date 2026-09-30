@@ -62,24 +62,6 @@
   line-height: 1.55;
 }
 
-.securityStatus {
-  margin: 14px 0 0;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #cd8a2d;
-  background: #fff8ec;
-  border: 1px solid #f3d9ad;
-  border-radius: 10px;
-  font-size: 11px;
-  line-height: 1.4;
-}
-.securityStatusReady {
-  color: #15934e;
-  background: #effcf5;
-  border-color: #b8edcc;
-}
 .securityQuestion {
   padding: 12px;
   display: grid;

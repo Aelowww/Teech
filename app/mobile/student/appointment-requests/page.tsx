@@ -3,12 +3,13 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Ban, Eye, UserRound } from "lucide-react";
-import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
+import { Ban, CalendarPlus, CheckCircle2, Eye, UserRound } from "lucide-react";
+import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
+import { matchesTab, parseTab, RequestTabs, type RequestTab } from "@/app/mobile/_components/request-tabs";
 import styles from "./page.module.css";
 
 type Appointment = {
@@ -31,7 +32,7 @@ export default function Page() {
 function RequestsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const statusFilter = searchParams.get("status") === "pending" ? "pending" : "";
+  const [tab, setTab] = useState<RequestTab>(() => parseTab(searchParams.get("status")));
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [error, setError] = useState("");
   const [cancellingId, setCancellingId] = useState("");
@@ -92,7 +93,7 @@ function RequestsPage() {
     };
   }, [router]);
 
-  const filteredAppointments = statusFilter ? appointments.filter((appointment) => appointment.status === statusFilter) : appointments;
+  const filteredAppointments = appointments.filter((appointment) => matchesTab(appointment.status, tab));
   const list = useShowMore(filteredAppointments);
 
   if (isLoading) return <AppLoader />;
@@ -114,7 +115,8 @@ function RequestsPage() {
   return (
     <MobileLayout className={styles.screen} backTo="/student/home" role="student" activeNav="requests">
       <div className={styles.page}>
-        <PageHeading title={statusFilter ? "Pending Requests" : "Requests"} subtitle={statusFilter ? "Review consultation requests waiting for a response." : "Manage your consultation requests."} />
+        <PageHeading title="Requests" subtitle="Manage your consultation requests." />
+        {appointments.length > 0 && <RequestTabs statuses={appointments.map((appointment) => appointment.status)} active={tab} onChange={setTab} />}
         {error && <Notice error>{error}</Notice>}
         {filteredAppointments.length > 0 ? (
           <div className={styles.requests}>
@@ -125,17 +127,23 @@ function RequestsPage() {
                   <strong>{appointment.faculty_name || "Faculty"}</strong>
                   <span>{formatDate(appointment.preferred_date)} at {formatTime(appointment.preferred_time)}</span>
                   <small>{appointment.reason}</small>
-                  <em className={styles[`status${capitalize(appointment.status)}`]}>{appointment.status}</em>
+                  <em className={styles[`status${capitalize(appointment.status)}`]}>{appointment.status === "pending" && isPastDate(appointment.preferred_date) ? "expired" : appointment.status}</em>
                 </div>
                 <div className={styles.cardActions}>
                   <Link className={styles.viewButton} href={`/student/appointment-requests/${appointment.id}`}><Eye size={14} /><span>View</span></Link>
-                  {(appointment.status === "pending" || appointment.status === "confirmed") && <button type="button" className={styles.cancelButton} onClick={() => setCancellingId(appointment.id)}><Ban size={12} />Cancel</button>}
+                  <button type="button" className={styles.cancelButton} onClick={() => setCancellingId(appointment.id)} disabled={appointment.status !== "pending" && appointment.status !== "confirmed"}><Ban size={12} />Cancel</button>
                 </div>
               </article>
             ))}
             <ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} />
           </div>
-        ) : <p className={styles.emptyState}>{statusFilter ? "No requests are waiting for a response." : "No appointment requests have been submitted."}</p>}
+        ) : tab === "pending"
+          ? <EmptyState icon={<CheckCircle2 size={30} />} title="You're all caught up" description="None of your requests are waiting on a faculty response right now." />
+          : tab === "confirmed"
+            ? <EmptyState icon={<CalendarPlus size={30} />} title="No confirmed consultations" description="Once a faculty member confirms a request, it will show up here." action={{ label: "Book a consultation", href: "/student/faculty" }} />
+            : tab === "closed"
+              ? <EmptyState icon={<CheckCircle2 size={30} />} title="Nothing closed yet" description="Declined and cancelled requests will show up here." />
+              : <EmptyState icon={<CalendarPlus size={30} />} title="No consultations yet" description="Stuck on a lesson, project, or thesis? Book a one-on-one consultation with a faculty member." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
       </div>
       <ConfirmationModal open={Boolean(cancellingId)} title="Cancel consultation?" description={cancellingAppointment?.status === "confirmed" ? "This will cancel your confirmed consultation and notify the faculty member." : "This will cancel your pending consultation request and notify the faculty member."} confirmLabel="Cancel Consultation" tone="danger" onCancel={() => setCancellingId("")} onConfirm={() => cancelRequest(cancellingId)} />
     </MobileLayout>
@@ -152,4 +160,10 @@ function formatTime(value: string) {
 
 function capitalize(value: string) {
   return `${value[0].toUpperCase()}${value.slice(1)}` as "Pending" | "Confirmed" | "Declined" | "Cancelled";
+}
+
+function isPastDate(value: string) {
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  return value < today;
 }

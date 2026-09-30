@@ -10,21 +10,20 @@
 .welcome {
   min-height: 700px;
   flex: 1;
-  padding: 120px 14px 20px;
+  padding: 90px 6px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
 }
 .welcome > :not(.circle):not(.circleBottom) {
+  position: relative;
   z-index: 1;
 }
 .circle,
 .circleBottom {
   position: absolute;
-  top: -80px;
-  right: -97px;
+  top: -72px;
+  right: -82px;
   width: 245px;
   height: 245px;
   background: #e7e5fa;
@@ -33,34 +32,85 @@
 .circleBottom {
   top: auto;
   right: auto;
-  bottom: -155px;
-  left: -130px;
+  bottom: -140px;
+  left: -118px;
   width: 285px;
   height: 285px;
 }
+.welcome > h1,
+.welcome > p {
+  text-align: center;
+}
+.brand {
+  margin-bottom: 26px;
+  display: flex;
+  justify-content: center;
+}
+.brand img {
+  width: 132px;
+}
 .roles {
   z-index: 1;
+  margin: 26px 0 auto;
   display: grid;
   gap: 12px;
-  margin: 20px 0 auto;
 }
-.roleLink {
-  width: 100%;
-  min-height: 60px;
-  padding: 0 20px;
-  display: inline-flex;
+.roleCard {
+  min-height: 68px;
+  padding: 14px 16px;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--accent-dark);
-  background: var(--accent-pale);
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
+  gap: 14px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #dcd9f5;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(81, 76, 154, 0.08);
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
 }
-.roleLink:hover,
-.roleLink:focus-visible {
+.roleCard:hover,
+.roleCard:focus-visible {
   color: #fff;
   background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 10px 24px rgba(81, 76, 154, 0.22);
+}
+.roleCard:hover .roleIcon,
+.roleCard:focus-visible .roleIcon {
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+  color: var(--accent);
+  background: #fff;
+}
+.roleCard:hover .roleArrow,
+.roleCard:focus-visible .roleArrow {
+  color: #fff;
+}
+.roleCard:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+.roleIcon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border-radius: 12px;
+}
+.roleTitle {
+  min-width: 0;
+  flex: 1;
+  font-size: 14px;
+}
+.roleArrow {
+  flex: 0 0 auto;
+  color: var(--accent);
 }
