@@ -7,25 +7,6 @@
   display: flex;
   flex-direction: column;
 }
-.continueButton {
-  width: 100%;
-  min-height: 56px;
-  margin-top: auto;
-  margin-bottom: 12px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.continueButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
 .emptyState {
   margin: 16px 0 0;
   color: var(--muted);
@@ -66,4 +47,9 @@
   overflow-wrap: anywhere;
   color: var(--accent-dark);
   font-size: 12px;
+}
+/* Size and look come from the shared button (button.module.css); this sets placement only. */
+.continueButton {
+  margin-top: auto;
+  margin-bottom: 12px;
 }

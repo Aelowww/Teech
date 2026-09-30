@@ -7,6 +7,7 @@ import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./profile-settings.module.css";
 
 type Role = "student" | "faculty";
@@ -53,7 +54,7 @@ export function ChangePasswordForm({ role }: { role: Role }) {
           <PasswordField label="Confirm New Password" name="confirmation" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder="Re-enter your new password" autoComplete="new-password" minLength={8} required />
         </div>
         {error && <Notice error>{error}</Notice>}
-        <div className={styles.submitArea}><button className={styles.submitButton} type="submit" disabled={saving}>{saving ? "Updating..." : "Update Password"}</button></div>
+        <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Updating..." : "Update Password"}</button></div>
       </form>
       <ConfirmationModal open={confirming} title="Update password?" description="Your new password will replace the current one for this account." confirmLabel="Update Password" onCancel={() => setConfirming(false)} onConfirm={changePassword} />
     </MobileLayout>

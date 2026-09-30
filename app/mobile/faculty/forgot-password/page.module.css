@@ -12,22 +12,8 @@
   gap: 14px;
   margin-top: 22px;
 }
+/* Sits right under the form instead of being pushed to the bottom of the screen. */
 .submitButton {
-  width: 100%;
-  min-height: 56px;
-  margin-top: auto;
+  margin-top: 24px;
   margin-bottom: 8px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.submitButton:disabled {
-  cursor: wait;
-  opacity: 0.65;
 }

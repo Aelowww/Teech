@@ -8,6 +8,7 @@ import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { slotsFor } from "@/lib/time-slots";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
 
@@ -115,7 +116,7 @@ export default function Page() {
           {draft.preferredTime && <><Clock3 size={16} /><div><span>Selected time</span><strong>{draft.preferredTime}</strong></div></>}
           {draft.meetingLocation && <><MapPin size={16} /><div><span>Meeting location</span><strong>{draft.meetingLocation}</strong></div></>}
         </div>}
-        <button className={styles.continueButton} type="button" onClick={continueToInformation} disabled={!draft?.facultyId || !draft?.preferredDate || !draft.preferredTime}>Continue</button>
+        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.continueButton}`} type="button" onClick={continueToInformation} disabled={!draft?.facultyId || !draft?.preferredDate || !draft.preferredTime}>Continue</button>
       </div>
     </MobileLayout>
   );

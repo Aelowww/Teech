@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarCheck2, CalendarDays, ChevronRight, Clock3, Inbox, MapPin } from "lucide-react";
-import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard } from "@/app/mobile/_components/ui";
+import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
+import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
@@ -101,18 +101,15 @@ export default function Page() {
     <MobileLayout className={styles.screen} role="faculty" activeNav="home">
       <div className={styles.page}>
         <header className={styles.header}><BrandLogo /><NotificationBell href="/faculty/notifications" /></header>
-        <div className={styles.greeting}><ProfilePhoto inline src={photoUrl} /><div className={styles.greetingText}><strong>{getGreeting()}</strong><small>{profile?.full_name || "Faculty"}</small></div><PresenceSelect value={presence} onChange={(next) => void changePresence(next)} /></div>
+        <div className={styles.greeting}><ProfilePhoto inline small src={photoUrl} /><div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong></div><PresenceSelect value={presence} onChange={(next) => void changePresence(next)} /></div>
         {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
 
         {nextConsultation ? (
-          <SpotlightCard
+          <UpNextCard
             eyebrow={nextConsultation.preferred_date === localDateValue() ? "Up next · Today" : "Up next"}
             title={nextConsultation.student_name || "Student consultation"}
-            details={[
-              { icon: <CalendarDays size={13} />, text: formatLongDate(nextConsultation.preferred_date) },
-              { icon: <Clock3 size={13} />, text: formatTime(nextConsultation.preferred_time) },
-              { icon: <MapPin size={13} />, text: nextConsultation.meeting_location || "Location to be confirmed" },
-            ]}
+            date={nextConsultation.preferred_date}
+            meta={[formatTime(nextConsultation.preferred_time), nextConsultation.meeting_location || "Location to be confirmed"]}
             href={`/faculty/requests/${nextConsultation.id}`}
             actionLabel="View details"
           />
@@ -152,7 +149,6 @@ export default function Page() {
 }
 
 function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
-function formatLongDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {

@@ -1,11 +1,12 @@
 .card {
-  margin-top: 16px;
-  padding: 13px 14px 11px;
+  margin-top: 14px;
+  padding: 14px 16px 6px;
   display: grid;
-  gap: 12px;
-  background: var(--accent-pale);
-  border: 1px solid #dcd9f5;
-  border-radius: 14px;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #ebe9f5;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(40, 41, 74, 0.04);
 }
 
 .loading {
@@ -29,7 +30,7 @@
 
 .summary strong {
   color: var(--ink);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .summary small {
@@ -38,7 +39,7 @@
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .freezes {
@@ -53,13 +54,13 @@
 }
 
 .flame {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #e8793a;
+  background: #fff1e6;
   border-radius: 50%;
 }
 
@@ -69,9 +70,56 @@
   align-items: baseline;
   gap: 4px;
   color: var(--accent-dark);
-  background: #fff;
-  border: 1px solid #dcd9f5;
+  background: var(--accent-pale);
+  border: 1px solid transparent;
   border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 220ms var(--button-ease),
+    background-color 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+.points svg {
+  transition: transform 320ms var(--button-ease);
+}
+
+/* Clickable points pill: lifts, deepens and gives the coin a little spin. */
+@media (hover: hover) {
+  .points:hover {
+    transform: translateY(-1px);
+    background: #e9e7fa;
+    border-color: #d9d6f2;
+    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.12);
+  }
+
+  .points:hover svg {
+    transform: rotate(-18deg) scale(1.1);
+  }
+}
+
+.points:active {
+  transform: scale(0.96);
+  transition-duration: 100ms;
+}
+
+.points:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .points,
+  .points svg {
+    transition: none;
+  }
+
+  .points:hover,
+  .points:active,
+  .points:hover svg {
+    transform: none;
+  }
 }
 
 .points svg {
@@ -84,7 +132,7 @@
 
 .points small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .days {
@@ -92,33 +140,46 @@
   grid-template-columns: repeat(7, 1fr);
 }
 
-.days div {
+.days button {
+  padding: 4px 0;
   display: grid;
   justify-items: center;
   gap: 3px;
+  background: none;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 220ms var(--button-ease);
 }
 
 .days span {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   display: grid;
   place-items: center;
   color: #fff;
-  background: #fff;
-  border: 1.5px solid #cfcbf1;
+  background: #f6f5fc;
+  border: 1.5px solid #e1dff3;
   border-radius: 50%;
+  transition:
+    transform 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
 }
 
 .days em {
   color: var(--accent-dark);
-  font-size: 8px;
+  font-size: 10px;
   font-style: normal;
   font-weight: 700;
 }
 
 .days small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
+  font-weight: 500;
 }
 
 .days .dayActive {
@@ -136,19 +197,133 @@
 }
 
 .days .dayToday {
-  box-shadow: 0 0 0 2px var(--accent-pale), 0 0 0 3.5px var(--accent);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--accent);
 }
 
+/* Hover: the circle lifts and grows slightly; faded future days brighten. */
+@media (hover: hover) {
+  .days button:hover span {
+    transform: translateY(-2px) scale(1.1);
+    border-color: var(--accent);
+    box-shadow: 0 6px 12px rgba(81, 76, 154, 0.18);
+  }
+
+  .days button:hover .dayToday {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--accent), 0 6px 12px rgba(81, 76, 154, 0.18);
+  }
+
+  .days .dayFuture:hover {
+    opacity: 0.8;
+  }
+}
+
+.days button:active span {
+  transform: scale(0.92);
+  transition-duration: 100ms;
+}
+
+.days button:focus-visible {
+  outline: none;
+}
+
+.days button:focus-visible span {
+  box-shadow: 0 0 0 3px rgba(119, 114, 201, 0.35);
+}
+
+/* Selected day: bold label and a small underline dot. */
+.days .daySelected small {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.days .daySelected {
+  opacity: 1;
+}
+
+.days .daySelected::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  margin-top: 1px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.dayDetail {
+  margin: -4px 0 0;
+  padding: 9px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px 8px;
+  color: var(--muted);
+  background: #f8f7fd;
+  border-radius: 12px;
+  font-size: 12px;
+  text-align: center;
+  animation: detailIn 240ms var(--button-ease);
+}
+
+.dayDetail strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@keyframes detailIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .days span,
+  .days button {
+    transition: none;
+  }
+
+  .days button:hover span,
+  .days button:active span {
+    transform: none;
+  }
+
+  .dayDetail {
+    animation: none;
+  }
+}
+
+/* A quiet footer row instead of a heavy bar: the card's main job is the streak itself. */
 .exchange {
-  padding: 8px 10px;
+  margin: 0 -10px;
+  padding: 11px 10px;
   display: flex;
   align-items: center;
-  gap: 7px;
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 700;
+  gap: 8px;
+  color: var(--accent-dark);
+  border-top: 1px solid #f0eff7;
+  border-radius: 0 0 12px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 200ms var(--button-ease);
+}
+
+.exchange svg:last-child {
+  color: #c2c1d4;
+  transition:
+    color 200ms var(--button-ease),
+    transform 200ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .exchange:hover {
+    background: #faf9fe;
+  }
+
+  .exchange:hover svg:last-child {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
 }
 
 .exchange span {

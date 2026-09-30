@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -63,7 +64,7 @@ export default function Page() {
           <Link className={styles.inlineLink} href="/faculty/forgot-password">Forgot Password?</Link>
         </div>
         {error && <Notice error>{error}</Notice>}
-        <button className={styles.submitButton} type="submit" disabled={submitting}>{submitting ? "Signing In..." : "Sign In"}</button>
+        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Signing In..." : "Sign In"}</button>
         <p className={styles.formNote}>Don&apos;t have an account? <Link href="/faculty/create-account">Sign Up</Link></p>
       </FormCard>
       </form>

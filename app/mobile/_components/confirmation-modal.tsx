@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AlertTriangle, CheckCircle2, X } from "lucide-react";
+import buttonStyles from "./button.module.css";
 import styles from "./confirmation-modal.module.css";
 
 type ConfirmationModalProps = {
@@ -90,8 +91,8 @@ export function ConfirmationModal({
         )}
         {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}>
-          <button className={styles.cancel} type="button" onClick={dismiss} disabled={submitting}>Cancel</button>
-          <button className={`${styles.confirm} ${tone === "danger" ? styles.confirmDanger : ""}`} type="button" onClick={confirm} disabled={submitting}>{submitting ? "Please wait..." : confirmLabel}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.block}`} type="button" onClick={dismiss} disabled={submitting}>Cancel</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${tone === "danger" ? styles.confirmDanger : ""}`} type="button" onClick={confirm} disabled={submitting}>{submitting ? "Please wait..." : confirmLabel}</button>
         </div>
       </section>
     </div>

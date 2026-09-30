@@ -31,18 +31,23 @@
 .greeting small {
   display: block;
 }
-.greeting strong {
-  color: #4c4e7f;
-  font-size: 18px;
-}
 .greeting small {
-  margin-top: 3px;
-  color: #77799d;
+  color: var(--muted);
   font-size: 12px;
+}
+.greeting strong {
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sectionTitle {
-  margin: 22px 0 9px;
+  margin: 24px 0 10px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -67,7 +72,7 @@
 .seeAll {
   margin-left: auto;
   color: var(--accent);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 .emptyState {

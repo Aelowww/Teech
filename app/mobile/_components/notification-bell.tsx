@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -8,6 +9,10 @@ import styles from "./notification-bell.module.css";
 
 export function NotificationBell({ href, className }: { href: string; className?: string }) {
   const [hasUnread, setHasUnread] = useState(false);
+  // Filled while the tap plays out and the notifications page loads, and whenever we're on it.
+  const [pressed, setPressed] = useState(false);
+  const pathname = usePathname();
+  const filled = pressed || pathname === href;
 
   useEffect(() => {
     let active = true;
@@ -50,8 +55,13 @@ export function NotificationBell({ href, className }: { href: string; className?
   }, []);
 
   return (
-    <Link className={`${styles.bell} ${className || ""}`} href={href} aria-label={hasUnread ? "Notifications, unread updates" : "Notifications"}>
-      <Bell size={19} />
+    <Link
+      className={`${styles.bell} ${filled ? styles.filled : ""} ${pressed ? styles.ringing : ""} ${className || ""}`}
+      href={href}
+      aria-label={hasUnread ? "Notifications, unread updates" : "Notifications"}
+      onClick={() => setPressed(true)}
+    >
+      <Bell className={styles.icon} size={19} />
       {hasUnread && <span className={styles.unread} aria-hidden="true" />}
     </Link>
   );

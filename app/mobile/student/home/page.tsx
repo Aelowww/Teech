@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Clock3, MapPin, UsersRound } from "lucide-react";
-import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard } from "@/app/mobile/_components/ui";
+import { UsersRound } from "lucide-react";
+import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
@@ -101,19 +101,16 @@ export default function Page() {
           <NotificationBell href="/student/notifications" />
         </header>
         <div className={styles.greeting}>
-          <ProfilePhoto inline src={photoUrl} />
-          <div><strong>{getGreeting()}</strong><small>{profile?.full_name || "Student"}</small></div>
+          <ProfilePhoto inline small src={photoUrl} />
+          <div><small>{getGreeting()}</small><strong>{profile?.full_name || "Student"}</strong></div>
         </div>
 
         {nextAppointment ? (
-          <SpotlightCard
+          <UpNextCard
             eyebrow="Up next"
             title={nextAppointment.faculty_name || "Faculty consultation"}
-            details={[
-              { icon: <CalendarDays size={13} />, text: formatLongDate(nextAppointment.preferred_date) },
-              { icon: <Clock3 size={13} />, text: formatTime(nextAppointment.preferred_time) },
-              { icon: <MapPin size={13} />, text: nextAppointment.meeting_location || "Location to be confirmed" },
-            ]}
+            date={nextAppointment.preferred_date}
+            meta={[formatTime(nextAppointment.preferred_time), nextAppointment.meeting_location || "Location to be confirmed"]}
             href={`/student/appointment-requests/${nextAppointment.id}`}
             actionLabel="View details"
           />
