@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Camera, FolderOpen, Images, LoaderCircle } from "lucide-react";
+import { Camera, CheckCircle2, FolderOpen, Images, LoaderCircle } from "lucide-react";
 import { ProfilePhoto } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { avatarBucket, signedAvatarUrl, toSquareJpeg } from "@/lib/avatar";
@@ -36,6 +36,7 @@ export function AvatarUploader({ initialPath, initialUrl = null, compact = false
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
+  const [notice, setNotice] = useState<"updated" | "removed" | null>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -90,6 +91,8 @@ export function AvatarUploader({ initialPath, initialUrl = null, compact = false
       if (saveError) {
         await supabase.storage.from(avatarBucket).remove([nextPath]);
         setError(saveError);
+      } else {
+        setNotice("updated");
       }
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : "Your photo could not be uploaded.");
@@ -100,7 +103,9 @@ export function AvatarUploader({ initialPath, initialUrl = null, compact = false
 
   async function removePhoto() {
     setError("");
-    return saveAvatarPath(null);
+    const removeError = await saveAvatarPath(null);
+    if (removeError) return removeError;
+    setNotice("removed");
   }
 
   return (
@@ -144,6 +149,7 @@ export function AvatarUploader({ initialPath, initialUrl = null, compact = false
       {path && !saving && !compact && <button className={styles.removeButton} type="button" onClick={() => setConfirmingRemoval(true)}>Remove photo</button>}
       {error && <p className={styles.error} role="alert">{error}</p>}
       <ConfirmationModal open={confirmingRemoval} title="Remove profile photo?" description="Your profile will show the default icon instead." confirmLabel="Remove Photo" tone="danger" onCancel={() => setConfirmingRemoval(false)} onConfirm={removePhoto} />
+      <ConfirmationModal open={notice !== null} title={notice === "removed" ? "Profile photo removed" : "Profile photo updated"} description={notice === "removed" ? "Your profile now shows the default icon." : "Your new photo is now on your profile."} confirmLabel="Done" icon={CheckCircle2} hideCancel onCancel={() => setNotice(null)} onConfirm={() => setNotice(null)} />
     </div>
   );
 }

@@ -18,7 +18,6 @@ type Profile = { id: string; full_name: string; avatar_path: string | null; pres
 type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
 const pendingPreviewLimit = 4;
-const upcomingLimit = 4;
 
 export default function Page() {
   const router = useRouter();
@@ -100,13 +99,6 @@ export default function Page() {
     imageUrl: studentPhotos.get(request.id),
     href: `/faculty/requests/${request.id}`,
   }));
-  const upcomingItems = confirmed.slice(1, upcomingLimit + 1).map((request) => ({
-    title: request.student_name || "Student",
-    description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)} · ${request.meeting_location || "Location to be confirmed"}`,
-    status: "Confirmed",
-    imageUrl: studentPhotos.get(request.id),
-    href: `/faculty/requests/${request.id}`,
-  }));
 
   return (
     <DesktopLayout className={styles.screen} role="faculty" activeNav="home">
@@ -153,16 +145,6 @@ export default function Page() {
           </h2>
           {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
         </section>
-
-        {upcomingItems.length > 0 && (
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>
-              Upcoming Consultations
-              {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
-            </h2>
-            <CardList items={upcomingItems} />
-          </section>
-        )}
         </div>
 
         <aside className={styles.rail}>
