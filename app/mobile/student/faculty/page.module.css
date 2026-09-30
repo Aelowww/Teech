@@ -20,11 +20,6 @@
   color: var(--accent);
 }
 
-.filters a:focus-visible {
-  outline: 3px solid rgba(119, 114, 201, 0.35);
-  outline-offset: 1px;
-}
-
 .search {
   width: 100%;
   max-width: 100%;
@@ -65,93 +60,96 @@
   opacity: 1;
 }
 
-/* Segmented control: one soft track, the selected option is a raised white pill. */
+/* Filter tabs: plain labels on a hairline, the selected one is underlined in purple. */
 .filters {
   width: 100%;
   max-width: 100%;
-  margin: 18px 0 16px;
-  padding: 3px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2px;
-  background: #f4f4f8;
-  border-radius: 12px;
+  margin: 16px 0 6px;
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid #efeef6;
 }
 
 .filters a {
-  min-height: 34px;
-  padding: 0 12px;
+  position: relative;
+  padding: 10px 0 11px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   color: #8a8aa2;
-  border-radius: 9px;
   font: inherit;
   font-size: 13px;
   font-weight: 500;
   -webkit-tap-highlight-color: transparent;
-  transition:
-    color 220ms var(--button-ease),
-    background-color 220ms var(--button-ease),
-    box-shadow 220ms var(--button-ease),
-    transform 220ms var(--button-ease);
+  transition: color 200ms var(--button-ease);
 }
 
-/* The count is quiet text beside the label, not a badge. */
+.filters a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transition: transform 260ms var(--button-ease);
+}
+
 .filterCount {
-  color: #b3b2c6;
-  font-size: 12px;
-  font-weight: 500;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-grid;
+  place-items: center;
+  color: #9d9cb4;
+  background: #f3f3f8;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  transition: color 220ms var(--button-ease);
+  transition:
+    color 200ms var(--button-ease),
+    background-color 200ms var(--button-ease);
 }
 
 .filters .filterSelected {
   color: var(--ink);
-  background: #fff;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(40, 41, 74, 0.08);
-  animation: segmentIn 260ms var(--button-ease);
+}
+
+.filters .filterSelected::after {
+  transform: scaleX(1);
 }
 
 .filters .filterSelected .filterCount {
-  color: var(--accent);
+  color: var(--accent-dark);
+  background: var(--accent-pale);
 }
 
 @media (hover: hover) {
   .filters a:not(.filterSelected):hover {
-    color: var(--ink);
+    color: #4a4b6a;
+  }
+
+  .filters a:not(.filterSelected):hover::after {
+    background: #dcdbea;
+    transform: scaleX(1);
   }
 }
 
-.filters a:active {
-  transform: scale(0.97);
-}
-
-@keyframes segmentIn {
-  from {
-    opacity: 0.6;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.filters a:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .filters a,
+  .filters a::after,
   .filterCount {
     transition: none;
-  }
-
-  .filters .filterSelected {
-    animation: none;
-  }
-
-  .filters a:active {
-    transform: none;
   }
 }
 
@@ -169,10 +167,8 @@
     margin-top: 16px;
   }
 
-  .filters a {
-    padding: 0 8px;
-    gap: 5px;
-    font-size: 12px;
+  .filters {
+    gap: 20px;
   }
 }
 

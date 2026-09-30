@@ -2,13 +2,15 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { FormField, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
+import { ChevronDown, Info, ShieldAlert, ShieldCheck } from "lucide-react";
+import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "@/app/mobile/_components/profile-settings.module.css";
+import pageStyles from "./page.module.css";
 
 const emptyTrio = ["", "", ""];
 
@@ -22,6 +24,7 @@ export default function Page() {
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSetUp, setIsSetUp] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -41,6 +44,7 @@ export default function Page() {
         const saved = (savedResult.data || []).map((row) => row.question as string);
         if (saved.length === 3) {
           setQuestions(saved);
+          setIsSetUp(true);
         }
       }
       setIsLoading(false);
@@ -83,6 +87,7 @@ export default function Page() {
     if (saveError) { setError(saveError.message); return; }
     setAnswers(emptyTrio);
     setCurrentPassword("");
+    setIsSetUp(true);
     setNotice("Your security questions have been saved.");
   }
 
@@ -90,27 +95,38 @@ export default function Page() {
     <MobileLayout className={styles.screen} backTo="/student/profile" role="student" activeNav="profile">
       <form className={styles.page} onSubmit={saveQuestions}>
         <PageHeading title="Account Recovery" subtitle="Security questions let you reset your password if you forget it." />
-        <div className={styles.form}>
+        <p className={`${pageStyles.status} ${isSetUp ? pageStyles.statusOn : ""}`}>
+          {isSetUp ? <ShieldCheck size={15} aria-hidden="true" /> : <ShieldAlert size={15} aria-hidden="true" />}
+          {isSetUp ? "Recovery is set up. Save again to change it." : "Not set up yet"}
+        </p>
+
+        <ol className={pageStyles.questions}>
           {questions.map((question, index) => (
-            <div className={styles.securityQuestion} key={index}>
-              <label>
-                <span>Question {index + 1}</span>
-                <select className={styles.select} value={question} onChange={(event) => setQuestions((current) => updateAt(current, index, event.target.value))} required>
-                  <option value="" disabled>Choose a question</option>
-                  {options.map((option) => (
-                    <option key={option} value={option} disabled={questions.includes(option) && option !== question}>{option}</option>
-                  ))}
-                </select>
-              </label>
-              <FormField label={`Answer ${index + 1}`} name={`answer${index + 1}`} value={answers[index]} onChange={(event) => setAnswers((current) => updateAt(current, index, event.target.value))} placeholder="Your answer" maxLength={100} required />
-            </div>
+            <li key={index}>
+              <span className={pageStyles.step} aria-hidden="true">{index + 1}</span>
+              <div className={pageStyles.pair}>
+                <div className={pageStyles.selectWrap}>
+                  <select aria-label={`Question ${index + 1}`} className={question ? "" : pageStyles.placeholder} value={question} onChange={(event) => setQuestions((current) => updateAt(current, index, event.target.value))} required>
+                    <option value="" disabled>Choose a question</option>
+                    {options.map((option) => (
+                      <option key={option} value={option} disabled={questions.includes(option) && option !== question}>{option}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={16} aria-hidden="true" />
+                </div>
+                <input aria-label={`Answer ${index + 1}`} name={`answer${index + 1}`} value={answers[index]} onChange={(event) => setAnswers((current) => updateAt(current, index, event.target.value))} placeholder="Your answer" maxLength={100} autoComplete="off" required />
+              </div>
+            </li>
           ))}
-          <p className={styles.passwordHint}>Answers are not case-sensitive. Pick answers only you would know.</p>
-          <PasswordField label="Current Password" name="currentPassword" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Confirm it's you" autoComplete="current-password" required />
+        </ol>
+        <p className={pageStyles.hint}><Info size={13} aria-hidden="true" />Answers aren&apos;t case-sensitive. Pick ones only you would know.</p>
+
+        <div className={pageStyles.confirm}>
+          <PasswordField label="Confirm it's you" name="currentPassword" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Your current password" autoComplete="current-password" required />
         </div>
         {error && <Notice error>{error}</Notice>}
         {notice && <Notice>{notice}</Notice>}
-        <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Security Questions"}</button></div>
+        <div className={pageStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save questions"}</button></div>
         <SignOutEverywhere />
       </form>
     </MobileLayout>

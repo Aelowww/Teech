@@ -1,0 +1,165 @@
+/* ---------- Status ---------- */
+
+.status {
+  margin: 4px auto 0;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  gap: 6px;
+  color: #a8671a;
+  background: #fff4e3;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusOn {
+  color: #15834a;
+  background: #e8f7ee;
+}
+
+/* ---------- Questions: a numbered step beside one joined question + answer field ---------- */
+
+.questions {
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  list-style: none;
+}
+
+.questions li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.step {
+  width: 24px;
+  height: 24px;
+  margin-top: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pair {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e7e6f1;
+  border-radius: 14px;
+  transition:
+    border-color 200ms var(--button-ease),
+    box-shadow 200ms var(--button-ease);
+}
+
+.pair:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(119, 114, 201, 0.14);
+}
+
+.selectWrap {
+  position: relative;
+  border-bottom: 1px solid #f0eff7;
+}
+
+.selectWrap select,
+.pair input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  font-size: 14px;
+}
+
+.selectWrap select {
+  padding-right: 40px;
+  appearance: none;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.selectWrap select.placeholder {
+  color: #9d9cb4;
+  font-weight: 500;
+}
+
+.selectWrap svg {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  color: #b1b1c4;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.pair input::placeholder {
+  color: #b5b5c7;
+  opacity: 1;
+}
+
+.hint {
+  margin: 12px 0 0 36px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #9d9cb4;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.hint svg {
+  flex: 0 0 auto;
+}
+
+/* ---------- Confirm + save ---------- */
+
+.confirm {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f2f1f8;
+}
+
+/* Match the question fields above: small caps heading like "Active sessions", white field, same border and radius. */
+.confirm label > span {
+  color: #a9a8bd;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.confirm label > div {
+  min-height: 48px;
+  padding: 0 6px 0 14px;
+  background: #fff;
+  border-color: #e7e6f1;
+  border-radius: 14px;
+}
+
+.confirm label > div input {
+  font-size: 14px;
+}
+
+.submit {
+  margin: 24px 0 8px;
+  display: grid;
+  justify-items: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pair {
+    transition: none;
+  }
+}

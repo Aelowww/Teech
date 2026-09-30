@@ -15,10 +15,10 @@
   --shadow: 0 18px 54px rgba(43, 41, 85, 0.12);
 
   /* Buttons: one size everywhere (see app/mobile/_components/button.module.css). */
-  --button-height: 44px;
-  --button-padding-x: 28px;
-  --button-min-width: 168px;
-  --button-font-size: 14px;
+  --button-height: 40px;
+  --button-padding-x: 22px;
+  --button-min-width: 140px;
+  --button-font-size: 13px;
   --button-font-weight: 600;
   --button-radius: 999px;
   --button-ease: cubic-bezier(0.2, 0.8, 0.2, 1);

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Camera, LoaderCircle } from "lucide-react";
+import { Camera, FolderOpen, Images, LoaderCircle } from "lucide-react";
 import { ProfilePhoto } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { avatarBucket, signedAvatarUrl, toSquareJpeg } from "@/lib/avatar";
@@ -11,20 +11,57 @@ import styles from "./avatar-uploader.module.css";
 
 const maxUploadBytes = 10 * 1024 * 1024;
 
-export function AvatarUploader({ initialPath }: { initialPath: string | null }) {
+// One hidden input per source. `capture` opens the camera on phones; the image/* input opens the
+// photo library; listing file extensions makes phones show their file browser instead.
+const sources = [
+  { id: "camera", label: "Take photo", icon: Camera, accept: "image/*", capture: "user" },
+  { id: "photos", label: "Upload from photos", icon: Images, accept: "image/*" },
+  { id: "files", label: "Import from files", icon: FolderOpen, accept: ".jpg,.jpeg,.png,.webp" },
+] as const;
+
+type Source = (typeof sources)[number]["id"];
+
+// `initialUrl` lets a server page pass the already-signed photo so it shows at once.
+// `compact` is the My Profile version: a larger photo with the camera on its edge and no "Remove photo" link.
+export function AvatarUploader({ initialPath, initialUrl = null, compact = false }: { initialPath: string | null; initialUrl?: string | null; compact?: boolean }) {
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRefs = useRef<Partial<Record<Source, HTMLInputElement | null>>>({});
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [path, setPath] = useState(initialPath);
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(initialUrl);
 
   useEffect(() => {
+    if (initialUrl && path === initialPath) return;
     let active = true;
     void signedAvatarUrl(createClient(), path).then((url) => { if (active) setPhotoUrl(url); });
     return () => { active = false; };
-  }, [path]);
+  }, [path, initialPath, initialUrl]);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
+
+  // Close the menu on an outside tap or Escape.
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onPointer(event: PointerEvent) {
+      if (!wrapRef.current?.contains(event.target as Node)) setMenuOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  function choose(source: Source) {
+    setMenuOpen(false);
+    inputRefs.current[source]?.click();
+  }
 
   async function saveAvatarPath(nextPath: string | null) {
     const supabase = createClient();
@@ -72,15 +109,44 @@ export function AvatarUploader({ initialPath }: { initialPath: string | null }) 
   }
 
   return (
-    <div className={styles.uploader}>
-      <div className={styles.photo}>
+    <div className={`${styles.uploader} ${compact ? styles.compact : ""}`}>
+      <div className={styles.photo} ref={wrapRef}>
         <ProfilePhoto src={photoUrl} />
-        <button className={styles.cameraButton} type="button" onClick={() => inputRef.current?.click()} disabled={saving} aria-label={path ? "Change profile photo" : "Upload profile photo"}>
+        <button
+          className={styles.cameraButton}
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          disabled={saving}
+          aria-label={path ? "Change profile photo" : "Upload profile photo"}
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
+        >
           {saving ? <LoaderCircle className={styles.spinner} size={15} /> : <Camera size={15} />}
         </button>
-        <input ref={inputRef} className={styles.input} type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadPhoto} />
+        {menuOpen && (
+          <div className={styles.menu} role="menu" aria-label="Change profile photo">
+            {sources.map(({ id, label, icon: Icon }) => (
+              <button key={id} type="button" role="menuitem" onClick={() => choose(id)}>
+                <Icon size={16} aria-hidden="true" />{label}
+              </button>
+            ))}
+          </div>
+        )}
+        {sources.map((source) => (
+          <input
+            key={source.id}
+            ref={(element) => { inputRefs.current[source.id] = element; }}
+            className={styles.input}
+            type="file"
+            accept={source.accept}
+            capture={"capture" in source ? source.capture : undefined}
+            onChange={uploadPhoto}
+            tabIndex={-1}
+            aria-hidden="true"
+          />
+        ))}
       </div>
-      {path && !saving && <button className={styles.removeButton} type="button" onClick={() => setConfirmingRemoval(true)}>Remove photo</button>}
+      {path && !saving && !compact && <button className={styles.removeButton} type="button" onClick={() => setConfirmingRemoval(true)}>Remove photo</button>}
       {error && <p className={styles.error} role="alert">{error}</p>}
       <ConfirmationModal open={confirmingRemoval} title="Remove profile photo?" description="Your profile will show the default icon instead." confirmLabel="Remove Photo" tone="danger" onCancel={() => setConfirmingRemoval(false)} onConfirm={removePhoto} />
     </div>

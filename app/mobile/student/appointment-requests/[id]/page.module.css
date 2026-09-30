@@ -1,183 +1,272 @@
 .screen {
   --accent: #7772c9;
 }
+
 .page {
   flex: 1;
   min-height: 0;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
   display: flex;
   flex-direction: column;
 }
+
+/* ---------- Status heading ---------- */
+
+.hero {
+  margin: 4px 0 22px;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
 .statusMark {
-  width: 64px;
-  height: 64px;
-  margin: 4px auto 15px;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 14px;
   display: grid;
   place-items: center;
-  color: var(--accent);
-  background: #eeedfc;
   border-radius: 50%;
 }
+
+.statusMark.pending {
+  color: var(--accent);
+  background: var(--accent-pale);
+}
+
+.statusMark.confirmed {
+  color: #15834a;
+  background: #e8f7ee;
+}
+
+.statusMark.declined,
+.statusMark.cancelled {
+  color: #9d9cb4;
+  background: #f4f4f8;
+}
+
+.hero h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.hero p {
+  max-width: 280px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---------- Progress ---------- */
+
 .timeline {
-  width: min(100%, 235px);
-  margin: 2px auto 21px;
+  --progress: 0.5;
+  width: min(100%, 260px);
+  margin: 0 auto 26px;
+  padding: 0;
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: start;
+  list-style: none;
   text-align: center;
 }
-.timeline::before {
+
+/* Track from the first dot to the last, with the filled part drawn on top. */
+.timeline::before,
+.timeline::after {
   content: "";
-  height: 1px;
   position: absolute;
-  top: 10px;
-  right: 16.7%;
-  left: 16.7%;
-  background: #deddf0;
+  top: 9px;
+  left: 16.667%;
+  height: 2px;
+  border-radius: 2px;
 }
-.timeline div {
+
+.timeline::before {
+  right: 16.667%;
+  background: #efeef6;
+}
+
+.timeline::after {
+  width: calc(66.667% * var(--progress));
+  background: var(--accent);
+}
+
+.timeline li {
   position: relative;
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 5px;
-  color: #9a9ab2;
+  gap: 6px;
 }
+
 .timeline span {
   width: 20px;
   height: 20px;
   display: grid;
   place-items: center;
-  color: #b4b3d8;
-  border: 1px solid #d6d5ed;
+  color: #fff;
+  background: #fff;
+  border: 2px solid #e4e3ef;
   border-radius: 50%;
 }
-.timeline .complete,
-.timeline .current {
-  color: #fff;
+
+.timeline .done span {
   background: var(--accent);
   border-color: var(--accent);
 }
-.timeline .current {
-  box-shadow: 0 0 0 3px #eeedfc;
+
+.timeline .current span {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-pale);
 }
+
+.timeline .current span::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.timeline .stopped span {
+  background: #b9b8cb;
+  border-color: #b9b8cb;
+}
+
 .timeline small {
-  color: #777896;
-  font-size: 9px;
+  color: #a9a8bd;
+  font-size: 11px;
+  font-weight: 500;
   white-space: nowrap;
 }
-.detailsCard {
-  overflow: hidden;
-  margin-bottom: 16px;
-  border: 1px solid #deddf0;
-  border-radius: 8px;
+
+.timeline .done small {
+  color: var(--ink);
 }
-.detailsCard > header {
-  padding: 13px 14px;
-  display: grid;
-  gap: 4px;
-  background: #f2f1fd;
+
+.timeline .current small {
+  color: var(--accent-dark);
+  font-weight: 600;
 }
-.detailsCard > header span,
-.reason > span {
-  color: #7375a0;
-  font-size: 10px;
-}
-.detailsCard > header strong {
-  color: #474579;
-  font-size: 12px;
-}
+
+/* ---------- Faculty ---------- */
+
 .faculty {
-  padding: 14px;
+  padding-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #edecf5;
+  gap: 12px;
+  border-bottom: 1px solid #f2f1f8;
 }
-.initials {
-  width: 30px;
-  height: 30px;
-  display: grid;
+
+.avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
   flex: 0 0 auto;
+  display: grid;
   place-items: center;
+  overflow: hidden;
   color: var(--accent);
-  background: #f0effd;
+  background: var(--accent-pale);
   border-radius: 50%;
-  font-size: 10px;
-  font-weight: 700;
 }
+
+.avatar img {
+  object-fit: cover;
+}
+
 .faculty div {
+  min-width: 0;
   display: grid;
   gap: 2px;
 }
+
 .faculty strong {
+  overflow: hidden;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
 .faculty small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
 }
-.detailsCard dl {
+
+/* ---------- Details: label on the left, value on the right, hairline between rows ---------- */
+
+.details {
   margin: 0;
-  padding: 3px 14px;
-  display: grid;
 }
-.detailsCard dl div {
-  min-height: 37px;
+
+.details div {
+  padding: 14px 0;
   display: grid;
-  grid-template-columns: 20px 50px minmax(0, 1fr);
+  grid-template-columns: 104px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.details div + div {
+  border-top: 1px solid #f2f1f8;
+}
+
+.details dt {
+  display: flex;
   align-items: center;
-  color: #a2a2bc;
+  gap: 8px;
+  color: #9d9cb4;
+  font-size: 13px;
 }
-.detailsCard dt {
-  font-size: 11px;
+
+.details dt svg {
+  flex: 0 0 auto;
+  color: #b9b8cb;
 }
-.detailsCard dd {
+
+.details dd {
+  min-width: 0;
   margin: 0;
-  color: #45436d;
-  font-size: 11px;
+  display: grid;
+  gap: 4px;
+  color: var(--ink);
+  font-size: 13px;
   font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
-.statusPill {
-  padding: 5px 9px;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 700;
-}
-.statusPending {
-  color: #a26015;
-  background: #fff5df;
-}
-.statusConfirmed {
-  color: #277d51;
-  background: #edfbf3;
-}
-.statusDeclined,
-.statusCancelled {
-  color: #b13a55;
-  background: #fff0f3;
-}
-.reason {
-  padding: 10px 14px 13px;
-  border-top: 1px solid #edecf5;
-}
-.reason p {
-  margin: 4px 0;
-  color: #45436d;
-  font-size: 11px;
-  font-weight: 600;
-}
-.reason small {
+
+.details dd small {
   color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
+  font-size: 12px;
+  font-weight: 400;
 }
-/* Size and look come from the shared button (button.module.css); this sets placement only. */
-.homeButton {
+
+.details .muted {
+  color: #9d9cb4;
+  font-weight: 500;
+}
+
+.details .code {
+  color: var(--muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Actions ---------- */
+
+.actions {
   margin-top: auto;
-  margin-bottom: 12px;
+  padding-top: 24px;
+  display: grid;
+  justify-items: center;
 }
