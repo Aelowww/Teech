@@ -6,6 +6,7 @@ import { Award, CalendarCheck, Check, Coins, Snowflake } from "lucide-react";
 import { DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
+import { SuccessModal } from "@/app/desktop/_components/success-modal";
 import { ShowMoreButton, useShowMore } from "@/app/desktop/_components/show-more";
 import { badgeIcons } from "@/app/desktop/_components/badge-icons";
 import { createClient } from "@/lib/supabase/client";
@@ -62,7 +63,7 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
     if (!redeeming) return;
     const { error: redeemError } = await createClient().rpc("redeem_shop_item", { requested_item_id: redeeming.id });
     if (redeemError) return redeemError.message;
-    setNotice(`${redeeming.name} redeemed!`);
+    setNotice(redeeming.name);
     await load();
   }
 
@@ -113,7 +114,6 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
           </section>
 
           {error && <Notice error>{error}</Notice>}
-          {notice && <Notice>{notice}</Notice>}
 
           <section className={styles.rewards}>
             <h2 className={styles.sectionTitle}>Rewards</h2>
@@ -176,6 +176,7 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
         onCancel={() => setRedeeming(null)}
         onConfirm={redeem}
       />
+      <SuccessModal open={Boolean(notice)} title={`${notice} redeemed`} description="Your points balance has been updated." onDone={() => setNotice("")} />
     </DesktopLayout>
   );
 }

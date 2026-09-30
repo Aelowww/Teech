@@ -39,6 +39,11 @@
   background: #fdeeec;
 }
 
+.success .icon {
+  color: #15934e;
+  background: #e3f8ec;
+}
+
 .dialog h2 {
   margin: 0;
   color: var(--ink, #28294a);

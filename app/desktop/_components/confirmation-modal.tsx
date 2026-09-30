@@ -11,7 +11,7 @@ type ConfirmationModalProps = {
   title: string;
   description: string;
   confirmLabel: string;
-  tone?: "default" | "danger";
+  tone?: "default" | "danger" | "success";
   icon?: LucideIcon;
   confirmationText?: string;
   hideCancel?: boolean;
@@ -79,7 +79,7 @@ export function ConfirmationModal({
   return createPortal(
     <div className={styles.backdrop} role="presentation" onMouseDown={() => !submitting && dismiss()}>
       <section
-        className={`${styles.dialog} ${tone === "danger" ? styles.danger : ""}`}
+        className={`${styles.dialog} ${tone === "danger" ? styles.danger : tone === "success" ? styles.success : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
