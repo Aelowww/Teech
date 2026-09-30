@@ -131,9 +131,7 @@ export default function Page() {
         <header className={styles.header}>
           <div className={styles.greeting}>
             <ProfilePhoto inline small src={photoUrl} />
-            <div><small>{getGreeting()}</small><strong>{fullName}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
-            <FactCard role="student" />
-          </div>
+            <div><small>{getGreeting()}</small><strong>{fullName}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>          </div>
           <Link className={`${buttonStyles.button} ${buttonStyles.primary}`} href="/student/faculty">
             <Plus size={16} strokeWidth={2.25} />
             Book consultation
@@ -162,6 +160,8 @@ export default function Page() {
                 actionLabel="Find faculty"
               />
             )}
+
+            <FactCard role="student" />
 
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>
