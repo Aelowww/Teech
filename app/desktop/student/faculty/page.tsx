@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, UserRound } from "lucide-react";
+import { ArrowRight, CalendarDays, UserRound } from "lucide-react";
 import { DesktopLayout, EmptyState, PageHeading } from "@/app/desktop/_components/ui";
 import { createClient } from "@/lib/supabase/server";
 import { avatarBucket } from "@/lib/avatar";
@@ -65,46 +65,48 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   return (
     <DesktopLayout className={styles.screen} role="student" activeNav="faculty">
       <div className={styles.page}>
-        <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
-        <nav className={styles.filters} aria-label="Faculty filters">
-          <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all" aria-current={showingAll ? "page" : undefined}>
-            All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
-          </Link>
-          <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={!showingAll ? "page" : undefined}>
-            Available<span className={styles.filterCount}>{availableCount}</span>
-          </Link>
-        </nav>
+        <header className={styles.header}>
+          <div className={styles.heading}>
+            <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
+          </div>
+          <nav className={styles.filters} aria-label="Faculty filters">
+            <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all" aria-current={showingAll ? "page" : undefined}>
+              All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
+            </Link>
+            <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={!showingAll ? "page" : undefined}>
+              Available<span className={styles.filterCount}>{availableCount}</span>
+            </Link>
+          </nav>
+        </header>
         {facultyItems.length > 0
           ? (
-            <ul className={styles.list}>
+            <ul className={styles.grid}>
               {facultyItems.map((item) => {
-                const showPresence = showingAll;
                 const content = <>
-                  <span className={styles.avatar}>
+                  <span className={styles.photo}>
                     {item.imageUrl
-                      ? <Image src={item.imageUrl} alt="" fill sizes="44px" unoptimized />
-                      : <UserRound size={20} aria-hidden="true" />}
-                    {showPresence && <i className={`${styles.presenceDot} ${styles[item.presence]}`} aria-hidden="true" />}
+                      ? <Image src={item.imageUrl} alt="" fill sizes="88px" unoptimized />
+                      : <UserRound size={34} aria-hidden="true" />}
+                    <i className={`${styles.presenceDot} ${styles[item.presence]}`} aria-hidden="true" />
                   </span>
-                  <span className={styles.info}>
+                  <span className={styles.identity}>
                     <strong>{item.name}</strong>
-                    <span>
-                      {item.department}
-                      {showPresence && <em className={styles[item.presence]}> · {presenceLabels[item.presence]}</em>}
-                    </span>
+                    <span>{item.department}</span>
                   </span>
-                  <span className={styles.next}>
-                    {item.nextOpen
-                      ? <><strong>{item.nextOpen}</strong><small>Next open</small></>
-                      : <small>No open dates</small>}
+                  <span className={`${styles.presence} ${styles[item.presence]}`}>{presenceLabels[item.presence]}</span>
+                  <span className={styles.nextOpen}>
+                    <CalendarDays size={14} aria-hidden="true" />
+                    {item.nextOpen ? <>Next open <b>{item.nextOpen}</b></> : "No open dates"}
                   </span>
-                  {item.href && <ChevronRight className={styles.chevron} size={16} aria-hidden="true" />}
+                  <span className={styles.book}>
+                    {item.href ? <>Book consultation<ArrowRight size={15} strokeWidth={2.4} aria-hidden="true" /></> : "Not bookable yet"}
+                  </span>
                 </>;
                 return (
                   <li key={item.id}>
                     {item.href
-                      ? <Link className={styles.row} href={item.href}>{content}</Link>
-                      : <div className={`${styles.row} ${styles.rowUnavailable}`}>{content}</div>}
+                      ? <Link className={styles.card} href={item.href} aria-label={`Book a consultation with ${item.name}`}>{content}</Link>
+                      : <div className={`${styles.card} ${styles.cardUnavailable}`}>{content}</div>}
                   </li>
                 );
               })}

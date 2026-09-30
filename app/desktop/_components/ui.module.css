@@ -1400,3 +1400,164 @@ a.listCard:active,
     transform: none;
   }
 }
+
+/* "Today" chip gets a softly pulsing live dot. */
+.upNextTop .upNextToday {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.upNextTop .upNextToday::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  animation: livePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+  }
+
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .upNextTop .upNextToday::before {
+    animation: none;
+  }
+}
+
+/* ---------- Time slots: chips instead of radio rows ---------- */
+
+.slotGroup {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.slotLabel {
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.slotLabel svg {
+  color: var(--accent);
+}
+
+.slotLabel span {
+  padding: 2px 8px;
+  color: var(--muted);
+  background: #f1f1f7;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.timeToggle {
+  position: relative;
+  min-height: 48px;
+  padding: 0 14px;
+  justify-content: center;
+  gap: 8px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition:
+    transform var(--motion) var(--ease),
+    color var(--motion) var(--ease),
+    background-color var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease);
+}
+
+.timeToggle svg {
+  flex: 0 0 auto;
+  color: var(--inactive-icon);
+  transition: color var(--motion) var(--ease);
+}
+
+.slotInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+@media (hover: hover) {
+  .timeToggle:hover:not(:has(input:disabled)):not(:has(input:checked)) {
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  .timeToggle:hover:not(:has(input:disabled)) svg {
+    color: var(--accent);
+  }
+}
+
+.timeToggle:active:not(:has(input:disabled)) {
+  transform: scale(0.97);
+  transition-duration: var(--motion-fast);
+}
+
+.timeToggle:has(input:focus-visible) {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+}
+
+.timeToggle:has(input:checked) {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 8px 18px rgba(81, 76, 154, 0.24);
+}
+
+.timeToggle:has(input:checked) svg {
+  color: #fff;
+}
+
+.timeUnavailable {
+  color: #b9b8cb;
+  background: #fafafd;
+  border-color: #efeef6;
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.timeToggle:has(input:disabled) {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeToggle,
+  .timeToggle svg {
+    transition: none;
+  }
+
+  .timeToggle:hover,
+  .timeToggle:active {
+    transform: none;
+  }
+}

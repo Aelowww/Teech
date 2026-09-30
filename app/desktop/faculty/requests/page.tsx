@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { studentAvatarUrls } from "@/lib/avatar";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/desktop/_components/show-more";
@@ -47,7 +48,7 @@ export default function Page() {
       setIsLoading(false);
 
       channel = supabase
-        .channel(`faculty-requests-${profile.id}`)
+        .channel(uniqueChannelName(`faculty-requests-${profile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `faculty_profile_id=eq.${profile.id}` },

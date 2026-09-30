@@ -11,6 +11,7 @@ import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
@@ -54,7 +55,7 @@ export default function Page() {
       setIsLoading(false);
 
       channel = supabase
-        .channel(`faculty-dashboard-${currentProfile.id}`)
+        .channel(uniqueChannelName(`faculty-dashboard-${currentProfile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `faculty_profile_id=eq.${currentProfile.id}` },

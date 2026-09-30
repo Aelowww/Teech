@@ -15,6 +15,8 @@ import {
   Mail,
   MapPin,
   Search,
+  Sun,
+  Sunset,
   UserRound,
   X,
 } from "lucide-react";
@@ -395,20 +397,30 @@ export function AvailabilitySlots({
   const afternoonSlots = times.filter((time) => time.includes("PM"));
 
   function renderSlots(slots: string[]) {
-    return slots.map((time) => (
-      <label className={`${styles.timeToggle} ${unavailableTimes.includes(time) ? styles.timeUnavailable : ""}`} key={time}>
-        {time}
-        {onSelectTime
-          ? <input type="radio" name="appointment-time" checked={selectedTime === time} onChange={() => onSelectTime(time)} disabled={disabled || unavailableTimes.includes(time)} />
-          : <input type="checkbox" disabled={disabled || unavailableTimes.includes(time)} />}
-      </label>
-    ));
+    return slots.map((time) => {
+      const unavailable = unavailableTimes.includes(time);
+      const selected = selectedTime === time;
+      return (
+        <label className={`${styles.timeToggle} ${unavailable ? styles.timeUnavailable : ""}`} key={time}>
+          {onSelectTime
+            ? <input className={styles.slotInput} type="radio" name="appointment-time" checked={selected} onChange={() => onSelectTime(time)} disabled={disabled || unavailable} />
+            : <input className={styles.slotInput} type="checkbox" disabled={disabled || unavailable} />}
+          {selected ? <Check size={15} strokeWidth={2.75} aria-hidden="true" /> : <Clock3 size={15} aria-hidden="true" />}
+          <span>{time}</span>
+        </label>
+      );
+    });
+  }
+
+  function groupLabel(label: string, Icon: typeof Sun, slots: string[]) {
+    const open = slots.filter((time) => !unavailableTimes.includes(time)).length;
+    return <p className={styles.slotLabel}><Icon size={15} aria-hidden="true" />{label}<span>{open} open</span></p>;
   }
 
   return (
     <div className={styles.availabilityForm}>
-      {morningSlots.length > 0 && <section className={styles.slotGroup}><p className={styles.slotLabel}>Morning</p>{renderSlots(morningSlots)}</section>}
-      {afternoonSlots.length > 0 && <section className={styles.slotGroup}><p className={styles.slotLabel}>Afternoon</p>{renderSlots(afternoonSlots)}</section>}
+      {morningSlots.length > 0 && <section className={styles.slotGroup}>{groupLabel("Morning", Sun, morningSlots)}{renderSlots(morningSlots)}</section>}
+      {afternoonSlots.length > 0 && <section className={styles.slotGroup}>{groupLabel("Afternoon", Sunset, afternoonSlots)}{renderSlots(afternoonSlots)}</section>}
     </div>
   );
 }

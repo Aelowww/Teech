@@ -5,6 +5,7 @@ import { Award, Ban, Bell, CalendarCheck, CheckCheck, CalendarX, ChevronRight, H
 import { useEffect, useState } from "react";
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import styles from "./notifications-feed.module.css";
@@ -63,7 +64,7 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
       setIsLoading(false);
 
       channel = supabase
-        .channel(`notification-feed-${profile.id}`)
+        .channel(uniqueChannelName(`notification-feed-${profile.id}`))
         .on(
           "postgres_changes",
           { event: "INSERT", schema: "public", table: "notifications", filter: `recipient_profile_id=eq.${profile.id}` },

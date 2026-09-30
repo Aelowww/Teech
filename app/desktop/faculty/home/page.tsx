@@ -9,6 +9,7 @@ import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
+import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
@@ -53,7 +54,7 @@ export default function Page() {
       setIsLoading(false);
 
       channel = supabase
-        .channel(`faculty-dashboard-${currentProfile.id}`)
+        .channel(uniqueChannelName(`faculty-dashboard-${currentProfile.id}`))
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "appointment_requests", filter: `faculty_profile_id=eq.${currentProfile.id}` },
@@ -92,6 +93,9 @@ export default function Page() {
   const pending = upcoming.filter((request) => request.status === "pending");
   const confirmed = upcoming.filter((request) => request.status === "confirmed");
   const nextConsultation = confirmed[0];
+  const summary = pending.length
+    ? `${pending.length} ${pending.length === 1 ? "request needs" : "requests need"} your response`
+    : confirmed.length ? `${confirmed.length} upcoming ${confirmed.length === 1 ? "consultation" : "consultations"}` : "You're all caught up";
   const pendingItems = pending.slice(0, pendingPreviewLimit).map((request) => ({
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
@@ -112,7 +116,7 @@ export default function Page() {
       <header className={styles.header}>
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
-          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong></div>
+          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
           <FactCard role="faculty" />
         </div>
         <div className={styles.presence}>
@@ -121,7 +125,8 @@ export default function Page() {
         </div>
       </header>
 
-      <div className={styles.top}>
+      <div className={styles.layout}>
+        <div className={styles.main}>
         {nextConsultation ? (
           <UpNextCard
             eyebrow="Up next"
@@ -142,7 +147,27 @@ export default function Page() {
             actionLabel={pending.length ? "View requests" : "Manage availability"}
           />
         )}
-        <div className={styles.side}>
+
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>
+            Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
+            {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
+          </h2>
+          {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+        </section>
+
+        {upcomingItems.length > 0 && (
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>
+              Upcoming Consultations
+              {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
+            </h2>
+            <CardList items={upcomingItems} />
+          </section>
+        )}
+        </div>
+
+        <aside className={styles.rail}>
           <LoginStreakCard role="faculty" />
           {openDates.length > 0 && (
             <Link className={styles.availability} href="/faculty/availability">
@@ -154,32 +179,15 @@ export default function Page() {
               <ChevronRight size={16} />
             </Link>
           )}
-        </div>
+        </aside>
       </div>
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>
-          Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
-          {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
-        </h2>
-        {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
-      </section>
-
-      {upcomingItems.length > 0 && (
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>
-            Upcoming Consultations
-            {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
-          </h2>
-          <CardList items={upcomingItems} />
-        </section>
-      )}
     </DesktopLayout>
   );
 }
 
 function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();
