@@ -103,9 +103,14 @@
   place-items: center;
   color: var(--accent);
   background: #f0effd;
+  position: relative;
+  overflow: hidden;
   border-radius: 50%;
   font-size: 10px;
   font-weight: 700;
+}
+.initialsImage {
+  object-fit: cover;
 }
 .faculty div {
   display: grid;

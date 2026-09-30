@@ -10,7 +10,7 @@ import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
-import { signedAvatarUrl } from "@/lib/avatar";
+import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
 
@@ -24,6 +24,7 @@ export default function Page() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [requests, setRequests] = useState<Request[]>([]);
+  const [studentPhotos, setStudentPhotos] = useState<Map<string, string>>(() => new Map());
   const [openDates, setOpenDates] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [presence, setPresence] = useState<PresenceStatus>("available");
@@ -47,6 +48,7 @@ export default function Page() {
       setPresence(currentProfile.presence_status || "available");
       void signedAvatarUrl(supabase, currentProfile.avatar_path).then((url) => { if (active) setPhotoUrl(url); });
       setRequests(requestsResult.data as Request[] || []);
+      if (requestsResult.data?.length) void studentAvatarUrls(supabase, requestsResult.data.map((request) => request.id)).then((urls) => { if (active) setStudentPhotos(urls); });
       setOpenDates([...new Set((availabilityResult.data || []).map((slot) => slot.available_date as string))]);
       setIsLoading(false);
 
@@ -94,6 +96,7 @@ export default function Page() {
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
     status: "Pending",
+    imageUrl: studentPhotos.get(request.id),
     href: `/faculty/requests/${request.id}`,
   }));
 
