@@ -46,9 +46,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const avatarUrls = new Map((signedAvatars || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
 
   const allFaculty = (faculty as FacultyProfile[] | null) || [];
-  const availableCount = allFaculty.filter((profile) => (profile.presence_status || "available") === "available").length;
+  const availableCount = allFaculty.filter((profile) => nextOpenDates.has(profile.id)).length;
   const facultyItems = allFaculty
-    .filter((profile) => showingAll || (profile.presence_status || "available") === "available")
+    .filter((profile) => showingAll || nextOpenDates.has(profile.id))
     .map((profile) => {
       const nextOpen = nextOpenDates.get(profile.id);
       const presence = profile.presence_status || "available";
@@ -83,19 +83,18 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
           ? (
             <ul className={styles.list}>
               {facultyItems.map((item) => {
-                const showPresence = showingAll;
                 const content = <>
                   <span className={styles.avatar}>
                     {item.imageUrl
                       ? <Image src={item.imageUrl} alt="" fill sizes="44px" unoptimized />
                       : <UserRound size={20} aria-hidden="true" />}
-                    {showPresence && <i className={`${styles.presenceDot} ${styles[item.presence]}`} aria-hidden="true" />}
+                    <i className={`${styles.presenceDot} ${styles[item.presence]}`} aria-hidden="true" />
                   </span>
                   <span className={styles.info}>
                     <strong>{item.name}</strong>
                     <span>
                       {item.department}
-                      {showPresence && <em className={styles[item.presence]}> · {presenceLabels[item.presence]}</em>}
+                      <em className={styles[item.presence]}> · {presenceLabels[item.presence]}</em>
                     </span>
                   </span>
                   <span className={styles.next}>

@@ -21,7 +21,7 @@ const timeline = strokes.reduce<{ start: number; duration: number; hiddenFrom: n
 
 const writingTime = timeline[timeline.length - 1].start + timeline[timeline.length - 1].duration;
 
-export function WritingLogo({ children }: { children?: React.ReactNode }) {
+export function WritingLogo({ children, width }: { children?: React.ReactNode; width?: number }) {
   const [loaded, setLoaded] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
   const playing = loaded >= frames.length || timedOut;
@@ -37,7 +37,7 @@ export function WritingLogo({ children }: { children?: React.ReactNode }) {
       data-playing={playing || undefined}
       style={{ "--written": `${writingTime}ms` } as CSSProperties}
     >
-      <div className={styles.logo} role="img" aria-label="Teech">
+      <div className={styles.logo} style={width ? { width } : undefined} role="img" aria-label="Teech">
         {frames.map((width, index) => {
           const isFinal = index === frames.length - 1;
           const stroke = timeline[index];

@@ -76,6 +76,7 @@ export default function Page() {
       setError(signUpError.message);
       return;
     }
+    await createClient().auth.signOut();
     router.push("/student/account-created");
   }
 

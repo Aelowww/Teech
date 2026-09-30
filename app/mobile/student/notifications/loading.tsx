@@ -1,5 +1,5 @@
-import { NotificationsSkeleton } from "@/app/mobile/_components/screen-skeletons";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 export default function Loading() {
-  return <NotificationsSkeleton role="student" />;
+  return <AppLoader />;
 }

@@ -13,6 +13,7 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
+import { isBlockedWhileBusy } from "@/lib/time-slots";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -174,7 +175,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
   }
 
   const requestedTime = toDatabaseTime(draft.preferredTime);
-  const [availabilityResult, bookedSlotsResult] = await Promise.all([
+  const [availabilityResult, bookedSlotsResult, presenceResult] = await Promise.all([
     supabase
       .from("faculty_availability")
       .select("start_time, end_time, meeting_location")
@@ -184,6 +185,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
     supabase.rpc("get_reserved_appointment_slots", {
       requested_faculty_profile_id: draft.facultyId,
     }),
+    supabase.from("profiles").select("presence_status").eq("id", draft.facultyId).maybeSingle(),
   ]);
 
   if (availabilityResult.error || bookedSlotsResult.error) {
@@ -196,7 +198,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
   const matchingSlot = availability.find((slot) => requestedMinutes >= databaseTimeToMinutes(slot.start_time) && requestedMinutes < databaseTimeToMinutes(slot.end_time));
   const booked = ((bookedSlotsResult.data || []) as { preferred_date: string; preferred_time: string }[])
     .some((slot) => slot.preferred_date === draft.preferredDate && slot.preferred_time.slice(0, 5) === requestedTime.slice(0, 5));
-  if (!matchingSlot || booked) return { kind: "unavailable", unavailable: "time" };
+  if (!matchingSlot || booked || isBlockedWhileBusy(draft.preferredDate, draft.preferredTime, presenceResult.data?.presence_status)) return { kind: "unavailable", unavailable: "time" };
 
   return { kind: "available", meetingLocation: matchingSlot.meeting_location || null };
 }

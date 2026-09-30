@@ -7,7 +7,7 @@ import { DesktopLayout, Notice, PageHeading, MonthCalendar } from "@/app/desktop
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
-import { isPastSlotToday, slotsFor } from "@/lib/time-slots";
+import { isBlockedWhileBusy, isPastSlotToday, slotsFor } from "@/lib/time-slots";
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
@@ -42,7 +42,7 @@ export default function Page() {
         return;
       }
       const supabase = createClient();
-      const [availabilityResult, reservedSlotsResult] = await Promise.all([
+      const [availabilityResult, reservedSlotsResult, presenceResult] = await Promise.all([
         supabase
           .from("faculty_availability")
           .select("available_date, start_time, end_time, meeting_location")
@@ -51,6 +51,7 @@ export default function Page() {
           .not("available_date", "is", null)
           .gte("available_date", localDateValue()),
         supabase.rpc("get_reserved_appointment_slots", { requested_faculty_profile_id: updatedDraft.facultyId }),
+        supabase.from("profiles").select("presence_status").eq("id", updatedDraft.facultyId).maybeSingle(),
       ]);
       if (!active) return;
       if (availabilityResult.error || reservedSlotsResult.error) {
@@ -58,7 +59,7 @@ export default function Page() {
       } else {
         const availability = (availabilityResult.data || []) as Availability[];
         const reservedSlots = (reservedSlotsResult.data || []) as ReservedSlot[];
-        const dates = getBookableDates(availability, reservedSlots);
+        const dates = getBookableDates(availability, reservedSlots, presenceResult.data?.presence_status);
         const locations = availability.reduce<Record<string, string>>((current, slot) => {
           if (!current[slot.available_date] && slot.meeting_location) current[slot.available_date] = slot.meeting_location;
           return current;
@@ -129,9 +130,9 @@ export default function Page() {
   );
 }
 
-function getBookableDates(availability: Availability[], reservedSlots: ReservedSlot[]) {
+function getBookableDates(availability: Availability[], reservedSlots: ReservedSlot[], presence: string | null | undefined) {
   return [...new Set(availability.map((slot) => slot.available_date))].filter((date) => {
-    const dateSlots = slotsFor(availability.filter((slot) => slot.available_date === date)).filter((time) => !isPastSlotToday(date, time));
+    const dateSlots = slotsFor(availability.filter((slot) => slot.available_date === date)).filter((time) => !isPastSlotToday(date, time) && !isBlockedWhileBusy(date, time, presence));
     return dateSlots.some((time) => !reservedSlots.some((reserved) => reserved.preferred_date === date && reserved.preferred_time.slice(0, 5) === toDatabaseTime(time)));
   });
 }

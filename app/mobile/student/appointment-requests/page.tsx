@@ -9,10 +9,10 @@ import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_com
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { avatarBucket } from "@/lib/avatar";
-import { StudentRequestsSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import { matchesTab, parseTab, RequestTabs, type RequestTab } from "@/app/mobile/_components/request-tabs";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Appointment = {
   id: string;
@@ -116,7 +116,7 @@ function RequestsPage() {
   const filteredAppointments = appointments.filter((appointment) => matchesTab(appointment.status, tab));
   const list = useShowMore(filteredAppointments);
 
-  if (isLoading) return <StudentRequestsSkeleton />;
+  if (isLoading) return <AppLoader />;
 
   return (
     <MobileLayout className={styles.screen} backTo="/student/home" role="student" activeNav="requests">

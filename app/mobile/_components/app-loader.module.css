@@ -1,0 +1,20 @@
+.screen {
+  --accent: #7772c9;
+}
+
+.loader {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 48px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
