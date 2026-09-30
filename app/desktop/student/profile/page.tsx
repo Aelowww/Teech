@@ -1,12 +1,7 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Award, ChevronRight, FileText, KeyRound, ShieldCheck, ShieldQuestion, UserRound } from "lucide-react";
-import { DesktopLayout, PageHeading, ProfilePhoto } from "@/app/desktop/_components/ui";
+import { DesktopLayout } from "@/app/desktop/_components/ui";
+import { ProfileOverview } from "@/app/desktop/_components/profile-overview";
 import { signedAvatarUrl } from "@/lib/avatar";
-import { ShowcasedBadges } from "@/app/desktop/_components/showcased-badges";
-import { SignOutButton } from "@/app/desktop/_components/sign-out-button";
-import { DeleteAccountButton } from "@/app/desktop/_components/delete-account-button";
-import { SupportChat } from "@/app/desktop/_components/support-chat";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./page.module.css";
 
@@ -34,49 +29,7 @@ export default async function Page() {
 
   return (
     <DesktopLayout className={styles.screen} role="student" activeNav="profile">
-      <PageHeading title="My Profile" />
-      <div className={styles.page}>
-        <aside className={styles.identity}>
-          <ProfilePhoto src={photoUrl} />
-          <strong>{profile.full_name}</strong>
-          <ShowcasedBadges badges={showcasedBadges} />
-          <div className={styles.signOut}><SignOutButton redirectTo="/welcome" /></div>
-        </aside>
-
-        <div className={styles.settings}>
-          <section className={styles.group} aria-labelledby="account-settings">
-            <h2 id="account-settings">Account</h2>
-            <div className={styles.actionList}>
-              <Link className={styles.settingLink} href="/student/profile/info"><span><UserRound size={18} />Personal Information</span><ChevronRight size={18} /></Link>
-              <Link className={styles.settingLink} href="/student/profile/badges"><span><Award size={18} />Badges</span><ChevronRight size={18} /></Link>
-            </div>
-          </section>
-
-          <section className={styles.group} aria-labelledby="security-settings">
-            <h2 id="security-settings">Security</h2>
-            <div className={styles.actionList}>
-              <Link className={styles.settingLink} href="/student/profile/password"><span><KeyRound size={18} />Change Password</span><ChevronRight size={18} /></Link>
-              <Link className={styles.settingLink} href="/student/profile/security"><span><ShieldQuestion size={18} />Account Recovery</span><ChevronRight size={18} /></Link>
-            </div>
-          </section>
-
-          <section className={styles.group} aria-labelledby="support-settings">
-            <h2 id="support-settings">Support &amp; Legal</h2>
-            <div className={styles.actionList}>
-              <SupportChat audience="student" variant="row" className={styles.settingLink} />
-              <Link className={styles.settingLink} href="/student/profile/privacy"><span><ShieldCheck size={18} />Privacy Policy</span><ChevronRight size={18} /></Link>
-              <Link className={styles.settingLink} href="/student/profile/terms"><span><FileText size={18} />Terms of Service</span><ChevronRight size={18} /></Link>
-            </div>
-          </section>
-
-          <section className={`${styles.group} ${styles.danger}`} aria-labelledby="danger-settings">
-            <h2 id="danger-settings">Danger Zone</h2>
-            <div className={styles.actionList}>
-              <DeleteAccountButton role="student" className={styles.settingLink} />
-            </div>
-          </section>
-        </div>
-      </div>
+      <ProfileOverview role="student" name={profile.full_name} avatarPath={profile.avatar_path} photoUrl={photoUrl} badges={showcasedBadges} />
     </DesktopLayout>
   );
 }

@@ -4,6 +4,7 @@ import { Suspense, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DesktopLayout, PageHeading, FormField, Notice } from "@/app/desktop/_components/ui";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import styles from "./page.module.css";
 
 export default function Page() {
@@ -46,7 +47,7 @@ function ForgotPasswordPage() {
           <FormField label="Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your school email" type="email" required />
         </div>
         {error && <Notice error>{error}</Notice>}
-        <button className={styles.submitButton} type="submit" disabled={sending}>{sending ? "Sending..." : "Send Reset Link"}</button>
+        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${styles.submitButton}`} type="submit" disabled={sending}>{sending ? "Sending..." : "Send Reset Link"}</button>
       </form>
     </DesktopLayout>
   );

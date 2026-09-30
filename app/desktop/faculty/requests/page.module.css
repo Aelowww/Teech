@@ -183,3 +183,53 @@
       "reason status";
   }
 }
+
+/* Interactions (mirrors mobile) */
+
+.requestCard {
+  transition:
+    transform 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .requestCard:hover {
+    border-color: #d9d6f2;
+    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.07);
+    transform: none;
+  }
+}
+
+.actions button {
+  transition:
+    transform 220ms var(--button-ease),
+    color 220ms var(--button-ease),
+    background-color 220ms var(--button-ease),
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .actions button:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.actions button:active:not(:disabled) {
+  transform: scale(0.98);
+  transition-duration: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .requestCard,
+  .actions button {
+    transition: none;
+  }
+
+  .actions button:hover:not(:disabled),
+  .actions button:active:not(:disabled) {
+    transform: none;
+  }
+}

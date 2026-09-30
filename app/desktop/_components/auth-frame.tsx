@@ -1,8 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, LoaderCircle } from "lucide-react";
+import { Backdrop } from "./backdrop";
 import { tagline } from "./ui";
 import styles from "./auth.module.css";
+
+export function AuthSubmit({
+  label,
+  pendingLabel,
+  pending,
+}: {
+  label: string;
+  pendingLabel: string;
+  pending: boolean;
+}) {
+  return (
+    <button className={styles.submitButton} type="submit" disabled={pending} aria-busy={pending}>
+      <span>{pending ? pendingLabel : label}</span>
+      {pending ? (
+        <LoaderCircle className={styles.submitSpinner} size={16} strokeWidth={2.25} aria-hidden="true" />
+      ) : (
+        <ArrowRight className={styles.submitArrow} size={16} strokeWidth={2.25} aria-hidden="true" />
+      )}
+    </button>
+  );
+}
 
 export function AuthFrame({
   children,
@@ -19,27 +41,25 @@ export function AuthFrame({
 }) {
   return (
     <main className={`${styles.screen} ${wide ? styles.wide : ""}`}>
-      <div className={styles.circle} aria-hidden="true" />
-      <div className={styles.circleBottom} aria-hidden="true" />
+      <Backdrop />
 
       <Link className={styles.back} href={backTo} aria-label="Go back">
-        <ArrowLeft size={20} />
+        <ArrowLeft size={18} />
       </Link>
 
       <section className={styles.content}>
-        <h1 className={styles.title}>
-          Welcome to
-          <Image className={styles.logo} src="/logo/teech_logo.svg" alt="Teech" width={1118} height={348} priority />
-        </h1>
-        <p className={styles.tagline}>&ldquo;{tagline}&rdquo;</p>
+        <header className={styles.header}>
+          <h1 className={styles.title}>
+            <Image className={styles.logo} src="/logo/teech_logo.svg" alt="Teech" width={1118} height={348} priority />
+          </h1>
+          <p className={styles.tagline}>{tagline}</p>
+        </header>
 
         <form className={styles.card} onSubmit={onSubmit}>
           {children}
         </form>
         {below}
       </section>
-
-      <footer className={styles.footer}>Teech <span>•</span> Student &amp; Faculty Portal</footer>
     </main>
   );
 }

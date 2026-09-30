@@ -47,6 +47,8 @@ export function PasswordField({
           className={styles.passwordToggle}
           type="button"
           aria-label={visible ? "Hide password" : "Show password"}
+          aria-pressed={visible}
+          onPointerDown={(event) => event.preventDefault()}
           onClick={() => setVisible((current) => !current)}
         >
           {visible ? <EyeOff size={16} /> : <Eye size={16} />}

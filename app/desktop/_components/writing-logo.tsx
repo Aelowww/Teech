@@ -32,7 +32,11 @@ export function WritingLogo({ children }: { children?: React.ReactNode }) {
   }, []);
 
   return (
-    <div className={`${styles.intro} ${playing ? styles.playing : ""}`} style={{ "--written": `${writingTime}ms` } as CSSProperties}>
+    <div
+      className={`${styles.intro} ${playing ? styles.playing : ""}`}
+      data-playing={playing || undefined}
+      style={{ "--written": `${writingTime}ms` } as CSSProperties}
+    >
       <div className={styles.logo} role="img" aria-label="Teech">
         {frames.map((width, index) => {
           const isFinal = index === frames.length - 1;

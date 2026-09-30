@@ -1,174 +1,257 @@
 .page {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 1fr) 340px;
   align-items: start;
   gap: 24px;
 }
 
-.mainColumn,
-.sideColumn {
+.mainColumn {
   min-width: 0;
   display: grid;
-  gap: 20px;
+  gap: 24px;
 }
 
 .sideColumn {
   position: sticky;
-  top: 112px;
+  top: var(--sticky-top, 32px);
+  min-width: 0;
 }
 
-.panel {
-  padding: 22px 24px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+.sectionTitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
 }
 
-.panel .sectionTitle {
-  margin-top: 0;
+.hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-.balance {
-  padding: 28px 32px;
-  display: flex;
-  flex-wrap: wrap;
+/* ---------- Summary: balance · next reward · how to earn ---------- */
+
+.summary {
+  padding: 22px 26px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "balance next"
+    "earn earn";
   align-items: center;
-  gap: 20px;
+  column-gap: 32px;
+  row-gap: 18px;
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   border-radius: var(--radius);
-  box-shadow: 0 16px 36px rgba(81, 76, 154, 0.24);
+  box-shadow: 0 10px 28px rgba(81, 76, 154, 0.18);
 }
 
-.balance > span {
-  width: 64px;
-  height: 64px;
+.balance {
+  grid-area: balance;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.balanceIcon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.18);
   border-radius: 50%;
 }
 
-.balance div {
-  flex: 1;
+.balance > div {
   display: grid;
-  gap: 4px;
+  gap: 2px;
 }
 
 .balance small {
-  font-size: 14px;
+  font-size: 13px;
   opacity: 0.85;
 }
 
 .balance strong {
-  font-size: 44px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 40px;
   font-weight: 700;
   line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .balance em {
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
-  opacity: 0.85;
+  font-weight: 600;
+  opacity: 0.8;
 }
 
-.balance p {
-  margin: 0;
-  padding: 8px 14px;
+.freezes {
+  margin: 0 0 0 4px;
+  padding: 6px 12px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
-.sectionTitle {
-  margin: 8px 0 0;
-  color: var(--ink);
-  font-size: 18px;
+.next {
+  grid-area: next;
+  min-width: 0;
+  padding-left: 32px;
+  display: grid;
+  gap: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.next p {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.next p span,
+.next small {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.next p strong {
+  overflow: hidden;
+  font-size: 15px;
   font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track {
+  height: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.track i {
+  height: 100%;
+  display: block;
+  background: #fff;
+  border-radius: 999px;
+  transition: width 400ms var(--button-ease);
 }
 
 .earn {
-  margin-top: 14px;
-  display: grid;
-  gap: 10px;
+  grid-area: earn;
+  padding-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 
-.earn div {
-  padding: 14px 16px;
+.earn span {
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.earn b {
+  font-weight: 700;
+}
+
+/* ---------- Rewards ---------- */
+
+.rewards {
+  display: grid;
+  gap: 14px;
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 14px;
+}
+
+.item {
+  min-width: 0;
+  padding: 18px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  transition:
+    border-color 220ms var(--button-ease),
+    box-shadow 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .item:hover {
+    border-color: #d9d6f2;
+    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.07);
+  }
+}
+
+.itemIcon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
   color: var(--accent);
   background: var(--accent-pale);
   border-radius: 14px;
 }
 
-.earn span {
-  flex: 1;
-  color: var(--ink);
-  font-size: 14px;
+.itemFreeze {
+  color: #3a86c8;
+  background: #e7f2fb;
 }
 
-.earn b {
-  color: var(--accent-dark);
-  font-size: 14px;
-}
-
-.hint {
-  margin: 12px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.items {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-.item {
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  transition: border-color 0.15s ease, transform 0.15s ease;
-}
-
-.item:hover {
-  border-color: var(--indigo-300);
-  transform: translateY(-2px);
-}
-
-.item > div {
+.itemText {
   min-width: 0;
   flex: 1;
   display: grid;
-  align-content: start;
-  gap: 6px;
+  gap: 4px;
 }
 
-.item strong {
+.itemText strong {
   color: var(--ink);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 }
 
-.item small {
+.itemText small {
   color: var(--muted);
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
-.item em {
-  margin-top: 4px;
+.itemAction {
+  flex: 0 0 auto;
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.itemAction em {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -178,52 +261,65 @@
   font-weight: 700;
 }
 
-.itemIcon {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 auto;
+.redeem {
+  --button-height: 34px;
+  --button-min-width: 0;
+  --button-padding-x: 16px;
+  --button-font-size: 13px;
+}
+
+.needMore {
   display: grid;
-  place-items: center;
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  border-radius: 14px;
-}
-
-.itemFreeze {
-  background: linear-gradient(135deg, #7fb8e6, #3a86c8);
-}
-
-.item button {
-  width: 100%;
-  min-height: 44px;
-  padding: 0 16px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.item button:hover:not(:disabled) {
-  background: var(--accent-dark);
-}
-
-.item button:disabled {
+  justify-items: end;
+  gap: 5px;
   color: var(--muted);
-  background: #f0f0f6;
-  cursor: default;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.item button:focus-visible {
-  outline: 3px solid rgba(119, 114, 201, 0.35);
-  outline-offset: 2px;
+.miniTrack {
+  width: 96px;
+  height: 5px;
+  overflow: hidden;
+  background: #efeef6;
+  border-radius: 999px;
+}
+
+.miniTrack i {
+  height: 100%;
+  display: block;
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.ownedTag {
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #15834a;
+  background: #e8f7ee;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.itemOwned .itemIcon {
+  opacity: 0.7;
+}
+
+/* ---------- History ---------- */
+
+.panel {
+  padding: 20px 22px;
+  display: grid;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .history {
-  margin-top: 10px;
   display: grid;
 }
 
@@ -236,7 +332,12 @@
   border-bottom: 1px solid var(--line-soft);
 }
 
+.history > div:last-of-type {
+  border-bottom: 0;
+}
+
 .history span {
+  min-width: 0;
   display: grid;
   gap: 3px;
   color: var(--ink);
@@ -249,7 +350,9 @@
 }
 
 .history b {
-  font-size: 15px;
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
 }
 
 .earned {
@@ -260,6 +363,22 @@
   color: #c2413b;
 }
 
+@media (max-width: 1280px) {
+  .summary {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "balance"
+      "next"
+      "earn";
+  }
+
+  .next {
+    padding: 16px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-left: 0;
+  }
+}
+
 @media (max-width: 1180px) {
   .page {
     grid-template-columns: minmax(0, 1fr);
@@ -267,5 +386,12 @@
 
   .sideColumn {
     position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .track i {
+    transition: none;
   }
 }

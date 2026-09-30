@@ -6,6 +6,7 @@ import { FormField, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_co
 import { AvatarUploader } from "@/app/desktop/_components/avatar-uploader";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import styles from "./profile-settings.module.css";
 
 type Role = "student" | "faculty";
@@ -116,7 +117,7 @@ export function ProfileEditor({ role }: { role: Role }) {
         </div>
         {error && <Notice error>{error}</Notice>}
         {notice && <Notice>{notice}</Notice>}
-        <div className={styles.submitArea}><button className={styles.submitButton} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</button></div>
+        <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</button></div>
       </form>
     </DesktopLayout>
   );

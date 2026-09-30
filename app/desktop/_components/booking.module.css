@@ -15,7 +15,7 @@
 
 .side {
   position: sticky;
-  top: 112px;
+  top: var(--sticky-top, 112px);
   padding: 24px;
   display: grid;
   gap: 16px;
@@ -71,36 +71,6 @@
   font-weight: 500 !important;
 }
 
-.continueButton {
-  width: 100%;
-  min-height: 52px;
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #fff;
-  background: var(--accent);
-  border: 0;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 10px 22px rgba(81, 76, 154, 0.22);
-  transition: background 0.15s ease, box-shadow 0.15s ease;
-}
-
-.continueButton:hover:not(:disabled) {
-  background: var(--accent-dark);
-}
-
-.continueButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-  box-shadow: none;
-}
-
 .hint {
   margin: 0;
   color: var(--muted);
@@ -117,4 +87,9 @@
   .side {
     position: static;
   }
+}
+
+/* Look comes from button.module.css. */
+.continueButton {
+  margin-top: 4px;
 }
