@@ -17,7 +17,7 @@ import styles from "./page.module.css";
 type Profile = { id: string; full_name: string; avatar_path: string | null; presence_status: PresenceStatus | null };
 type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
-const pendingPreviewLimit = 4;
+const pendingPreviewLimit = 1;
 
 export default function Page() {
   const router = useRouter();
