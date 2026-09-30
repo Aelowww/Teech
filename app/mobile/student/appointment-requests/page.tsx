@@ -8,7 +8,7 @@ import { CalendarPlus, CheckCircle2, ChevronRight, UserRound } from "lucide-reac
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { avatarBucket } from "@/lib/avatar";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { StudentRequestsSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import { matchesTab, parseTab, RequestTabs, type RequestTab } from "@/app/mobile/_components/request-tabs";
 import styles from "./page.module.css";
@@ -115,7 +115,7 @@ function RequestsPage() {
   const filteredAppointments = appointments.filter((appointment) => matchesTab(appointment.status, tab));
   const list = useShowMore(filteredAppointments);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <StudentRequestsSkeleton />;
 
   return (
     <MobileLayout className={styles.screen} backTo="/student/home" role="student" activeNav="requests">

@@ -9,7 +9,7 @@ import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_com
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { studentAvatarUrls } from "@/lib/avatar";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { FacultyRequestsSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import { matchesTab, RequestTabs, type RequestTab } from "@/app/mobile/_components/request-tabs";
 import styles from "./page.module.css";
@@ -76,7 +76,7 @@ export default function Page() {
     .sort((first, second) => Number(second.status === "pending") - Number(first.status === "pending"));
   const list = useShowMore(sortedRequests);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <FacultyRequestsSkeleton />;
 
   async function updateStatus(id: string, status: "confirmed" | "declined") {
     setError(""); setUpdating(id);

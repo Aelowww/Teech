@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Award, CalendarCheck, Coins, Snowflake } from "lucide-react";
 import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { PointsSkeleton } from "@/app/mobile/_components/screen-skeletons";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import { badgeIcons } from "@/app/mobile/_components/badge-icons";
@@ -53,7 +53,7 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
 
   const history = useShowMore(ledger);
 
-  if (isLoading) return <AppLoader />;
+  if (isLoading) return <PointsSkeleton role={role} />;
 
   const balance = ledger.reduce((total, entry) => total + entry.amount, 0);
 

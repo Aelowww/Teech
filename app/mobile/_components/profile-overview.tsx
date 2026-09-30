@@ -5,6 +5,7 @@ import { ShowcasedBadges } from "@/app/mobile/_components/showcased-badges";
 import { SignOutButton } from "@/app/mobile/_components/sign-out-button";
 import { DeleteAccountButton } from "@/app/mobile/_components/delete-account-button";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
+import { Bone, TextBone } from "@/app/mobile/_components/skeleton";
 import styles from "./profile-overview.module.css";
 
 type Role = "student" | "faculty";
@@ -22,6 +23,31 @@ export function ProfileOverview({ role, name, avatarPath, photoUrl, badges }: { 
         <ShowcasedBadges badges={badges} href={`${base}/badges`} />
       </header>
 
+      <ProfileMenu role={role} />
+    </div>
+  );
+}
+
+export function ProfileOverviewSkeleton({ role }: { role: Role }) {
+  return (
+    <div className={styles.page}>
+      <h1 className={styles.title}>My Profile</h1>
+
+      <header className={styles.identity}>
+        <div className={styles.photo}><Bone height={88} round /></div>
+        <TextBone size={17} width={150} />
+        <span>{role === "faculty" ? "Faculty member" : "Student"}</span>
+      </header>
+
+      <ProfileMenu role={role} />
+    </div>
+  );
+}
+
+function ProfileMenu({ role }: { role: Role }) {
+  const base = `/${role}/profile`;
+  return (
+    <>
       <Group label="Account">
         <SettingLink href={`${base}/info`} icon={UserRound} label="Personal Information" />
         <SettingLink href={`${base}/badges`} icon={Award} label="Badges" />
@@ -42,7 +68,7 @@ export function ProfileOverview({ role, name, avatarPath, photoUrl, badges }: { 
         <SignOutButton redirectTo="/welcome" variant="row" className={styles.row} />
         <DeleteAccountButton role={role} className={`${styles.row} ${styles.danger}`} />
       </Group>
-    </div>
+    </>
   );
 }
 
