@@ -19,7 +19,7 @@ export function ProfileOverview({ role, name, avatarPath, photoUrl, badges }: { 
         <div className={styles.photo}><AvatarUploader initialPath={avatarPath} initialUrl={photoUrl} compact /></div>
         <strong>{name}</strong>
         <span>{role === "faculty" ? "Faculty member" : "Student"}</span>
-        <ShowcasedBadges badges={badges} />
+        <ShowcasedBadges badges={badges} href={`${base}/badges`} />
       </header>
 
       <Group label="Account">
