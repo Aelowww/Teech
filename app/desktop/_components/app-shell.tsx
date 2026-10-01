@@ -14,7 +14,10 @@ const navItems: Record<Role, { key: string; label: string; href: string; icon: N
     { key: "home", label: "Home", href: "/student/home", icon: "house" },
     { key: "faculty", label: "Faculty", href: "/student/faculty", icon: "users" },
     { key: "requests", label: "Requests", href: "/student/appointment-requests", icon: "clipboard" },
+<<<<<<< HEAD
     { key: "notifications", label: "Notifications", href: "/student/notifications", icon: "bell" },
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     { key: "points", label: "Points & Rewards", href: "/student/points", icon: "sparkles" },
     { key: "profile", label: "Profile", href: "/student/profile", icon: "profile" },
   ],
@@ -22,7 +25,10 @@ const navItems: Record<Role, { key: string; label: string; href: string; icon: N
     { key: "home", label: "Home", href: "/faculty/home", icon: "house" },
     { key: "calendar", label: "Calendar", href: "/faculty/calendar", icon: "calendar" },
     { key: "requests", label: "Requests", href: "/faculty/requests", icon: "clipboard" },
+<<<<<<< HEAD
     { key: "notifications", label: "Notifications", href: "/faculty/notifications", icon: "bell" },
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     { key: "points", label: "Points & Rewards", href: "/faculty/points", icon: "sparkles" },
     { key: "profile", label: "Profile", href: "/faculty/profile", icon: "profile" },
   ],

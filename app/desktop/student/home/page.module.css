@@ -70,7 +70,10 @@
   gap: 20px;
 }
 
+<<<<<<< HEAD
 /* Requests overview */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .overview {
   padding: 20px 22px 18px;
   display: grid;
@@ -244,6 +247,7 @@
   }
 }
 
+<<<<<<< HEAD
 /* ---------- Header summary ---------- */
 
 .dashboard .summary {
@@ -254,6 +258,8 @@
 
 /* ---------- Requests split bar ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .split {
   height: 8px;
   display: flex;
@@ -276,8 +282,11 @@
   }
 }
 
+<<<<<<< HEAD
 /* ---------- Staggered entrance ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .header,
 .main > *,
 .rail > * {

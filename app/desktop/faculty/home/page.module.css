@@ -213,7 +213,10 @@
   }
 }
 
+<<<<<<< HEAD
 /* Clickable card: shared hover lift and press (tokens in globals.css). */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .availability {
   transition:
     transform var(--motion) var(--ease),
@@ -249,6 +252,7 @@
   }
 }
 
+<<<<<<< HEAD
 .screen .summary {
   margin-top: 4px;
   color: var(--muted);
@@ -256,6 +260,8 @@
 }
 
 /* Staggered entrance */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .header,
 .main > *,
 .rail > * {

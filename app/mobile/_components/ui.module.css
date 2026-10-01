@@ -43,7 +43,10 @@
   display: none;
 }
 
+<<<<<<< HEAD
 /* Opacity only: a transform here would re-anchor absolutely positioned children mid-fade. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .contentFadeIn {
   animation: contentFadeIn 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -159,12 +162,18 @@
     box-shadow 180ms ease;
 }
 
+<<<<<<< HEAD
 /* Icons stay soft while empty, then darken once the field has a value... */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .inputWrap:has(input:not(:placeholder-shown)) {
   color: #77788f;
 }
 
+<<<<<<< HEAD
 /* ...and take the accent while focused, which also gives keyboard users a visible focus state. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .inputWrap:focus-within {
   color: var(--accent);
   border-color: #c9c6ee;
@@ -184,7 +193,10 @@
   font-weight: 400;
 }
 
+<<<<<<< HEAD
 /* Hide Edge's built-in reveal/clear icons so they don't sit on top of our own eye button. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .inputWrap input::-ms-reveal,
 .inputWrap input::-ms-clear {
   display: none;
@@ -487,27 +499,28 @@ a.listCard:active {
 }
 .calendarGrid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  justify-items: center;
-  gap: 5px 0;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
 }
 .weekday {
-  padding-bottom: 5px;
+  padding-bottom: 2px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
 }
 .day {
-  width: 28px;
-  height: 28px;
+  width: 100%;
+  aspect-ratio: 1;
   padding: 0;
   display: grid;
   place-items: center;
   color: #62637c;
   background: transparent;
   border: 0;
-  border-radius: 50%;
+  border-radius: 10px;
   font: inherit;
-  font-size: 10px;
+  font-size: 12px;
   cursor: pointer;
 }
 .daySelected {
@@ -714,7 +727,10 @@ a.listCard:active {
     transform 220ms var(--button-ease);
 }
 
+<<<<<<< HEAD
 /* Current tab: a short accent bar grows in above the icon; icon and label take the accent. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .navActive {
   color: var(--accent-dark);
   font-weight: 600;
@@ -735,7 +751,10 @@ a.listCard:active {
   animation: navIndicatorIn 320ms var(--button-ease) both;
 }
 
+<<<<<<< HEAD
 /* Hover: the icon lifts slightly and warms to the accent. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 @media (hover: hover) {
   .navItem:hover {
     color: var(--accent-dark);
@@ -943,9 +962,12 @@ a.listCard:active {
   margin-top: 10px;
 }
 
+<<<<<<< HEAD
 /* Up next: white card with a calendar tile, matching the other Home cards. */
 /* ---------- Up Next: soft lavender card, relative-day chip, one tidy row of details ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .upNext {
   position: relative;
   padding: 16px 16px 16px 18px;
@@ -1023,7 +1045,10 @@ a.listCard:active {
   color: var(--accent);
 }
 
+<<<<<<< HEAD
 /* Round arrow, bottom right. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .upNextGo {
   position: absolute;
   right: 14px;
@@ -1074,7 +1099,10 @@ a.listCard:active {
   }
 }
 
+<<<<<<< HEAD
 /* Clickable card: shared hover lift and press (tokens in globals.css). */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 a.listCard,
 .spotlight,
 .upNext {
@@ -1111,4 +1139,173 @@ a.listCard:active,
   .upNext:active {
     transform: none;
   }
+<<<<<<< HEAD
+=======
+}
+
+/* Empty states: illustrated scene with tone, floating icon and sparkles */
+.toneAccent {
+  --empty-ink: var(--accent);
+  --empty-pale: #f1f0fc;
+  --empty-mid: #dcd9f7;
+  --empty-glow: rgba(119, 114, 201, 0.25);
+}
+
+.toneGreen {
+  --empty-ink: #2f9e6f;
+  --empty-pale: #e8f7ef;
+  --empty-mid: #c5ecd8;
+  --empty-glow: rgba(47, 158, 111, 0.22);
+}
+
+.toneOrange {
+  --empty-ink: #e8742f;
+  --empty-pale: #fff1e6;
+  --empty-mid: #ffd9bd;
+  --empty-glow: rgba(232, 116, 47, 0.22);
+}
+
+.tonePink {
+  --empty-ink: #d4566b;
+  --empty-pale: #fff0f2;
+  --empty-mid: #fbd3da;
+  --empty-glow: rgba(212, 86, 107, 0.2);
+}
+
+.emptyState {
+  color: var(--empty-ink, var(--accent));
+}
+
+.emptyArt {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.emptyArt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--empty-pale);
+  border-radius: 42% 58% 55% 45% / 50% 42% 58% 50%;
+  animation: emptyMorph 8s ease-in-out infinite;
+}
+
+.emptyIcon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  color: var(--empty-ink);
+  background: linear-gradient(160deg, #fff 0%, var(--empty-pale) 100%);
+  border: 1.5px solid var(--empty-mid);
+  border-radius: 50%;
+  box-shadow: 0 10px 22px var(--empty-glow);
+  animation: emptyBob 3.2s ease-in-out infinite;
+}
+
+.emptySparkle {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  color: var(--empty-ink);
+  animation: emptyTwinkle 2.4s ease-in-out infinite;
+}
+
+.emptyDot,
+.emptyDotSmall {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.emptyDot {
+  bottom: 8px;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  background: var(--empty-mid);
+  animation: emptyBob 3.2s ease-in-out 0.6s infinite;
+}
+
+.emptyDotSmall {
+  top: 10px;
+  left: 8px;
+  width: 6px;
+  height: 6px;
+  border: 1.5px solid var(--empty-ink);
+  opacity: 0.45;
+}
+
+.emptyCompact {
+  min-height: 0;
+  margin: 0;
+  padding: 16px 12px;
+  gap: 4px;
+}
+
+.emptyCompact .emptyArt {
+  width: 68px;
+  height: 68px;
+  margin-bottom: 4px;
+}
+
+.emptyCompact .emptyIcon {
+  width: 42px;
+  height: 42px;
+  box-shadow: 0 6px 14px var(--empty-glow);
+}
+
+.emptyCompact strong {
+  font-size: 13px;
+}
+
+.emptyCompact .emptyAction {
+  margin-top: 6px;
+}
+
+@keyframes emptyBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes emptyTwinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) rotate(15deg);
+  }
+}
+
+@keyframes emptyMorph {
+  0%,
+  100% {
+    border-radius: 42% 58% 55% 45% / 50% 42% 58% 50%;
+  }
+  50% {
+    border-radius: 58% 42% 45% 55% / 42% 58% 50% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emptyArt::before,
+  .emptyIcon,
+  .emptySparkle,
+  .emptyDot {
+    animation: none;
+  }
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }

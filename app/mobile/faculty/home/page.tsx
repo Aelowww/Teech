@@ -4,17 +4,21 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
+<<<<<<< HEAD
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
+=======
+import { MobileLayout, BrandLogo, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { signedAvatarUrl, studentAvatarUrls } from "@/lib/avatar";
 import { PresenceSelect, type PresenceStatus } from "./presence-select";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Profile = { id: string; full_name: string; avatar_path: string | null; presence_status: PresenceStatus | null };
 type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
@@ -146,7 +150,7 @@ export default function Page() {
           Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
           {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
         </h2>
-        {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+        {pendingItems.length ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="You're all caught up." action={{ label: "Manage availability", href: "/faculty/availability" }} />}
         <SupportChat audience="faculty" variant="floating" />
       </div>
     </MobileLayout>

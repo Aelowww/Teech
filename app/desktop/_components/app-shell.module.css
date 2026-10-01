@@ -28,7 +28,10 @@
   --sidebar-width: 256px;
   --main-pad-y: 32px;
   --main-pad-x: 40px;
+<<<<<<< HEAD
   /* Offset for sticky panels inside pages. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   --sticky-top: var(--main-pad-y);
 
   min-height: 100dvh;
@@ -314,8 +317,11 @@
   }
 }
 
+<<<<<<< HEAD
 /* Interactions (mirrors mobile) */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .sidebarTop .iconButton {
   transition:
     color 200ms var(--button-ease),
@@ -391,7 +397,10 @@
   }
 }
 
+<<<<<<< HEAD
 /* Page content fades in on navigation (mirrors mobile). */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .main {
   animation: contentFadeIn 320ms var(--button-ease);
 }
@@ -408,13 +417,19 @@
   }
 }
 
+<<<<<<< HEAD
 /* Active item: filled icon; its cut-outs match the active background. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .navActive {
   --nav-icon-cut: var(--indigo-50);
 }
 
+<<<<<<< HEAD
 /* ---------- Navigation states ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .navItem {
   position: relative;
   color: var(--inactive);
@@ -483,8 +498,11 @@
   }
 }
 
+<<<<<<< HEAD
 /* ---------- Tablet: collapse the sidebar to an icon rail ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 @media (max-width: 1023px) {
   .shell {
     --sidebar-width: 76px;
@@ -551,7 +569,10 @@
   }
 }
 
+<<<<<<< HEAD
 /* The indicator sits inside the highlighted item, not against the sidebar edge. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .navItem::before {
   top: 12px;
   bottom: 12px;

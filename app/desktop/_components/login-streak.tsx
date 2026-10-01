@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { Check, ChevronRight, Coins, Flame, Gift, Snowflake } from "lucide-react";
+=======
+import { ChevronRight, Coins, Flame, Gift, Snowflake, Trophy } from "lucide-react";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { createClient } from "@/lib/supabase/client";
 import styles from "./login-streak.module.css";
 
@@ -78,6 +82,7 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   });
   const tomorrowReward = streak.upcomingRewards[0];
   const selectedDetail = days.find((day) => day.value === selectedDay) || days.find((day) => day.isToday);
+<<<<<<< HEAD
 
   return (
     <section className={styles.card} aria-label="Login streak">
@@ -98,17 +103,66 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
         {days.map((day) => {
           const { value, label, active, frozen, isToday, isFuture, points } = day;
           const selected = value === selectedDay;
+=======
+  const milestone = nextMilestone(streak.current);
+  const progress = Math.min(100, Math.round((streak.current / milestone) * 100));
+  const daysLeft = milestone - streak.current;
+
+  return (
+    <section className={styles.card} aria-label="Login streak">
+      <div className={`${styles.hero} ${streak.current === 0 ? styles.heroCold : ""}`}>
+        <div className={styles.summary}>
+          <span className={styles.flame}><Flame size={22} fill="currentColor" /></span>
+          <div>
+            <strong><b className={styles.count}>{streak.current}</b> day{streak.current === 1 ? "" : "s"} streak</strong>
+            <small>{streakMessage(streak.current)}</small>
+          </div>
+          <Link className={styles.points} href={`/${role}/points`} aria-label={`${streak.points} points. View and exchange points`}>
+            <Coins size={14} /><b>{streak.points}</b><small>pts</small>
+          </Link>
+        </div>
+        <div className={styles.milestone}>
+          <div className={styles.milestoneText}>
+            <span><Trophy size={12} />{daysLeft} day{daysLeft === 1 ? "" : "s"} to a {milestone}-day streak</span>
+            <span className={styles.chips}>
+              {tomorrowReward ? <span className={styles.tomorrow}><Gift size={10} />+{tomorrowReward} tomorrow</span> : null}
+              {streak.freezes > 0 && <span className={styles.freezes} title="Streak freezes"><Snowflake size={10} />{streak.freezes}</span>}
+            </span>
+          </div>
+          <div className={styles.bar} role="progressbar" aria-valuemin={0} aria-valuemax={milestone} aria-valuenow={streak.current} aria-label="Progress to next milestone">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+      </div>
+      <div className={styles.days}>
+        {days.map((day, index) => {
+          const { value, label, active, frozen, isToday, isFuture, points } = day;
+          const selected = value === selectedDay;
+          const previous = days[index - 1];
+          const linked = previous && (active || frozen) && (previous.active || previous.frozen);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           return (
             <button
               key={value}
               type="button"
+<<<<<<< HEAD
               className={`${isFuture ? styles.dayFuture : ""} ${selected ? styles.daySelected : ""}`}
+=======
+              className={`${isFuture ? styles.dayFuture : ""} ${selected ? styles.daySelected : ""} ${active ? styles.dayDone : ""}`}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
               aria-pressed={selected}
               aria-label={`${dayName(value, isToday)}: ${dayStatus(day)}`}
               onClick={() => setSelectedDay(value)}
             >
+<<<<<<< HEAD
               <span className={`${active ? styles.dayActive : ""} ${frozen ? styles.dayFrozen : ""} ${isToday ? styles.dayToday : ""}`}>
                 {active && <Check size={11} strokeWidth={3} />}
+=======
+              {index > 0 && <i className={`${styles.link} ${linked ? styles.linked : ""}`} aria-hidden="true" />}
+              <span className={`${active ? styles.dayActive : ""} ${frozen ? styles.dayFrozen : ""} ${isToday ? styles.dayToday : ""}`}>
+                {active && <Flame size={13} fill="currentColor" strokeWidth={2} />}
+                {isFuture && points ? <Gift size={11} strokeWidth={2.2} /> : null}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
                 {frozen && <Snowflake size={11} strokeWidth={2.5} />}
               </span>
               <em>{points ? `+${points}` : " "}</em>
@@ -132,6 +186,24 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   );
 }
 
+<<<<<<< HEAD
+=======
+const MILESTONES = [3, 7, 14, 30, 50, 100, 200, 365];
+
+function nextMilestone(current: number) {
+  return MILESTONES.find((milestone) => milestone > current) ?? Math.ceil((current + 1) / 100) * 100;
+}
+
+function streakMessage(current: number) {
+  if (current === 0) return "Check in today to light your flame.";
+  if (current === 1) return "Day one! Every streak starts here.";
+  if (current < 7) return "You're heating up. Keep it going!";
+  if (current < 14) return "A full week. You're on fire!";
+  if (current < 30) return "Unstoppable. Don't break the chain!";
+  return "Legendary streak. Keep the flame alive!";
+}
+
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 type StreakDay = { active: boolean; frozen: boolean; isToday: boolean; isFuture: boolean; points?: number };
 
 function dayName(value: string, isToday: boolean) {

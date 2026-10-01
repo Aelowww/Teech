@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
+<<<<<<< HEAD
 import { DesktopLayout, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+=======
+import { DesktopLayout, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -17,8 +21,12 @@ import styles from "./page.module.css";
 type Profile = { id: string; full_name: string; avatar_path: string | null; presence_status: PresenceStatus | null };
 type Request = { id: string; student_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
+<<<<<<< HEAD
 const pendingPreviewLimit = 4;
 const upcomingLimit = 4;
+=======
+const pendingPreviewLimit = 1;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
 export default function Page() {
   const router = useRouter();
@@ -93,9 +101,12 @@ export default function Page() {
   const pending = upcoming.filter((request) => request.status === "pending");
   const confirmed = upcoming.filter((request) => request.status === "confirmed");
   const nextConsultation = confirmed[0];
+<<<<<<< HEAD
   const summary = pending.length
     ? `${pending.length} ${pending.length === 1 ? "request needs" : "requests need"} your response`
     : confirmed.length ? `${confirmed.length} upcoming ${confirmed.length === 1 ? "consultation" : "consultations"}` : "You're all caught up";
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const pendingItems = pending.slice(0, pendingPreviewLimit).map((request) => ({
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)}${request.reason ? ` · ${request.reason}` : ""}`,
@@ -103,6 +114,7 @@ export default function Page() {
     imageUrl: studentPhotos.get(request.id),
     href: `/faculty/requests/${request.id}`,
   }));
+<<<<<<< HEAD
   const upcomingItems = confirmed.slice(1, upcomingLimit + 1).map((request) => ({
     title: request.student_name || "Student",
     description: `${formatDate(request.preferred_date)} - ${formatTime(request.preferred_time)} · ${request.meeting_location || "Location to be confirmed"}`,
@@ -110,14 +122,20 @@ export default function Page() {
     imageUrl: studentPhotos.get(request.id),
     href: `/faculty/requests/${request.id}`,
   }));
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
   return (
     <DesktopLayout className={styles.screen} role="faculty" activeNav="home">
       <header className={styles.header}>
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
+<<<<<<< HEAD
           <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
           <FactCard role="faculty" />
+=======
+          <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong></div>
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         </div>
         <div className={styles.presence}>
           <PresenceSelect value={presence} onChange={(next) => void changePresence(next)} />
@@ -127,6 +145,11 @@ export default function Page() {
 
       <div className={styles.layout}>
         <div className={styles.main}>
+<<<<<<< HEAD
+=======
+        <FactCard role="faculty" />
+
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         {nextConsultation ? (
           <UpNextCard
             eyebrow="Up next"
@@ -153,6 +176,7 @@ export default function Page() {
             Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
             {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
           </h2>
+<<<<<<< HEAD
           {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
         </section>
 
@@ -165,6 +189,10 @@ export default function Page() {
             <CardList items={upcomingItems} />
           </section>
         )}
+=======
+          {pendingItems.length ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="You're all caught up." action={{ label: "Manage availability", href: "/faculty/availability" }} />}
+        </section>
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         </div>
 
         <aside className={styles.rail}>
@@ -187,7 +215,10 @@ export default function Page() {
 
 function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+<<<<<<< HEAD
 function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();

@@ -9,6 +9,10 @@ import { Check } from "lucide-react";
 import { getPasswordError, passwordRules } from "@/lib/password";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
+<<<<<<< HEAD
+=======
+import { SuccessModal } from "./success-modal";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import styles from "./profile-settings.module.css";
 import formStyles from "./change-password-form.module.css";
 
@@ -21,6 +25,10 @@ export function ChangePasswordForm({ role }: { role: Role }) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirming, setConfirming] = useState(false);
+<<<<<<< HEAD
+=======
+  const [saved, setSaved] = useState(false);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const profilePath = `/${role}/profile`;
   const metCount = passwordRules.filter((rule) => rule.test(password)).length;
   const matches = confirmation.length > 0 && confirmation === password;
@@ -39,6 +47,14 @@ export function ChangePasswordForm({ role }: { role: Role }) {
     const { error: updateError } = await createClient().auth.updateUser({ password });
     setSaving(false);
     if (updateError) return updateError.message;
+<<<<<<< HEAD
+=======
+    setSaved(true);
+  }
+
+  function finishSave() {
+    setSaved(false);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     router.replace(profilePath);
     router.refresh();
   }
@@ -79,6 +95,10 @@ export function ChangePasswordForm({ role }: { role: Role }) {
         <div className={formStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Updating..." : "Update Password"}</button></div>
       </form>
       <ConfirmationModal open={confirming} title="Update password?" description="Your new password will replace the current one for this account." confirmLabel="Update Password" onCancel={() => setConfirming(false)} onConfirm={changePassword} />
+<<<<<<< HEAD
+=======
+      <SuccessModal open={saved} title="Password changed" description="Use your new password the next time you sign in." onDone={finishSave} />
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     </DesktopLayout>
   );
 }

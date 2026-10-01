@@ -187,7 +187,10 @@
   }
 }
 
+<<<<<<< HEAD
 /* Desktop: rows become cards in a responsive grid. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
@@ -246,7 +249,10 @@
   }
 }
 
+<<<<<<< HEAD
 /* Clickable card: shared hover lift and press (tokens in globals.css). */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .row {
   transition:
     transform var(--motion) var(--ease),

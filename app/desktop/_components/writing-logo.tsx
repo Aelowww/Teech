@@ -1,7 +1,11 @@
 "use client";
 
 import Image from "next/image";
+<<<<<<< HEAD
 import { useEffect, useState, type CSSProperties } from "react";
+=======
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import styles from "./writing-logo.module.css";
 
 const frames = [101, 165, 219, 278, 402, 402];
@@ -21,6 +25,7 @@ const timeline = strokes.reduce<{ start: number; duration: number; hiddenFrom: n
 
 const writingTime = timeline[timeline.length - 1].start + timeline[timeline.length - 1].duration;
 
+<<<<<<< HEAD
 export function WritingLogo({ children }: { children?: React.ReactNode }) {
   const [loaded, setLoaded] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
@@ -28,6 +33,18 @@ export function WritingLogo({ children }: { children?: React.ReactNode }) {
 
   useEffect(() => {
     const fallback = window.setTimeout(() => setTimedOut(true), 2500);
+=======
+export function WritingLogo({ children, width }: { children?: React.ReactNode; width?: number }) {
+  const [loaded, setLoaded] = useState(0);
+  const [timedOut, setTimedOut] = useState(false);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const playing = loaded >= frames.length || timedOut;
+
+  useEffect(() => {
+    const images = Array.from(logoRef.current?.querySelectorAll("img") || []);
+    if (images.length === frames.length && images.every((image) => image.complete && image.naturalWidth > 0)) setLoaded(frames.length);
+    const fallback = window.setTimeout(() => setTimedOut(true), 1200);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     return () => window.clearTimeout(fallback);
   }, []);
 
@@ -37,7 +54,11 @@ export function WritingLogo({ children }: { children?: React.ReactNode }) {
       data-playing={playing || undefined}
       style={{ "--written": `${writingTime}ms` } as CSSProperties}
     >
+<<<<<<< HEAD
       <div className={styles.logo} role="img" aria-label="Teech">
+=======
+      <div ref={logoRef} className={styles.logo} style={width ? { width } : undefined} role="img" aria-label="Teech">
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         {frames.map((width, index) => {
           const isFinal = index === frames.length - 1;
           const stroke = timeline[index];

@@ -8,11 +8,17 @@
   flex-direction: column;
 }
 .header {
+  position: relative;
   margin-bottom: 21px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: var(--accent);
+}
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .greeting {
   position: relative;

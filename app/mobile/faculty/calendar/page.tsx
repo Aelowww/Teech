@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { CalendarDays } from "lucide-react";
 import { ActionButtons, MobileLayout, MonthCalendar, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Availability = { id: string; available_date: string; start_time: string; end_time: string };
 

@@ -4,13 +4,20 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Info, ShieldAlert, ShieldCheck } from "lucide-react";
 import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
+<<<<<<< HEAD
+=======
+import { SuccessModal } from "@/app/mobile/_components/success-modal";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "@/app/mobile/_components/profile-settings.module.css";
 import pageStyles from "./page.module.css";
+<<<<<<< HEAD
+=======
+import { AppLoader } from "@/app/mobile/_components/app-loader";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
 const emptyTrio = ["", "", ""];
 
@@ -21,7 +28,7 @@ export default function Page() {
   const [answers, setAnswers] = useState(emptyTrio);
   const [currentPassword, setCurrentPassword] = useState("");
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSetUp, setIsSetUp] = useState(false);
@@ -62,7 +69,6 @@ export default function Page() {
   async function saveQuestions(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    setNotice("");
     if (questions.some((question) => !question) || new Set(questions).size !== 3) {
       setError("Choose three different questions.");
       return;
@@ -88,7 +94,11 @@ export default function Page() {
     setAnswers(emptyTrio);
     setCurrentPassword("");
     setIsSetUp(true);
+<<<<<<< HEAD
     setNotice("Your security questions have been saved.");
+=======
+    setSaved(true);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   }
 
   return (
@@ -125,10 +135,14 @@ export default function Page() {
           <PasswordField label="Confirm it's you" name="currentPassword" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Your current password" autoComplete="current-password" required />
         </div>
         {error && <Notice error>{error}</Notice>}
+<<<<<<< HEAD
         {notice && <Notice>{notice}</Notice>}
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         <div className={pageStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save questions"}</button></div>
         <SignOutEverywhere />
       </form>
+      <SuccessModal open={saved} title="Security questions saved" description="You can now use them to recover your account if you forget your password." onDone={() => setSaved(false)} />
     </MobileLayout>
   );
 }

@@ -8,8 +8,13 @@ export type PresenceStatus = "available" | "in_meeting" | "busy";
 
 const options: { value: PresenceStatus; label: string; description: string }[] = [
   { value: "available", label: "Available", description: "Listed as available to students" },
+<<<<<<< HEAD
   { value: "in_meeting", label: "In a meeting", description: "Visible, but not listed as available" },
   { value: "busy", label: "Busy (in a class)", description: "Visible, but not listed as available" },
+=======
+  { value: "in_meeting", label: "In a meeting", description: "Hidden from Available, next hour blocked" },
+  { value: "busy", label: "Busy (in a class)", description: "Hidden from Available, next hour blocked" },
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 ];
 
 export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onChange: (next: PresenceStatus) => void }) {

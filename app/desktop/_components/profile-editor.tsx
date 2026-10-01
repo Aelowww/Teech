@@ -7,6 +7,10 @@ import { AvatarUploader } from "@/app/desktop/_components/avatar-uploader";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
+<<<<<<< HEAD
+=======
+import { SuccessModal } from "./success-modal";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import styles from "./profile-settings.module.css";
 
 type Role = "student" | "faculty";
@@ -22,6 +26,10 @@ export function ProfileEditor({ role }: { role: Role }) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
+<<<<<<< HEAD
+=======
+  const [saved, setSaved] = useState(false);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const [isLoading, setIsLoading] = useState(true);
 
   const profilePath = `/${role}/profile/info`;
@@ -94,6 +102,14 @@ export function ProfileEditor({ role }: { role: Role }) {
       setSaving(false);
     }
 
+<<<<<<< HEAD
+=======
+    setSaved(true);
+  }
+
+  function finishSave() {
+    setSaved(false);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     router.replace(profilePath);
     router.refresh();
   }
@@ -119,6 +135,10 @@ export function ProfileEditor({ role }: { role: Role }) {
         {notice && <Notice>{notice}</Notice>}
         <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</button></div>
       </form>
+<<<<<<< HEAD
+=======
+      <SuccessModal open={saved} title="Profile updated" description="Your changes have been saved." onDone={finishSave} />
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     </DesktopLayout>
   );
 }

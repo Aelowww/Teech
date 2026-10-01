@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MobileLayout, Notice, PageHeading, DetailList } from "@/app/mobile/_components/ui";
+import { MobileLayout, EmptyState, Notice, PageHeading, DetailList } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import {
   emptyAppointmentDraft,
@@ -13,6 +13,10 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
+<<<<<<< HEAD
+=======
+import { isBlockedWhileBusy } from "@/lib/time-slots";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -146,11 +150,16 @@ export default function Page() {
         <PageHeading title="Review Appointment" subtitle="Review the information you entered before submitting." />
         {details.length > 0
           ? <DetailList details={details} />
-          : <p className={styles.emptyState}>No appointment information has been entered yet.</p>}
+          : <EmptyState compact scene="inbox" title="No appointment information has been entered yet." action={{ label: "Start booking", href: "/student/faculty" }} />}
         {error && <Notice error>{error}</Notice>}
         <div className={styles.actions}>
+<<<<<<< HEAD
           <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
           <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
+=======
+          <Link className={`${buttonStyles.button} ${buttonStyles.secondary}`} href="/student/appointment-info">Edit</Link>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : "Submit Request"}</button>
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         </div>
       </div>
       <ConfirmationModal open={confirming} title="Submit consultation request?" description="Your request will be sent to the selected faculty member for review." confirmLabel="Submit Request" onCancel={() => setConfirming(false)} onConfirm={handleSubmit} />
@@ -174,7 +183,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
   }
 
   const requestedTime = toDatabaseTime(draft.preferredTime);
-  const [availabilityResult, bookedSlotsResult] = await Promise.all([
+  const [availabilityResult, bookedSlotsResult, presenceResult] = await Promise.all([
     supabase
       .from("faculty_availability")
       .select("start_time, end_time, meeting_location")
@@ -184,6 +193,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
     supabase.rpc("get_reserved_appointment_slots", {
       requested_faculty_profile_id: draft.facultyId,
     }),
+    supabase.from("profiles").select("presence_status").eq("id", draft.facultyId).maybeSingle(),
   ]);
 
   if (availabilityResult.error || bookedSlotsResult.error) {
@@ -196,7 +206,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
   const matchingSlot = availability.find((slot) => requestedMinutes >= databaseTimeToMinutes(slot.start_time) && requestedMinutes < databaseTimeToMinutes(slot.end_time));
   const booked = ((bookedSlotsResult.data || []) as { preferred_date: string; preferred_time: string }[])
     .some((slot) => slot.preferred_date === draft.preferredDate && slot.preferred_time.slice(0, 5) === requestedTime.slice(0, 5));
-  if (!matchingSlot || booked) return { kind: "unavailable", unavailable: "time" };
+  if (!matchingSlot || booked || isBlockedWhileBusy(draft.preferredDate, draft.preferredTime, presenceResult.data?.presence_status)) return { kind: "unavailable", unavailable: "time" };
 
   return { kind: "available", meetingLocation: matchingSlot.meeting_location || null };
 }

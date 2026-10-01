@@ -1,4 +1,5 @@
 import Link from "next/link";
+<<<<<<< HEAD
 import type { CSSProperties } from "react";
 import { badgeIcon } from "@/app/desktop/_components/badge-icons";
 import styles from "./badge-grid.module.css";
@@ -34,11 +35,16 @@ const rosette = (() => {
   }
   return `${points.join(" ")}Z`;
 })();
+=======
+import { BadgeMedal } from "@/app/desktop/_components/badge-medal";
+import styles from "./showcased-badges.module.css";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
 export function ShowcasedBadges({ badges, href }: { badges: { id: string; name: string }[]; href: string }) {
   if (!badges.length) return null;
   return (
     <ul className={styles.showcased} aria-label="Showcased badges">
+<<<<<<< HEAD
       {badges.map((badge, index) => {
         const Icon = badgeIcon(badge.id);
         const [tint, ink] = badgeColors[badge.id] || ["#efedfc", "#6a64c4"];
@@ -51,6 +57,15 @@ export function ShowcasedBadges({ badges, href }: { badges: { id: string; name: 
           </li>
         );
       })}
+=======
+      {badges.map((badge, index) => (
+        <li key={badge.id}>
+          <Link className={styles.badge} href={href} aria-label={badge.name} data-name={badge.name}>
+            <BadgeMedal id={badge.id} size={37} glitter delay={index * 110} />
+          </Link>
+        </li>
+      ))}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     </ul>
   );
 }

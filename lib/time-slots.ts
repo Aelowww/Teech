@@ -35,3 +35,12 @@ export function isPastSlotToday(date: string, label: string) {
   const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   return date === today && slotMinutes(label) <= now.getHours() * 60 + now.getMinutes();
 }
+
+export const busyPresenceStatuses = ["in_meeting", "busy"];
+
+export function isBlockedWhileBusy(date: string, label: string, presence: string | null | undefined) {
+  if (!presence || !busyPresenceStatuses.includes(presence)) return false;
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  return date === today && slotMinutes(label) < now.getHours() * 60 + now.getMinutes() + 60;
+}

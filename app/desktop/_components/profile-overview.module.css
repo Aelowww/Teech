@@ -220,8 +220,11 @@
   }
 }
 
+<<<<<<< HEAD
 /* ---------- Desktop layout ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .page {
   display: grid;
   align-content: start;
@@ -235,7 +238,10 @@
   text-align: left;
 }
 
+<<<<<<< HEAD
 /* Profile banner: photo · name · badges · sign out */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .identity {
   margin: 0;
   padding: 24px 28px;
@@ -317,7 +323,10 @@
   flex: 0 0 auto;
 }
 
+<<<<<<< HEAD
 /* Settings: three equal cards side by side */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .groups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -341,7 +350,10 @@
   min-height: 52px;
 }
 
+<<<<<<< HEAD
 /* Danger zone: one quiet row */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .dangerZone {
   padding: 16px 22px 16px 26px;
   display: flex;

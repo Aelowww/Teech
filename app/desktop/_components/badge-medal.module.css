@@ -1,0 +1,186 @@
+.medal {
+  position: relative;
+  width: var(--size);
+  height: calc(var(--size) * 76 / 64);
+  flex: 0 0 auto;
+  display: block;
+  transform-origin: 50% 8%;
+  animation: medalPop 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--delay);
+}
+
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ribbonBack {
+  fill: color-mix(in srgb, var(--ink) 72%, #1d1c3b);
+}
+
+.ribbonFront {
+  fill: color-mix(in srgb, var(--ink) 82%, #fff);
+}
+
+.body {
+  filter: drop-shadow(0 3px 4px color-mix(in srgb, var(--ink) 30%, transparent));
+}
+
+.rim {
+  fill: var(--ink);
+}
+
+.stitch {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.2;
+  stroke-dasharray: 2 2.6;
+  stroke-linecap: round;
+  opacity: 0.6;
+}
+
+.face {
+  fill: var(--tint);
+  stroke: color-mix(in srgb, var(--ink) 25%, #fff);
+  stroke-width: 1.5;
+}
+
+.shine {
+  fill: #fff;
+  opacity: 0.7;
+}
+
+.icon {
+  position: absolute;
+  top: calc(30 / 76 * 100%);
+  left: 50%;
+  color: var(--ink);
+  transform: translate(-50%, -50%);
+}
+
+.sparkles path {
+  fill: var(--ink);
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+/* The medal swings and sparkles whenever its tile or row is hovered. */
+@media (hover: hover) {
+  :hover > .medal:not(.locked) {
+    animation: medalSwing 900ms cubic-bezier(0.36, 0, 0.3, 1);
+  }
+
+  :hover > .medal .sparkles path {
+    animation: sparkle 900ms ease-out both;
+  }
+
+  :hover > .medal .sparkles g:nth-child(2) path {
+    animation-delay: 120ms;
+  }
+
+  :hover > .medal .sparkles g:nth-child(3) path {
+    animation-delay: 240ms;
+  }
+}
+
+.locked .ribbonBack,
+.locked .ribbonFront {
+  fill: #dddce8;
+}
+
+.locked .body {
+  filter: none;
+}
+
+.locked .rim {
+  fill: #e4e3ee;
+}
+
+.locked .stitch {
+  stroke: #c9c8d8;
+  opacity: 1;
+}
+
+.locked .face {
+  fill: #f6f6fa;
+  stroke: #e4e3ee;
+}
+
+.locked .shine {
+  opacity: 0.5;
+}
+
+@keyframes medalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-14deg);
+  }
+}
+
+@keyframes medalSwing {
+  20% { transform: rotate(10deg); }
+  45% { transform: rotate(-7deg); }
+  70% { transform: rotate(3deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes sparkle {
+  0% { opacity: 0; scale: 0.2; rotate: 0deg; }
+  45% { opacity: 1; scale: 1.15; }
+  100% { opacity: 0; scale: 0.6; rotate: 90deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medal,
+  :hover > .medal:not(.locked),
+  :hover > .medal .sparkles path {
+    animation: none;
+  }
+}
+
+/* Glitter: a light sweep across the face and sparkles that keep twinkling. */
+.glint {
+  fill: #fff;
+  opacity: 0.9;
+  animation: glint 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--delay) + 600ms);
+  transform: translateX(-10px);
+}
+
+.glitter .sparkles path {
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+
+.glitter .sparkles g:nth-child(2) path {
+  animation-delay: 800ms;
+}
+
+.glitter .sparkles g:nth-child(3) path {
+  animation-delay: 1600ms;
+}
+
+@keyframes glint {
+  0% { transform: translateX(-10px); }
+  45%, 100% { transform: translateX(64px); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; scale: 0.3; rotate: 0deg; }
+  30% { opacity: 1; scale: 1.1; }
+  60% { opacity: 0; scale: 0.5; rotate: 90deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glint,
+  .glitter .sparkles path {
+    animation: none;
+  }
+
+  .glint {
+    display: none;
+  }
+}

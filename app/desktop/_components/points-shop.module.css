@@ -31,8 +31,11 @@
   line-height: 1.5;
 }
 
+<<<<<<< HEAD
 /* ---------- Summary: balance · next reward · how to earn ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .summary {
   padding: 22px 26px;
   display: grid;
@@ -175,8 +178,11 @@
   font-weight: 700;
 }
 
+<<<<<<< HEAD
 /* ---------- Rewards ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .rewards {
   display: grid;
   gap: 14px;
@@ -308,8 +314,11 @@
   opacity: 0.7;
 }
 
+<<<<<<< HEAD
 /* ---------- History ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .panel {
   padding: 20px 22px;
   display: grid;
@@ -395,3 +404,97 @@
     transition: none;
   }
 }
+<<<<<<< HEAD
+=======
+
+/* Rarity tiers */
+.itemText strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.rarity {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.common .itemIcon {
+  color: #1f7d6d;
+  background: #e2f5f1;
+}
+
+.common .rarity {
+  color: #1f7d6d;
+  background: #e2f5f1;
+}
+
+.rare .itemIcon {
+  color: #fff;
+  background: linear-gradient(135deg, #6f86f0, #3c43b3);
+}
+
+.rare .rarity {
+  color: #3c43b3;
+  background: #e7e8fb;
+}
+
+.legendary {
+  border-color: #f3dc9a;
+  background: linear-gradient(135deg, #fffaf0 0%, #fff 60%);
+}
+
+.legendary .itemIcon {
+  color: #fff;
+  background: linear-gradient(135deg, #ffd66b, #e0a21b 60%, #c28a0e);
+  animation: glow 2.6s ease-in-out infinite;
+}
+
+.legendary .rarity {
+  color: #fff;
+  background: linear-gradient(90deg, #f0b429, #d9890b);
+}
+
+.legendary .miniTrack i {
+  background: linear-gradient(90deg, #ffd66b, #e0a21b);
+}
+
+.miniTrack i {
+  animation: grow 900ms var(--button-ease) backwards;
+  transform-origin: left;
+}
+
+.track i {
+  animation: grow 900ms var(--button-ease) backwards;
+  transform-origin: left;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px #fff3cf, 0 4px 14px rgba(224, 162, 27, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 3px #fff3cf, 0 4px 20px rgba(224, 162, 27, 0.65);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track i,
+  .miniTrack i,
+  .legendary .itemIcon {
+    animation: none;
+  }
+}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
