@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { UsersRound } from "lucide-react";
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
+import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
+import { FactCard } from "@/app/mobile/_components/fact-card";
+import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { facultyAvatarUrls, signedAvatarUrl } from "@/lib/avatar";
@@ -100,7 +103,7 @@ export default function Page() {
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <div className={styles.headerActions}><NotificationBell href="/student/notifications" /></div>
+          <div className={styles.headerActions}><FactCard role="student" /><NotificationBell href="/student/notifications" /></div>
         </header>
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
@@ -127,11 +130,14 @@ export default function Page() {
           />
         )}
 
+        <LoginStreakCard role="student" />
+
         <h2 className={styles.sectionTitle}>
           Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
           {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
         </h2>
         {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+        <SupportChat audience="student" variant="floating" />
       </div>
     </MobileLayout>
   );
