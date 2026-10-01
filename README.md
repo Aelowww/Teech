@@ -1,91 +1,71 @@
-# Teech: Student–Faculty Consultation Booking System
+# Teech
 
-*Teacher within your reach.*
+Student and faculty consultation booking web app. *Teacher within your reach.*
 
-## About
+Live site: https://teech-app.vercel.app
 
-We built Teech because booking a consultation with a teacher at our school is honestly a hassle. You message them, wait, they reply late, the time doesn't work anymore, and you start over. Teech puts everything in one place: teachers post the dates and rooms they're free, students pick a slot and send a request, and the teacher just confirms or declines.
+## Overview
 
-## Features
-
-For students:
-- Book a consultation by picking a faculty member, a date, and a time
-- Track requests (pending, confirmed, declined, cancelled) and cancel if plans change
-- Reset a forgotten password with security questions (student accounts use a Student ID, not an email)
-
-For faculty:
-- Publish available dates, time ranges, and the meeting room
-- Confirm, decline, or cancel consultation requests
-- Reset a forgotten password through email
-
-For everyone:
-- In-app notifications whenever a request changes
-- Daily login streaks, points, and badges (you can exchange points for streak freezes and collectible badges)
-- Profile photo, badge showcase, and account deletion
+We built Teech because booking a consultation with a teacher at our school is honestly a hassle. You message them, wait, they reply late, the time doesn't work anymore, and you start over. Teech puts everything in one place: faculty post the dates and rooms they're free, students pick a slot and send a request, and faculty just confirm or decline. It has a mobile layout for phones and a full desktop layout for computers, both on the same URLs.
 
 ## Tech Stack
 
-- Next.js, React, and TypeScript
+- Next.js
+- React
+- TypeScript
 - CSS Modules
 - Supabase (Postgres, Auth, Storage, Realtime)
+- Google Gemini (help chat fallback)
+- Vercel
+
+## Features
+
+- Book a consultation by picking a faculty member, an open date, and a time slot
+- Faculty publish their available dates, time ranges, and meeting rooms
+- Faculty confirm, decline, or cancel requests, and students can cancel their own
+- Request tracking by status: pending, confirmed, and closed
+- In-app notifications whenever a request changes
+- Daily login streaks, points, a points shop, and collectible badges
+- Profile photo, badge showcase, and account deletion
+- Password reset with security questions for students and email for faculty
+- Reminder for students who haven't set up account recovery yet
+- Rotating study tips and a built-in help chat
+- Separate mobile and desktop layouts, picked automatically for each device
+- Animated loading screens and page skeletons while pages load
+
+## Local Setup
+
+```bash
+npm ci
+```
+
+Copy `.env.example` to `.env.local` and fill in the Supabase project URL, the publishable key, and a Gemini API key (ask us, they're not in the repo):
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+GEMINI_API_KEY=...
+```
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+To share a demo with groupmates' phones, run `npm run tunnel` in a second terminal and send them the ngrok link.
 
 ## Project Structure
 
-```text
-app/
-  mobile/     the mobile version (pages + _components)
-  desktop/    the desktop version (in progress)
-  auth/       shared auth callback
-lib/          Supabase clients and small helpers
-supabase/
-  migrations/ database changes, numbered in the order we ran them
-public/       logo and images
-proxy.ts      sign-in protection and phone vs computer routing
-```
+- `app/mobile/` contains the mobile pages and their `_components`
+- `app/desktop/` contains the desktop pages and their `_components`
+- `app/auth/callback/` finishes email sign-in links like faculty password resets
+- `app/api/support/` powers the help chat's Gemini fallback
+- `proxy.ts` protects signed-in pages and serves the mobile or desktop layout for each device
+- `lib/` holds the Supabase clients and small shared helpers
+- `supabase/migrations/` stores every database change, named by date (run them oldest first on a fresh Supabase project)
+- `public/` stores the logo and images
 
-Both versions use the same URLs. `proxy.ts` checks if you're on a phone or a computer and serves the right folder. Desktop pages only switch on once their path is added to `desktopPages` in `proxy.ts`, so anything not built yet falls back to mobile.
+## Purpose
 
-## Getting Started
-
-1. Install everything:
-
-   ```bash
-   npm ci
-   ```
-
-2. Copy `.env.example` to `.env.local` and put in our Supabase project URL and publishable key (ask me for them, they're not in the repo):
-
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=...
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
-   ```
-
-3. Start it:
-
-   ```bash
-   npm run dev
-   ```
-
-   Then open http://localhost:3000.
-
-## Database Setup
-
-If you're using a fresh Supabase project, open the SQL Editor and run every file in `supabase/migrations/` in order, oldest date first (the numbers at the start of each name are dates, so sorting by name works). Our shared project already has all of them.
-
-## Sharing a Demo
-
-We use ngrok so groupmates can try it on their phones. With the dev server running, open a second terminal:
-
-```bash
-npm run tunnel
-```
-
-Then share the https link it gives you. The first time, you need to connect ngrok to your account:
-
-```bash
-ngrok config add-authtoken YOUR_NGROK_AUTHTOKEN
-```
-
-## Project Status
-
-The mobile version works end to end: accounts, booking, requests, notifications, streaks, points, and badges. The desktop version is being built in `app/desktop/` on the `desktop` branch.
+We built Teech as a school project to make student and faculty consultations easier to book, track, and manage, without the back-and-forth messaging.
