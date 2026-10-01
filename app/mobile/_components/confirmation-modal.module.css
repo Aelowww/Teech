@@ -37,6 +37,14 @@
 .danger .icon {
   color: #c2413b;
   background: #fdeeec;
+<<<<<<< HEAD
+=======
+}
+
+.success .icon {
+  color: #15934e;
+  background: #e3f8ec;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }
 
 .dialog h2 {
@@ -57,8 +65,11 @@
   line-height: 1.55;
 }
 
+<<<<<<< HEAD
 /* ---------- Type-to-confirm (delete account) ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .confirmationField {
   margin-top: 18px;
   display: grid;
@@ -103,8 +114,11 @@
   font-size: 12px;
 }
 
+<<<<<<< HEAD
 /* ---------- Actions ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .actions {
   margin-top: 24px;
   display: grid;
@@ -112,6 +126,7 @@
   gap: 10px;
 }
 
+<<<<<<< HEAD
 /* Cancel is the quiet choice: plain grey, no border. */
 .actions .cancel {
   color: #4a4b6a;
@@ -127,6 +142,25 @@
 }
 
 /* Destructive confirmations use solid red instead of the purple gradient. */
+=======
+.actions > :only-child {
+  grid-column: 1 / -1;
+}
+
+.actions .cancel {
+  color: #4a4b6a;
+  background: #f4f4f8;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) {
+  .actions .cancel:hover {
+    background: #ebebf2;
+  }
+}
+
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .actions .confirmDanger {
   background: #c94658;
   border-color: #c94658;

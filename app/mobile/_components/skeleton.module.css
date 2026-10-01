@@ -1,0 +1,257 @@
+.bone {
+  display: block;
+  flex: 0 0 auto;
+  max-width: 100%;
+  background-color: #f0eff7;
+  background-image: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.8) 50%, transparent 80%);
+  background-repeat: no-repeat;
+  background-size: 70vw 100%;
+  background-attachment: fixed;
+  border-radius: 6px;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.onDark {
+  background-color: rgba(255, 255, 255, 0.2);
+  background-image: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.25) 50%, transparent 80%);
+}
+
+.round {
+  border-radius: 50%;
+}
+
+.pill {
+  border-radius: 999px;
+}
+
+.center {
+  margin-inline: auto;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -70vw 0;
+  }
+  to {
+    background-position: 100vw 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bone {
+    background-image: none;
+    animation: none;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.lines {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+
+.stack {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.card {
+  padding: 14px 14px 14px 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #ebe9f5;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(40, 41, 74, 0.04);
+}
+
+.listCard {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #ebe9f5;
+  border-radius: 16px;
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.row + .row {
+  border-top: 1px solid #f2f1f8;
+}
+
+.trailing {
+  flex: 0 0 auto;
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+}
+
+.chevron {
+  flex: 0 0 auto;
+  color: #d9d8e5;
+}
+
+.tabs {
+  margin: 14px 0 6px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #efeef6;
+}
+
+.tabsPacked {
+  margin-top: 16px;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.tabs > span {
+  padding: 10px 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #b1b1c4;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tabs > span > i {
+  min-width: 18px;
+  height: 18px;
+  background: #f3f3f8;
+  border-radius: 999px;
+}
+
+.calendarHeader {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #c9c8d8;
+}
+
+.day {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.week > div {
+  padding: 4px 0;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+
+.exchange {
+  margin: 0 -10px;
+  padding: 11px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #f0eff7;
+}
+
+.notification {
+  padding: 14px 14px 14px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.notification + .notification {
+  border-top: 1px solid #f2f1f8;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pairRow {
+  min-height: 48px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+}
+
+.pairRow + .pairRow {
+  border-top: 1px solid #f0eff7;
+}
+
+.hero {
+  margin: 4px 0 22px;
+  display: grid;
+  justify-items: center;
+}
+
+.heroSubtitle {
+  margin-top: 6px;
+  display: grid;
+  justify-items: center;
+}
+
+.timeline {
+  width: min(100%, 260px);
+  margin: 0 auto 26px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  right: 16.667%;
+  left: 16.667%;
+  height: 2px;
+  background: #efeef6;
+  border-radius: 2px;
+}
+
+.timeline > div {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+.blocks {
+  margin-top: 22px;
+  display: grid;
+  gap: 12px;
+}

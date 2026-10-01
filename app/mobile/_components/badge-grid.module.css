@@ -73,6 +73,7 @@
   border-top: 1px solid #f2f1f8;
 }
 
+<<<<<<< HEAD
 .icon {
   width: 40px;
   height: 40px;
@@ -89,6 +90,8 @@
   background: var(--accent);
 }
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .text {
   min-width: 0;
   flex: 1;
@@ -180,6 +183,7 @@
   color: #c2413b;
   font-size: 12px;
   line-height: 1.4;
+<<<<<<< HEAD
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -303,6 +307,16 @@
   .showcased a:hover .rosette,
   .showcased a:hover .rosetteIcon,
   .showcased a:active .rosette {
+=======
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase {
+    transition: none;
+  }
+
+  .showcase:not(:disabled):active {
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     transform: none;
   }
 }

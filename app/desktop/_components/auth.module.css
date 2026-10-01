@@ -337,8 +337,11 @@
   }
 }
 
+<<<<<<< HEAD
 /* Interactions (mirrors mobile) */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .submitButton {
   transition:
     background-color 220ms var(--button-ease),

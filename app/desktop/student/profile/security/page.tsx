@@ -4,6 +4,10 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Info, ShieldAlert, ShieldCheck } from "lucide-react";
 import { DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
+<<<<<<< HEAD
+=======
+import { SuccessModal } from "@/app/desktop/_components/success-modal";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { PasswordField } from "@/app/desktop/_components/password-field";
 import { SignOutEverywhere } from "@/app/desktop/_components/sign-out-everywhere";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -21,7 +25,11 @@ export default function Page() {
   const [answers, setAnswers] = useState(emptyTrio);
   const [currentPassword, setCurrentPassword] = useState("");
   const [error, setError] = useState("");
+<<<<<<< HEAD
   const [notice, setNotice] = useState("");
+=======
+  const [saved, setSaved] = useState(false);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const [saving, setSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSetUp, setIsSetUp] = useState(false);
@@ -62,7 +70,10 @@ export default function Page() {
   async function saveQuestions(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+<<<<<<< HEAD
     setNotice("");
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     if (questions.some((question) => !question) || new Set(questions).size !== 3) {
       setError("Choose three different questions.");
       return;
@@ -88,7 +99,11 @@ export default function Page() {
     setAnswers(emptyTrio);
     setCurrentPassword("");
     setIsSetUp(true);
+<<<<<<< HEAD
     setNotice("Your security questions have been saved.");
+=======
+    setSaved(true);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   }
 
   return (
@@ -125,10 +140,17 @@ export default function Page() {
           <PasswordField label="Confirm it's you" name="currentPassword" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Your current password" autoComplete="current-password" required />
         </div>
         {error && <Notice error>{error}</Notice>}
+<<<<<<< HEAD
         {notice && <Notice>{notice}</Notice>}
         <div className={pageStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save questions"}</button></div>
         <SignOutEverywhere />
       </form>
+=======
+        <div className={pageStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save questions"}</button></div>
+        <SignOutEverywhere />
+      </form>
+      <SuccessModal open={saved} title="Security questions saved" description="You can now use them to recover your account if you forget your password." onDone={() => setSaved(false)} />
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     </DesktopLayout>
   );
 }

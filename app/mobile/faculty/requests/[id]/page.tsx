@@ -102,7 +102,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         {(request.status === "pending" || request.status === "confirmed") && (
           <div className={styles.actions}>
             {request.status === "pending" && <RequestDecisionButtons requestId={request.id} canConfirm={!expired} />}
+<<<<<<< HEAD
             {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" />}
+=======
+            {request.status === "confirmed" && <CancelAppointmentButton appointmentId={request.id} role="faculty" quiet />}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           </div>
         )}
       </div>

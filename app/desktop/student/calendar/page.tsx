@@ -3,11 +3,19 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, MapPin, UserRound } from "lucide-react";
+<<<<<<< HEAD
 import { DesktopLayout, Notice, PageHeading, MonthCalendar } from "@/app/desktop/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { isPastSlotToday, slotsFor } from "@/lib/time-slots";
+=======
+import { DesktopLayout, EmptyState, Notice, PageHeading, MonthCalendar } from "@/app/desktop/_components/ui";
+import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
+import { createClient } from "@/lib/supabase/client";
+import { AppLoader } from "@/app/desktop/_components/app-loader";
+import { isBlockedWhileBusy, isPastSlotToday, slotsFor } from "@/lib/time-slots";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
@@ -42,7 +50,11 @@ export default function Page() {
         return;
       }
       const supabase = createClient();
+<<<<<<< HEAD
       const [availabilityResult, reservedSlotsResult] = await Promise.all([
+=======
+      const [availabilityResult, reservedSlotsResult, presenceResult] = await Promise.all([
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         supabase
           .from("faculty_availability")
           .select("available_date, start_time, end_time, meeting_location")
@@ -51,6 +63,10 @@ export default function Page() {
           .not("available_date", "is", null)
           .gte("available_date", localDateValue()),
         supabase.rpc("get_reserved_appointment_slots", { requested_faculty_profile_id: updatedDraft.facultyId }),
+<<<<<<< HEAD
+=======
+        supabase.from("profiles").select("presence_status").eq("id", updatedDraft.facultyId).maybeSingle(),
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
       ]);
       if (!active) return;
       if (availabilityResult.error || reservedSlotsResult.error) {
@@ -58,7 +74,11 @@ export default function Page() {
       } else {
         const availability = (availabilityResult.data || []) as Availability[];
         const reservedSlots = (reservedSlotsResult.data || []) as ReservedSlot[];
+<<<<<<< HEAD
         const dates = getBookableDates(availability, reservedSlots);
+=======
+        const dates = getBookableDates(availability, reservedSlots, presenceResult.data?.presence_status);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         const locations = availability.reduce<Record<string, string>>((current, slot) => {
           if (!current[slot.available_date] && slot.meeting_location) current[slot.available_date] = slot.meeting_location;
           return current;
@@ -121,7 +141,11 @@ export default function Page() {
             {meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{meetingLocation}</dd></div>}
           </dl>
           {error && <Notice error>{error}</Notice>}
+<<<<<<< HEAD
           {draft?.facultyId && !error && availableDates.length === 0 && <p className={booking.hint}>This faculty member has not published any upcoming dates.</p>}
+=======
+          {draft?.facultyId && !error && availableDates.length === 0 && <EmptyState compact scene="calendar" title="This faculty member has not published any upcoming dates." action={{ label: "Choose another faculty", href: "/student/faculty" }} />}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue<ArrowRight size={17} /></button>
         </aside>
       </div>
@@ -129,9 +153,15 @@ export default function Page() {
   );
 }
 
+<<<<<<< HEAD
 function getBookableDates(availability: Availability[], reservedSlots: ReservedSlot[]) {
   return [...new Set(availability.map((slot) => slot.available_date))].filter((date) => {
     const dateSlots = slotsFor(availability.filter((slot) => slot.available_date === date)).filter((time) => !isPastSlotToday(date, time));
+=======
+function getBookableDates(availability: Availability[], reservedSlots: ReservedSlot[], presence: string | null | undefined) {
+  return [...new Set(availability.map((slot) => slot.available_date))].filter((date) => {
+    const dateSlots = slotsFor(availability.filter((slot) => slot.available_date === date)).filter((time) => !isPastSlotToday(date, time) && !isBlockedWhileBusy(date, time, presence));
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     return dateSlots.some((time) => !reservedSlots.some((reserved) => reserved.preferred_date === date && reserved.preferred_time.slice(0, 5) === toDatabaseTime(time)));
   });
 }

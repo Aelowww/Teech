@@ -30,6 +30,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/student/sign-in");
 
+<<<<<<< HEAD
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
@@ -42,6 +43,17 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     .select("id, appointment_code, faculty_profile_id, faculty_name, preferred_date, preferred_time, reason, details, meeting_location, status, cancelled_by")
     .eq("id", id)
     .maybeSingle();
+=======
+  const [{ data: profile }, { data: appointment }] = await Promise.all([
+    supabase.from("profiles").select("role").eq("auth_user_id", user.id).maybeSingle(),
+    supabase
+      .from("appointment_requests")
+      .select("id, appointment_code, faculty_profile_id, faculty_name, preferred_date, preferred_time, reason, details, meeting_location, status, cancelled_by")
+      .eq("id", id)
+      .maybeSingle(),
+  ]);
+  if (!profile || profile.role !== "student") redirect("/student/sign-in");
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   if (!appointment) redirect("/student/appointment-requests");
 
   const request = appointment as Appointment;

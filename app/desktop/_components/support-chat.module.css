@@ -502,7 +502,10 @@ button.row {
   }
 }
 
+<<<<<<< HEAD
 /* Desktop: the chat opens as a floating card in the bottom-right corner. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .backdrop {
   padding: 24px;
   align-items: flex-end;
@@ -521,7 +524,10 @@ button.row {
   display: none;
 }
 
+<<<<<<< HEAD
 /* Guest pages: "Need help? Chat with us" as a soft pill. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .link {
   margin: 16px auto 0;
   padding: 8px 16px;

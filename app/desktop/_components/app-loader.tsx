@@ -1,16 +1,34 @@
 "use client";
 
+<<<<<<< HEAD
+=======
+import Image from "next/image";
+import type { CSSProperties } from "react";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { usePathname } from "next/navigation";
 import { AppShell } from "./app-shell";
 import { Backdrop } from "./backdrop";
 import styles from "./app-loader.module.css";
 
 type Role = "student" | "faculty";
+<<<<<<< HEAD
 type Layout = "dashboard" | "facultyGrid" | "requestList" | "requestDetail" | "booking" | "calendar" | "profile" | "panel" | "inbox" | "points" | "confirmation";
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
 const guestPages = ["sign-in", "create-account", "forgot-password", "password-reset", "account-created"];
 const bookingPages = ["calendar", "select-date-time", "appointment-info", "appointment-review"];
 
+<<<<<<< HEAD
+=======
+const loadingMessages = [
+  "Getting things ready…",
+  "Syncing your schedule…",
+  "Checking the latest updates…",
+  "Tip: check in daily to keep your streak",
+];
+
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 export function AppLoader() {
   const pathname = usePathname() || "/";
   const parts = pathname.split("/").filter(Boolean);
@@ -18,6 +36,7 @@ export function AppLoader() {
   const [first, ...rest] = parts;
   const role: Role | null = first === "student" || first === "faculty" ? first : null;
 
+<<<<<<< HEAD
   if (!role || guestPages.includes(rest[0])) return <GuestSkeleton />;
 
   const { layout, active } = layoutFor(role, rest);
@@ -26,11 +45,27 @@ export function AppLoader() {
       <div className={styles.content} aria-busy="true" aria-live="polite">
         <span className={styles.srOnly}>Loading…</span>
         {skeletons[layout]()}
+=======
+  if (!role || guestPages.includes(rest[0])) {
+    return (
+      <main className={styles.guest}>
+        <Backdrop />
+        <Logo />
+      </main>
+    );
+  }
+
+  return (
+    <AppShell role={role} active={activeFor(role, rest[0])}>
+      <div className={styles.content}>
+        <Logo />
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
       </div>
     </AppShell>
   );
 }
 
+<<<<<<< HEAD
 function layoutFor(role: Role, rest: string[]): { layout: Layout; active: string } {
   const [page, sub] = rest;
   if (page === "home" || !page) return { layout: "dashboard", active: "home" };
@@ -287,3 +322,37 @@ function GuestSkeleton() {
     </main>
   );
 }
+=======
+function Logo() {
+  return (
+    <div className={styles.status} role="status">
+      <span className={styles.srOnly}>Loading Teech</span>
+      <div className={styles.loader} aria-hidden="true">
+        <div className={styles.logo}>
+          <Image className={styles.logoImage} src="/logo/teech_logo.svg" alt="" width={1118} height={348} priority />
+        </div>
+        <svg className={styles.trail} viewBox="0 0 156 20" fill="none">
+          <path d="M3 10 Q 15.5 2 28 10 T 53 10 T 78 10 T 103 10 T 128 10 T 153 10" />
+        </svg>
+        <p className={styles.messages}>
+          {loadingMessages.map((message, index) => (
+            <span key={message} style={{ "--i": index } as CSSProperties}>{message}</span>
+          ))}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function activeFor(role: Role, page: string | undefined) {
+  if (page === "home" || !page) return "home";
+  if (page === "faculty") return "faculty";
+  if (page === "appointment-requests" || page === "requests" || page === "request-submitted") return "requests";
+  if (role === "student" && bookingPages.includes(page)) return "faculty";
+  if (page === "calendar" || page === "availability") return "calendar";
+  if (page === "notifications") return "notifications";
+  if (page === "points") return "points";
+  if (page === "profile") return "profile";
+  return "";
+}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4

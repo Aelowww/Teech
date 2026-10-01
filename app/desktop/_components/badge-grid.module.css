@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 /* ---------- Badges page (desktop) ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .page {
   display: grid;
   align-content: start;
@@ -104,7 +107,10 @@
   list-style: none;
 }
 
+<<<<<<< HEAD
 /* Tile: icon, name, description, action */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .tile {
   --badge-tint: #f4f4f8;
   --badge-ink: #b9b8cb;
@@ -136,6 +142,7 @@
   }
 }
 
+<<<<<<< HEAD
 .icon {
   width: 60px;
   height: 60px;
@@ -146,6 +153,8 @@
   border-radius: 50%;
 }
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .text {
   min-width: 0;
   display: grid;
@@ -168,10 +177,13 @@
   background: #fbfbfd;
 }
 
+<<<<<<< HEAD
 .locked .icon {
   opacity: 0.85;
 }
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .locked .text strong {
   color: #8a8aa2;
   font-weight: 500;
@@ -282,6 +294,7 @@
     transform: none;
   }
 }
+<<<<<<< HEAD
 
 /* ---------- Showcased badges (profile rosettes) ---------- */
 
@@ -399,3 +412,5 @@
     transform: none;
   }
 }
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4

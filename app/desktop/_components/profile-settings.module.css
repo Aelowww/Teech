@@ -1,5 +1,9 @@
 .page {
   width: min(880px, 100%);
+<<<<<<< HEAD
+=======
+  margin-inline: auto;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   padding: 36px 40px;
   display: flex;
   flex-direction: column;
@@ -260,8 +264,11 @@
   opacity: 0.6;
 }
 
+<<<<<<< HEAD
 /* Interactions (mirrors mobile) */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .submitButton,
 .editLink {
   transition:

@@ -3,10 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { Ban, Check, CheckCircle2, Inbox, UserRound, X, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
+=======
+import { Ban, Check, CheckCircle2, UserRound, X, XCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
+import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
+import { SuccessModal } from "@/app/desktop/_components/success-modal";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { studentAvatarUrls } from "@/lib/avatar";
@@ -26,6 +34,10 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
   const [tab, setTab] = useState<RequestTab>("all");
   const [pendingAction, setPendingAction] = useState<{ id: string; status: "confirmed" | "declined" } | null>(null);
+<<<<<<< HEAD
+=======
+  const [done, setDone] = useState<"confirmed" | "declined" | null>(null);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
   useEffect(() => {
     let active = true;
@@ -86,6 +98,10 @@ export default function Page() {
     if (updateError) return updateError.message;
     if (!updated?.length) return "This request is no longer pending. Refresh to see its latest status.";
     setRequests((current) => current.map((request) => request.id === id ? { ...request, status } : request));
+<<<<<<< HEAD
+=======
+    setDone(status);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   }
 
   return (
@@ -96,6 +112,7 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         {sortedRequests.length ? <div className={styles.requests}>{list.visible.map((request) => <article className={styles.requestCard} key={request.id}>
           <span className={styles.icon} aria-label="Student profile">{photoUrls.get(request.id) ? <Image className={styles.iconImage} src={photoUrls.get(request.id) as string} alt="" fill sizes="48px" unoptimized /> : <UserRound size={18} />}</span>
+<<<<<<< HEAD
           <Link className={styles.copy} href={`/faculty/requests/${request.id}`} aria-label={`View request from ${request.student_name || "student"}`}><strong>{request.student_name || "Student"}</strong><span>{formatDate(request.preferred_date)} at {formatTime(request.preferred_time)}</span><small>{request.student_number || ""}{request.student_number && request.reason ? " - " : ""}{request.reason}</small><em className={styles[`status${capitalize(request.status)}`]}>{request.status === "pending" && isPastDate(request.preferred_date) ? "expired" : request.status}</em></Link>
           {request.status === "pending" && <div className={styles.actions}>{!isPastDate(request.preferred_date) && <button type="button" onClick={() => setPendingAction({ id: request.id, status: "confirmed" })} disabled={updating === request.id} aria-label="Confirm request"><Check size={16} /></button>}<button type="button" onClick={() => setPendingAction({ id: request.id, status: "declined" })} disabled={updating === request.id} aria-label="Decline request"><X size={16} /></button></div>}
           {request.status !== "pending" && <span className={`${styles.statusIcon} ${styles[`statusIcon${capitalize(request.status)}`]}`} title={`Request ${request.status}`} aria-label={`Request ${request.status}`}>{request.status === "confirmed" ? <CheckCircle2 size={21} /> : request.status === "declined" ? <XCircle size={21} /> : <Ban size={20} />}</span>}
@@ -104,6 +121,17 @@ export default function Page() {
           : <EmptyState icon={<CheckCircle2 size={30} />} title={tab === "pending" ? "You're all caught up" : tab === "confirmed" ? "No confirmed consultations" : "Nothing closed yet"} description={tab === "pending" ? "No requests are waiting for your response." : tab === "confirmed" ? "Requests you confirm will show up here." : "Declined and cancelled requests will show up here."} />}
       </div>
       <ConfirmationModal open={Boolean(pendingAction)} title={pendingAction?.status === "confirmed" ? "Confirm request?" : "Decline request?"} description={pendingAction?.status === "confirmed" ? "The student will see that their consultation request has been confirmed." : "The student will see that their consultation request was declined."} confirmLabel={pendingAction?.status === "confirmed" ? "Confirm Request" : "Decline Request"} tone={pendingAction?.status === "declined" ? "danger" : "default"} onCancel={() => setPendingAction(null)} onConfirm={() => pendingAction ? updateStatus(pendingAction.id, pendingAction.status) : undefined} />
+=======
+          <Link className={styles.copy} href={`/faculty/requests/${request.id}`} aria-label={`View request from ${request.student_name || "student"}`}><strong>{request.student_name || "Student"}</strong><span>{formatDate(request.preferred_date)} at {formatTime(request.preferred_time)}</span><small>{request.student_number || ""}{request.student_number && request.reason ? " - " : ""}{request.reason}</small><em className={styles[`status${capitalize(request.status)}`]}>{request.status === "pending" && isPastDate(request.preferred_date) ? "Expired" : capitalize(request.status)}</em></Link>
+          {request.status === "pending" && <div className={styles.actions}>{!isPastDate(request.preferred_date) && <button type="button" onClick={() => setPendingAction({ id: request.id, status: "confirmed" })} disabled={updating === request.id} aria-label="Confirm request"><Check size={16} /></button>}<button type="button" onClick={() => setPendingAction({ id: request.id, status: "declined" })} disabled={updating === request.id} aria-label="Decline request"><X size={16} /></button></div>}
+          {request.status !== "pending" && <span className={`${styles.statusIcon} ${styles[`statusIcon${capitalize(request.status)}`]}`} title={`Request ${request.status}`} aria-label={`Request ${request.status}`}>{request.status === "confirmed" ? <CheckCircle2 size={21} /> : request.status === "declined" ? <XCircle size={21} /> : <Ban size={20} />}</span>}
+        </article>)}<ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} /></div> : requests.length === 0
+          ? <EmptyState scene="inbox" title="No requests yet" description="Students can request a consultation once you publish available dates. Keep your calendar up to date." action={{ label: "Manage availability", href: "/faculty/availability" }} />
+          : <EmptyState scene={tab === "pending" ? "done" : tab === "confirmed" ? "calendar" : "inbox"} action={{ label: "Manage availability", href: "/faculty/availability" }} title={tab === "pending" ? "You're all caught up" : tab === "confirmed" ? "No confirmed consultations" : "Nothing closed yet"} description={tab === "pending" ? "No requests are waiting for your response." : tab === "confirmed" ? "Requests you confirm will show up here." : "Declined and cancelled requests will show up here."} />}
+      </div>
+      <ConfirmationModal open={Boolean(pendingAction)} title={pendingAction?.status === "confirmed" ? "Confirm request?" : "Decline request?"} description={pendingAction?.status === "confirmed" ? "The student will see that their consultation request has been confirmed." : "The student will see that their consultation request was declined."} confirmLabel={pendingAction?.status === "confirmed" ? "Confirm Request" : "Decline Request"} tone={pendingAction?.status === "declined" ? "danger" : "default"} onCancel={() => setPendingAction(null)} onConfirm={() => pendingAction ? updateStatus(pendingAction.id, pendingAction.status) : undefined} />
+      <SuccessModal open={Boolean(done)} title={done === "confirmed" ? "Request confirmed" : "Request declined"} description={done === "confirmed" ? "The student has been notified that their consultation is confirmed." : "The student has been notified that their request was declined."} onDone={() => setDone(null)} />
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     </DesktopLayout>
   );
 }

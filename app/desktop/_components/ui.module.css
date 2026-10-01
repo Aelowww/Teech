@@ -424,8 +424,13 @@
 .list {
   min-width: 0;
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
+=======
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }
 
 .listCard {
@@ -601,6 +606,7 @@ a.listCard:hover {
 }
 
 .calendarGrid {
+<<<<<<< HEAD
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   justify-items: center;
@@ -617,13 +623,38 @@ a.listCard:hover {
 .day {
   width: 46px;
   height: 46px;
+=======
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.weekday {
+  padding-bottom: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.day {
+  width: 100%;
+  aspect-ratio: 1;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   padding: 0;
   display: grid;
   place-items: center;
   color: #4f5070;
   background: transparent;
   border: 0;
+<<<<<<< HEAD
   border-radius: 50%;
+=======
+  border-radius: 14px;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   font: inherit;
   font-size: 15px;
   cursor: pointer;
@@ -898,8 +929,11 @@ button.daySelected:hover {
   background: var(--accent);
 }
 
+<<<<<<< HEAD
 /* Interactions (mirrors mobile) */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .action,
 .emptyAction,
 .filters a,
@@ -1077,8 +1111,11 @@ button.day:active,
   }
 }
 
+<<<<<<< HEAD
 /* Ported from mobile: status pills, list chevron, small avatar, Up Next card */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .statusPill {
   margin-top: 6px;
   padding: 3px 10px;
@@ -1129,9 +1166,12 @@ button.day:active,
   margin-top: 12px;
 }
 
+<<<<<<< HEAD
 
 
 /* Up Next: fills its row — header, teacher + date tile, footer action. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .upNext {
   height: 100%;
   padding: 22px 24px;
@@ -1362,7 +1402,10 @@ button.day:active,
   }
 }
 
+<<<<<<< HEAD
 /* Clickable card: shared hover lift and press (tokens in globals.css). */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 a.listCard,
 .spotlight,
 .upNext {
@@ -1401,7 +1444,10 @@ a.listCard:active,
   }
 }
 
+<<<<<<< HEAD
 /* "Today" chip gets a softly pulsing live dot. */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .upNextTop .upNextToday {
   display: inline-flex;
   align-items: center;
@@ -1436,8 +1482,11 @@ a.listCard:active,
   }
 }
 
+<<<<<<< HEAD
 /* ---------- Time slots: chips instead of radio rows ---------- */
 
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .slotGroup {
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 10px;
@@ -1561,3 +1610,172 @@ a.listCard:active,
     transform: none;
   }
 }
+<<<<<<< HEAD
+=======
+
+/* Empty states: illustrated scene with tone, floating icon and sparkles */
+.toneAccent {
+  --empty-ink: var(--accent);
+  --empty-pale: #f1f0fc;
+  --empty-mid: #dcd9f7;
+  --empty-glow: rgba(119, 114, 201, 0.25);
+}
+
+.toneGreen {
+  --empty-ink: #2f9e6f;
+  --empty-pale: #e8f7ef;
+  --empty-mid: #c5ecd8;
+  --empty-glow: rgba(47, 158, 111, 0.22);
+}
+
+.toneOrange {
+  --empty-ink: #e8742f;
+  --empty-pale: #fff1e6;
+  --empty-mid: #ffd9bd;
+  --empty-glow: rgba(232, 116, 47, 0.22);
+}
+
+.tonePink {
+  --empty-ink: #d4566b;
+  --empty-pale: #fff0f2;
+  --empty-mid: #fbd3da;
+  --empty-glow: rgba(212, 86, 107, 0.2);
+}
+
+.emptyState {
+  color: var(--empty-ink, var(--accent));
+}
+
+.emptyArt {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  margin-bottom: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.emptyArt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--empty-pale);
+  border-radius: 42% 58% 55% 45% / 50% 42% 58% 50%;
+  animation: emptyMorph 8s ease-in-out infinite;
+}
+
+.emptyIcon {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  color: var(--empty-ink);
+  background: linear-gradient(160deg, #fff 0%, var(--empty-pale) 100%);
+  border: 1.5px solid var(--empty-mid);
+  border-radius: 50%;
+  box-shadow: 0 10px 22px var(--empty-glow);
+  animation: emptyBob 3.2s ease-in-out infinite;
+}
+
+.emptySparkle {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  color: var(--empty-ink);
+  animation: emptyTwinkle 2.4s ease-in-out infinite;
+}
+
+.emptyDot,
+.emptyDotSmall {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.emptyDot {
+  bottom: 8px;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  background: var(--empty-mid);
+  animation: emptyBob 3.2s ease-in-out 0.6s infinite;
+}
+
+.emptyDotSmall {
+  top: 10px;
+  left: 8px;
+  width: 6px;
+  height: 6px;
+  border: 1.5px solid var(--empty-ink);
+  opacity: 0.45;
+}
+
+.emptyCompact {
+  min-height: 0;
+  margin: 0;
+  padding: 24px 16px;
+  gap: 4px;
+}
+
+.emptyCompact .emptyArt {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 4px;
+}
+
+.emptyCompact .emptyIcon {
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 6px 14px var(--empty-glow);
+}
+
+.emptyCompact strong {
+  font-size: 15px;
+}
+
+.emptyCompact .emptyAction {
+  margin-top: 6px;
+}
+
+@keyframes emptyBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes emptyTwinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) rotate(15deg);
+  }
+}
+
+@keyframes emptyMorph {
+  0%,
+  100% {
+    border-radius: 42% 58% 55% 45% / 50% 42% 58% 50%;
+  }
+  50% {
+    border-radius: 58% 42% 45% 55% / 42% 58% 50% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emptyArt::before,
+  .emptyIcon,
+  .emptySparkle,
+  .emptyDot {
+    animation: none;
+  }
+}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4

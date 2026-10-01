@@ -4,16 +4,20 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UsersRound } from "lucide-react";
+<<<<<<< HEAD
 import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
+=======
+import { MobileLayout, BrandLogo, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
-import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
 import { facultyAvatarUrls, signedAvatarUrl } from "@/lib/avatar";
 import styles from "./page.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Profile = { id: string; full_name: string; avatar_path: string | null };
 type Appointment = { id: string; faculty_profile_id: string; faculty_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
@@ -103,12 +107,15 @@ export default function Page() {
       <div className={styles.page}>
         <header className={styles.header}>
           <BrandLogo />
-          <NotificationBell href="/student/notifications" />
+          <div className={styles.headerActions}><FactCard role="student" /><NotificationBell href="/student/notifications" /></div>
         </header>
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
           <div><small>{getGreeting()}</small><strong>{profile?.full_name || "Student"}</strong></div>
+<<<<<<< HEAD
           <FactCard role="student" />
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         </div>
 
         {nextAppointment ? (
@@ -137,7 +144,7 @@ export default function Page() {
           Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
           {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
         </h2>
-        {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+        {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="No requests are waiting on faculty." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
         <SupportChat audience="student" variant="floating" />
       </div>
     </MobileLayout>

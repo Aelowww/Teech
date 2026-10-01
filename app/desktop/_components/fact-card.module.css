@@ -1,10 +1,39 @@
+<<<<<<< HEAD
 .root {
+=======
+.card {
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   --tone: var(--accent);
   --tone-dark: var(--accent-dark);
   --tone-soft: var(--accent-pale);
   --tone-line: #dcd9f5;
 
+<<<<<<< HEAD
   flex: 0 0 auto;
+=======
+  position: relative;
+  padding: 22px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, var(--tone-soft) 0%, transparent 55%),
+    linear-gradient(120deg, #fff 45%, var(--tone-soft) 100%);
+  border: 1px solid var(--tone-line);
+  border-radius: var(--radius, 20px);
+  box-shadow: 0 10px 28px rgba(43, 41, 85, 0.06);
+}
+
+.card::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 5px;
+  content: "";
+  background: linear-gradient(180deg, var(--tone), var(--tone-dark));
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }
 
 .amber {
@@ -35,6 +64,7 @@
   --tone-line: #c9def6;
 }
 
+<<<<<<< HEAD
 .trigger {
   width: 34px;
   height: 34px;
@@ -86,11 +116,28 @@
 .icon {
   width: 20px;
   height: 20px;
+=======
+.watermark {
+  position: absolute;
+  right: -24px;
+  bottom: -36px;
+  color: var(--tone);
+  opacity: 0.09;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.icon {
+  position: relative;
+  width: 56px;
+  height: 56px;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   display: grid;
   flex: 0 0 auto;
   place-items: center;
   color: #fff;
   background: linear-gradient(135deg, var(--tone), var(--tone-dark));
+<<<<<<< HEAD
   border-radius: 6px;
 }
 
@@ -128,11 +175,87 @@
   font-size: 14px;
   line-height: 1.45;
   animation: fade 0.3s ease;
+=======
+  border-radius: 18px;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--tone-dark) 30%, transparent);
+}
+
+.body {
+  position: relative;
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pill {
+  padding: 5px 12px;
+  color: var(--tone-dark);
+  background: #fff;
+  border: 1px solid var(--tone-line);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.next {
+  min-height: 32px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tone-dark);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--tone-line);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.next:hover {
+  background: #fff;
+  border-color: var(--tone);
+}
+
+.next svg {
+  transition: transform 0.3s ease;
+}
+
+.next:hover svg {
+  transform: rotate(180deg);
+}
+
+.next:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--tone) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.text {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.55;
+  animation: fadeIn 0.35s ease;
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }
 
 .footer {
   display: flex;
   align-items: center;
+<<<<<<< HEAD
   gap: 8px;
 }
 
@@ -141,6 +264,18 @@
   height: 3px;
   overflow: hidden;
   background: var(--tone-soft);
+=======
+  gap: 12px;
+}
+
+.progress {
+  max-width: 180px;
+  height: 5px;
+  flex: 1;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--tone-line);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   border-radius: 999px;
 }
 
@@ -151,6 +286,7 @@
   border-radius: 999px;
 }
 
+<<<<<<< HEAD
 .card .footer small {
   display: inline;
   margin: 0;
@@ -162,6 +298,17 @@
   from {
     opacity: 0;
     transform: translateY(-4px);
+=======
+.footer small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   }
   to {
     opacity: 1;
@@ -169,6 +316,7 @@
   }
 }
 
+<<<<<<< HEAD
 @keyframes fade {
   from {
     opacity: 0;
@@ -247,4 +395,14 @@
   .trigger:active {
     transform: none;
   }
+=======
+@media (prefers-reduced-motion: reduce) {
+  .text {
+    animation: none;
+  }
+
+  .next svg {
+    transition: none;
+  }
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }

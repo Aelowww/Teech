@@ -6,9 +6,13 @@ import { useEffect, useState } from "react";
 import { EmptyState, MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
+<<<<<<< HEAD
 import { AppLoader } from "@/app/mobile/_components/app-loader";
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
 import styles from "./notifications-feed.module.css";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 
 type Notification = {
   id: string;
@@ -144,7 +148,12 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
           </div>
         ) : (
           <EmptyState
+<<<<<<< HEAD
             icon={<Bell size={26} />}
+=======
+            scene="bell"
+            action={{ label: "Go to dashboard", href: `/${role}/home` }}
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
             title="You're all caught up"
             description="Updates about your consultations and account will show up here."
           />

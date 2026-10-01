@@ -137,7 +137,10 @@
   }
 }
 
+<<<<<<< HEAD
 /* Desktop sizing */
+=======
+>>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .button {
   --button-height: 52px;
   --button-font-size: 16px;
