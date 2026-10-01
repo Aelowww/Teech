@@ -88,6 +88,5 @@ export default function Page() {
           <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit">Review Appointment</button>
         </div>
       </form>
-    </MobileLayout>
-  );
+    </MobileLayout>);
 }
