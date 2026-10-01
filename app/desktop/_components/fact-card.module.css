@@ -198,3 +198,53 @@
     transition: none;
   }
 }
+
+/* Compact: for narrow columns. Icon joins the header row; the tip gets the full width. */
+.compact {
+  padding: 18px 20px 16px;
+  display: block;
+}
+
+.compact .body {
+  gap: 10px;
+}
+
+.compact .header {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.compact .icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.compact .pill {
+  padding: 3px 9px;
+  font-size: 11px;
+}
+
+.compact .next {
+  min-height: 28px;
+  margin-left: auto;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.compact .text {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.compact .progress {
+  max-width: 120px;
+}
+
+.compact .watermark {
+  right: -18px;
+  bottom: -26px;
+  width: 110px;
+  height: 110px;
+}

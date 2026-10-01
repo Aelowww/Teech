@@ -1,18 +1,3 @@
-.content {
-  min-height: calc(100dvh - 160px);
-  display: grid;
-  place-items: center;
-}
-
-.status {
-  --accent: #7772c9;
-
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-}
-
 .srOnly {
   position: absolute;
   width: 1px;
@@ -22,142 +7,219 @@
   white-space: nowrap;
 }
 
+/* The skeleton reuses each page's real layout classes; it stays still and non-interactive. */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  user-select: none;
+}
+
+.skeleton :not(.bone) {
+  animation: none;
+}
+
+.block {
+  display: block;
+}
+
+/* ---------- Bone + shimmer ---------- */
+
+.bone {
+  display: block;
+  flex: 0 0 auto;
+  max-width: 100%;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #eeedf6 0%, #f7f6fb 40%, #eeedf6 80%);
+  background-size: 300% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -50% 0;
+  }
+}
+
+/* ---------- Arrangement helpers ---------- */
+
+.lines {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+}
+
+.centerLines {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.endLines {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.stack28 {
+  display: grid;
+  gap: 28px;
+}
+
+.end {
+  justify-self: end;
+  margin-left: auto;
+}
+
+.center {
+  justify-self: center;
+  margin-inline: auto;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.subtitle {
+  margin: 10px 0 0;
+}
+
+.groupLabel {
+  margin-bottom: 14px;
+}
+
+.static {
+  transform: none;
+}
+
+/* ---------- Specific shapes ---------- */
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+.tab {
+  padding: 12px 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.timeline {
+  display: flex;
+  justify-content: space-around;
+}
+
+.slotLabel {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reviewList {
+  margin-top: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.settingRows {
+  display: grid;
+  gap: 20px;
+  padding: 14px 0 8px;
+}
+
+.history {
+  display: grid;
+  gap: 18px;
+  padding-top: 8px;
+}
+
+.fields {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.infoIcon {
+  grid-row: 1 / 3;
+}
+
+.authFields {
+  display: grid;
+  gap: 20px;
+}
+
+/* ---------- Welcome / splash ---------- */
+
 .guest {
   position: relative;
   min-height: 100dvh;
-  display: grid;
-  place-items: center;
   overflow: hidden;
   background: #fff;
 }
 
-.logoImage {
-  display: block;
-  width: 170px;
-  height: auto;
-}
-
-.loader {
-  display: grid;
-  justify-items: center;
-  gap: 18px;
-  animation: loaderIn 420ms cubic-bezier(0.2, 0.8, 0.2, 1) 150ms both;
-}
-
-.logo {
-  position: relative;
-  isolation: isolate;
-  animation: float 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-.logo::before {
-  content: "";
-  position: absolute;
-  inset: -40px -50px;
-  z-index: -1;
-  background: radial-gradient(ellipse at center, rgba(220, 216, 251, 0.9) 0%, rgba(220, 216, 251, 0) 70%);
-  animation: glow 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-}
-
-.trail {
-  width: 150px;
-  height: auto;
-  overflow: visible;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
-}
-
-.trail path {
-  stroke: var(--accent);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-dasharray: 5 7;
-  animation: march 900ms linear infinite;
-}
-
-.messages {
-  position: relative;
-  width: 300px;
-  height: 18px;
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-  text-align: center;
-}
-
-.messages span {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  animation: messageCycle 10s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i) * 2.5s) infinite;
-}
-
-@keyframes loaderIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -5px;
-  }
-}
-
-@keyframes glow {
-  0%,
-  100% {
-    opacity: 0.6;
-    scale: 0.95;
-  }
-  50% {
-    opacity: 1;
-    scale: 1.05;
-  }
-}
-
-@keyframes march {
-  to {
-    stroke-dashoffset: -24;
-  }
-}
-
-@keyframes messageCycle {
-  0% {
-    opacity: 0;
-    translate: 0 6px;
-  }
-  5%,
-  25% {
-    opacity: 1;
-    translate: 0 0;
-  }
-  30%,
-  100% {
-    opacity: 0;
-    translate: 0 -6px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .loader,
-  .logo,
-  .logo::before,
-  .trail path,
-  .messages span {
+  .bone {
     animation: none;
+    background: #efeef6;
   }
+}
 
-  .messages span:first-child {
-    opacity: 1;
-  }
+
+.endRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.profilePhoto {
+  margin: -52px 0 14px;
+  box-shadow: 0 0 0 4px #fff;
+}
+
+.chipRow {
+  margin-top: 14px;
+}
+
+.presenceBone {
+  margin-left: 8px;
+  align-self: flex-end;
+}
+
+.noGrow {
+  flex: 0 0 auto;
 }

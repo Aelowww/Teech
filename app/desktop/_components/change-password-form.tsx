@@ -40,7 +40,14 @@ export function ChangePasswordForm({ role }: { role: Role }) {
     setSaving(true);
     const { error: updateError } = await createClient().auth.updateUser({ password });
     setSaving(false);
-    if (updateError) return updateError.message;
+    if (updateError) {
+      if (updateError.name === "AuthSessionMissingError" || updateError.code === "session_not_found") {
+        await createClient().auth.signOut({ scope: "local" });
+        router.replace(`/${role}/sign-in`);
+        return "Your session expired. Please sign in again.";
+      }
+      return updateError.message;
+    }
     setSaved(true);
   }
 

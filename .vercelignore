@@ -1,0 +1,4 @@
+.env*
+.mcp.json
+.vscode
+supabase/.temp

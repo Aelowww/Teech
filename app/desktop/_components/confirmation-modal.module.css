@@ -155,3 +155,71 @@
     animation: none;
   }
 }
+
+/* Success check: the badge pops in, the circle and tick draw on, then a ring ripples out once. */
+.success .icon {
+  position: relative;
+  animation: checkPop 460ms cubic-bezier(0.34, 1.56, 0.64, 1) 120ms both;
+}
+
+.success .icon svg circle {
+  stroke-dasharray: 64;
+  stroke-dashoffset: 64;
+  animation: checkDraw 480ms ease-out 260ms forwards;
+}
+
+.success .icon svg path {
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  animation: checkDraw 280ms ease-out 640ms forwards;
+}
+
+.success .icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid #26c07a;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  animation: checkRipple 700ms ease-out 860ms;
+}
+
+@keyframes checkPop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes checkDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes checkRipple {
+  from {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success .icon,
+  .success .icon::after {
+    animation: none;
+  }
+
+  .success .icon svg circle,
+  .success .icon svg path {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}

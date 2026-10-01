@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChevronDown, Info, ShieldAlert, ShieldCheck } from "lucide-react";
 import { DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { SuccessModal } from "@/app/desktop/_components/success-modal";
+import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { PasswordField } from "@/app/desktop/_components/password-field";
 import { SignOutEverywhere } from "@/app/desktop/_components/sign-out-everywhere";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -24,6 +25,7 @@ export default function Page() {
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSetUp, setIsSetUp] = useState(false);
 
@@ -60,7 +62,7 @@ export default function Page() {
     return list.map((item, itemIndex) => itemIndex === index ? value : item);
   }
 
-  async function saveQuestions(event: FormEvent<HTMLFormElement>) {
+  function saveQuestions(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     if (questions.some((question) => !question) || new Set(questions).size !== 3) {
@@ -72,6 +74,10 @@ export default function Page() {
       return;
     }
 
+    setConfirming(true);
+  }
+
+  async function persistQuestions() {
     setSaving(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -128,6 +134,7 @@ export default function Page() {
         <div className={pageStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save questions"}</button></div>
         <SignOutEverywhere />
       </form>
+      <ConfirmationModal open={confirming} title="Save security questions?" description={isSetUp ? "These will replace your current security questions and answers." : "You will use these answers to recover your account if you forget your password."} confirmLabel="Save Questions" icon={ShieldCheck} onCancel={() => setConfirming(false)} onConfirm={persistQuestions} />
       <SuccessModal open={saved} title="Security questions saved" description="You can now use them to recover your account if you forget your password." onDone={() => setSaved(false)} />
     </DesktopLayout>
   );

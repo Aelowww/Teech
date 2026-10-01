@@ -12,25 +12,11 @@
   gap: 14px;
   margin-top: 22px;
 }
-.checkbox {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  color: #64657f;
-  font-size: 10px;
-  line-height: 1.5;
-}
-.checkbox input {
-  accent-color: var(--accent);
-}
 .inlineLink {
   align-self: end;
   color: var(--accent-dark);
   font-size: 11px;
   text-decoration: underline;
-}
-.authActions {
-  margin-bottom: 8px;
 }
 .formNote {
   margin: 0 0 10px;

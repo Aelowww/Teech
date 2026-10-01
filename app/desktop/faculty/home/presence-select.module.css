@@ -90,7 +90,7 @@
 .menu {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  left: 0;
   z-index: 20;
   width: min(300px, calc(100vw - 32px));
   padding: 6px;

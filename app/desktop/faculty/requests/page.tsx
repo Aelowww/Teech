@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Ban, Check, CheckCircle2, UserRound, X, XCircle } from "lucide-react";
+import { Check, ChevronRight, UserRound, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
@@ -14,6 +14,7 @@ import { studentAvatarUrls } from "@/lib/avatar";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { ShowMoreButton, useShowMore } from "@/app/desktop/_components/show-more";
 import { matchesTab, RequestTabs, type RequestTab } from "@/app/desktop/_components/request-tabs";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import styles from "./page.module.css";
 
 type Appointment = { id: string; student_name: string | null; student_number: string | null; preferred_date: string; preferred_time: string; reason: string; status: "pending" | "confirmed" | "declined" | "cancelled" };
@@ -97,12 +98,53 @@ export default function Page() {
         <PageHeading title="Requests" subtitle="Approve or decline student consultation requests." />
         {requests.length > 0 && <RequestTabs statuses={requests.map((request) => request.status)} active={tab} onChange={setTab} />}
         {error && <Notice error>{error}</Notice>}
-        {sortedRequests.length ? <div className={styles.requests}>{list.visible.map((request) => <article className={styles.requestCard} key={request.id}>
-          <span className={styles.icon} aria-label="Student profile">{photoUrls.get(request.id) ? <Image className={styles.iconImage} src={photoUrls.get(request.id) as string} alt="" fill sizes="48px" unoptimized /> : <UserRound size={18} />}</span>
-          <Link className={styles.copy} href={`/faculty/requests/${request.id}`} aria-label={`View request from ${request.student_name || "student"}`}><strong>{request.student_name || "Student"}</strong><span>{formatDate(request.preferred_date)} at {formatTime(request.preferred_time)}</span><small>{request.student_number || ""}{request.student_number && request.reason ? " - " : ""}{request.reason}</small><em className={styles[`status${capitalize(request.status)}`]}>{request.status === "pending" && isPastDate(request.preferred_date) ? "Expired" : capitalize(request.status)}</em></Link>
-          {request.status === "pending" && <div className={styles.actions}>{!isPastDate(request.preferred_date) && <button type="button" onClick={() => setPendingAction({ id: request.id, status: "confirmed" })} disabled={updating === request.id} aria-label="Confirm request"><Check size={16} /></button>}<button type="button" onClick={() => setPendingAction({ id: request.id, status: "declined" })} disabled={updating === request.id} aria-label="Decline request"><X size={16} /></button></div>}
-          {request.status !== "pending" && <span className={`${styles.statusIcon} ${styles[`statusIcon${capitalize(request.status)}`]}`} title={`Request ${request.status}`} aria-label={`Request ${request.status}`}>{request.status === "confirmed" ? <CheckCircle2 size={21} /> : request.status === "declined" ? <XCircle size={21} /> : <Ban size={20} />}</span>}
-        </article>)}<ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} /></div> : requests.length === 0
+        {sortedRequests.length ? (
+          <div className={styles.table}>
+            <div className={styles.head} aria-hidden="true">
+              <span>Student</span>
+              <span>Reason</span>
+              <span>When</span>
+              <span>Status</span>
+              <span />
+            </div>
+            {list.visible.map((request) => {
+              const expired = request.status === "pending" && isPastDate(request.preferred_date);
+              const closed = request.status === "declined" || request.status === "cancelled";
+              const photo = photoUrls.get(request.id);
+              return (
+                <article className={`${styles.row} ${closed ? styles.rowClosed : ""}`} key={request.id}>
+                  <Link className={styles.rowLink} href={`/faculty/requests/${request.id}`} aria-label={`View request from ${request.student_name || "student"}`} />
+                  <span className={styles.student}>
+                    <span className={styles.avatar}>{photo ? <Image className={styles.avatarImage} src={photo} alt="" fill sizes="44px" unoptimized /> : <UserRound size={18} />}</span>
+                    <span className={styles.studentText}>
+                      <strong>{request.student_name || "Student"}</strong>
+                      {request.student_number && <small>ID {request.student_number}</small>}
+                    </span>
+                  </span>
+                  <span className={styles.reason} title={request.reason}>{request.reason || "No reason given"}</span>
+                  <span className={styles.when}>
+                    <strong>{formatDate(request.preferred_date)}</strong>
+                    <small>{formatTime(request.preferred_time)}</small>
+                  </span>
+                  <span className={styles.statusCell}>
+                    <em className={styles[`status${expired ? "Expired" : capitalize(request.status)}`]}>{expired ? "Expired" : capitalize(request.status)}</em>
+                  </span>
+                  <span className={styles.rowActions}>
+                    {request.status === "pending" ? (
+                      <>
+                        <button className={`${buttonStyles.button} ${buttonStyles.danger} ${styles.action}`} type="button" onClick={() => setPendingAction({ id: request.id, status: "declined" })} disabled={updating === request.id}><X size={14} strokeWidth={2.5} />Decline</button>
+                        {!expired && <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.action}`} type="button" onClick={() => setPendingAction({ id: request.id, status: "confirmed" })} disabled={updating === request.id}><Check size={14} strokeWidth={2.5} />Confirm</button>}
+                      </>
+                    ) : (
+                      <span className={styles.view}>View<ChevronRight size={15} /></span>
+                    )}
+                  </span>
+                </article>
+              );
+            })}
+            <ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} />
+          </div>
+        ) : requests.length === 0
           ? <EmptyState scene="inbox" title="No requests yet" description="Students can request a consultation once you publish available dates. Keep your calendar up to date." action={{ label: "Manage availability", href: "/faculty/availability" }} />
           : <EmptyState scene={tab === "pending" ? "done" : tab === "confirmed" ? "calendar" : "inbox"} action={{ label: "Manage availability", href: "/faculty/availability" }} title={tab === "pending" ? "You're all caught up" : tab === "confirmed" ? "No confirmed consultations" : "Nothing closed yet"} description={tab === "pending" ? "No requests are waiting for your response." : tab === "confirmed" ? "Requests you confirm will show up here." : "Declined and cancelled requests will show up here."} />}
       </div>
@@ -117,6 +159,10 @@ function isPastDate(value: string) {
   const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   return value < today;
 }
-function formatDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); }
+function formatDate(value: string) {
+  const date = new Date(`${value}T00:00:00`);
+  const sameYear = date.getFullYear() === new Date().getFullYear();
+  return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", ...(sameYear ? {} : { year: "numeric" }) });
+}
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
-function capitalize(value: string) { return `${value[0].toUpperCase()}${value.slice(1)}` as "Pending" | "Confirmed" | "Declined" | "Cancelled"; }
+function capitalize(value: string) { return `${value[0].toUpperCase()}${value.slice(1)}` as "Pending" | "Confirmed" | "Declined" | "Cancelled" | "Expired"; }
