@@ -4,6 +4,9 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { MobileLayout, PageHeading, FormField, Notice } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
+import { KeyRound } from "lucide-react";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
+import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
@@ -24,6 +27,7 @@ export default function Page() {
   const [confirmation, setConfirmation] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   async function loadQuestions(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,13 +42,17 @@ export default function Page() {
     setQuestions(data as string[]);
   }
 
-  async function resetPassword(event: FormEvent<HTMLFormElement>) {
+  function resetPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     const passwordError = getPasswordError(password);
     if (passwordError) { setError(passwordError); return; }
     if (password !== confirmation) { setError("Passwords do not match."); return; }
 
+    setConfirming(true);
+  }
+
+  async function confirmReset() {
     setSubmitting(true);
     const { data, error: resetError } = await createClient().rpc("reset_student_password", {
       requested_student_number: studentId,
@@ -53,8 +61,8 @@ export default function Page() {
       new_password: password,
     });
     setSubmitting(false);
-    if (resetError) { setError(resetError.message); return; }
-    if (data !== "ok") { setError(resetMessages[data as string] || "Your password could not be reset."); return; }
+    if (resetError) return resetError.message;
+    if (data !== "ok") return resetMessages[data as string] || "Your password could not be reset.";
     router.replace("/student/password-reset");
   }
 
@@ -65,6 +73,8 @@ export default function Page() {
     setConfirmation("");
     setError("");
   }
+
+  if (submitting && !questions.length) return <AppLoader />;
 
   if (!questions.length) {
     return (
@@ -107,6 +117,7 @@ export default function Page() {
         <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Resetting..." : "Reset Password"}</button>
         <button className={styles.textButton} type="button" onClick={startOver}>Use a different Student ID</button>
       </form>
+      <ConfirmationModal open={confirming} title="Reset your password?" description="Your new password will replace the old one, and you will be signed out on every device." confirmLabel="Reset Password" icon={KeyRound} onCancel={() => setConfirming(false)} onConfirm={confirmReset} />
     </MobileLayout>
   );
 }

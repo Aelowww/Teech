@@ -3,231 +3,284 @@
   flex-direction: column;
 }
 
-.requests {
-  display: grid;
-  gap: 12px;
-}
+/* ---------- Table-style list ---------- */
 
-.requestCard {
-  padding: 18px 20px;
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 18px;
+.table {
+  --columns: minmax(220px, 1.3fr) minmax(0, 1.6fr) 150px 120px 180px;
+  overflow: hidden;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 18px;
-  transition: border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
+  border-radius: var(--radius-lg, 20px);
 }
 
-.requestCard:hover {
-  border-color: var(--indigo-300);
-  box-shadow: 0 12px 28px rgba(63, 65, 112, 0.07);
+.head,
+.row {
+  display: grid;
+  grid-template-columns: var(--columns);
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
 }
 
-.icon {
-  width: 48px;
-  height: 48px;
+.head {
+  min-height: 46px;
+  color: var(--inactive, #8a8aa2);
+  background: #fafafd;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.row {
+  position: relative;
+  min-height: 76px;
+  transition: background-color var(--motion) var(--ease);
+}
+
+.row + .row {
+  border-top: 1px solid var(--line-soft, #efeef7);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: #fafafd;
+  }
+
+  .row:hover .studentText strong {
+    color: var(--accent-dark);
+  }
+
+  .row:hover .view {
+    color: var(--accent);
+  }
+
+  .row:hover .view svg {
+    transform: translateX(2px);
+  }
+}
+
+/* The whole row opens the request; buttons sit above the link. */
+.rowLink {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.rowLink:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: -3px;
+}
+
+.student,
+.rowActions {
+  position: relative;
+  z-index: 1;
+}
+
+.student {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: var(--accent);
-  background: var(--indigo-50);
-  position: relative;
   overflow: hidden;
+  color: var(--accent);
+  background: var(--accent-pale);
   border-radius: 50%;
 }
-.iconImage {
+
+.avatarImage {
   object-fit: cover;
 }
 
-.copy {
+.studentText {
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 120px;
-  grid-template-areas:
-    "name date status"
-    "reason date status";
-  align-items: center;
-  gap: 4px 20px;
+  gap: 2px;
 }
 
-.copy strong {
-  grid-area: name;
+.studentText strong {
   overflow: hidden;
   color: var(--ink);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color var(--motion) var(--ease);
 }
 
-.copy small {
-  grid-area: reason;
-  overflow: hidden;
+.studentText small {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.reason {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-soft, #5d5f80);
+  font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.copy span {
-  grid-area: date;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 500;
+.when {
+  display: grid;
+  gap: 2px;
 }
 
-.copy em {
-  grid-area: status;
-  justify-self: start;
-  padding: 5px 12px;
+.when strong {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.when small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.statusCell em {
+  padding: 4px 11px;
   border-radius: 999px;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
-  text-transform: capitalize;
 }
 
-.copy:hover strong {
-  color: var(--accent);
-}
-
-.copy .statusPending {
-  color: #a16d1d;
+.statusPending {
+  color: #a8671a;
   background: #fff4e3;
 }
 
-.copy .statusConfirmed {
-  color: #288453;
-  background: #e8f8ef;
+.statusConfirmed {
+  color: #15834a;
+  background: #e8f7ee;
 }
 
-.copy .statusDeclined,
-.copy .statusCancelled {
+.statusDeclined,
+.statusCancelled {
   color: #b13a55;
-  background: #fff0f3;
+  background: #fdeef1;
 }
 
-.actions {
+.statusExpired {
+  color: #8a8aa2;
+  background: #f1f1f7;
+}
+
+.rowActions {
   display: flex;
+  justify-content: flex-end;
   gap: 8px;
 }
 
-.actions button {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  color: #25804e;
-  background: #effdf5;
-  border: 1px solid #c6edda;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background var(--motion) var(--ease), color var(--motion) var(--ease);
+.action {
+  --button-height: 30px;
+  --button-min-width: 0;
+  --button-padding-x: 12px;
+  --button-font-size: 12px;
+  gap: 4px;
+  box-shadow: none;
 }
 
-.actions button:hover {
-  color: #fff;
-  background: #25804e;
+.action svg {
+  width: 13px;
+  height: 13px;
 }
 
-.actions button:last-child {
-  color: #b13a55;
-  background: #fff2f5;
-  border-color: #f1cbd6;
+.view {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  transition: color var(--motion) var(--ease);
 }
 
-.actions button:last-child:hover {
-  color: #fff;
-  background: #b13a55;
+.view svg {
+  transition: transform var(--motion) var(--ease);
 }
 
-.actions button:disabled {
-  opacity: 0.55;
-  cursor: wait;
+/* Closed requests stay readable but step back. */
+.rowClosed .student,
+.rowClosed .reason,
+.rowClosed .when {
+  opacity: 0.6;
 }
 
-.statusIcon {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border: 1px solid;
-  border-radius: 50%;
+.table > :last-child:not(.row) {
+  margin: 12px 24px 16px;
 }
 
-.statusIconConfirmed {
-  color: #25804e;
-  background: #effdf5;
-  border-color: #c6edda;
-}
-
-.statusIconDeclined {
-  color: #b13a55;
-  background: #fff2f5;
-  border-color: #f1cbd6;
-}
-
-.statusIconCancelled {
-  color: #77788f;
-  background: #f5f5f9;
-  border-color: #dedee8;
+@media (max-width: 1280px) {
+  .table {
+    --columns: minmax(200px, 1.3fr) minmax(0, 1fr) 130px 110px 170px;
+  }
 }
 
 @media (max-width: 1100px) {
-  .copy {
+  .head {
+    display: none;
+  }
+
+  .row {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "name status"
-      "date status"
-      "reason status";
+      "student actions"
+      "reason status"
+      "when when";
+    gap: 8px 16px;
+    padding: 16px 20px;
   }
-}
 
-.requestCard {
-  transition:
-    transform 220ms var(--button-ease),
-    border-color 220ms var(--button-ease),
-    box-shadow 220ms var(--button-ease);
-}
-
-@media (hover: hover) {
-  .requestCard:hover {
-    border-color: #d9d6f2;
-    box-shadow: 0 6px 16px rgba(81, 76, 154, 0.07);
-    transform: none;
+  .student {
+    grid-area: student;
   }
-}
 
-.actions button {
-  transition:
-    transform 220ms var(--button-ease),
-    color 220ms var(--button-ease),
-    background-color 220ms var(--button-ease),
-    border-color 220ms var(--button-ease),
-    box-shadow 220ms var(--button-ease);
-}
-
-@media (hover: hover) {
-  .actions button:hover:not(:disabled) {
-    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.1);
-    transform: translateY(-2px);
+  .reason {
+    grid-area: reason;
   }
-}
 
-.actions button:active:not(:disabled) {
-  transform: scale(0.98);
-  transition-duration: 100ms;
+  .when {
+    grid-area: when;
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: 8px;
+  }
+
+  .statusCell {
+    grid-area: status;
+    justify-self: end;
+  }
+
+  .rowActions {
+    grid-area: actions;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .requestCard,
-  .actions button {
+  .row,
+  .studentText strong,
+  .view,
+  .view svg {
     transition: none;
   }
 
-  .actions button:hover:not(:disabled),
-  .actions button:active:not(:disabled) {
+  .row:hover .view svg {
     transform: none;
   }
 }

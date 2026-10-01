@@ -71,14 +71,6 @@
   font-weight: 500 !important;
 }
 
-.hint {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-  text-align: center;
-}
-
 @media (max-width: 1100px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);

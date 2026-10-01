@@ -296,8 +296,8 @@
 
 .statusMark.declined svg path,
 .statusMark.cancelled svg path {
-  stroke-dasharray: 9;
-  stroke-dashoffset: 9;
+  stroke-dasharray: 22;
+  stroke-dashoffset: 22;
   animation: draw 220ms ease-out 620ms forwards;
 }
 

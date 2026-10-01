@@ -12,7 +12,7 @@ export default async function Page() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, avatar_path")
+    .select("full_name, role, avatar_path, student_number, course_year")
     .eq("auth_user_id", user.id)
     .maybeSingle();
   if (!profile || profile.role !== "student") redirect("/student/sign-in");
@@ -27,9 +27,16 @@ export default async function Page() {
     .sort((first, second) => (first.badges?.sort_order || 0) - (second.badges?.sort_order || 0))
     .map((row) => ({ id: row.badge_id, name: row.badges?.name || "" }));
 
+  const details = [
+    { label: "Full name", value: profile.full_name },
+    { label: "Student ID", value: profile.student_number },
+    { label: "Course and year", value: profile.course_year },
+  ];
+  const chips = [profile.course_year, profile.student_number ? `ID ${profile.student_number}` : null].filter((chip): chip is string => Boolean(chip));
+
   return (
     <DesktopLayout className={styles.screen} role="student" activeNav="profile">
-      <ProfileOverview role="student" name={profile.full_name} avatarPath={profile.avatar_path} photoUrl={photoUrl} badges={showcasedBadges} />
+      <ProfileOverview role="student" name={profile.full_name} avatarPath={profile.avatar_path} photoUrl={photoUrl} badges={showcasedBadges} details={details} chips={chips} />
     </DesktopLayout>
   );
 }

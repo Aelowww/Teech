@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Plus, UsersRound } from "lucide-react";
+import { CheckCircle2, ChevronRight, Plus, UsersRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
-import { CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
+import { RecoveryReminder } from "@/app/desktop/_components/recovery-reminder";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { CountUp } from "@/app/desktop/_components/count-up";
 import { createClient } from "@/lib/supabase/client";
@@ -130,7 +131,8 @@ export default function Page() {
 
         <div className={styles.layout}>
           <div className={styles.main}>
-            <FactCard role="student" />
+            <RecoveryReminder />
+            <FactCard role="student" compact />
 
             {nextAppointment ? (
               <UpNextCard
@@ -158,7 +160,9 @@ export default function Page() {
                 Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
                 {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
               </h2>
-              {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="No requests are waiting on faculty." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
+              {pendingItems.length > 0
+                ? <CardList items={pendingItems} />
+                : <p className={styles.caughtUp}><CheckCircle2 size={18} aria-hidden="true" />No requests are waiting on faculty.</p>}
             </section>
           </div>
 

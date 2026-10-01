@@ -26,7 +26,7 @@ type Appointment = {
 
 export default function Page() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<AppLoader />}>
       <RequestsPage />
     </Suspense>
   );

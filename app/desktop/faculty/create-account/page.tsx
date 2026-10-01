@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { Notice, FormField } from "@/app/desktop/_components/ui";
 import { PasswordField } from "@/app/desktop/_components/password-field";
 import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
+import { UserPlus } from "lucide-react";
+import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/desktop/_components/support-chat";
@@ -30,12 +32,13 @@ export default function Page() {
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   function updateField(field: keyof SignUpForm) {
     return (event: ChangeEvent<HTMLInputElement>) => setForm((current) => ({ ...current, [field]: event.target.value }));
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     const passwordError = getPasswordError(form.password);
@@ -52,6 +55,10 @@ export default function Page() {
       return;
     }
 
+    setConfirming(true);
+  }
+
+  async function createAccount() {
     setSubmitting(true);
     const { error: signUpError } = await createClient().auth.signUp({
       email: form.email,
@@ -66,11 +73,9 @@ export default function Page() {
         },
       },
     });
-    setSubmitting(false);
-
     if (signUpError) {
-      setError(signUpError.message);
-      return;
+      setSubmitting(false);
+      return signUpError.code === "user_already_exists" ? "This email already has an account. Sign in instead, or use Forgot Password." : signUpError.message;
     }
     await createClient().auth.signOut();
     router.push("/faculty/account-created");
@@ -94,6 +99,7 @@ export default function Page() {
       {error && <Notice error>{error}</Notice>}
       <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} />
       <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign in</Link></p>
+      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with ${form.email}. Make sure these details are correct.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </AuthFrame>
   );
 }

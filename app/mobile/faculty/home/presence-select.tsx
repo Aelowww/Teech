@@ -6,10 +6,10 @@ import styles from "./presence-select.module.css";
 
 export type PresenceStatus = "available" | "in_meeting" | "busy";
 
-const options: { value: PresenceStatus; label: string; description: string }[] = [
-  { value: "available", label: "Available", description: "Listed as available to students" },
-  { value: "in_meeting", label: "In a meeting", description: "Hidden from Available, next hour blocked" },
-  { value: "busy", label: "Busy (in a class)", description: "Hidden from Available, next hour blocked" },
+const options: { value: PresenceStatus; label: string }[] = [
+  { value: "available", label: "Available" },
+  { value: "in_meeting", label: "In a meeting" },
+  { value: "busy", label: "Busy (in a class)" },
 ];
 
 export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onChange: (next: PresenceStatus) => void }) {
@@ -69,13 +69,11 @@ export function PresenceSelect({ value, onChange }: { value: PresenceStatus; onC
               onClick={() => choose(option.value)}
             >
               <span className={`${styles.dot} ${styles[option.value]}`} />
-              <span className={styles.optionText}>
-                <strong>{option.label}</strong>
-                <small>{option.description}</small>
-              </span>
+              <span className={styles.optionText}>{option.label}</span>
               {option.value === value && <Check size={16} strokeWidth={2.5} className={styles.check} />}
             </button>
           ))}
+          <p className={styles.menuNote}>Meeting or Busy hides you from Available and blocks the next hour.</p>
         </div>
       )}
     </div>

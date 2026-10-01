@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays } from "lucide-react";
-import { ActionButtons, DesktopLayout, MonthCalendar, Notice, PageHeading } from "@/app/desktop/_components/ui";
+import { CalendarDays, ChevronRight } from "lucide-react";
+import { DesktopLayout, MonthCalendar, Notice, PageHeading } from "@/app/desktop/_components/ui";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import styles from "./page.module.css";
@@ -45,17 +47,17 @@ export default function Page() {
     <DesktopLayout className={styles.screen} role="faculty" activeNav="calendar">
       <PageHeading title="Calendar" subtitle="Your published consultation dates." />
       <div className={styles.page}>
-        <MonthCalendar month={month} selectedDates={availability.map((slot) => slot.available_date)} legend="Available to students" onMonthChange={setMonth} />
+        <MonthCalendar soft month={month} markedDates={availability.map((slot) => slot.available_date)} legend="Published" onMonthChange={setMonth} />
         <aside className={styles.side}>
           {error && <Notice error>{error}</Notice>}
           <section className={styles.summary}>
             <span className={styles.summaryIcon}><CalendarDays size={22} /></span>
-            <div>
-              <strong>{upcomingCount} upcoming {upcomingCount === 1 ? "date" : "dates"} published</strong>
-              <p>{upcomingCount ? "Students can request the marked dates." : "Publish dates so students can request a consultation."}</p>
+            <div className={styles.summaryText}>
+              <strong>{upcomingCount} upcoming {upcomingCount === 1 ? "date" : "dates"}</strong>
+              <p>{upcomingCount ? "Students can request these dates." : "Publish dates so students can book you."}</p>
             </div>
           </section>
-          <ActionButtons actions={[{ label: "Manage Availability", href: "/faculty/availability" }]} primaryLabel="Manage Availability" />
+          <Link className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block}`} href="/faculty/availability">Manage availability<ChevronRight size={15} /></Link>
         </aside>
       </div>
     </DesktopLayout>

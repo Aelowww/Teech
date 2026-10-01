@@ -420,34 +420,6 @@ a.listCard:active {
   background: #fdeef1;
 }
 
-.filters {
-  margin: 13px 0;
-  display: flex;
-  gap: 7px;
-}
-
-.filters a {
-  min-height: 29px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  color: #85859b;
-  background: #f7f7fb;
-  border: 1px solid #e7e6f1;
-  border-radius: 99px;
-  font-size: 9px;
-}
-
-.filters .filterSelected {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.searchWrap {
-  margin: 12px 0 0;
-}
-
 .calendar {
   margin-top: 24px;
   padding: 15px 12px 12px;
@@ -580,12 +552,6 @@ a.listCard:active {
   font-size: 11px;
   font-weight: 700;
 }
-.fieldHeading {
-  margin: 0;
-  color: #77788f;
-  font-size: 11px;
-  font-weight: 700;
-}
 .timeToggle {
   width: 100%;
   min-width: 0;
@@ -638,40 +604,6 @@ a.listCard:active {
 }
 .avatarImage {
   object-fit: cover;
-}
-.dialogCard {
-  margin: auto 0;
-  padding: 22px 17px;
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  background: #fbfaff;
-  border: 1px solid #e8e6f5;
-  border-radius: 18px;
-}
-.dialogIcon {
-  width: 43px;
-  height: 43px;
-  margin-bottom: 12px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: #eeedfc;
-  border-radius: 50%;
-}
-.dialogDanger {
-  color: #db4456;
-  background: #fff0f1;
-}
-.dialogCard strong {
-  font-size: 15px;
-}
-.dialogCard p {
-  max-width: 240px;
-  margin: 7px 0 0;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.5;
 }
 .bottomNav {
   position: absolute;
@@ -1264,5 +1196,178 @@ a.listCard:active,
   .emptySparkle,
   .emptyDot {
     animation: none;
+  }
+}
+
+/* Muted spotlight: the card stays still; only its pill button reacts. */
+.spotlight.spotlightMuted,
+.spotlight.spotlightMuted:hover,
+.spotlight.spotlightMuted:active {
+  border-color: #ebe9f5;
+  box-shadow: 0 1px 2px rgba(40, 41, 74, 0.04);
+  transform: none;
+}
+
+.spotlightMuted .spotlightAction {
+  transition:
+    color var(--motion) var(--ease),
+    background-color var(--motion) var(--ease),
+    transform var(--motion) var(--ease);
+}
+
+.spotlightMuted .spotlightAction svg {
+  transition: transform var(--motion) var(--ease);
+}
+
+@media (hover: hover) {
+  .spotlightMuted .spotlightAction:hover {
+    color: #fff;
+    background: var(--accent);
+  }
+
+  .spotlightMuted .spotlightAction:hover svg {
+    transform: translateX(2px);
+  }
+}
+
+.spotlightMuted .spotlightAction:active {
+  color: #fff;
+  background: var(--accent-dark);
+  transform: scale(0.96);
+  transition-duration: var(--motion-fast);
+}
+
+.spotlightMuted:focus-visible .spotlightAction {
+  color: #fff;
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlightMuted .spotlightAction,
+  .spotlightMuted .spotlightAction svg {
+    transition: none;
+  }
+
+  .spotlightMuted .spotlightAction:hover svg,
+  .spotlightMuted .spotlightAction:active {
+    transform: none;
+  }
+}
+
+/* ---------- Soft calendar (opt-in) ---------- */
+/* Published = soft circle with a dot · Selected = solid · Today = ring · Past = faded */
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendarSoft {
+  padding: 16px 14px 14px;
+  background: #fff;
+}
+
+.calendarSoft .calendarHeader strong {
+  font-size: 15px;
+}
+
+.calendarSoft .legend {
+  gap: 18px;
+  font-size: 11px;
+}
+
+.calendarSoft .legend i {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-pale);
+  box-shadow: inset 0 0 0 1.5px #c9c6ef;
+}
+
+.calendarSoft .legendSelected i {
+  background: var(--accent);
+  box-shadow: none;
+}
+
+.calendarSoft .calendarGrid {
+  gap: 4px 0;
+}
+
+.calendarSoft .day {
+  position: relative;
+  width: 38px;
+  max-width: 100%;
+  height: 38px;
+  aspect-ratio: auto;
+  justify-self: center;
+  color: #4f5070;
+  border-radius: 50%;
+  font-size: 14px;
+  box-shadow: none;
+  transition:
+    color var(--motion) var(--ease),
+    background-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease),
+    transform var(--motion) var(--ease);
+}
+
+.calendarSoft .dayMarked {
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.calendarSoft .dayMarked::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.calendarSoft .daySelected {
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 4px 10px rgba(81, 76, 154, 0.25);
+  font-weight: 700;
+}
+
+.calendarSoft .dayToday:not(.daySelected) {
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+  font-weight: 700;
+}
+
+.calendarSoft .dayToday:not(.daySelected):not(.dayMarked) {
+  color: var(--accent-dark);
+}
+
+.calendarSoft .dayPast {
+  opacity: 0.4;
+}
+
+@media (hover: hover) {
+  .calendarSoft button.day:not(.daySelected):hover {
+    color: var(--accent-dark);
+    background: #e9e7fa;
+  }
+}
+
+.calendarSoft button.day:active {
+  transform: scale(0.92);
+  transition-duration: var(--motion-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendarSoft .day {
+    transition: none;
+  }
+
+  .calendarSoft button.day:active {
+    transform: none;
   }
 }

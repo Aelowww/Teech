@@ -70,13 +70,17 @@ export async function POST(request: NextRequest) {
       }),
       signal: AbortSignal.timeout(15000),
     });
-    if (!response.ok) return NextResponse.json({ error: "Support AI is unavailable right now." }, { status: 502 });
+    if (!response.ok) {
+      console.error("Gemini request failed", response.status, (await response.text()).slice(0, 500));
+      return NextResponse.json({ error: "Support AI is unavailable right now." }, { status: 502 });
+    }
 
     const data = await response.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
     const reply = data.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("").trim();
     if (!reply) return NextResponse.json({ error: "Support AI did not return an answer." }, { status: 502 });
     return NextResponse.json({ reply });
-  } catch {
+  } catch (error) {
+    console.error("Gemini request error", error);
     return NextResponse.json({ error: "Support AI is unavailable right now." }, { status: 504 });
   }
 }

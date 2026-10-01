@@ -310,26 +310,6 @@ function statusToneClass(status: string) {
   return styles.statusBad;
 }
 
-export function FilterTabs({
-  filters,
-  selected,
-  hrefs,
-}: {
-  filters: string[];
-  selected: number;
-  hrefs?: string[];
-}) {
-  return (
-    <div className={styles.filters}>
-      {filters.map((filter, index) => (
-        <Link key={filter} href={hrefs?.[index] || "#"} className={index === selected ? styles.filterSelected : ""}>
-          {filter}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
 export function MonthCalendar({
   month = new Date(),
   selectedDate,
@@ -337,7 +317,9 @@ export function MonthCalendar({
   markedDates = [],
   availableDates,
   legend = "Select a date",
+  selectedLegend,
   disablePastDates = true,
+  soft = false,
   onSelectDate,
   onMonthChange,
 }: {
@@ -347,7 +329,9 @@ export function MonthCalendar({
   markedDates?: string[];
   availableDates?: string[];
   legend?: string;
+  selectedLegend?: string;
   disablePastDates?: boolean;
+  soft?: boolean;
   onSelectDate?: (date: string) => void;
   onMonthChange?: (month: Date) => void;
 }) {
@@ -369,7 +353,7 @@ export function MonthCalendar({
   }
 
   return (
-    <div className={styles.calendar}>
+    <div className={`${styles.calendar} ${soft ? styles.calendarSoft : ""}`}>
       <div className={styles.calendarHeader}>
         {onMonthChange
           ? <button type="button" aria-label="Previous month" onClick={() => changeMonth(-1)}><ChevronLeft size={14} /></button>
@@ -379,7 +363,7 @@ export function MonthCalendar({
           ? <button type="button" aria-label="Next month" onClick={() => changeMonth(1)}><ChevronRight size={14} /></button>
           : <span className={styles.calendarControl}><ChevronRight size={14} /></span>}
       </div>
-      <div className={styles.legend}><i /> {legend}</div>
+      <div className={styles.legend}><span><i /> {legend}</span>{selectedLegend && <span className={styles.legendSelected}><i /> {selectedLegend}</span>}</div>
       <div className={styles.calendarGrid}>
         {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => <span className={styles.weekday} key={`${day}${index}`}>{day}</span>)}
         {days.map((day, index) => {
@@ -388,7 +372,7 @@ export function MonthCalendar({
           const marked = markedDates.includes(date);
           const isAvailable = availableDates?.includes(date);
           const isPastDate = disablePastDates && date < today;
-          const className = `${styles.day} ${selected ? styles.daySelected : ""} ${marked && !selected ? styles.dayMarked : ""} ${isAvailable && !selected ? styles.dayAvailable : ""}`;
+          const className = `${styles.day} ${date === today ? styles.dayToday : ""} ${isPastDate ? styles.dayPast : ""} ${selected ? styles.daySelected : ""} ${marked && !selected ? styles.dayMarked : ""} ${isAvailable && !selected ? styles.dayAvailable : ""}`;
           return day > 0 && day <= daysInMonth
             ? onSelectDate && !isPastDate && (!availableDates || availableDates.includes(date))
               ? <button type="button" key={index} className={className} onClick={() => onSelectDate(date)}>{day}</button>
@@ -439,35 +423,6 @@ export function ProfilePhoto({ inline = false, small = false, src }: { inline?: 
   return (
     <div className={`${styles.avatar} ${inline ? styles.avatarInline : ""} ${small ? styles.avatarSmall : ""}`}>
       {src ? <Image className={styles.avatarImage} src={src} alt="Profile photo" fill sizes="120px" unoptimized /> : <UserRound size={small ? 22 : 31} />}
-    </div>
-  );
-}
-
-export function ConfirmationDialog({
-  title,
-  children,
-  danger = false,
-}: {
-  title: string;
-  children: React.ReactNode;
-  danger?: boolean;
-}) {
-  return (
-    <div className={styles.dialogCard}>
-      <div className={`${styles.dialogIcon} ${danger ? styles.dialogDanger : ""}`}>
-        {danger ? <X size={19} /> : <Check size={19} />}
-      </div>
-      <strong>{title}</strong>
-      <p>{children}</p>
-    </div>
-  );
-}
-
-export function SearchField({ placeholder }: { placeholder: string }) {
-  return (
-    <div className={`${styles.inputWrap} ${styles.searchWrap}`}>
-      <Search size={15} />
-      <input placeholder={placeholder} aria-label={placeholder} />
     </div>
   );
 }

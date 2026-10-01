@@ -103,7 +103,7 @@ export default function Page() {
     <DesktopLayout className={styles.screen} backTo="/faculty/calendar" role="faculty" activeNav="calendar">
       <PageHeading title="Availability" subtitle="Choose specific dates and times students can request." />
       <div className={styles.page}>
-        <MonthCalendar month={month} selectedDates={selectedDates} markedDates={availability.map((slot) => slot.available_date)} legend="Outlined dates are available to students" onSelectDate={selectDate} onMonthChange={setMonth} />
+        <MonthCalendar month={month} selectedDates={selectedDates} markedDates={availability.map((slot) => slot.available_date)} soft legend="Published" selectedLegend="Selected" onSelectDate={selectDate} onMonthChange={setMonth} />
         <aside className={styles.side}>
           <section className={styles.editor} aria-label="Selected date availability">
             <p className={styles.selectedDate}>{selectedDates.length ? `${selectedDates.length} ${selectedDates.length === 1 ? "date" : "dates"} selected` : "Select one or more dates from the calendar"}</p>

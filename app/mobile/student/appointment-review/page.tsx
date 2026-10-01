@@ -14,6 +14,7 @@ import {
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { isBlockedWhileBusy } from "@/lib/time-slots";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -29,9 +30,13 @@ export default function Page() {
   const [submitting, setSubmitting] = useState(false);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadDraft = window.setTimeout(() => setDraft(getAppointmentDraft()), 0);
+    const loadDraft = window.setTimeout(() => {
+      setDraft(getAppointmentDraft());
+      setIsLoading(false);
+    }, 0);
     return () => window.clearTimeout(loadDraft);
   }, []);
 
@@ -118,12 +123,13 @@ export default function Page() {
       })
       .select("id, appointment_code")
       .single();
-    setSubmitting(false);
     if (requestError?.code === "23505") {
+      setSubmitting(false);
       handleUnavailableSlot("time");
       return;
     }
     if (requestError || !submittedRequest) {
+      setSubmitting(false);
       return requestError?.message || "Your request could not be saved. Please try again.";
     }
 
@@ -141,6 +147,8 @@ export default function Page() {
     router.replace(unavailable === "date" ? `/student/calendar?${facultyParams}&unavailable=true` : "/student/select-date-time?unavailable=true");
   }
 
+  if (isLoading) return <AppLoader />;
+
   return (
     <MobileLayout className={styles.screen} backTo="/student/appointment-info">
       <div className={styles.page}>
@@ -151,7 +159,7 @@ export default function Page() {
         {error && <Notice error>{error}</Notice>}
         <div className={styles.actions}>
           <Link className={`${buttonStyles.button} ${buttonStyles.secondary}`} href="/student/appointment-info">Edit</Link>
-          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : "Submit Request"}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : checkingAvailability ? "Checking..." : "Submit Request"}</button>
         </div>
       </div>
       <ConfirmationModal open={confirming} title="Submit consultation request?" description="Your request will be sent to the selected faculty member for review." confirmLabel="Submit Request" onCancel={() => setConfirming(false)} onConfirm={handleSubmit} />

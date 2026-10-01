@@ -39,6 +39,7 @@ function ProfileMenu({ role }: { role: Role }) {
       <Group label="Security">
         <SettingLink href={`${base}/password`} icon={KeyRound} label="Change Password" />
         <SettingLink href={`${base}/security`} icon={ShieldQuestion} label="Account Recovery" />
+        <DeleteAccountButton role={role} className={`${styles.row} ${styles.danger}`} />
       </Group>
 
       <Group label="Help">
@@ -49,7 +50,6 @@ function ProfileMenu({ role }: { role: Role }) {
 
       <Group>
         <SignOutButton redirectTo="/welcome" variant="row" className={styles.row} />
-        <DeleteAccountButton role={role} className={`${styles.row} ${styles.danger}`} />
       </Group>
     </>
   );

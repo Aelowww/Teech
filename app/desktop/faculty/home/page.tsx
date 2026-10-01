@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
-import { DesktopLayout, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+import { CalendarCheck2, CalendarDays, CheckCircle2, ChevronRight, Inbox } from "lucide-react";
+import { DesktopLayout, CardList, ProfilePhoto, UpNextCard } from "@/app/desktop/_components/ui";
+import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -106,50 +107,72 @@ export default function Page() {
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
           <div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong></div>
-        </div>
-        <div className={styles.presence}>
-          <PresenceSelect value={presence} onChange={(next) => void changePresence(next)} />
-          {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
+          <div className={styles.presence}>
+            <PresenceSelect value={presence} onChange={(next) => void changePresence(next)} />
+            {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
+          </div>
         </div>
       </header>
 
       <div className={styles.layout}>
         <div className={styles.main}>
-        <FactCard role="faculty" />
+          <FactCard role="faculty" compact />
+          {nextConsultation ? (
+            <UpNextCard
+              eyebrow="Up next"
+              title={nextConsultation.student_name || "Student consultation"}
+              date={nextConsultation.preferred_date}
+              meta={[formatTime(nextConsultation.preferred_time), nextConsultation.meeting_location || "Location to be confirmed"]}
+              href={`/faculty/requests/${nextConsultation.id}`}
+              actionLabel="View details"
+              avatar={studentPhotos.get(nextConsultation.id) ?? null}
+            />
+          ) : (
+            <section className={styles.schedule} aria-label="Your schedule">
+              <div className={styles.scheduleHead}>
+                <div className={styles.scheduleText}>
+                  <small>Your schedule</small>
+                  <strong>No consultations booked yet</strong>
+                  <p>{pending.length
+                    ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for your response.`
+                    : openDates.length ? "Students can book any of your open dates." : "Publish dates so students can book you."}</p>
+                </div>
+                <Link className={`${buttonStyles.button} ${buttonStyles.primary}`} href="/faculty/availability">Manage availability<ChevronRight size={15} /></Link>
+              </div>
+              <div className={styles.scheduleStats}>
+                <Link className={styles.stat} href="/faculty/availability">
+                  <span className={`${styles.statIcon} ${styles.statViolet}`}><CalendarCheck2 size={18} aria-hidden="true" /></span>
+                  <strong>{openDates.length}</strong>
+                  <small>Open {openDates.length === 1 ? "date" : "dates"}</small>
+                </Link>
+                <Link className={styles.stat} href="/faculty/calendar">
+                  <span className={`${styles.statIcon} ${styles.statGreen}`}><CalendarDays size={18} aria-hidden="true" /></span>
+                  <strong>{openDates.length ? formatDate(openDates[0]) : "None yet"}</strong>
+                  <small>Next open day</small>
+                </Link>
+                <Link className={styles.stat} href="/faculty/requests">
+                  <span className={`${styles.statIcon} ${styles.statAmber}`}><Inbox size={18} aria-hidden="true" /></span>
+                  <strong>{pending.length}</strong>
+                  <small>Pending {pending.length === 1 ? "request" : "requests"}</small>
+                </Link>
+              </div>
+            </section>
+          )}
 
-        {nextConsultation ? (
-          <UpNextCard
-            eyebrow="Up next"
-            title={nextConsultation.student_name || "Student consultation"}
-            date={nextConsultation.preferred_date}
-            meta={[formatTime(nextConsultation.preferred_time), nextConsultation.meeting_location || "Location to be confirmed"]}
-            href={`/faculty/requests/${nextConsultation.id}`}
-            actionLabel="View details"
-            avatar={studentPhotos.get(nextConsultation.id) ?? null}
-          />
-        ) : (
-          <SpotlightCard
-            muted
-            eyebrow="No upcoming consultation"
-            title={pending.length ? "Review your requests" : "Open dates for booking"}
-            details={[{ icon: <Inbox size={15} />, text: pending.length ? `${pending.length} ${pending.length === 1 ? "request is" : "requests are"} waiting for you` : openDates.length ? "Students can book your open dates" : "Students can book once you publish dates" }]}
-            href={pending.length ? "/faculty/requests" : "/faculty/availability"}
-            actionLabel={pending.length ? "View requests" : "Manage availability"}
-          />
-        )}
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>
-            Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
-            {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
-          </h2>
-          {pendingItems.length ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="You're all caught up." action={{ label: "Manage availability", href: "/faculty/availability" }} />}
-        </section>
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>
+              Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
+              {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
+            </h2>
+            {pendingItems.length
+              ? <CardList items={pendingItems} />
+              : <p className={styles.caughtUp}><CheckCircle2 size={18} aria-hidden="true" />You&apos;re all caught up. New requests will appear here.</p>}
+          </section>
         </div>
 
         <aside className={styles.rail}>
           <LoginStreakCard role="faculty" />
-          {openDates.length > 0 && (
+          {nextConsultation && openDates.length > 0 && (
             <Link className={styles.availability} href="/faculty/availability">
               <CalendarCheck2 size={20} />
               <div>
