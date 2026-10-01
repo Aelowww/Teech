@@ -121,17 +121,6 @@
   color: var(--accent-dark);
 }
 
-.emptyState {
-  padding: 28px 16px;
-  color: var(--muted);
-  background: #fff;
-  border: 1px dashed var(--line);
-  border-radius: 16px;
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
-}
-
 .availability {
   padding: 16px 18px;
   display: flex;
@@ -312,8 +301,6 @@
 .rail > :nth-child(3) {
   animation-delay: 260ms;
 }
-
-
 
 /* ---------- Schedule hero (shown when nothing is booked) ---------- */
 

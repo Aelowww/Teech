@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { Notice, FormField } from "@/app/desktop/_components/ui";
 import { PasswordField } from "@/app/desktop/_components/password-field";
 import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
+import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
+import { accountRole } from "@/lib/account-role";
 import styles from "@/app/desktop/_components/auth.module.css";
 
 export default function Page() {
@@ -29,20 +31,16 @@ export default function Page() {
       return;
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("auth_user_id", data.user.id)
-      .maybeSingle();
+    const role = await accountRole(supabase, data.user.id);
 
-    if (profileError || !profile) {
+    if (!role) {
       await supabase.auth.signOut();
       setSubmitting(false);
-      setError("Your faculty profile was not created. Run the Supabase migration, then create the account again.");
+      setError("We couldn't load your profile. Please try again in a moment.");
       return;
     }
 
-    if (profile.role !== "faculty") {
+    if (role !== "faculty") {
       await supabase.auth.signOut();
       setSubmitting(false);
       setError("This account is not registered as faculty.");
@@ -52,6 +50,9 @@ export default function Page() {
     router.replace("/faculty/home");
     router.refresh();
   }
+
+
+  if (submitting) return <AppLoader />;
 
   return (
     <AuthFrame onSubmit={handleSubmit} backTo="/welcome">

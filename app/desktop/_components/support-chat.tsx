@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
-import { ArrowUp, ChevronRight, MessageCircleQuestion, ShieldCheck, X } from "lucide-react";
+import { ArrowUp, ChevronRight, MessageCircleQuestion, X } from "lucide-react";
 import { KiteIcon } from "@/app/desktop/_components/kite-icon";
 import { answersFor, respond, type SupportAnswer, type SupportAudience } from "@/app/desktop/_components/support-answers";
 import { maxQuestionLength } from "@/lib/support";
@@ -127,9 +127,7 @@ export function SupportChat({ audience, variant, className }: { audience: Suppor
               <div className={styles.composerField}>
                 <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask a question…" maxLength={maxQuestionLength} aria-label="Your question" />
                 <button type="submit" disabled={!input.trim() || typing} aria-label="Send"><ArrowUp size={17} strokeWidth={2.4} /></button>
-              </div>
-              <p className={styles.notice}><ShieldCheck size={11} aria-hidden="true" />Questions I can&apos;t answer are sent to Google Gemini. Please don&apos;t share personal information.</p>
-            </form>
+              </div>            </form>
           </section>
         </div>,
         document.body,
