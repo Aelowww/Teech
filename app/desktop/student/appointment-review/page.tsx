@@ -15,6 +15,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { isBlockedWhileBusy } from "@/lib/time-slots";
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
+import { AppLoader } from "@/app/desktop/_components/app-loader";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
 import styles from "./page.module.css";
@@ -31,9 +32,13 @@ export default function Page() {
   const [submitting, setSubmitting] = useState(false);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadDraft = window.setTimeout(() => setDraft(getAppointmentDraft()), 0);
+    const loadDraft = window.setTimeout(() => {
+      setDraft(getAppointmentDraft());
+      setIsLoading(false);
+    }, 0);
     return () => window.clearTimeout(loadDraft);
   }, []);
 
@@ -120,12 +125,13 @@ export default function Page() {
       })
       .select("id, appointment_code")
       .single();
-    setSubmitting(false);
     if (requestError?.code === "23505") {
+      setSubmitting(false);
       handleUnavailableSlot("time");
       return;
     }
     if (requestError || !submittedRequest) {
+      setSubmitting(false);
       return requestError?.message || "Your request could not be saved. Please try again.";
     }
 
@@ -143,6 +149,8 @@ export default function Page() {
     router.replace(unavailable === "date" ? `/student/calendar?${facultyParams}&unavailable=true` : "/student/select-date-time?unavailable=true");
   }
 
+  if (isLoading) return <AppLoader />;
+
   return (
     <DesktopLayout className={styles.screen} backTo="/student/appointment-info" role="student" activeNav="faculty">
       <BookingSteps current={4} />
@@ -156,7 +164,7 @@ export default function Page() {
 
         <aside className={booking.side}>
           {error && <Notice error>{error}</Notice>}
-          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : "Submit Request"}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : checkingAvailability ? "Checking..." : "Submit Request"}</button>
           <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
         </aside>
       </div>

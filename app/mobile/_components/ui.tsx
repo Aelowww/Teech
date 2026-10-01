@@ -310,26 +310,6 @@ function statusToneClass(status: string) {
   return styles.statusBad;
 }
 
-export function FilterTabs({
-  filters,
-  selected,
-  hrefs,
-}: {
-  filters: string[];
-  selected: number;
-  hrefs?: string[];
-}) {
-  return (
-    <div className={styles.filters}>
-      {filters.map((filter, index) => (
-        <Link key={filter} href={hrefs?.[index] || "#"} className={index === selected ? styles.filterSelected : ""}>
-          {filter}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
 export function MonthCalendar({
   month = new Date(),
   selectedDate,
@@ -443,35 +423,6 @@ export function ProfilePhoto({ inline = false, small = false, src }: { inline?: 
   return (
     <div className={`${styles.avatar} ${inline ? styles.avatarInline : ""} ${small ? styles.avatarSmall : ""}`}>
       {src ? <Image className={styles.avatarImage} src={src} alt="Profile photo" fill sizes="120px" unoptimized /> : <UserRound size={small ? 22 : 31} />}
-    </div>
-  );
-}
-
-export function ConfirmationDialog({
-  title,
-  children,
-  danger = false,
-}: {
-  title: string;
-  children: React.ReactNode;
-  danger?: boolean;
-}) {
-  return (
-    <div className={styles.dialogCard}>
-      <div className={`${styles.dialogIcon} ${danger ? styles.dialogDanger : ""}`}>
-        {danger ? <X size={19} /> : <Check size={19} />}
-      </div>
-      <strong>{title}</strong>
-      <p>{children}</p>
-    </div>
-  );
-}
-
-export function SearchField({ placeholder }: { placeholder: string }) {
-  return (
-    <div className={`${styles.inputWrap} ${styles.searchWrap}`}>
-      <Search size={15} />
-      <input placeholder={placeholder} aria-label={placeholder} />
     </div>
   );
 }

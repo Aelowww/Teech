@@ -24,6 +24,7 @@ export default function Page() {
   const [locationsByDate, setLocationsByDate] = useState<Record<string, string>>({});
   const [facultyLocations, setFacultyLocations] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const [unavailableNotice, setUnavailableNotice] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +34,11 @@ export default function Page() {
       const params = new URLSearchParams(window.location.search);
       const facultyId = params.get("facultyId");
       const facultyName = params.get("facultyName");
-      const updatedDraft = facultyId && facultyName ? { ...storedDraft, facultyId, facultyName } : storedDraft;
+      const switchedFaculty = Boolean(facultyId && facultyId !== storedDraft.facultyId);
+      const updatedDraft = facultyId && facultyName
+        ? { ...storedDraft, facultyId, facultyName, ...(switchedFaculty ? { preferredDate: "", preferredTime: "", meetingLocation: "" } : {}) }
+        : storedDraft;
+      setUnavailableNotice(params.get("unavailable") === "true");
 
       setDraft(updatedDraft);
       if (facultyId && facultyName) saveAppointmentDraft(updatedDraft);
@@ -121,6 +126,7 @@ export default function Page() {
             <div><CalendarDays size={18} /><dt>Date</dt><dd>{draft?.preferredDate ? formatLongDate(draft.preferredDate) : <span className={booking.placeholder}>Pick a date</span>}</dd></div>
             {meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{meetingLocation}</dd></div>}
           </dl>
+          {unavailableNotice && <Notice error>That date is no longer available. Please choose another date.</Notice>}
           {error && <Notice error>{error}</Notice>}
           {draft?.facultyId && !error && availableDates.length === 0 && <EmptyState compact scene="calendar" title="This faculty member has not published any upcoming dates." action={{ label: "Choose another faculty", href: "/student/faculty" }} />}
           <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue<ArrowRight size={17} /></button>

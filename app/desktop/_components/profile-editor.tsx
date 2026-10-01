@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { FormField, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { AvatarUploader } from "@/app/desktop/_components/avatar-uploader";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
+import { UserPen } from "lucide-react";
+import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { SuccessModal } from "./success-modal";
@@ -24,6 +26,7 @@ export function ProfileEditor({ role }: { role: Role }) {
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const profilePath = `/${role}/profile/info`;
@@ -62,8 +65,12 @@ export function ProfileEditor({ role }: { role: Role }) {
 
   if (isLoading) return <AppLoader />;
 
-  async function saveProfile(event: FormEvent<HTMLFormElement>) {
+  function requestSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setConfirming(true);
+  }
+
+  async function saveProfile() {
     setError("");
     setNotice("");
     setSaving(true);
@@ -112,7 +119,7 @@ export function ProfileEditor({ role }: { role: Role }) {
       role={role}
       activeNav="profile"
     >
-      <form className={styles.page} onSubmit={saveProfile}>
+      <form className={styles.page} onSubmit={requestSave}>
         <PageHeading title="Edit Profile" subtitle="Update the information shown in your portal." />
         {avatarPath !== undefined && <div className={styles.photoEditor}><AvatarUploader initialPath={avatarPath} /></div>}
         <div className={styles.form}>
@@ -126,6 +133,7 @@ export function ProfileEditor({ role }: { role: Role }) {
         {notice && <Notice>{notice}</Notice>}
         <div className={styles.submitArea}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</button></div>
       </form>
+      <ConfirmationModal open={confirming} title="Save changes?" description={role === "faculty" && email.trim().toLowerCase() !== initialEmail.toLowerCase() ? "Your profile will be updated, and you will need to confirm your new email from your inbox." : "Your profile will be updated with these details."} confirmLabel="Save Changes" icon={UserPen} onCancel={() => setConfirming(false)} onConfirm={saveProfile} />
       <SuccessModal open={saved} title="Profile updated" description="Your changes have been saved." onDone={finishSave} />
     </DesktopLayout>
   );

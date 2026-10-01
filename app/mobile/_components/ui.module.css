@@ -420,34 +420,6 @@ a.listCard:active {
   background: #fdeef1;
 }
 
-.filters {
-  margin: 13px 0;
-  display: flex;
-  gap: 7px;
-}
-
-.filters a {
-  min-height: 29px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  color: #85859b;
-  background: #f7f7fb;
-  border: 1px solid #e7e6f1;
-  border-radius: 99px;
-  font-size: 9px;
-}
-
-.filters .filterSelected {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.searchWrap {
-  margin: 12px 0 0;
-}
-
 .calendar {
   margin-top: 24px;
   padding: 15px 12px 12px;
@@ -580,12 +552,6 @@ a.listCard:active {
   font-size: 11px;
   font-weight: 700;
 }
-.fieldHeading {
-  margin: 0;
-  color: #77788f;
-  font-size: 11px;
-  font-weight: 700;
-}
 .timeToggle {
   width: 100%;
   min-width: 0;
@@ -638,40 +604,6 @@ a.listCard:active {
 }
 .avatarImage {
   object-fit: cover;
-}
-.dialogCard {
-  margin: auto 0;
-  padding: 22px 17px;
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  background: #fbfaff;
-  border: 1px solid #e8e6f5;
-  border-radius: 18px;
-}
-.dialogIcon {
-  width: 43px;
-  height: 43px;
-  margin-bottom: 12px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: #eeedfc;
-  border-radius: 50%;
-}
-.dialogDanger {
-  color: #db4456;
-  background: #fff0f1;
-}
-.dialogCard strong {
-  font-size: 15px;
-}
-.dialogCard p {
-  max-width: 240px;
-  margin: 7px 0 0;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.5;
 }
 .bottomNav {
   position: absolute;

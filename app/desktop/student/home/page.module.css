@@ -209,17 +209,6 @@
   color: var(--accent-dark);
 }
 
-.emptyState {
-  padding: 28px 16px;
-  color: var(--muted);
-  background: #fff;
-  border: 1px dashed var(--line);
-  border-radius: 16px;
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
-}
-
 @media (max-width: 1100px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);

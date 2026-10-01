@@ -80,6 +80,11 @@ export function useRotatingFact(role: "student" | "faculty") {
   }, []);
 
   const activeHour = Math.floor(now / factHour);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setNow(Date.now()), factHour - (Date.now() % factHour) + 250);
+    return () => window.clearTimeout(timer);
+  }, [activeHour]);
   const offset = shuffle.hour === activeHour ? shuffle.offset : 0;
   const fact = facts[(activeHour + offset) % facts.length];
   return {

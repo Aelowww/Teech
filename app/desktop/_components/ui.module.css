@@ -60,25 +60,6 @@
   min-width: 0;
 }
 
-.logo {
-  display: inline-flex;
-  align-items: center;
-}
-
-.logoImage {
-  display: block;
-  width: 132px;
-  height: auto;
-}
-
-.logoLarge {
-  flex-direction: column;
-}
-
-.logoLarge .logoImage {
-  width: 280px;
-}
-
 .title {
   margin: 0;
   color: var(--ink);
@@ -119,56 +100,8 @@
   flex-wrap: wrap;
 }
 
-.action {
-  min-width: 180px;
-  min-height: 50px;
-  padding: 0 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--accent-dark);
-  background: var(--accent-pale);
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background var(--motion) var(--ease), color var(--motion) var(--ease), transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
-}
-
-.action:hover {
-  background: #e6e7f9;
-}
-
-.actionPrimary {
-  color: #fff;
-  background: var(--accent);
-  box-shadow: 0 10px 22px rgba(81, 76, 154, 0.22);
-}
-
-.actionPrimary:hover {
-  background: var(--accent-dark);
-  transform: translateY(-1px);
-}
-
-.actionDanger {
-  color: #b5394b;
-  background: #fff0f1;
-  border-color: #f4c9cf;
-}
-
-.actionDanger:hover {
-  background: #ffe3e6;
-}
-
 .guestCard .actions {
   flex-direction: column;
-}
-
-.guestCard .action {
-  width: 100%;
 }
 
 .field {
@@ -250,10 +183,6 @@
 .passwordToggle:hover {
   color: var(--accent);
   background: var(--accent-pale);
-}
-
-.searchWrap {
-  margin: 0;
 }
 
 .message {
@@ -529,12 +458,6 @@ a.listCard:hover {
   border-color: var(--accent);
 }
 
-.filters .filterSelected {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
 .calendar {
   padding: 24px;
   background: var(--surface, #fff);
@@ -672,8 +595,7 @@ button.daySelected:hover {
   gap: 10px;
 }
 
-.slotLabel,
-.fieldHeading {
+.slotLabel {
   grid-column: 1 / -1;
   margin: 0;
   color: var(--muted);
@@ -754,45 +676,6 @@ button.daySelected:hover {
 
 .avatarImage {
   object-fit: cover;
-}
-
-.dialogCard {
-  padding: 32px 28px;
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  background: #fbfaff;
-  border: 1px solid #e8e6f5;
-  border-radius: var(--radius, 20px);
-}
-
-.dialogIcon {
-  width: 52px;
-  height: 52px;
-  margin-bottom: 14px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: #eeedfc;
-  border-radius: 50%;
-}
-
-.dialogDanger {
-  color: #db4456;
-  background: #fff0f1;
-}
-
-.dialogCard strong {
-  color: var(--ink);
-  font-size: 19px;
-}
-
-.dialogCard p {
-  max-width: 380px;
-  margin: 8px 0 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.55;
 }
 
 .spotlight {
@@ -901,7 +784,6 @@ button.daySelected:hover {
   background: var(--accent);
 }
 
-.action,
 .emptyAction,
 .filters a,
 .calendarHeader button,
@@ -939,25 +821,12 @@ button.daySelected:hover {
 }
 
 @media (hover: hover) {
-  .action:hover {
-    background: #e9e7fa;
-    border-color: #d4d1f1;
-    box-shadow: 0 6px 14px rgba(81, 76, 154, 0.1);
-    transform: translateY(-2px);
-  }
 
-  .actionPrimary:hover,
   .emptyAction:hover {
     background: var(--accent-dark);
     border-color: transparent;
     box-shadow: 0 8px 16px rgba(81, 75, 145, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
-  }
-
-  .actionDanger:hover {
-    background: #ffecf0;
-    border-color: #e9bfcb;
-    box-shadow: 0 6px 14px rgba(177, 58, 85, 0.12);
   }
 
   a.listCard:hover {
@@ -969,12 +838,6 @@ button.daySelected:hover {
   a.listCard:hover > svg {
     color: var(--accent);
     transform: translateX(2px);
-  }
-
-  .filters a:not(.filterSelected):hover {
-    color: var(--accent-dark);
-    background: var(--accent-pale);
-    border-color: #d4d1f1;
   }
 
   .calendarHeader button:not(:disabled):hover {
@@ -1002,13 +865,11 @@ button.daySelected:hover {
   }
 }
 
-.action:active,
 .emptyAction:active {
   transform: scale(0.98);
   transition-duration: 100ms;
 }
 
-.actionPrimary:active,
 .emptyAction:active {
   box-shadow: 0 2px 6px rgba(81, 75, 145, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
@@ -1033,7 +894,6 @@ button.day:active,
   transition-duration: 100ms;
 }
 
-.action:focus-visible,
 .emptyAction:focus-visible,
 .filters a:focus-visible,
 .listCard:focus-visible,
@@ -1043,7 +903,6 @@ button.day:active,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .action,
   .emptyAction,
   .filters a,
   .calendarHeader button,
@@ -1057,14 +916,11 @@ button.day:active,
     transition: none;
   }
 
-  .action:hover,
-  .actionPrimary:hover,
   .emptyAction:hover,
   a.listCard:hover > svg,
   .calendarHeader button:hover,
   button.day:hover,
   .spotlight:hover,
-  .action:active,
   .emptyAction:active,
   a.listCard:active,
   .spotlight:active,

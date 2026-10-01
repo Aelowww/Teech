@@ -5,6 +5,8 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
+import { UserPlus } from "lucide-react";
+import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { studentAuthEmail } from "@/lib/student-auth";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
@@ -30,12 +32,13 @@ export default function Page() {
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   function updateField(field: keyof SignUpForm) {
     return (event: ChangeEvent<HTMLInputElement>) => setForm((current) => ({ ...current, [field]: event.target.value }));
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     if (!/^\d{6}$/.test(form.studentNumber)) {
@@ -56,6 +59,10 @@ export default function Page() {
       return;
     }
 
+    setConfirming(true);
+  }
+
+  async function createAccount() {
     setSubmitting(true);
     const { error: signUpError } = await createClient().auth.signUp({
       email: studentAuthEmail(form.studentNumber),
@@ -70,11 +77,9 @@ export default function Page() {
         },
       },
     });
-    setSubmitting(false);
-
     if (signUpError) {
-      setError(signUpError.message);
-      return;
+      setSubmitting(false);
+      return signUpError.code === "user_already_exists" ? "This Student ID already has an account. Sign in instead, or use Forgot Password." : signUpError.message;
     }
     await createClient().auth.signOut();
     router.push("/student/account-created");
@@ -103,6 +108,7 @@ export default function Page() {
       </FormCard>
       <SupportChat audience="guest" variant="link" />
       </form>
+      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with Student ID ${form.studentNumber}. Make sure these details are correct.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </MobileLayout>
   );
 }

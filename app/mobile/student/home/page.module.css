@@ -76,10 +76,3 @@
   font-size: 12px;
   font-weight: 600;
 }
-.emptyState {
-  margin: 4px 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.5;
-  text-align: center;
-}

@@ -5,7 +5,9 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
+import { accountRole } from "@/lib/account-role";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -29,20 +31,16 @@ export default function Page() {
       return;
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("auth_user_id", data.user.id)
-      .maybeSingle();
+    const role = await accountRole(supabase, data.user.id);
 
-    if (profileError || !profile) {
+    if (!role) {
       await supabase.auth.signOut();
       setSubmitting(false);
-      setError("Your faculty profile was not created. Run the Supabase migration, then create the account again.");
+      setError("We couldn't load your profile. Please try again in a moment.");
       return;
     }
 
-    if (profile.role !== "faculty") {
+    if (role !== "faculty") {
       await supabase.auth.signOut();
       setSubmitting(false);
       setError("This account is not registered as faculty.");
@@ -52,6 +50,9 @@ export default function Page() {
     router.replace("/faculty/home");
     router.refresh();
   }
+
+
+  if (submitting) return <AppLoader />;
 
   return (
     <MobileLayout className={styles.screen} backTo="/welcome">

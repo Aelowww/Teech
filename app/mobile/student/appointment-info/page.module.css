@@ -17,30 +17,3 @@
   margin-bottom: 12px;
   padding-top: 16px;
 }
-.checkbox {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  color: #64657f;
-  font-size: 10px;
-  line-height: 1.5;
-}
-.checkbox input {
-  accent-color: var(--accent);
-}
-.inlineLink {
-  align-self: end;
-  color: var(--accent-dark);
-  font-size: 11px;
-  text-decoration: underline;
-}
-.formNote {
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 10px;
-  text-align: center;
-}
-.formNote a {
-  color: var(--accent-dark);
-  font-weight: 700;
-}

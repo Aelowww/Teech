@@ -22,6 +22,7 @@ export default function Page() {
   const [locationsByDate, setLocationsByDate] = useState<Record<string, string>>({});
   const [facultyLocations, setFacultyLocations] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const [unavailableNotice, setUnavailableNotice] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +32,11 @@ export default function Page() {
       const params = new URLSearchParams(window.location.search);
       const facultyId = params.get("facultyId");
       const facultyName = params.get("facultyName");
-      const updatedDraft = facultyId && facultyName ? { ...storedDraft, facultyId, facultyName } : storedDraft;
+      const switchedFaculty = Boolean(facultyId && facultyId !== storedDraft.facultyId);
+      const updatedDraft = facultyId && facultyName
+        ? { ...storedDraft, facultyId, facultyName, ...(switchedFaculty ? { preferredDate: "", preferredTime: "", meetingLocation: "" } : {}) }
+        : storedDraft;
+      setUnavailableNotice(params.get("unavailable") === "true");
 
       setDraft(updatedDraft);
       if (facultyId && facultyName) saveAppointmentDraft(updatedDraft);
@@ -108,6 +113,7 @@ export default function Page() {
           subtitle={draft?.facultyName ? `Choose one of ${draft.facultyName}'s available dates.` : "Select a faculty member before choosing a date."}
         />
         <MonthCalendar month={month} selectedDate={draft?.preferredDate} availableDates={availableDates} legend="Available dates" onSelectDate={draft?.facultyId ? selectDate : undefined} onMonthChange={setMonth} />
+        {unavailableNotice && <Notice error>That date is no longer available. Please choose another date.</Notice>}
         {error && <Notice error>{error}</Notice>}
         {meetingLocation && (
           <aside className={styles.locationCard}>

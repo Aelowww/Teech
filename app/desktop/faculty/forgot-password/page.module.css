@@ -8,30 +8,6 @@
   gap: 18px;
 }
 
-.hint {
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.form .hint {
-  margin-top: -8px;
-}
-
-.textButton {
-  margin: 12px auto 0;
-  padding: 8px;
-  color: var(--accent-dark);
-  background: none;
-  border: 0;
-  font: inherit;
-  font-size: 14px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
-
 .submitButton {
   margin-top: 24px;
 }

@@ -3,13 +3,14 @@
 import { Suspense, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MobileLayout, PageHeading, FormField, Notice } from "@/app/mobile/_components/ui";
+import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
 export default function Page() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<AppLoader />}>
       <ForgotPasswordPage />
     </Suspense>
   );
@@ -30,13 +31,15 @@ function ForgotPasswordPage() {
     const { error: resetError } = await createClient().auth.resetPasswordForEmail(email.trim(), {
       redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
     });
-    setSending(false);
     if (resetError) {
+      setSending(false);
       setError(resetError.message);
       return;
     }
     router.push("/faculty/password-reset");
   }
+
+  if (sending) return <AppLoader />;
 
   return (
     <MobileLayout className={styles.screen} backTo="/faculty/sign-in">

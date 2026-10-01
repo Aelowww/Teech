@@ -48,7 +48,6 @@ export function ProfileOverview({
               ? <ShowcasedBadges badges={badges} href={`${base}/badges`} />
               : <Link className={styles.badgesEmpty} href={`${base}/badges`}>Choose up to 3<ChevronRight size={14} /></Link>}
           </div>
-          <div className={styles.signOut}><SignOutButton redirectTo="/welcome" /></div>
         </aside>
 
         <div className={styles.content}>
@@ -72,6 +71,7 @@ export function ProfileOverview({
               <SettingLink href={`${base}/badges`} icon={Award} label="Badges" />
               <SettingLink href={`${base}/password`} icon={KeyRound} label="Change Password" />
               <SettingLink href={`${base}/security`} icon={ShieldQuestion} label="Account Recovery" />
+              <DeleteAccountButton role={role} className={`${styles.row} ${styles.danger}`} />
             </Group>
 
             <Group label="Help & legal">
@@ -81,12 +81,12 @@ export function ProfileOverview({
             </Group>
           </div>
 
-          <section className={styles.dangerZone} aria-label="Danger zone">
+          <section className={styles.signOutBar} aria-label="Sign out">
             <div>
-              <strong>Delete account</strong>
-              <small>Permanently remove your profile and consultation history. This can&apos;t be undone.</small>
+              <strong>Sign out</strong>
+              <small>Sign out of Teech on this device.</small>
             </div>
-            <DeleteAccountButton role={role} className={`${styles.row} ${styles.danger}`} />
+            <SignOutButton redirectTo="/welcome" />
           </section>
         </div>
       </div>

@@ -2,17 +2,6 @@
   display: block;
 }
 
-.emptyState {
-  margin: 0;
-  padding: 32px;
-  color: var(--muted);
-  background: var(--page);
-  border-radius: 16px;
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
-}
-
 .editButton {
   width: 100%;
   min-height: 48px;

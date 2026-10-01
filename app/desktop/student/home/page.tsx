@@ -9,6 +9,7 @@ import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
+import { RecoveryReminder } from "@/app/desktop/_components/recovery-reminder";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { CountUp } from "@/app/desktop/_components/count-up";
 import { createClient } from "@/lib/supabase/client";
@@ -130,6 +131,8 @@ export default function Page() {
 
         <div className={styles.layout}>
           <div className={styles.main}>
+            <RecoveryReminder />
+            <FactCard role="student" compact />
 
             {nextAppointment ? (
               <UpNextCard
@@ -184,7 +187,6 @@ export default function Page() {
               </div>
               <Link className={styles.overviewAll} href="/student/appointment-requests">View all requests<ChevronRight size={15} /></Link>
             </section>
-            <FactCard role="student" compact />
           </aside>
         </div>
       </div>
