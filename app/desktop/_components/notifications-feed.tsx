@@ -144,12 +144,8 @@ export function NotificationsFeed({ role }: { role: "student" | "faculty" }) {
           </div>
         ) : (
           <EmptyState
-<<<<<<< HEAD
-            icon={<Bell size={26} />}
-=======
             scene="bell"
             action={{ label: "Go to dashboard", href: `/${role}/home` }}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
             title="You're all caught up"
             description="Updates about your consultations and account will show up here."
           />

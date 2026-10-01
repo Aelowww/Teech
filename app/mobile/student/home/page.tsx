@@ -4,11 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UsersRound } from "lucide-react";
-<<<<<<< HEAD
-import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
-=======
 import { MobileLayout, BrandLogo, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
@@ -112,10 +108,6 @@ export default function Page() {
         <div className={styles.greeting}>
           <ProfilePhoto inline small src={photoUrl} />
           <div><small>{getGreeting()}</small><strong>{profile?.full_name || "Student"}</strong></div>
-<<<<<<< HEAD
-          <FactCard role="student" />
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         </div>
 
         {nextAppointment ? (

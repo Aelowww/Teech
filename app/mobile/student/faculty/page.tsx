@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, UserRound } from "lucide-react";
-import { MobileLayout, BrandLogo, EmptyState, PageHeading } from "@/app/mobile/_components/ui";
+import { CalendarDays, UserRound } from "lucide-react";
+import { MobileLayout, BrandLogo, EmptyState } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { createClient } from "@/lib/supabase/server";
 import { avatarBucket } from "@/lib/avatar";
@@ -46,16 +46,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const avatarUrls = new Map((signedAvatars || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
 
   const allFaculty = (faculty as FacultyProfile[] | null) || [];
-<<<<<<< HEAD
-  const availableCount = allFaculty.filter((profile) => (profile.presence_status || "available") === "available").length;
-  const facultyItems = allFaculty
-    .filter((profile) => showingAll || (profile.presence_status || "available") === "available")
-=======
   const isBookableNow = (profile: FacultyProfile) => (profile.presence_status || "available") === "available" && nextOpenDates.has(profile.id);
   const availableCount = allFaculty.filter(isBookableNow).length;
+  const presenceOrder: Record<string, number> = { available: 0, in_meeting: 1, busy: 2 };
   const facultyItems = allFaculty
     .filter((profile) => showingAll || isBookableNow(profile))
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
+    .sort((first, second) => presenceOrder[first.presence_status || "available"] - presenceOrder[second.presence_status || "available"])
     .map((profile) => {
       const nextOpen = nextOpenDates.get(profile.id);
       const presence = profile.presence_status || "available";
@@ -77,19 +73,15 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
           <BrandLogo />
           <NotificationBell href="/student/notifications" />
         </header>
-        <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
+        <div className={styles.intro}>
+          <h1>Book a consultation</h1>
+          <p>Pick a faculty member to see their open dates.</p>
+        </div>
         <nav className={styles.filters} aria-label="Faculty filters">
-<<<<<<< HEAD
-          <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all" aria-current={showingAll ? "page" : undefined}>
-            All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
-          </Link>
-          <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={!showingAll ? "page" : undefined}>
-=======
           <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={showingAll ? "page" : undefined}>
             All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
           </Link>
           <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=available" aria-current={!showingAll ? "page" : undefined}>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
             Available<span className={styles.filterCount}>{availableCount}</span>
           </Link>
         </nav>
@@ -97,43 +89,28 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
           ? (
             <ul className={styles.list}>
               {facultyItems.map((item) => {
-<<<<<<< HEAD
-                const showPresence = showingAll;
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
                 const content = <>
                   <span className={styles.avatar}>
                     {item.imageUrl
-                      ? <Image src={item.imageUrl} alt="" fill sizes="44px" unoptimized />
+                      ? <Image src={item.imageUrl} alt="" fill sizes="48px" unoptimized />
                       : <UserRound size={20} aria-hidden="true" />}
-<<<<<<< HEAD
-                    {showPresence && <i className={`${styles.presenceDot} ${styles[item.presence]}`} aria-hidden="true" />}
-=======
                     <i className={`${styles.presenceDot} ${styles[item.presence]}`} aria-hidden="true" />
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
                   </span>
                   <span className={styles.info}>
                     <strong>{item.name}</strong>
-                    <span>
+                    <span className={styles.meta}>
                       {item.department}
-<<<<<<< HEAD
-                      {showPresence && <em className={styles[item.presence]}> · {presenceLabels[item.presence]}</em>}
-=======
-                      <em className={styles[item.presence]}> · {presenceLabels[item.presence]}</em>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
+                      <em className={`${styles.pill} ${styles[item.presence]}`}>{presenceLabels[item.presence]}</em>
                     </span>
                   </span>
-                  <span className={styles.next}>
-                    {item.nextOpen
-                      ? <><strong>{item.nextOpen}</strong><small>Next open</small></>
-                      : <small>No open dates</small>}
+                  <span className={`${styles.dateChip} ${item.nextOpen ? "" : styles.dateChipEmpty}`}>
+                    {item.nextOpen ? <><CalendarDays size={12} aria-hidden="true" />{item.nextOpen}</> : "No dates"}
                   </span>
-                  {item.href && <ChevronRight className={styles.chevron} size={16} aria-hidden="true" />}
                 </>;
                 return (
                   <li key={item.id}>
                     {item.href
-                      ? <Link className={styles.row} href={item.href}>{content}</Link>
+                      ? <Link className={`${styles.row} ${item.presence === "available" ? "" : styles.rowAway}`} href={item.href} aria-label={`${item.name}, ${presenceLabels[item.presence]}, next open ${item.nextOpen}`}>{content}</Link>
                       : <div className={`${styles.row} ${styles.rowUnavailable}`}>{content}</div>}
                   </li>
                 );

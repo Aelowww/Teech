@@ -6,10 +6,7 @@ import { FormField, MobileLayout, Notice, PageHeading } from "@/app/mobile/_comp
 import { AvatarUploader } from "@/app/mobile/_components/avatar-uploader";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
-<<<<<<< HEAD
-=======
 import { SuccessModal } from "./success-modal";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import styles from "./profile-settings.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 

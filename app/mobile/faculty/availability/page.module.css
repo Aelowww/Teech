@@ -8,18 +8,20 @@
   flex-direction: column;
 }
 .editor {
-  margin-top: 16px;
-  padding: 13px;
-  background: #f8f7fe;
-  border: 1px solid #e2e1f1;
-  border-radius: 10px;
+  margin-top: 14px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e7e6f1;
+  border-radius: 16px;
 }
 .selectedDate {
-  min-height: 17px;
   margin: 0;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 700;
+  padding: 9px 12px;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
   text-align: center;
 }
 .times {
@@ -32,8 +34,8 @@
   min-width: 0;
   display: grid;
   gap: 6px;
-  color: var(--muted);
-  font-size: 10px;
+  color: var(--ink);
+  font-size: 12px;
   font-weight: 600;
 }
 .times input {
@@ -44,10 +46,14 @@
   padding: 0 8px;
   color: var(--ink);
   background: #fff;
-  border: 1px solid #dcdce9;
-  border-radius: 8px;
+  border: 1px solid #e7e6f1;
+  border-radius: 12px;
+  outline: 0;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
+  transition:
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease);
 }
 .times input:disabled {
   color: #a4a4b5;
@@ -57,8 +63,8 @@
   margin-top: 12px;
   display: grid;
   gap: 6px;
-  color: var(--muted);
-  font-size: 10px;
+  color: var(--ink);
+  font-size: 12px;
   font-weight: 600;
 }
 .location input {
@@ -67,10 +73,14 @@
   padding: 0 10px;
   color: var(--ink);
   background: #fff;
-  border: 1px solid #dcdce9;
-  border-radius: 8px;
+  border: 1px solid #e7e6f1;
+  border-radius: 12px;
+  outline: 0;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
+  transition:
+    border-color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease);
 }
 .location input:disabled {
   color: #a4a4b5;
@@ -94,9 +104,20 @@
   opacity: 0.6;
 }
 .saveArea {
-  margin-top: auto;
-  margin-bottom: 12px;
+  margin-top: 16px;
   padding-top: 16px;
+  border-top: 1px solid #f2f1f8;
+}
+.times input:focus,
+.location input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-pale);
+}
+.times input:disabled,
+.location input:disabled {
+  color: #b9b8cb;
+  background: #fafafd;
+  border-style: dashed;
 }
 @media (max-width: 340px) {
   .times {

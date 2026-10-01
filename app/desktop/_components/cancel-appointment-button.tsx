@@ -4,10 +4,7 @@ import { Ban } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
-<<<<<<< HEAD
-=======
 import { SuccessModal } from "./success-modal";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import styles from "./cancel-appointment-button.module.css";
@@ -15,10 +12,7 @@ import styles from "./cancel-appointment-button.module.css";
 export function CancelAppointmentButton({ appointmentId, role, quiet = false }: { appointmentId: string; role: "student" | "faculty"; quiet?: boolean }) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
-<<<<<<< HEAD
-=======
   const [done, setDone] = useState(false);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
   async function cancelAppointment() {
     const { data: cancelled, error: cancelError } = await createClient()
@@ -32,14 +26,11 @@ export function CancelAppointmentButton({ appointmentId, role, quiet = false }: 
       router.refresh();
       return "This consultation can no longer be cancelled.";
     }
-<<<<<<< HEAD
-=======
     setDone(true);
   }
 
   function finish() {
     setDone(false);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     if (role === "student") router.replace("/student/appointment-requests");
     router.refresh();
   }
@@ -56,10 +47,7 @@ export function CancelAppointmentButton({ appointmentId, role, quiet = false }: 
         onCancel={() => setConfirming(false)}
         onConfirm={cancelAppointment}
       />
-<<<<<<< HEAD
-=======
       <SuccessModal open={done} title="Consultation cancelled" description={role === "faculty" ? "The student has been notified." : "Your faculty member has been notified."} onDone={finish} />
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     </>
   );
 }

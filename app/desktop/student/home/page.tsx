@@ -3,13 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Plus, UsersRound } from "lucide-react";
+import { CheckCircle2, ChevronRight, Plus, UsersRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
-<<<<<<< HEAD
 import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
-=======
-import { CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
@@ -23,12 +19,7 @@ import styles from "./page.module.css";
 type Profile = { id: string; full_name: string; avatar_path: string | null; course_year: string | null };
 type Appointment = { id: string; faculty_profile_id: string; faculty_name: string | null; preferred_date: string; preferred_time: string; reason: string; status: string; meeting_location: string | null };
 
-<<<<<<< HEAD
-const pendingPreviewLimit = 3;
-const upcomingLimit = 4;
-=======
 const pendingPreviewLimit = 1;
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
 export default function Page() {
   const router = useRouter();
@@ -109,12 +100,6 @@ export default function Page() {
     { label: "Closed", count: closedCount, tone: styles.dotClosed, href: "/student/appointment-requests?status=closed" },
   ];
   const overviewTotal = overview.reduce((total, item) => total + item.count, 0);
-<<<<<<< HEAD
-  const summary = pendingAppointments.length
-    ? `${pendingAppointments.length} ${pendingAppointments.length === 1 ? "request" : "requests"} awaiting response`
-    : nextAppointment ? "You're all set for your next consultation" : "No consultations booked yet";
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const pendingItems = pendingAppointments.slice(0, pendingPreviewLimit).map((appointment) => ({
     title: appointment.faculty_name || "Faculty",
     description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)}`,
@@ -122,16 +107,6 @@ export default function Page() {
     imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
     href: `/student/appointment-requests/${appointment.id}`,
   }));
-<<<<<<< HEAD
-  const upcomingItems = confirmed.slice(1, upcomingLimit + 1).map((appointment) => ({
-    title: appointment.faculty_name || "Faculty",
-    description: `${formatLongDate(appointment.preferred_date)} - ${formatTime(appointment.preferred_time)} · ${appointment.meeting_location || "Location to be confirmed"}`,
-    status: "Confirmed",
-    imageUrl: facultyPhotos.get(appointment.faculty_profile_id),
-    href: `/student/appointment-requests/${appointment.id}`,
-  }));
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
   return (
     <AppShell
@@ -145,12 +120,7 @@ export default function Page() {
         <header className={styles.header}>
           <div className={styles.greeting}>
             <ProfilePhoto inline small src={photoUrl} />
-<<<<<<< HEAD
-            <div><small>{getGreeting()}</small><strong>{fullName}</strong><p className={styles.summary}>{formatToday()} · {summary}</p></div>
-            <FactCard role="student" />
-=======
             <div><small>{getGreeting()}</small><strong>{fullName}</strong></div>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           </div>
           <Link className={`${buttonStyles.button} ${buttonStyles.primary}`} href="/student/faculty">
             <Plus size={16} strokeWidth={2.25} />
@@ -160,11 +130,7 @@ export default function Page() {
 
         <div className={styles.layout}>
           <div className={styles.main}>
-<<<<<<< HEAD
-=======
-            <FactCard role="student" />
 
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
             {nextAppointment ? (
               <UpNextCard
                 eyebrow="Up next"
@@ -191,23 +157,10 @@ export default function Page() {
                 Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
                 {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
               </h2>
-<<<<<<< HEAD
-              {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+              {pendingItems.length > 0
+                ? <CardList items={pendingItems} />
+                : <p className={styles.caughtUp}><CheckCircle2 size={18} aria-hidden="true" />No requests are waiting on faculty.</p>}
             </section>
-
-            {upcomingItems.length > 0 && (
-              <section className={styles.section}>
-                <h2 className={styles.sectionTitle}>
-                  Upcoming consultations
-                  {confirmed.length - 1 > upcomingLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=confirmed">See all</Link>}
-                </h2>
-                <CardList items={upcomingItems} />
-              </section>
-            )}
-=======
-              {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="No requests are waiting on faculty." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
-            </section>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           </div>
 
           <aside className={styles.rail}>
@@ -231,6 +184,7 @@ export default function Page() {
               </div>
               <Link className={styles.overviewAll} href="/student/appointment-requests">View all requests<ChevronRight size={15} /></Link>
             </section>
+            <FactCard role="student" compact />
           </aside>
         </div>
       </div>
@@ -240,10 +194,6 @@ export default function Page() {
 
 function formatLongDate(value: string) { return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }); }
 function formatTime(value: string) { return new Date(`1970-01-01T${value}`).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
-<<<<<<< HEAD
-function formatToday() { return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 function getGreeting() { const hour = new Date().getHours(); return hour < 12 ? "Good morning," : hour < 18 ? "Good afternoon," : "Good evening,"; }
 function localDateValue() {
   const now = new Date();

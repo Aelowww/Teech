@@ -6,10 +6,6 @@ import { MonthCalendar, MobileLayout, Notice, PageHeading } from "@/app/mobile/_
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { SuccessModal } from "@/app/mobile/_components/success-modal";
 import { createClient } from "@/lib/supabase/client";
-<<<<<<< HEAD
-import { AppLoader } from "@/app/mobile/_components/app-loader";
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
@@ -107,7 +103,7 @@ export default function Page() {
     <MobileLayout className={styles.screen} backTo="/faculty/calendar" role="faculty" activeNav="calendar">
       <div className={styles.page}>
         <PageHeading title="Availability" subtitle="Choose specific dates and times students can request." />
-        <MonthCalendar month={month} selectedDates={selectedDates} markedDates={availability.map((slot) => slot.available_date)} legend="Outlined dates are available to students" onSelectDate={selectDate} onMonthChange={setMonth} />
+        <MonthCalendar month={month} selectedDates={selectedDates} markedDates={availability.map((slot) => slot.available_date)} soft legend="Published" selectedLegend="Selected" onSelectDate={selectDate} onMonthChange={setMonth} />
         <section className={styles.editor} aria-label="Selected date availability">
           <p className={styles.selectedDate}>{selectedDates.length ? `${selectedDates.length} ${selectedDates.length === 1 ? "date" : "dates"} selected` : "Select one or more dates from the calendar"}</p>
           <div className={styles.times}>
@@ -116,13 +112,13 @@ export default function Page() {
           </div>
           <label className={styles.location}>Meeting room or location <span className={styles.required}>(required)</span><input required value={meetingLocation} onChange={(event) => setMeetingLocation(event.target.value)} placeholder="e.g. Faculty Office, Room 21" disabled={!selectedDates.length} /></label>
           {savedSelectedDates.length > 0 && <button className={styles.removeButton} type="button" onClick={startRemoval} disabled={saving}>Make {savedSelectedDates.length === 1 ? "selected date" : "selected dates"} unavailable</button>}
+          {error && <Notice error>{error}</Notice>}
+          <div className={styles.saveArea}>
+            <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block}`} type="button" onClick={savedCount > 0 ? () => router.push("/faculty/calendar") : saveAvailability} disabled={saving || (!selectedDates.length && savedCount === 0)}>
+              {saving ? "Saving..." : savedCount > 0 ? "View Calendar" : "Save Selected Dates"}
+            </button>
+          </div>
         </section>
-        {error && <Notice error>{error}</Notice>}
-        <div className={styles.saveArea}>
-          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={savedCount > 0 ? () => router.push("/faculty/calendar") : saveAvailability} disabled={saving || (!selectedDates.length && savedCount === 0)}>
-            {saving ? "Saving..." : savedCount > 0 ? "View Calendar" : "Save Selected Dates"}
-          </button>
-        </div>
       </div>
       <ConfirmationModal open={confirmingRemoval} title="Remove availability?" description={`The selected ${savedSelectedDates.length === 1 ? "date will" : "dates will"} no longer be available for students to request.${bookedOnRemovedDates ? ` ${bookedOnRemovedDates} ${bookedOnRemovedDates === 1 ? "consultation is" : "consultations are"} already booked on ${savedSelectedDates.length === 1 ? "this date" : "these dates"} and will stay booked. Cancel or decline them from Requests if you can't attend.` : ""}`} confirmLabel="Remove Dates" tone="danger" onCancel={() => setConfirmingRemoval(false)} onConfirm={removeAvailability} />
       <SuccessModal open={Boolean(success)} title={success?.title || ""} description={success?.description || ""} onDone={() => setSuccess(null)} />

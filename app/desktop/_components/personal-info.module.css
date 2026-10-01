@@ -24,18 +24,10 @@
   margin: 0;
 }
 
-<<<<<<< HEAD
-/* One card per detail, side by side. */
-.list {
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-=======
 .list {
   margin: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   gap: 16px;
 }
 
@@ -81,11 +73,7 @@
 .row dd {
   min-width: 0;
   margin: 0;
-<<<<<<< HEAD
-  overflow-wrap: anywhere;
-=======
   overflow-wrap: break-word;
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   color: var(--ink);
   font-size: 17px;
   font-weight: 600;

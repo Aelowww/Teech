@@ -331,10 +331,6 @@
   outline-offset: 2px;
 }
 
-<<<<<<< HEAD
-/* Desktop sizing */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .card {
   margin-top: 0;
   padding: 20px 22px 8px;
@@ -367,10 +363,6 @@
   padding: 14px;
 }
 
-<<<<<<< HEAD
-/* Keep every day column the same height so the letters line up. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .days button {
   position: relative;
   grid-template-rows: auto 14px auto;
@@ -389,8 +381,6 @@
   left: 50%;
   margin: 0 0 0 -2px;
 }
-<<<<<<< HEAD
-=======
 
 /* Streak theme: warm flame hero, milestone bar, linked day chain */
 .hero {
@@ -688,4 +678,3 @@
     animation: none;
   }
 }
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4

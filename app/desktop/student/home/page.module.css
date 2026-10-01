@@ -70,10 +70,6 @@
   gap: 20px;
 }
 
-<<<<<<< HEAD
-/* Requests overview */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .overview {
   padding: 20px 22px 18px;
   display: grid;
@@ -96,7 +92,7 @@
 
 .overviewRow {
   margin: 0 -10px;
-  padding: 10px;
+  padding: 7px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -247,19 +243,6 @@
   }
 }
 
-<<<<<<< HEAD
-/* ---------- Header summary ---------- */
-
-.dashboard .summary {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-/* ---------- Requests split bar ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .split {
   height: 8px;
   display: flex;
@@ -282,11 +265,6 @@
   }
 }
 
-<<<<<<< HEAD
-/* ---------- Staggered entrance ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .header,
 .main > *,
 .rail > * {
@@ -327,4 +305,25 @@
   .split i {
     animation: none;
   }
+}
+
+.caughtUp {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md, 14px);
+  font-size: 14px;
+}
+
+.caughtUp svg {
+  flex: 0 0 auto;
+  color: #26c07a;
+}
+
+.rail > :nth-child(3) {
+  animation-delay: 260ms;
 }

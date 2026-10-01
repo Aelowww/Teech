@@ -3,19 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, Clock3, MapPin, UserRound } from "lucide-react";
-<<<<<<< HEAD
-import { DesktopLayout, Notice, PageHeading, AvailabilitySlots } from "@/app/desktop/_components/ui";
-import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
-import { createClient } from "@/lib/supabase/client";
-import { AppLoader } from "@/app/desktop/_components/app-loader";
-import { slotsFor } from "@/lib/time-slots";
-=======
 import { DesktopLayout, EmptyState, Notice, PageHeading, AvailabilitySlots } from "@/app/desktop/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { isBlockedWhileBusy, slotsFor } from "@/lib/time-slots";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
@@ -29,10 +21,7 @@ export default function Page() {
   const [locationsByTime, setLocationsByTime] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
   const [unavailableNotice, setUnavailableNotice] = useState(false);
-<<<<<<< HEAD
-=======
   const [busyHours, setBusyHours] = useState<string[]>([]);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -47,11 +36,7 @@ export default function Page() {
         return;
       }
       const supabase = createClient();
-<<<<<<< HEAD
-      const [availabilityResult, bookedSlotsResult] = await Promise.all([
-=======
       const [availabilityResult, bookedSlotsResult, presenceResult] = await Promise.all([
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         supabase
           .from("faculty_availability")
           .select("start_time, end_time, meeting_location")
@@ -61,10 +46,7 @@ export default function Page() {
         supabase.rpc("get_reserved_appointment_slots", {
           requested_faculty_profile_id: storedDraft.facultyId,
         }),
-<<<<<<< HEAD
-=======
         supabase.from("profiles").select("presence_status").eq("id", storedDraft.facultyId).maybeSingle(),
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
       ]);
       if (!active) return;
       if (availabilityResult.error || bookedSlotsResult.error) {
@@ -78,13 +60,9 @@ export default function Page() {
           .map((slot) => slot.preferred_time.slice(0, 5)),
       );
       const times = slotsFor(availabilityResult.data || []).filter((time) => !isPastTimeToday(storedDraft.preferredDate, time));
-<<<<<<< HEAD
-      const unavailable = times.filter((time) => bookedTimes.has(toDatabaseTime(time)));
-=======
       const busy = times.filter((time) => isBlockedWhileBusy(storedDraft.preferredDate, time, presenceResult.data?.presence_status));
       const unavailable = times.filter((time) => bookedTimes.has(toDatabaseTime(time)) || busy.includes(time));
       setBusyHours(busy);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
       const locations = times.reduce<Record<string, string>>((current, time) => {
         const matchingAvailability = availabilityResult.data?.find((slot) => isWithinAvailability(time, slot.start_time, slot.end_time));
         if (matchingAvailability?.meeting_location) current[time] = matchingAvailability.meeting_location;
@@ -135,16 +113,10 @@ export default function Page() {
           <PageHeading title="Choose a time" subtitle={selectedDate} />
           {error && <Notice error>{error}</Notice>}
           {unavailableNotice && <Notice error>This time is no longer available. Please choose another time.</Notice>}
-<<<<<<< HEAD
-          {!error && availableTimes.length > 0 && availableTimes.every((time) => unavailableTimes.includes(time)) && <Notice>This date is fully booked. Choose another available date.</Notice>}
-          {draft?.facultyId && draft.preferredDate && !error && availableTimes.length === 0
-            ? <p className={styles.emptyState}>This faculty member has no availability on the selected date.</p>
-=======
           {!error && busyHours.length > 0 && <Notice>{draft?.facultyName || "This faculty member"} is busy right now, so {busyHours.length === 1 ? busyHours[0] : "the next hour"} can’t be booked. Other times are open.</Notice>}
           {!error && availableTimes.length > 0 && availableTimes.every((time) => unavailableTimes.includes(time)) && <Notice>This date is fully booked. Choose another available date.</Notice>}
           {draft?.facultyId && draft.preferredDate && !error && availableTimes.length === 0
             ? <EmptyState compact scene="calendar" title="This faculty member has no availability on the selected date." action={{ label: "Pick another date", href: "/student/calendar" }} />
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
             : <AvailabilitySlots times={availableTimes} unavailableTimes={unavailableTimes} selectedTime={draft?.preferredTime} onSelectTime={selectTime} disabled={!draft?.facultyId || !draft?.preferredDate} />}
         </section>
 

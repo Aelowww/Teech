@@ -13,10 +13,7 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
-<<<<<<< HEAD
-=======
 import { isBlockedWhileBusy } from "@/lib/time-slots";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -153,13 +150,8 @@ export default function Page() {
           : <EmptyState compact scene="inbox" title="No appointment information has been entered yet." action={{ label: "Start booking", href: "/student/faculty" }} />}
         {error && <Notice error>{error}</Notice>}
         <div className={styles.actions}>
-<<<<<<< HEAD
-          <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
-          <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
-=======
           <Link className={`${buttonStyles.button} ${buttonStyles.secondary}`} href="/student/appointment-info">Edit</Link>
           <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : "Submit Request"}</button>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         </div>
       </div>
       <ConfirmationModal open={confirming} title="Submit consultation request?" description="Your request will be sent to the selected faculty member for review." confirmLabel="Submit Request" onCancel={() => setConfirming(false)} onConfirm={handleSubmit} />

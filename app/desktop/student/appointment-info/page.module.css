@@ -2,10 +2,6 @@
   display: block;
 }
 
-<<<<<<< HEAD
-/* "Requesting as": read-only identity, shown as a quiet strip rather than fields. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .identity {
   margin-top: 4px;
   padding: 16px 20px;
@@ -72,10 +68,6 @@
   font-weight: 600;
 }
 
-<<<<<<< HEAD
-/* Editable fields */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .form {
   margin-top: 24px;
   display: grid;

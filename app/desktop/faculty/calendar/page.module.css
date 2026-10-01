@@ -64,3 +64,11 @@
     position: static;
   }
 }
+
+.summaryText {
+  min-width: 0;
+}
+
+.side > a {
+  margin-top: 16px;
+}

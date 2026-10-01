@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, GraduationCap, Presentation } from "lucide-react";
 import { Backdrop } from "@/app/desktop/_components/backdrop";
+import { WritingLogo } from "@/app/desktop/_components/writing-logo";
 import styles from "@/app/desktop/welcome/page.module.css";
 
 const roles = [
@@ -25,7 +25,7 @@ export function WelcomeScreen() {
       <Backdrop />
 
       <section className={styles.content}>
-        <Image className={styles.logo} src="/logo/teech_logo.svg" alt="Teech" width={1118} height={348} priority />
+        <div className={styles.logo}><WritingLogo /></div>
         <h1 className={styles.title}>Who&apos;s signing in?</h1>
         <p className={styles.subtitle}>Choose your role to continue.</p>
 

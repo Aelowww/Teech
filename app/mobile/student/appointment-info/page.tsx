@@ -11,10 +11,6 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
-<<<<<<< HEAD
-import { AppLoader } from "@/app/mobile/_components/app-loader";
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";

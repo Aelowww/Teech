@@ -248,11 +248,7 @@ export function EmptyState({
         <span className={styles.emptyDotSmall} />
       </span>
       <strong>{title}</strong>
-<<<<<<< HEAD
-      <p>{description}</p>
-=======
       {description && <p>{description}</p>}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
       {action && <Link className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.emptyAction}`} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
     </section>
   );
@@ -341,7 +337,9 @@ export function MonthCalendar({
   markedDates = [],
   availableDates,
   legend = "Select a date",
+  selectedLegend,
   disablePastDates = true,
+  soft = false,
   onSelectDate,
   onMonthChange,
 }: {
@@ -351,7 +349,9 @@ export function MonthCalendar({
   markedDates?: string[];
   availableDates?: string[];
   legend?: string;
+  selectedLegend?: string;
   disablePastDates?: boolean;
+  soft?: boolean;
   onSelectDate?: (date: string) => void;
   onMonthChange?: (month: Date) => void;
 }) {
@@ -373,7 +373,7 @@ export function MonthCalendar({
   }
 
   return (
-    <div className={styles.calendar}>
+    <div className={`${styles.calendar} ${soft ? styles.calendarSoft : ""}`}>
       <div className={styles.calendarHeader}>
         {onMonthChange
           ? <button type="button" aria-label="Previous month" onClick={() => changeMonth(-1)}><ChevronLeft size={14} /></button>
@@ -383,7 +383,7 @@ export function MonthCalendar({
           ? <button type="button" aria-label="Next month" onClick={() => changeMonth(1)}><ChevronRight size={14} /></button>
           : <span className={styles.calendarControl}><ChevronRight size={14} /></span>}
       </div>
-      <div className={styles.legend}><i /> {legend}</div>
+      <div className={styles.legend}><span><i /> {legend}</span>{selectedLegend && <span className={styles.legendSelected}><i /> {selectedLegend}</span>}</div>
       <div className={styles.calendarGrid}>
         {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => <span className={styles.weekday} key={`${day}${index}`}>{day}</span>)}
         {days.map((day, index) => {
@@ -392,7 +392,7 @@ export function MonthCalendar({
           const marked = markedDates.includes(date);
           const isAvailable = availableDates?.includes(date);
           const isPastDate = disablePastDates && date < today;
-          const className = `${styles.day} ${selected ? styles.daySelected : ""} ${marked && !selected ? styles.dayMarked : ""} ${isAvailable && !selected ? styles.dayAvailable : ""}`;
+          const className = `${styles.day} ${date === today ? styles.dayToday : ""} ${isPastDate ? styles.dayPast : ""} ${selected ? styles.daySelected : ""} ${marked && !selected ? styles.dayMarked : ""} ${isAvailable && !selected ? styles.dayAvailable : ""}`;
           return day > 0 && day <= daysInMonth
             ? onSelectDate && !isPastDate && (!availableDates || availableDates.includes(date))
               ? <button type="button" key={index} className={className} onClick={() => onSelectDate(date)}>{day}</button>
@@ -570,10 +570,6 @@ export function UpNextCard({
   );
 }
 
-<<<<<<< HEAD
-// "Today", "Tomorrow", "In 3 days", or the weekday for anything further out.
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 function relativeDay(day: Date) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);

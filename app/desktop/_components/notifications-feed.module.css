@@ -213,13 +213,6 @@
   }
 }
 
-<<<<<<< HEAD
-/* Desktop: keep the feed at a readable width. */
 .page {
   width: 100%;
-  max-width: 880px;
-=======
-.page {
-  width: 100%;
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }

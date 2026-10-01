@@ -19,8 +19,6 @@ export const badgeIcons: Record<string, LucideIcon> = {
 export function badgeIcon(id: string) {
   return badgeIcons[id] || Award;
 }
-<<<<<<< HEAD
-=======
 
 export const badgeColors: Record<string, [string, string]> = {
   photo: ["#ffe3ee", "#d8508a"],
@@ -45,4 +43,3 @@ export const badgeRarity: Record<string, BadgeRarity> = {
   "shop-night-owl": "rare",
   "shop-legend": "legendary",
 };
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
