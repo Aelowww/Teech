@@ -7,6 +7,7 @@ import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mo
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { createClient } from "@/lib/supabase/client";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
+import { SupportChat } from "@/app/mobile/_components/support-chat";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 
@@ -97,6 +98,7 @@ export default function Page() {
         <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Creating Account..." : "Create Account"}</button>
         <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign In</Link></p>
       </FormCard>
+      <SupportChat audience="guest" variant="link" />
       </form>
     </MobileLayout>
   );

@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { NavIcon, type NavIconName } from "./nav-icons";
 import { NotificationBell } from "./notification-bell";
 import { ShellProfile } from "./shell-profile";
+import { SupportChat } from "./support-chat";
 import styles from "./app-shell.module.css";
 
 type Role = "student" | "faculty";
@@ -64,6 +65,7 @@ export function AppShell({
         </nav>
 
         <div className={styles.sidebarFooter}>
+          <SupportChat audience={role} variant="row" className={styles.helpButton} />
           <ShellProfile role={role} name={name} subtitle={subtitle} avatarSrc={avatarSrc} />
         </div>
       </aside>

@@ -4,6 +4,7 @@ import { AvatarUploader } from "@/app/desktop/_components/avatar-uploader";
 import { ShowcasedBadges } from "@/app/desktop/_components/showcased-badges";
 import { SignOutButton } from "@/app/desktop/_components/sign-out-button";
 import { DeleteAccountButton } from "@/app/desktop/_components/delete-account-button";
+import { SupportChat } from "@/app/desktop/_components/support-chat";
 import styles from "./profile-overview.module.css";
 
 type Role = "student" | "faculty";
@@ -41,6 +42,7 @@ export function ProfileOverview({ role, name, avatarPath, photoUrl, badges }: { 
         </Group>
 
         <Group label="Help">
+          <SupportChat audience={role} variant="row" className={styles.row} />
           <SettingLink href={`${base}/privacy`} icon={ShieldCheck} label="Privacy Policy" />
           <SettingLink href={`${base}/terms`} icon={FileText} label="Terms of Service" />
         </Group>
