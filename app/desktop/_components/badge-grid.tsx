@@ -3,8 +3,8 @@
 import { useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Lock } from "lucide-react";
-import { badgeIcon } from "@/app/desktop/_components/badge-icons";
-import { badgeColors } from "@/app/desktop/_components/showcased-badges";
+import { BadgeMedal } from "@/app/desktop/_components/badge-medal";
+import { badgeColors } from "@/app/desktop/_components/badge-icons";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./badge-grid.module.css";
 
@@ -42,13 +42,12 @@ export function BadgeGrid({ badges, earnedIds, showcasedIds }: { badges: Badge[]
         <div className={styles.group}>
           <h2>Earned <span>{earnedBadges.length}</span></h2>
           <ul className={styles.list}>
-            {earnedBadges.map((badge) => {
-              const Icon = badgeIcon(badge.id);
+            {earnedBadges.map((badge, index) => {
               const isShown = showcased.includes(badge.id);
               const [tint, ink] = badgeColors[badge.id] || ["#efedfc", "#6a64c4"];
               return (
                 <li key={badge.id} className={`${styles.tile} ${isShown ? styles.tileShown : ""}`} style={{ "--badge-tint": tint, "--badge-ink": ink } as CSSProperties}>
-                  <span className={styles.icon}><Icon size={24} aria-hidden="true" /></span>
+                  <BadgeMedal id={badge.id} delay={index * 60} />
                   <span className={styles.text}>
                     <strong>{badge.name}</strong>
                     <small>{badge.description}</small>
@@ -77,10 +76,9 @@ export function BadgeGrid({ badges, earnedIds, showcasedIds }: { badges: Badge[]
           <h2>Locked <span>{lockedBadges.length}</span></h2>
           <ul className={styles.list}>
             {lockedBadges.map((badge) => {
-              const Icon = badgeIcon(badge.id);
               return (
                 <li key={badge.id} className={`${styles.tile} ${styles.locked}`} aria-label={`${badge.name}, locked. ${badge.description}`}>
-                  <span className={styles.icon}><Icon size={24} aria-hidden="true" /></span>
+                  <BadgeMedal id={badge.id} locked />
                   <span className={styles.text}>
                     <strong>{badge.name}</strong>
                     <small>{badge.description}</small>

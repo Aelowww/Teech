@@ -19,3 +19,19 @@ export const badgeIcons: Record<string, LucideIcon> = {
 export function badgeIcon(id: string) {
   return badgeIcons[id] || Award;
 }
+
+export const badgeColors: Record<string, [string, string]> = {
+  photo: ["#ffe3ee", "#d8508a"],
+  "streak-7": ["#ffe9d6", "#e0782e"],
+  "streak-30": ["#dff5ee", "#23946b"],
+  "streak-100": ["#e9e4ff", "#6a55d8"],
+  security: ["#e0f3e6", "#2f8f55"],
+  "first-consultation": ["#fff4cf", "#c9921a"],
+  regular: ["#e1efff", "#3b7bd4"],
+  "open-door": ["#e6f6f3", "#26917f"],
+  "quick-responder": ["#fff4cf", "#c9921a"],
+  mentor: ["#f1e6ff", "#8a4fd0"],
+  "shop-bookworm": ["#e1efff", "#3b7bd4"],
+  "shop-night-owl": ["#e7e8fb", "#4d52b8"],
+  "shop-legend": ["#fff1cc", "#c28a0e"],
+};

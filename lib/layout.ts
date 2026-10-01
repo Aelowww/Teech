@@ -4,4 +4,4 @@ export const layoutCookie = "teech-layout";
 
 export const desktopMinWidth = 768;
 
-export const forcedLayout: Layout | null = null;
+export const forcedLayout: Layout | null = "mobile";

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Lock } from "lucide-react";
-import { badgeIcon } from "@/app/mobile/_components/badge-icons";
+import { BadgeMedal } from "@/app/mobile/_components/badge-medal";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./badge-grid.module.css";
 
@@ -41,12 +41,11 @@ export function BadgeGrid({ badges, earnedIds, showcasedIds }: { badges: Badge[]
         <div className={styles.group}>
           <h2>Earned <span>{earnedBadges.length}</span></h2>
           <ul className={styles.list}>
-            {earnedBadges.map((badge) => {
-              const Icon = badgeIcon(badge.id);
+            {earnedBadges.map((badge, index) => {
               const isShown = showcased.includes(badge.id);
               return (
                 <li key={badge.id} className={styles.row}>
-                  <span className={`${styles.icon} ${styles.iconEarned}`}><Icon size={18} aria-hidden="true" /></span>
+                  <BadgeMedal id={badge.id} size={42} delay={index * 60} />
                   <span className={styles.text}>
                     <strong>{badge.name}</strong>
                     <small>{badge.description}</small>
@@ -75,10 +74,9 @@ export function BadgeGrid({ badges, earnedIds, showcasedIds }: { badges: Badge[]
           <h2>Locked <span>{lockedBadges.length}</span></h2>
           <ul className={styles.list}>
             {lockedBadges.map((badge) => {
-              const Icon = badgeIcon(badge.id);
               return (
                 <li key={badge.id} className={`${styles.row} ${styles.locked}`} aria-label={`${badge.name}, locked. ${badge.description}`}>
-                  <span className={styles.icon}><Icon size={18} aria-hidden="true" /></span>
+                  <BadgeMedal id={badge.id} size={42} locked />
                   <span className={styles.text}>
                     <strong>{badge.name}</strong>
                     <small>{badge.description}</small>
