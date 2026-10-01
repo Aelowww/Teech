@@ -9,7 +9,6 @@ import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
 import { createClient } from "@/lib/supabase/client";
 import { studentAuthEmail } from "@/lib/student-auth";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
-import { SupportChat } from "@/app/desktop/_components/support-chat";
 import styles from "@/app/desktop/_components/auth.module.css";
 
 type SignUpForm = {
@@ -81,7 +80,7 @@ export default function Page() {
   }
 
   return (
-    <AuthFrame onSubmit={handleSubmit} backTo="/student/sign-in" wide below={<SupportChat audience="guest" variant="link" />}>
+    <AuthFrame onSubmit={handleSubmit} backTo="/student/sign-in" wide>
       <div className={`${styles.form} ${styles.formColumns}`}>
         <div className={styles.fullRow}>
           <FormField label="Full Name" name="fullName" value={form.fullName} onChange={updateField("fullName")} placeholder="Enter your full name" required />

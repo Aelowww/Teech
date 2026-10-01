@@ -7,8 +7,6 @@ import { ChevronRight, Plus, UsersRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
 import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
-import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
-import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { CountUp } from "@/app/desktop/_components/count-up";
 import { createClient } from "@/lib/supabase/client";
@@ -130,8 +128,6 @@ export default function Page() {
 
         <div className={styles.layout}>
           <div className={styles.main}>
-            <FactCard role="student" />
-
             {nextAppointment ? (
               <UpNextCard
                 eyebrow="Up next"
@@ -163,7 +159,6 @@ export default function Page() {
           </div>
 
           <aside className={styles.rail}>
-            <LoginStreakCard role="student" />
             <section className={styles.overview} aria-label="Your requests">
               <h2>Your requests</h2>
               {overviewTotal > 0 && (

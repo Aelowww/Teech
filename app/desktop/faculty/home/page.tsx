@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
 import { DesktopLayout, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
-import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
-import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
@@ -115,8 +113,6 @@ export default function Page() {
 
       <div className={styles.layout}>
         <div className={styles.main}>
-        <FactCard role="faculty" />
-
         {nextConsultation ? (
           <UpNextCard
             eyebrow="Up next"
@@ -148,7 +144,6 @@ export default function Page() {
         </div>
 
         <aside className={styles.rail}>
-          <LoginStreakCard role="faculty" />
           {openDates.length > 0 && (
             <Link className={styles.availability} href="/faculty/availability">
               <CalendarCheck2 size={20} />
