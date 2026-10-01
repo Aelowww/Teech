@@ -60,27 +60,6 @@ export function AvatarUploader({ initialPath, initialUrl = null, compact = false
     inputRefs.current[source]?.click();
   }
 
-  useEffect(() => {
-    if (!menuOpen) return;
-    function onPointer(event: PointerEvent) {
-      if (!wrapRef.current?.contains(event.target as Node)) setMenuOpen(false);
-    }
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setMenuOpen(false);
-    }
-    document.addEventListener("pointerdown", onPointer);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onPointer);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [menuOpen]);
-
-  function choose(source: Source) {
-    setMenuOpen(false);
-    inputRefs.current[source]?.click();
-  }
-
   async function saveAvatarPath(nextPath: string | null) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();

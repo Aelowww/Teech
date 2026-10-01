@@ -3,11 +3,6 @@
   flex: 0 0 auto;
 }
 
-<<<<<<< HEAD
-/* ---------- Trigger: a soft pill tinted by the current status ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .trigger {
   min-height: 34px;
   padding: 0 10px 0 12px;
@@ -73,11 +68,6 @@
   transform: rotate(180deg);
 }
 
-<<<<<<< HEAD
-/* ---------- Status dots ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .dot {
   width: 8px;
   height: 8px;
@@ -97,15 +87,10 @@
   background: #d9534f;
 }
 
-<<<<<<< HEAD
-/* ---------- Menu ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .menu {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  left: 0;
   z-index: 20;
   width: min(300px, calc(100vw - 32px));
   padding: 6px;
@@ -145,10 +130,6 @@
   transition: background-color 160ms var(--button-ease);
 }
 
-<<<<<<< HEAD
-/* A slightly larger dot with a soft halo in the menu. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .option .dot {
   width: 10px;
   height: 10px;
@@ -189,10 +170,6 @@
   gap: 2px;
 }
 
-<<<<<<< HEAD
-/* Scoped under .menu so the page's greeting styles (big name text) never leak in. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .menu .optionText strong,
 .menu .optionText small {
   display: block;

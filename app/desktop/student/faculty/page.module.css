@@ -14,11 +14,6 @@
   margin-bottom: 0;
 }
 
-<<<<<<< HEAD
-/* ---------- Filter tabs (matches Requests) ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .filters {
   display: flex;
   gap: 32px;
@@ -100,11 +95,6 @@
   border-radius: 6px;
 }
 
-<<<<<<< HEAD
-/* ---------- Faculty cards ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .grid {
   margin: 0;
   padding: 0;
@@ -286,10 +276,6 @@ a.card:focus-visible {
   outline-offset: 2px;
 }
 
-<<<<<<< HEAD
-/* Faculty without open dates: still readable, clearly not actionable. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .cardUnavailable {
   background: #fbfbfd;
 }

@@ -42,10 +42,6 @@
   gap: 14px;
 }
 
-<<<<<<< HEAD
-/* Ported from mobile: CTA shimmer once the logo finishes writing. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .cta {
   display: flex;
   justify-content: center;
@@ -81,8 +77,3 @@
     animation: none;
   }
 }
-<<<<<<< HEAD
-
-/* The CTA's look comes from cta-link.module.css. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4

@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays } from "lucide-react";
-import { ActionButtons, MobileLayout, MonthCalendar, Notice, PageHeading } from "@/app/mobile/_components/ui";
+import { CalendarDays, ChevronRight } from "lucide-react";
+import { MobileLayout, MonthCalendar, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { createClient } from "@/lib/supabase/client";
+import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 
@@ -45,16 +47,16 @@ export default function Page() {
     <MobileLayout className={styles.screen} role="faculty" activeNav="calendar">
       <div className={styles.page}>
         <PageHeading title="Calendar" subtitle="Your published consultation dates." />
-        <MonthCalendar month={month} selectedDates={availability.map((slot) => slot.available_date)} legend="Available to students" onMonthChange={setMonth} />
+        <MonthCalendar soft month={month} markedDates={availability.map((slot) => slot.available_date)} legend="Published" onMonthChange={setMonth} />
         {error && <Notice error>{error}</Notice>}
         <section className={styles.summary}>
           <span className={styles.summaryIcon}><CalendarDays size={19} /></span>
-          <div>
-            <strong>{upcomingCount} upcoming {upcomingCount === 1 ? "date" : "dates"} published</strong>
-            <p>{upcomingCount ? "Students can request the marked dates." : "Publish dates so students can request a consultation."}</p>
+          <div className={styles.summaryText}>
+            <strong>{upcomingCount} upcoming {upcomingCount === 1 ? "date" : "dates"}</strong>
+            <p>{upcomingCount ? "Students can request these dates." : "Publish dates so students can book you."}</p>
           </div>
+          <Link className={`${buttonStyles.button} ${buttonStyles.secondary} ${styles.manage}`} href="/faculty/availability">Manage<ChevronRight size={14} /></Link>
         </section>
-        <ActionButtons actions={[{ label: "Manage Availability", href: "/faculty/availability" }]} primaryLabel="Manage Availability" />
       </div>
     </MobileLayout>
   );

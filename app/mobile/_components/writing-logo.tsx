@@ -40,11 +40,7 @@ export function WritingLogo({ children, width }: { children?: React.ReactNode; w
       data-playing={playing || undefined}
       style={{ "--written": `${writingTime}ms` } as CSSProperties}
     >
-<<<<<<< HEAD
-      <div className={styles.logo} role="img" aria-label="Teech">
-=======
       <div ref={logoRef} className={styles.logo} style={width ? { width } : undefined} role="img" aria-label="Teech">
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         {frames.map((width, index) => {
           const isFinal = index === frames.length - 1;
           const stroke = timeline[index];

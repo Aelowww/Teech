@@ -3,11 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
-import { DesktopLayout, Notice, PageHeading, DetailList } from "@/app/desktop/_components/ui";
-=======
 import { DesktopLayout, EmptyState, Notice, PageHeading, DetailList } from "@/app/desktop/_components/ui";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import {
   emptyAppointmentDraft,
@@ -17,10 +13,7 @@ import {
   type AppointmentDraft,
 } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
-<<<<<<< HEAD
-=======
 import { isBlockedWhileBusy } from "@/lib/time-slots";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { BookingSteps } from "@/app/desktop/_components/booking-steps";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import booking from "@/app/desktop/_components/booking.module.css";
@@ -158,20 +151,12 @@ export default function Page() {
           <PageHeading title="Review Appointment" subtitle="Review the information you entered before submitting." />
           {details.length > 0
             ? <DetailList details={details} />
-<<<<<<< HEAD
-            : <p className={styles.emptyState}>No appointment information has been entered yet.</p>}
-=======
             : <EmptyState compact scene="inbox" title="No appointment information has been entered yet." action={{ label: "Start booking", href: "/student/faculty" }} />}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         </section>
 
         <aside className={booking.side}>
           {error && <Notice error>{error}</Notice>}
-<<<<<<< HEAD
-          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{checkingAvailability ? "Checking availability..." : submitting ? "Submitting..." : "Submit Request"}</button>
-=======
           <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={requestSubmission} disabled={!isAppointmentDraftComplete(draft) || submitting || checkingAvailability}>{submitting ? "Submitting..." : "Submit Request"}</button>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           <Link className={styles.editButton} href="/student/appointment-info">Edit</Link>
         </aside>
       </div>
@@ -196,11 +181,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
   }
 
   const requestedTime = toDatabaseTime(draft.preferredTime);
-<<<<<<< HEAD
-  const [availabilityResult, bookedSlotsResult] = await Promise.all([
-=======
   const [availabilityResult, bookedSlotsResult, presenceResult] = await Promise.all([
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     supabase
       .from("faculty_availability")
       .select("start_time, end_time, meeting_location")
@@ -210,10 +191,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
     supabase.rpc("get_reserved_appointment_slots", {
       requested_faculty_profile_id: draft.facultyId,
     }),
-<<<<<<< HEAD
-=======
     supabase.from("profiles").select("presence_status").eq("id", draft.facultyId).maybeSingle(),
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   ]);
 
   if (availabilityResult.error || bookedSlotsResult.error) {
@@ -226,11 +204,7 @@ async function findAvailableSlot(supabase: ReturnType<typeof createClient>, draf
   const matchingSlot = availability.find((slot) => requestedMinutes >= databaseTimeToMinutes(slot.start_time) && requestedMinutes < databaseTimeToMinutes(slot.end_time));
   const booked = ((bookedSlotsResult.data || []) as { preferred_date: string; preferred_time: string }[])
     .some((slot) => slot.preferred_date === draft.preferredDate && slot.preferred_time.slice(0, 5) === requestedTime.slice(0, 5));
-<<<<<<< HEAD
-  if (!matchingSlot || booked) return { kind: "unavailable", unavailable: "time" };
-=======
   if (!matchingSlot || booked || isBlockedWhileBusy(draft.preferredDate, draft.preferredTime, presenceResult.data?.presence_status)) return { kind: "unavailable", unavailable: "time" };
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
   return { kind: "available", meetingLocation: matchingSlot.meeting_location || null };
 }

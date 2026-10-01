@@ -9,10 +9,7 @@ import { Check } from "lucide-react";
 import { getPasswordError, passwordRules } from "@/lib/password";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
-<<<<<<< HEAD
-=======
 import { SuccessModal } from "./success-modal";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import styles from "./profile-settings.module.css";
 import formStyles from "./change-password-form.module.css";
 

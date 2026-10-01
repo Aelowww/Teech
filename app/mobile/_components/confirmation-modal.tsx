@@ -11,12 +11,7 @@ type ConfirmationModalProps = {
   title: string;
   description: string;
   confirmLabel: string;
-<<<<<<< HEAD
-  tone?: "default" | "danger";
-  /** Icon for the action, e.g. LogOut for signing out. Defaults to a warning (danger) or a question mark. */
-=======
   tone?: "default" | "danger" | "success";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   icon?: LucideIcon;
   confirmationText?: string;
   hideCancel?: boolean;
@@ -81,18 +76,10 @@ export function ConfirmationModal({
 
   const Icon = icon || (tone === "danger" ? AlertTriangle : CircleHelp);
 
-<<<<<<< HEAD
-  // Rendered at the top of the page so it never picks up styles from wherever the trigger sits.
-  return createPortal(
-    <div className={styles.backdrop} role="presentation" onMouseDown={() => !submitting && dismiss()}>
-      <section
-        className={`${styles.dialog} ${tone === "danger" ? styles.danger : ""}`}
-=======
   return createPortal(
     <div className={styles.backdrop} role="presentation" onMouseDown={() => !submitting && dismiss()}>
       <section
         className={`${styles.dialog} ${tone === "danger" ? styles.danger : tone === "success" ? styles.success : ""}`}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -110,11 +97,7 @@ export function ConfirmationModal({
         )}
         {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}>
-<<<<<<< HEAD
-          <button className={`${buttonStyles.button} ${buttonStyles.block} ${styles.cancel}`} type="button" onClick={dismiss} disabled={submitting}>Cancel</button>
-=======
           {!hideCancel && <button className={`${buttonStyles.button} ${buttonStyles.block} ${styles.cancel}`} type="button" onClick={dismiss} disabled={submitting}>Cancel</button>}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${tone === "danger" ? styles.confirmDanger : ""}`} type="button" onClick={confirm} disabled={submitting} autoFocus>{submitting ? "Please wait..." : confirmLabel}</button>
         </div>
       </section>

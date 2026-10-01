@@ -72,10 +72,7 @@ export default function Page() {
       setError(signUpError.message);
       return;
     }
-<<<<<<< HEAD
-=======
     await createClient().auth.signOut();
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     router.push("/faculty/account-created");
   }
 

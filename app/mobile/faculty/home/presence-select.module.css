@@ -3,8 +3,6 @@
   flex: 0 0 auto;
 }
 
-/* ---------- Trigger: a soft pill tinted by the current status ---------- */
-
 .trigger {
   min-height: 34px;
   padding: 0 10px 0 12px;
@@ -70,8 +68,6 @@
   transform: rotate(180deg);
 }
 
-/* ---------- Status dots ---------- */
-
 .dot {
   width: 8px;
   height: 8px;
@@ -91,15 +87,13 @@
   background: #d9534f;
 }
 
-/* ---------- Menu ---------- */
-
 .menu {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
   z-index: 20;
-  width: min(256px, calc(100vw - 32px));
-  padding: 6px;
+  width: min(212px, calc(100vw - 32px));
+  padding: 5px;
   display: grid;
   gap: 2px;
   background: #fff;
@@ -111,7 +105,7 @@
 }
 
 .menu .menuTitle {
-  margin: 6px 10px 6px;
+  margin: 5px 9px 4px;
   color: #a9a8bd;
   font-size: 11px;
   font-weight: 600;
@@ -121,10 +115,11 @@
 
 .option {
   width: 100%;
-  padding: 10px;
+  min-height: 38px;
+  padding: 0 9px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: var(--ink);
   background: transparent;
   border: 0;
@@ -136,10 +131,6 @@
   transition: background-color 160ms var(--button-ease);
 }
 
-<<<<<<< HEAD
-/* A slightly larger dot with a soft halo in the menu. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .option .dot {
   width: 10px;
   height: 10px;
@@ -176,34 +167,23 @@
 .optionText {
   min-width: 0;
   flex: 1;
-  display: grid;
-  gap: 2px;
-}
-
-<<<<<<< HEAD
-/* Scoped under .menu so the page's greeting styles (big name text) never leak in. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
-.menu .optionText strong,
-.menu .optionText small {
-  display: block;
-  margin: 0;
-  overflow: visible;
-  letter-spacing: 0;
-  white-space: normal;
-}
-
-.menu .optionText strong {
   color: var(--ink);
   font-size: 14px;
-  font-weight: 600;
-  line-height: 1.3;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
-.menu .optionText small {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
+.option[aria-selected="true"] .optionText {
+  font-weight: 600;
+}
+
+.menu .menuNote {
+  margin: 4px 0 0;
+  padding: 8px 9px 5px;
+  color: #a9a8bd;
+  border-top: 1px solid #f2f1f8;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .check {

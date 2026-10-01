@@ -6,17 +6,10 @@ import { CalendarDays, Clock3, MapPin } from "lucide-react";
 import { MobileLayout, EmptyState, Notice, PageHeading, AvailabilitySlots } from "@/app/mobile/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
-<<<<<<< HEAD
-import { AppLoader } from "@/app/mobile/_components/app-loader";
-import { slotsFor } from "@/lib/time-slots";
-import buttonStyles from "@/app/mobile/_components/button.module.css";
-import styles from "./page.module.css";
-=======
 import { isBlockedWhileBusy, slotsFor } from "@/lib/time-slots";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./page.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 
 export default function Page() {
   const router = useRouter();

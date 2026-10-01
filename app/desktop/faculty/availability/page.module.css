@@ -60,8 +60,8 @@
   min-height: 50px;
   padding: 0 14px;
   color: var(--ink);
-  background: #f8f8fc;
-  border: 1px solid #dcdce9;
+  background: #fff;
+  border: 1px solid var(--line);
   border-radius: 14px;
   outline: 0;
   font: inherit;
@@ -79,7 +79,8 @@
 .times input:disabled,
 .location input:disabled {
   color: #a4a4b5;
-  background: #f1f0f6;
+  background: #fafafd;
+  border-style: dashed;
   cursor: not-allowed;
 }
 
@@ -135,10 +136,6 @@
   }
 }
 
-<<<<<<< HEAD
-/* Look comes from button.module.css. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .saveButton {
   width: 100%;
 }

@@ -39,15 +39,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       .maybeSingle(),
   ]);
   if (!profile || profile.role !== "student") redirect("/student/sign-in");
-<<<<<<< HEAD
-
-  const { data: appointment } = await supabase
-    .from("appointment_requests")
-    .select("id, appointment_code, faculty_profile_id, faculty_name, preferred_date, preferred_time, reason, details, meeting_location, status, cancelled_by")
-    .eq("id", id)
-    .maybeSingle();
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   if (!appointment) redirect("/student/appointment-requests");
 
   const request = appointment as Appointment;

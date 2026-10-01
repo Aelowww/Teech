@@ -259,12 +259,6 @@
   justify-items: center;
 }
 
-<<<<<<< HEAD
-/* ---------- Entrance animation ---------- */
-
-/* The status badge pops in; when confirmed, its circle and tick draw themselves on, then a soft ring ripples out once. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .statusMark {
   position: relative;
   animation: markPop 460ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -293,10 +287,6 @@
   pointer-events: none;
 }
 
-<<<<<<< HEAD
-/* Declined or cancelled: the circle draws on, then each stroke of the X, then a small "no" shake. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .statusMark.declined svg circle,
 .statusMark.cancelled svg circle {
   stroke-dasharray: 64;
@@ -306,8 +296,8 @@
 
 .statusMark.declined svg path,
 .statusMark.cancelled svg path {
-  stroke-dasharray: 9;
-  stroke-dashoffset: 9;
+  stroke-dasharray: 22;
+  stroke-dashoffset: 22;
   animation: draw 220ms ease-out 620ms forwards;
 }
 
@@ -321,10 +311,6 @@
   animation: shake 420ms ease-in-out 1040ms;
 }
 
-<<<<<<< HEAD
-/* Progress: the line fills from the left and each step pops in after it. */
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .timeline::after {
   transform-origin: left center;
   animation: lineGrow 600ms var(--button-ease) 200ms both;

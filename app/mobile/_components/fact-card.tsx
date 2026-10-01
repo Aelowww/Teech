@@ -29,7 +29,7 @@ export function FactCard({ role }: { role: "student" | "faculty" }) {
   return (
     <div className={`${styles.root} ${styles[tone]}`} ref={rootRef}>
       <button className={`${styles.trigger} ${open ? styles.triggerOpen : ""}`} type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-label={open ? "Hide tip" : "Show tip"}>
-        <Lightbulb size={17} />
+        <Lightbulb className={styles.bulb} size={19} />
       </button>
       {open && (
         <aside className={styles.card} aria-live="polite" aria-label={fact.kind}>

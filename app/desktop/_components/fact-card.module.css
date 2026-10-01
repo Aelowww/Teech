@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-.root {
-=======
 .card {
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   --tone: var(--accent);
   --tone-dark: var(--accent-dark);
   --tone-soft: var(--accent-pale);
   --tone-line: #dcd9f5;
 
-<<<<<<< HEAD
-  flex: 0 0 auto;
-=======
   position: relative;
   padding: 22px 24px;
   display: flex;
@@ -33,7 +26,6 @@
   width: 5px;
   content: "";
   background: linear-gradient(180deg, var(--tone), var(--tone-dark));
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }
 
 .amber {
@@ -64,59 +56,6 @@
   --tone-line: #c9def6;
 }
 
-<<<<<<< HEAD
-.trigger {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  color: var(--tone-dark);
-  background: var(--tone-soft);
-  border: 1px solid var(--tone-line);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background var(--motion) var(--ease), color var(--motion) var(--ease);
-}
-
-.triggerOpen {
-  color: #fff;
-  background: linear-gradient(135deg, var(--tone), var(--tone-dark));
-  border-color: transparent;
-}
-
-.trigger:focus-visible,
-.header button:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--tone) 40%, transparent);
-  outline-offset: 2px;
-}
-
-.card {
-  position: absolute;
-  z-index: 25;
-  top: calc(100% + 8px);
-  right: 0;
-  left: 0;
-  padding: 10px 11px 9px;
-  display: grid;
-  gap: 5px;
-  background: linear-gradient(135deg, #fff 55%, var(--tone-soft) 100%);
-  border: 1px solid var(--tone-line);
-  border-left: 4px solid var(--tone);
-  border-radius: 14px;
-  box-shadow: 0 14px 32px rgba(43, 41, 85, 0.16);
-  animation: drop 0.2s ease;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-=======
 .watermark {
   position: absolute;
   right: -24px;
@@ -131,51 +70,11 @@
   position: relative;
   width: 56px;
   height: 56px;
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   display: grid;
   flex: 0 0 auto;
   place-items: center;
   color: #fff;
   background: linear-gradient(135deg, var(--tone), var(--tone-dark));
-<<<<<<< HEAD
-  border-radius: 6px;
-}
-
-.card .header strong {
-  display: block;
-  margin: 0;
-  flex: 1;
-  color: var(--tone-dark);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.header button {
-  width: 22px;
-  height: 22px;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  background: transparent;
-  border: 0;
-  border-radius: 7px;
-  cursor: pointer;
-}
-
-.header button:hover {
-  color: var(--tone-dark);
-  background: var(--tone-soft);
-}
-
-.card .text {
-  margin: 0;
-  color: var(--ink);
-  font-size: 14px;
-  line-height: 1.45;
-  animation: fade 0.3s ease;
-=======
   border-radius: 18px;
   box-shadow: 0 10px 22px color-mix(in srgb, var(--tone-dark) 30%, transparent);
 }
@@ -249,22 +148,11 @@
   font-weight: 500;
   line-height: 1.55;
   animation: fadeIn 0.35s ease;
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 }
 
 .footer {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
-  gap: 8px;
-}
-
-.progress {
-  width: 50px;
-  height: 3px;
-  overflow: hidden;
-  background: var(--tone-soft);
-=======
   gap: 12px;
 }
 
@@ -275,7 +163,6 @@
   overflow: hidden;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid var(--tone-line);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   border-radius: 999px;
 }
 
@@ -286,19 +173,6 @@
   border-radius: 999px;
 }
 
-<<<<<<< HEAD
-.card .footer small {
-  display: inline;
-  margin: 0;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-@keyframes drop {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-=======
 .footer small {
   color: var(--muted);
   font-size: 12px;
@@ -308,7 +182,6 @@
   from {
     opacity: 0;
     transform: translateY(4px);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   }
   to {
     opacity: 1;
@@ -316,86 +189,6 @@
   }
 }
 
-<<<<<<< HEAD
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .text {
-    animation: none;
-  }
-}
-
-/* Desktop: anchor the popover to the trigger instead of spanning the row. */
-.root {
-  position: relative;
-}
-
-.trigger {
-  width: 40px;
-  height: 40px;
-  transition:
-    background-color 200ms var(--button-ease),
-    color 200ms var(--button-ease),
-    transform 200ms var(--button-ease);
-}
-
-.card {
-  top: calc(100% + 10px);
-  right: auto;
-  left: 0;
-  width: 380px;
-  padding: 14px 16px 12px;
-  gap: 8px;
-}
-
-.icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
-}
-
-.header button {
-  width: 28px;
-  height: 28px;
-  transition:
-    color 200ms var(--button-ease),
-    background-color 200ms var(--button-ease);
-}
-
-.progress {
-  width: 72px;
-}
-
-@media (hover: hover) {
-  .trigger:not(.triggerOpen):hover {
-    transform: translateY(-1px);
-  }
-}
-
-.trigger:active {
-  transform: scale(0.92);
-  transition-duration: 100ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .trigger,
-  .header button {
-    transition: none;
-  }
-
-  .trigger:hover,
-  .trigger:active {
-    transform: none;
-  }
-=======
 @media (prefers-reduced-motion: reduce) {
   .text {
     animation: none;
@@ -404,5 +197,54 @@
   .next svg {
     transition: none;
   }
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
+}
+
+/* Compact: for narrow columns. Icon joins the header row; the tip gets the full width. */
+.compact {
+  padding: 18px 20px 16px;
+  display: block;
+}
+
+.compact .body {
+  gap: 10px;
+}
+
+.compact .header {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.compact .icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.compact .pill {
+  padding: 3px 9px;
+  font-size: 11px;
+}
+
+.compact .next {
+  min-height: 28px;
+  margin-left: auto;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.compact .text {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.compact .progress {
+  max-width: 120px;
+}
+
+.compact .watermark {
+  right: -18px;
+  bottom: -26px;
+  width: 110px;
+  height: 110px;
 }

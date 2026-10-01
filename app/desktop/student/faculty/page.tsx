@@ -24,11 +24,7 @@ const presenceLabels: Record<PresenceStatus, string> = {
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ filter?: string }> }) {
   const { filter } = await searchParams;
-<<<<<<< HEAD
-  const showingAll = filter === "all";
-=======
   const showingAll = filter !== "available";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const supabase = await createClient();
   const [{ data: faculty, error }, { data: availability }] = await Promise.all([
     supabase
@@ -49,16 +45,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
   const avatarUrls = new Map((signedAvatars || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]));
 
   const allFaculty = (faculty as FacultyProfile[] | null) || [];
-<<<<<<< HEAD
-  const availableCount = allFaculty.filter((profile) => (profile.presence_status || "available") === "available").length;
-  const facultyItems = allFaculty
-    .filter((profile) => showingAll || (profile.presence_status || "available") === "available")
-=======
   const isBookableNow = (profile: FacultyProfile) => (profile.presence_status || "available") === "available" && nextOpenDates.has(profile.id);
   const availableCount = allFaculty.filter(isBookableNow).length;
   const facultyItems = allFaculty
     .filter((profile) => showingAll || isBookableNow(profile))
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     .map((profile) => {
       const nextOpen = nextOpenDates.get(profile.id);
       const presence = profile.presence_status || "available";
@@ -81,17 +71,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
             <PageHeading title="Book a Consultation" subtitle="Choose an available faculty member for your consultation." />
           </div>
           <nav className={styles.filters} aria-label="Faculty filters">
-<<<<<<< HEAD
-            <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=all" aria-current={showingAll ? "page" : undefined}>
-              All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
-            </Link>
-            <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={!showingAll ? "page" : undefined}>
-=======
             <Link className={showingAll ? styles.filterSelected : ""} href="/student/faculty" aria-current={showingAll ? "page" : undefined}>
               All Faculty<span className={styles.filterCount}>{allFaculty.length}</span>
             </Link>
             <Link className={!showingAll ? styles.filterSelected : ""} href="/student/faculty?filter=available" aria-current={!showingAll ? "page" : undefined}>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
               Available<span className={styles.filterCount}>{availableCount}</span>
             </Link>
           </nav>
@@ -131,11 +114,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
             </ul>
           )
           : <EmptyState
-<<<<<<< HEAD
-=======
               scene={error ? "error" : showingAll ? "inbox" : "busy"}
               action={error ? { label: "Try again", href: "/student/faculty" } : showingAll ? { label: "Back to dashboard", href: "/student/home" } : { label: "See all faculty", href: "/student/faculty" }}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
               title={error ? "Faculty could not be loaded" : showingAll ? "No faculty profiles" : "No faculty available"}
               description={error ? "Check the database connection and faculty records." : showingAll ? "Faculty profiles will appear here after accounts are created." : "No faculty are available right now. Check All Faculty to see who is in a meeting or in class."}
             />}

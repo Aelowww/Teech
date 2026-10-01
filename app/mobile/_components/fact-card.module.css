@@ -35,23 +35,82 @@
   --tone-line: #c9def6;
 }
 
+/* Matches the notification bell beside it. */
 .trigger {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
   display: grid;
+  flex: 0 0 auto;
   place-items: center;
-  color: var(--tone-dark);
-  background: var(--tone-soft);
-  border: 1px solid var(--tone-line);
+  color: var(--accent);
+  background: transparent;
+  border: 0;
   border-radius: 50%;
   cursor: pointer;
-  transition: background var(--motion) var(--ease), color var(--motion) var(--ease);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 200ms var(--button-ease),
+    transform 200ms var(--button-ease);
+}
+
+.bulb {
+  fill: currentColor;
+  fill-opacity: 0;
+  transform-origin: 50% 12%;
+  transition: fill-opacity 220ms var(--button-ease);
+}
+
+@media (hover: hover) {
+  .trigger:hover {
+    background: var(--accent-pale);
+  }
+
+  .trigger:hover .bulb {
+    animation: wiggle 500ms var(--button-ease);
+  }
+}
+
+.trigger:active {
+  transform: scale(0.92);
+  transition-duration: 100ms;
+}
+
+.trigger:active .bulb,
+.triggerOpen .bulb {
+  fill-opacity: 1;
 }
 
 .triggerOpen {
-  color: #fff;
-  background: linear-gradient(135deg, var(--tone), var(--tone-dark));
-  border-color: transparent;
+  background: var(--accent-pale);
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  35% {
+    transform: rotate(9deg);
+  }
+  70% {
+    transform: rotate(-6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger,
+  .bulb {
+    transition: none;
+  }
+
+  .trigger:active {
+    transform: none;
+  }
+
+  .trigger:hover .bulb {
+    animation: none;
+  }
 }
 
 .trigger:focus-visible,

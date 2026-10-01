@@ -4,10 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MonthCalendar, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
-<<<<<<< HEAD
-=======
 import { SuccessModal } from "@/app/desktop/_components/success-modal";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
@@ -27,10 +24,7 @@ export default function Page() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
-<<<<<<< HEAD
-=======
   const [success, setSuccess] = useState<{ title: string; description: string } | null>(null);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
   const [bookedOnRemovedDates, setBookedOnRemovedDates] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -77,10 +71,7 @@ export default function Page() {
     if (insertError) { setError(insertError.message); return; }
     setAvailability((current) => [...current.filter((slot) => !selectedDates.includes(slot.available_date)), ...((data || []) as Availability[])].sort((a, b) => a.available_date.localeCompare(b.available_date)));
     setSavedCount(selectedDates.length);
-<<<<<<< HEAD
-=======
     setSuccess({ title: "Availability saved", description: `${selectedDates.length} ${selectedDates.length === 1 ? "date is" : "dates are"} now open for students to book.` });
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     setSelectedDates([]);
   }
 
@@ -104,10 +95,7 @@ export default function Page() {
     if (deleteError) return deleteError.message;
     setAvailability((current) => current.filter((slot) => !savedSelectedDates.includes(slot.available_date)));
     setSavedCount(0);
-<<<<<<< HEAD
-=======
     setSuccess({ title: "Availability removed", description: `${savedSelectedDates.length} ${savedSelectedDates.length === 1 ? "date is" : "dates are"} no longer open for booking.` });
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     setSelectedDates([]);
   }
 
@@ -115,7 +103,7 @@ export default function Page() {
     <DesktopLayout className={styles.screen} backTo="/faculty/calendar" role="faculty" activeNav="calendar">
       <PageHeading title="Availability" subtitle="Choose specific dates and times students can request." />
       <div className={styles.page}>
-        <MonthCalendar month={month} selectedDates={selectedDates} markedDates={availability.map((slot) => slot.available_date)} legend="Outlined dates are available to students" onSelectDate={selectDate} onMonthChange={setMonth} />
+        <MonthCalendar month={month} selectedDates={selectedDates} markedDates={availability.map((slot) => slot.available_date)} soft legend="Published" selectedLegend="Selected" onSelectDate={selectDate} onMonthChange={setMonth} />
         <aside className={styles.side}>
           <section className={styles.editor} aria-label="Selected date availability">
             <p className={styles.selectedDate}>{selectedDates.length ? `${selectedDates.length} ${selectedDates.length === 1 ? "date" : "dates"} selected` : "Select one or more dates from the calendar"}</p>
@@ -127,10 +115,6 @@ export default function Page() {
             {savedSelectedDates.length > 0 && <button className={styles.removeButton} type="button" onClick={startRemoval} disabled={saving}>Make {savedSelectedDates.length === 1 ? "selected date" : "selected dates"} unavailable</button>}
           </section>
           {error && <Notice error>{error}</Notice>}
-<<<<<<< HEAD
-          {savedCount > 0 && <Notice>{savedCount} {savedCount === 1 ? "date has" : "dates have"} been saved.</Notice>}
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           <div className={styles.saveArea}>
             <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${styles.saveButton}`} type="button" onClick={savedCount > 0 ? () => router.push("/faculty/calendar") : saveAvailability} disabled={saving || (!selectedDates.length && savedCount === 0)}>
               {saving ? "Saving..." : savedCount > 0 ? "View Calendar" : "Save Selected Dates"}
@@ -139,10 +123,7 @@ export default function Page() {
         </aside>
       </div>
       <ConfirmationModal open={confirmingRemoval} title="Remove availability?" description={`The selected ${savedSelectedDates.length === 1 ? "date will" : "dates will"} no longer be available for students to request.${bookedOnRemovedDates ? ` ${bookedOnRemovedDates} ${bookedOnRemovedDates === 1 ? "consultation is" : "consultations are"} already booked on ${savedSelectedDates.length === 1 ? "this date" : "these dates"} and will stay booked. Cancel or decline them from Requests if you can't attend.` : ""}`} confirmLabel="Remove Dates" tone="danger" onCancel={() => setConfirmingRemoval(false)} onConfirm={removeAvailability} />
-<<<<<<< HEAD
-=======
       <SuccessModal open={Boolean(success)} title={success?.title || ""} description={success?.description || ""} onDone={() => setSuccess(null)} />
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
     </DesktopLayout>
   );
 }

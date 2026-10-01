@@ -125,11 +125,7 @@ export function SupportChat({ audience, variant, className }: { audience: Suppor
             </div>
             <form className={styles.composer} onSubmit={submit}>
               <div className={styles.composerField}>
-<<<<<<< HEAD
-                <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask a question…" maxLength={200} aria-label="Your question" />
-=======
                 <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask a question…" maxLength={maxQuestionLength} aria-label="Your question" />
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
                 <button type="submit" disabled={!input.trim() || typing} aria-label="Send"><ArrowUp size={17} strokeWidth={2.4} /></button>
               </div>
               <p className={styles.notice}><ShieldCheck size={11} aria-hidden="true" />Questions I can&apos;t answer are sent to Google Gemini. Please don&apos;t share personal information.</p>

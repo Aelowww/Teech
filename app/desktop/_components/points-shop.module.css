@@ -31,11 +31,6 @@
   line-height: 1.5;
 }
 
-<<<<<<< HEAD
-/* ---------- Summary: balance · next reward · how to earn ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .summary {
   padding: 22px 26px;
   display: grid;
@@ -178,11 +173,6 @@
   font-weight: 700;
 }
 
-<<<<<<< HEAD
-/* ---------- Rewards ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .rewards {
   display: grid;
   gap: 14px;
@@ -314,11 +304,6 @@
   opacity: 0.7;
 }
 
-<<<<<<< HEAD
-/* ---------- History ---------- */
-
-=======
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 .panel {
   padding: 20px 22px;
   display: grid;
@@ -404,8 +389,6 @@
     transition: none;
   }
 }
-<<<<<<< HEAD
-=======
 
 /* Rarity tiers */
 .itemText strong {
@@ -497,4 +480,3 @@
     animation: none;
   }
 }
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4

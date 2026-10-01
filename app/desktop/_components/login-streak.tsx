@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-<<<<<<< HEAD
-import { Check, ChevronRight, Coins, Flame, Gift, Snowflake } from "lucide-react";
-=======
 import { ChevronRight, Coins, Flame, Gift, Snowflake, Trophy } from "lucide-react";
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 import { createClient } from "@/lib/supabase/client";
 import styles from "./login-streak.module.css";
 
@@ -82,28 +78,6 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   });
   const tomorrowReward = streak.upcomingRewards[0];
   const selectedDetail = days.find((day) => day.value === selectedDay) || days.find((day) => day.isToday);
-<<<<<<< HEAD
-
-  return (
-    <section className={styles.card} aria-label="Login streak">
-      <div className={styles.summary}>
-        <span className={styles.flame}><Flame size={20} /></span>
-        <div>
-          <strong>{streak.current} day{streak.current === 1 ? "" : "s"} streak</strong>
-          <small>
-            {tomorrowReward ? `Come back tomorrow for +${tomorrowReward} pts.` : "Come back tomorrow to keep it going."}
-            {streak.freezes > 0 && <span className={styles.freezes}><Snowflake size={10} />{streak.freezes}</span>}
-          </small>
-        </div>
-        <Link className={styles.points} href={`/${role}/points`} aria-label={`${streak.points} points. View and exchange points`}>
-          <Coins size={14} /><b>{streak.points}</b><small>pts</small>
-        </Link>
-      </div>
-      <div className={styles.days}>
-        {days.map((day) => {
-          const { value, label, active, frozen, isToday, isFuture, points } = day;
-          const selected = value === selectedDay;
-=======
   const milestone = nextMilestone(streak.current);
   const progress = Math.min(100, Math.round((streak.current / milestone) * 100));
   const daysLeft = milestone - streak.current;
@@ -140,29 +114,19 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
           const selected = value === selectedDay;
           const previous = days[index - 1];
           const linked = previous && (active || frozen) && (previous.active || previous.frozen);
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
           return (
             <button
               key={value}
               type="button"
-<<<<<<< HEAD
-              className={`${isFuture ? styles.dayFuture : ""} ${selected ? styles.daySelected : ""}`}
-=======
               className={`${isFuture ? styles.dayFuture : ""} ${selected ? styles.daySelected : ""} ${active ? styles.dayDone : ""}`}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
               aria-pressed={selected}
               aria-label={`${dayName(value, isToday)}: ${dayStatus(day)}`}
               onClick={() => setSelectedDay(value)}
             >
-<<<<<<< HEAD
-              <span className={`${active ? styles.dayActive : ""} ${frozen ? styles.dayFrozen : ""} ${isToday ? styles.dayToday : ""}`}>
-                {active && <Check size={11} strokeWidth={3} />}
-=======
               {index > 0 && <i className={`${styles.link} ${linked ? styles.linked : ""}`} aria-hidden="true" />}
               <span className={`${active ? styles.dayActive : ""} ${frozen ? styles.dayFrozen : ""} ${isToday ? styles.dayToday : ""}`}>
                 {active && <Flame size={13} fill="currentColor" strokeWidth={2} />}
                 {isFuture && points ? <Gift size={11} strokeWidth={2.2} /> : null}
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
                 {frozen && <Snowflake size={11} strokeWidth={2.5} />}
               </span>
               <em>{points ? `+${points}` : " "}</em>
@@ -186,8 +150,6 @@ export function LoginStreakCard({ role }: { role: "student" | "faculty" }) {
   );
 }
 
-<<<<<<< HEAD
-=======
 const MILESTONES = [3, 7, 14, 30, 50, 100, 200, 365];
 
 function nextMilestone(current: number) {
@@ -203,7 +165,6 @@ function streakMessage(current: number) {
   return "Legendary streak. Keep the flame alive!";
 }
 
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
 type StreakDay = { active: boolean; frozen: boolean; isToday: boolean; isFuture: boolean; points?: number };
 
 function dayName(value: string, isToday: boolean) {

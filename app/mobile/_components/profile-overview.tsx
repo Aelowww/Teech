@@ -22,8 +22,6 @@ export function ProfileOverview({ role, name, avatarPath, photoUrl, badges }: { 
         <ShowcasedBadges badges={badges} href={`${base}/badges`} />
       </header>
 
-<<<<<<< HEAD
-=======
       <ProfileMenu role={role} />
     </div>
   );
@@ -33,7 +31,6 @@ function ProfileMenu({ role }: { role: Role }) {
   const base = `/${role}/profile`;
   return (
     <>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
       <Group label="Account">
         <SettingLink href={`${base}/info`} icon={UserRound} label="Personal Information" />
         <SettingLink href={`${base}/badges`} icon={Award} label="Badges" />
@@ -54,11 +51,7 @@ function ProfileMenu({ role }: { role: Role }) {
         <SignOutButton redirectTo="/welcome" variant="row" className={styles.row} />
         <DeleteAccountButton role={role} className={`${styles.row} ${styles.danger}`} />
       </Group>
-<<<<<<< HEAD
-    </div>
-=======
     </>
->>>>>>> 15407c001be6ee368c2f9b88dbf08d94de8246e4
   );
 }
 
