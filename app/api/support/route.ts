@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { answersFor, type SupportAudience } from "@/app/mobile/_components/support-answers";
+import { maxQuestionLength } from "@/lib/support";
 
 const model = "gemini-2.5-flash";
 const windowMs = 10 * 60 * 1000;
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null) as { message?: unknown; audience?: unknown } | null;
   const message = typeof body?.message === "string" ? body.message.trim() : "";
   const audience = body?.audience === "student" || body?.audience === "faculty" ? body.audience : "guest";
-  if (!message || message.length > 300) return NextResponse.json({ error: "Please send a question under 300 characters." }, { status: 400 });
+  if (!message || message.length > maxQuestionLength) return NextResponse.json({ error: `Please send a question under ${maxQuestionLength} characters.` }, { status: 400 });
 
   if (isRateLimited(clientAddress(request))) return NextResponse.json({ error: "You've asked a lot of questions. Please try again in a few minutes." }, { status: 429 });
 
