@@ -114,6 +114,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
             </ul>
           )
           : <EmptyState
+              scene={error ? "error" : showingAll ? "inbox" : "busy"}
+              action={error ? { label: "Try again", href: "/student/faculty" } : showingAll ? { label: "Back to dashboard", href: "/student/home" } : { label: "See all faculty", href: "/student/faculty" }}
               title={error ? "Faculty could not be loaded" : showingAll ? "No faculty profiles" : "No faculty available"}
               description={error ? "Check the database connection and faculty records." : showingAll ? "Faculty profiles will appear here after accounts are created." : "No faculty are available right now. Check All Faculty to see who is in a meeting or in class."}
             />}

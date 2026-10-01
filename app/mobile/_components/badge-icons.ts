@@ -35,3 +35,11 @@ export const badgeColors: Record<string, [string, string]> = {
   "shop-night-owl": ["#e7e8fb", "#4d52b8"],
   "shop-legend": ["#fff1cc", "#c28a0e"],
 };
+
+export type BadgeRarity = "common" | "rare" | "legendary";
+
+export const badgeRarity: Record<string, BadgeRarity> = {
+  "shop-bookworm": "common",
+  "shop-night-owl": "rare",
+  "shop-legend": "legendary",
+};

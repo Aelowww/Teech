@@ -191,3 +191,182 @@
 .spent {
   color: #c2413b;
 }
+
+/* Next reward on the balance card */
+.balance .next {
+  flex: 1 0 100%;
+  padding-top: 12px;
+  display: grid;
+  gap: 7px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.balance .next p {
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  background: none;
+  border-radius: 0;
+  font-weight: 500;
+}
+
+.balance .next b {
+  font-weight: 700;
+}
+
+.track {
+  height: 7px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.track i {
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, #ffe3a3, #fff);
+  border-radius: 999px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  animation: grow 900ms var(--button-ease) backwards;
+  transform-origin: left;
+}
+
+/* Reward progress instead of a disabled pill */
+.progress {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.progress em {
+  margin: 0;
+  color: var(--muted);
+}
+
+.miniTrack {
+  width: 72px;
+  height: 5px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: #efeef6;
+  border-radius: 999px;
+}
+
+.miniTrack i {
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+  border-radius: 999px;
+  animation: grow 900ms var(--button-ease) backwards;
+  transform-origin: left;
+}
+
+.needMore {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.item button {
+  box-shadow: 0 4px 10px rgba(81, 76, 154, 0.25);
+}
+
+.ownedTag {
+  padding: 5px 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #15934e;
+  background: #e7f6ee;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.itemOwned {
+  background: #fbfbfd;
+}
+
+/* Rarity tiers */
+.item strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.rarity {
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.common .itemIcon {
+  background: linear-gradient(135deg, #5fc9b4, #26917f);
+}
+
+.common .rarity {
+  color: #1f7d6d;
+  background: #e2f5f1;
+}
+
+.rare .itemIcon {
+  background: linear-gradient(135deg, #6f86f0, #3c43b3);
+}
+
+.rare .rarity {
+  color: #3c43b3;
+  background: #e7e8fb;
+}
+
+.legendary {
+  border-color: #f3dc9a;
+  background: linear-gradient(135deg, #fffaf0 0%, #fff 60%);
+}
+
+.legendary .itemIcon {
+  position: relative;
+  background: linear-gradient(135deg, #ffd66b, #e0a21b 60%, #c28a0e);
+  box-shadow: 0 0 0 3px #fff3cf, 0 4px 14px rgba(224, 162, 27, 0.45);
+  animation: glow 2.6s ease-in-out infinite;
+}
+
+.legendary .rarity {
+  color: #fff;
+  background: linear-gradient(90deg, #f0b429, #d9890b);
+}
+
+.legendary .miniTrack i {
+  background: linear-gradient(90deg, #ffd66b, #e0a21b);
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px #fff3cf, 0 4px 14px rgba(224, 162, 27, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 3px #fff3cf, 0 4px 20px rgba(224, 162, 27, 0.65);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track i,
+  .miniTrack i,
+  .legendary .itemIcon {
+    animation: none;
+  }
+}

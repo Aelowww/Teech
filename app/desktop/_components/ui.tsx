@@ -10,7 +10,13 @@ import {
   Clock3,
   GraduationCap,
   Info,
+  BellRing,
+  CalendarHeart,
+  CloudOff,
+  Coffee,
   Inbox,
+  PartyPopper,
+  Sparkles,
   LockKeyhole,
   Mail,
   MapPin,
@@ -213,22 +219,43 @@ export function Notice({ children, error = false }: { children: React.ReactNode;
   );
 }
 
+type EmptyScene = "inbox" | "calendar" | "done" | "bell" | "busy" | "error";
+
+const emptyScenes: Record<EmptyScene, { Icon: typeof Inbox; tone: string }> = {
+  inbox: { Icon: Inbox, tone: styles.toneAccent },
+  calendar: { Icon: CalendarHeart, tone: styles.toneAccent },
+  done: { Icon: PartyPopper, tone: styles.toneGreen },
+  bell: { Icon: BellRing, tone: styles.toneOrange },
+  busy: { Icon: Coffee, tone: styles.toneOrange },
+  error: { Icon: CloudOff, tone: styles.tonePink },
+};
+
 export function EmptyState({
   title,
   description,
   icon,
   action,
+  scene = "inbox",
+  compact = false,
 }: {
   title: string;
-  description: string;
+  description?: string;
   icon?: React.ReactNode;
   action?: { label: string; href: string };
+  scene?: EmptyScene;
+  compact?: boolean;
 }) {
+  const { Icon, tone } = emptyScenes[scene];
   return (
-    <section className={styles.emptyState}>
-      {icon ? <span className={styles.emptyIcon} aria-hidden="true">{icon}</span> : <Inbox size={28} aria-hidden="true" />}
+    <section className={`${styles.emptyState} ${tone} ${compact ? styles.emptyCompact : ""}`}>
+      <span className={styles.emptyArt} aria-hidden="true">
+        <span className={styles.emptyIcon}>{icon ?? <Icon size={compact ? 22 : 30} strokeWidth={1.8} />}</span>
+        <Sparkles className={styles.emptySparkle} size={compact ? 11 : 14} />
+        <span className={styles.emptyDot} />
+        <span className={styles.emptyDotSmall} />
+      </span>
       <strong>{title}</strong>
-      <p>{description}</p>
+      {description && <p>{description}</p>}
       {action && <Link className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.emptyAction}`} href={action.href}>{action.label}<ChevronRight size={15} /></Link>}
     </section>
   );
