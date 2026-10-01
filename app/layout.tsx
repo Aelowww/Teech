@@ -3,7 +3,7 @@ import { LayoutSwitch } from "./_components/layout-switch";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Teech | Student and Faculty Consultations",
+  title: "Teech",
   description: "A clearer way for students and faculty to connect for consultations.",
 };
 
