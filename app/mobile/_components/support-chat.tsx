@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { ArrowUp, ChevronRight, MessageCircleQuestion, ShieldCheck, X } from "lucide-react";
 import { KiteIcon } from "@/app/mobile/_components/kite-icon";
 import { answersFor, respond, type SupportAnswer, type SupportAudience } from "@/app/mobile/_components/support-answers";
+import { maxQuestionLength } from "@/lib/support";
 import styles from "./support-chat.module.css";
 
 type Message = { id: number; from: "bot" | "user"; text: string; action?: { label: string; href: string } };
@@ -43,7 +44,8 @@ export function SupportChat({ audience, variant, className }: { audience: Suppor
         body: JSON.stringify({ message: question, audience }),
       });
       const data = await response.json() as { reply?: string; error?: string };
-      return data.reply || data.error || null;
+      if (data.reply) return data.reply;
+      return response.status === 429 ? data.error || null : null;
     } catch {
       return null;
     }
@@ -123,7 +125,7 @@ export function SupportChat({ audience, variant, className }: { audience: Suppor
             </div>
             <form className={styles.composer} onSubmit={submit}>
               <div className={styles.composerField}>
-                <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask a question…" maxLength={200} aria-label="Your question" />
+                <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Ask a question…" maxLength={maxQuestionLength} aria-label="Your question" />
                 <button type="submit" disabled={!input.trim() || typing} aria-label="Send"><ArrowUp size={17} strokeWidth={2.4} /></button>
               </div>
               <p className={styles.notice}><ShieldCheck size={11} aria-hidden="true" />Questions I can&apos;t answer are sent to Google Gemini. Please don&apos;t share personal information.</p>
