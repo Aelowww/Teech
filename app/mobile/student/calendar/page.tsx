@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
-import { MobileLayout, Notice, PageHeading, MonthCalendar } from "@/app/mobile/_components/ui";
+import { MobileLayout, EmptyState, Notice, PageHeading, MonthCalendar } from "@/app/mobile/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { isBlockedWhileBusy, isPastSlotToday, slotsFor } from "@/lib/time-slots";
@@ -118,7 +118,7 @@ export default function Page() {
             </div>
           </aside>
         )}
-        {draft?.facultyId && !error && availableDates.length === 0 && <p className={styles.emptyState}>This faculty member has not published any upcoming dates.</p>}
+        {draft?.facultyId && !error && availableDates.length === 0 && <EmptyState compact scene="calendar" title="This faculty member has not published any upcoming dates." action={{ label: "Choose another faculty", href: "/student/faculty" }} />}
         <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.continueButton}`} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue</button>
       </div>
     </MobileLayout>

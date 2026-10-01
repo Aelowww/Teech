@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { DesktopLayout, Notice, PageHeading, DetailList } from "@/app/desktop/_components/ui";
+import { DesktopLayout, EmptyState, Notice, PageHeading, DetailList } from "@/app/desktop/_components/ui";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import {
   emptyAppointmentDraft,
@@ -151,7 +151,7 @@ export default function Page() {
           <PageHeading title="Review Appointment" subtitle="Review the information you entered before submitting." />
           {details.length > 0
             ? <DetailList details={details} />
-            : <p className={styles.emptyState}>No appointment information has been entered yet.</p>}
+            : <EmptyState compact scene="inbox" title="No appointment information has been entered yet." action={{ label: "Start booking", href: "/student/faculty" }} />}
         </section>
 
         <aside className={booking.side}>

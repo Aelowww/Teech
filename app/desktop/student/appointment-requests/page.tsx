@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CalendarPlus, CheckCircle2, ChevronRight, UserRound } from "lucide-react";
+import { ChevronRight, UserRound } from "lucide-react";
 import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
@@ -155,12 +155,12 @@ function RequestsPage() {
             <ShowMoreButton remaining={list.remaining} canCollapse={list.canCollapse} onShowMore={list.showMore} onShowLess={list.showLess} />
           </div>
         ) : tab === "pending"
-          ? <EmptyState icon={<CheckCircle2 size={30} />} title="You're all caught up" description="None of your requests are waiting on a faculty response right now." />
+          ? <EmptyState scene="done" title="You're all caught up" description="None of your requests are waiting on a faculty response right now." action={{ label: "Book a consultation", href: "/student/faculty" }} />
           : tab === "confirmed"
-            ? <EmptyState icon={<CalendarPlus size={30} />} title="No confirmed consultations" description="Once a faculty member confirms a request, it will show up here." action={{ label: "Book a consultation", href: "/student/faculty" }} />
+            ? <EmptyState scene="calendar" title="No confirmed consultations" description="Once a faculty member confirms a request, it will show up here." action={{ label: "Book a consultation", href: "/student/faculty" }} />
             : tab === "closed"
-              ? <EmptyState icon={<CheckCircle2 size={30} />} title="Nothing closed yet" description="Declined and cancelled requests will show up here." />
-              : <EmptyState icon={<CalendarPlus size={30} />} title="No consultations yet" description="Stuck on a lesson, project, or thesis? Book a one-on-one consultation with a faculty member." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
+              ? <EmptyState scene="inbox" title="Nothing closed yet" description="Declined and cancelled requests will show up here." action={{ label: "Book a consultation", href: "/student/faculty" }} />
+              : <EmptyState scene="calendar" title="No consultations yet" description="Stuck on a lesson, project, or thesis? Book a one-on-one consultation with a faculty member." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
       </div>
     </DesktopLayout>
   );

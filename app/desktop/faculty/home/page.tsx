@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
-import { DesktopLayout, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+import { DesktopLayout, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -143,7 +143,7 @@ export default function Page() {
             Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
             {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
           </h2>
-          {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+          {pendingItems.length ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="You're all caught up." action={{ label: "Manage availability", href: "/faculty/availability" }} />}
         </section>
         </div>
 

@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Award, CalendarCheck, Coins, Snowflake } from "lucide-react";
-import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
+import { Award, CalendarCheck, Check, Coins, Snowflake } from "lucide-react";
+import { MobileLayout, EmptyState, Notice, PageHeading } from "@/app/mobile/_components/ui";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { SuccessModal } from "@/app/mobile/_components/success-modal";
 import { ShowMoreButton, useShowMore } from "@/app/mobile/_components/show-more";
-import { badgeIcons } from "@/app/mobile/_components/badge-icons";
+import { badgeIcons, badgeRarity } from "@/app/mobile/_components/badge-icons";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./points-shop.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
@@ -73,6 +73,10 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
     return { label: "Redeem", disabled: false };
   }
 
+  const nextReward = items
+    .filter((item) => item.cost > balance && !itemState(item).label.startsWith("Owned") && !itemState(item).label.startsWith("Max"))
+    .sort((first, second) => first.cost - second.cost)[0];
+
   return (
     <MobileLayout className={styles.screen} backTo={`/${role}/home`} role={role} activeNav="home">
       <div className={styles.page}>
@@ -85,6 +89,18 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
             <strong>{balance} <em>pts</em></strong>
           </div>
           {freezes > 0 && <p><Snowflake size={12} />{freezes} {freezes === 1 ? "freeze" : "freezes"} ready</p>}
+          <div className={styles.next}>
+            {nextReward ? (
+              <>
+                <p><span>Next: <b>{nextReward.name}</b></span><span>{nextReward.cost - balance} pts to go</span></p>
+                <div className={styles.track} role="progressbar" aria-valuemin={0} aria-valuemax={nextReward.cost} aria-valuenow={balance} aria-label={`Progress to ${nextReward.name}`}>
+                  <i style={{ width: `${Math.min(100, (balance / nextReward.cost) * 100)}%` }} />
+                </div>
+              </>
+            ) : (
+              <p><span>{items.length ? "You can redeem everything available" : "Rewards are coming soon"}</span></p>
+            )}
+          </div>
         </section>
 
         {error && <Notice error>{error}</Notice>}
@@ -101,15 +117,30 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
           {items.map((item) => {
             const Icon = item.kind === "freeze" ? Snowflake : (item.badge_id && badgeIcons[item.badge_id]) || Award;
             const state = itemState(item);
+            const owned = state.label === "Owned" || state.label.startsWith("Max");
+            const rarity = item.badge_id ? badgeRarity[item.badge_id] : undefined;
             return (
-              <article className={styles.item} key={item.id}>
+              <article className={`${styles.item} ${rarity ? styles[rarity] : ""} ${owned ? styles.itemOwned : ""}`} key={item.id}>
                 <span className={`${styles.itemIcon} ${item.kind === "freeze" ? styles.itemFreeze : ""}`}><Icon size={18} /></span>
                 <div>
-                  <strong>{item.name}</strong>
+                  <strong>{item.name}{rarity && <span className={styles.rarity}>{rarity}</span>}</strong>
                   <small>{item.description}</small>
-                  <em><Coins size={11} />{item.cost} pts</em>
+                  {!state.disabled || owned ? (
+                    <em><Coins size={11} />{item.cost} pts</em>
+                  ) : (
+                    <span className={styles.progress}>
+                      <span className={styles.miniTrack}><i style={{ width: `${Math.min(100, (balance / item.cost) * 100)}%` }} /></span>
+                      <em><Coins size={11} />{balance} / {item.cost}</em>
+                    </span>
+                  )}
                 </div>
-                <button type="button" onClick={() => { setNotice(""); setRedeeming(item); }} disabled={state.disabled}>{state.label}</button>
+                {owned ? (
+                  <span className={styles.ownedTag}><Check size={12} strokeWidth={2.75} />{state.label}</span>
+                ) : state.disabled ? (
+                  <span className={styles.needMore}>{state.label}</span>
+                ) : (
+                  <button type="button" onClick={() => { setNotice(""); setRedeeming(item); }}>{state.label}</button>
+                )}
               </article>
             );
           })}
@@ -126,7 +157,7 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
             ))}
             <ShowMoreButton remaining={history.remaining} canCollapse={history.canCollapse} onShowMore={history.showMore} onShowLess={history.showLess} />
           </div>
-        ) : <p className={styles.hint}>No points yet. Your first check-in is on the dashboard.</p>}
+        ) : <EmptyState compact scene="bell" title="No points yet. Your first check-in is on the dashboard." action={{ label: "Go to dashboard", href: `/${role}/home` }} />}
       </div>
       <ConfirmationModal
         open={Boolean(redeeming)}

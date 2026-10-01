@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Plus, UsersRound } from "lucide-react";
 import { AppShell } from "@/app/desktop/_components/app-shell";
-import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
+import { CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop/_components/ui";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
@@ -158,7 +158,7 @@ export default function Page() {
                 Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
                 {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
               </h2>
-              {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+              {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="No requests are waiting on faculty." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
             </section>
           </div>
 

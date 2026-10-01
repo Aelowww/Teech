@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Award, CalendarCheck, Check, Coins, Snowflake } from "lucide-react";
-import { DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
+import { DesktopLayout, EmptyState, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { SuccessModal } from "@/app/desktop/_components/success-modal";
 import { ShowMoreButton, useShowMore } from "@/app/desktop/_components/show-more";
-import { badgeIcons } from "@/app/desktop/_components/badge-icons";
+import { badgeIcons, badgeRarity } from "@/app/desktop/_components/badge-icons";
 import { createClient } from "@/lib/supabase/client";
 import buttonStyles from "./button.module.css";
 import styles from "./points-shop.module.css";
@@ -122,12 +122,13 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
                 const Icon = item.kind === "freeze" ? Snowflake : (item.badge_id && badgeIcons[item.badge_id]) || Award;
                 const state = itemState(item);
                 const owned = state.label === "Owned" || state.label.startsWith("Max");
+                const rarity = item.badge_id ? badgeRarity[item.badge_id] : undefined;
                 const affordable = !state.disabled;
                 return (
-                  <article className={`${styles.item} ${owned ? styles.itemOwned : ""}`} key={item.id}>
+                  <article className={`${styles.item} ${rarity ? styles[rarity] : ""} ${owned ? styles.itemOwned : ""}`} key={item.id}>
                     <span className={`${styles.itemIcon} ${item.kind === "freeze" ? styles.itemFreeze : ""}`}><Icon size={20} /></span>
                     <div className={styles.itemText}>
-                      <strong>{item.name}</strong>
+                      <strong>{item.name}{rarity && <span className={styles.rarity}>{rarity}</span>}</strong>
                       <small>{item.description}</small>
                     </div>
                     <div className={styles.itemAction}>
@@ -164,7 +165,7 @@ export function PointsShop({ role }: { role: "student" | "faculty" }) {
                 ))}
                 <ShowMoreButton remaining={history.remaining} canCollapse={history.canCollapse} onShowMore={history.showMore} onShowLess={history.showLess} />
               </div>
-            ) : <p className={styles.hint}>No points yet. Your first check-in is on the dashboard.</p>}
+            ) : <EmptyState compact scene="bell" title="No points yet. Your first check-in is on the dashboard." action={{ label: "Go to dashboard", href: `/${role}/home` }} />}
           </section>
         </aside>
       </div>

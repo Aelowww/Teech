@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UsersRound } from "lucide-react";
-import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
+import { MobileLayout, BrandLogo, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
@@ -136,7 +136,7 @@ export default function Page() {
           Awaiting Response {pendingAppointments.length > 0 && <span className={styles.count}>{pendingAppointments.length}</span>}
           {pendingAppointments.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/student/appointment-requests?status=pending">See all</Link>}
         </h2>
-        {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>No requests are waiting on faculty.</p>}
+        {pendingItems.length > 0 ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="No requests are waiting on faculty." action={{ label: "Book a consultation", href: "/student/faculty" }} />}
         <SupportChat audience="student" variant="floating" />
       </div>
     </MobileLayout>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, MapPin, UserRound } from "lucide-react";
-import { DesktopLayout, Notice, PageHeading, MonthCalendar } from "@/app/desktop/_components/ui";
+import { DesktopLayout, EmptyState, Notice, PageHeading, MonthCalendar } from "@/app/desktop/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
@@ -122,7 +122,7 @@ export default function Page() {
             {meetingLocation && <div><MapPin size={18} /><dt>Meeting location</dt><dd>{meetingLocation}</dd></div>}
           </dl>
           {error && <Notice error>{error}</Notice>}
-          {draft?.facultyId && !error && availableDates.length === 0 && <p className={booking.hint}>This faculty member has not published any upcoming dates.</p>}
+          {draft?.facultyId && !error && availableDates.length === 0 && <EmptyState compact scene="calendar" title="This faculty member has not published any upcoming dates." action={{ label: "Choose another faculty", href: "/student/faculty" }} />}
           <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${booking.continueButton}`} type="button" onClick={continueToTimes} disabled={!draft?.facultyId || !draft.preferredDate || !availableDates.includes(draft.preferredDate)}>Continue<ArrowRight size={17} /></button>
         </aside>
       </div>

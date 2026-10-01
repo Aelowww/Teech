@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarDays, Clock3, MapPin } from "lucide-react";
-import { MobileLayout, Notice, PageHeading, AvailabilitySlots } from "@/app/mobile/_components/ui";
+import { MobileLayout, EmptyState, Notice, PageHeading, AvailabilitySlots } from "@/app/mobile/_components/ui";
 import { getAppointmentDraft, saveAppointmentDraft, type AppointmentDraft } from "@/lib/local-appointments";
 import { createClient } from "@/lib/supabase/client";
 import { isBlockedWhileBusy, slotsFor } from "@/lib/time-slots";
@@ -112,7 +112,7 @@ export default function Page() {
         {!error && busyHours.length > 0 && <Notice>{draft?.facultyName || "This faculty member"} is busy right now, so {busyHours.length === 1 ? busyHours[0] : "the next hour"} can’t be booked. Other times are open.</Notice>}
         {!error && availableTimes.length > 0 && availableTimes.every((time) => unavailableTimes.includes(time)) && <Notice>This date is fully booked. Choose another available date.</Notice>}
         {draft?.facultyId && draft.preferredDate && !error && availableTimes.length === 0
-          ? <p className={styles.emptyState}>This faculty member has no availability on the selected date.</p>
+          ? <EmptyState compact scene="calendar" title="This faculty member has no availability on the selected date." action={{ label: "Pick another date", href: "/student/calendar" }} />
           : <AvailabilitySlots times={availableTimes} unavailableTimes={unavailableTimes} selectedTime={draft?.preferredTime} onSelectTime={selectTime} disabled={!draft?.facultyId || !draft?.preferredDate} />}
         {draft?.preferredDate && <div className={styles.selectionSummary}>
           <CalendarDays size={16} />

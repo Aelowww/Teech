@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarCheck2, CalendarDays, ChevronRight, Inbox } from "lucide-react";
-import { MobileLayout, BrandLogo, CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
+import { MobileLayout, BrandLogo, CardList, EmptyState, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/mobile/_components/ui";
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
@@ -146,7 +146,7 @@ export default function Page() {
           Needs Your Response {pending.length > 0 && <span className={styles.count}>{pending.length}</span>}
           {pending.length > pendingPreviewLimit && <Link className={styles.seeAll} href="/faculty/requests">See all</Link>}
         </h2>
-        {pendingItems.length ? <CardList items={pendingItems} /> : <p className={styles.emptyState}>You&apos;re all caught up.</p>}
+        {pendingItems.length ? <CardList items={pendingItems} /> : <EmptyState compact scene="done" title="You're all caught up." action={{ label: "Manage availability", href: "/faculty/availability" }} />}
         <SupportChat audience="faculty" variant="floating" />
       </div>
     </MobileLayout>
