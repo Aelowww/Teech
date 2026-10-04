@@ -20,7 +20,7 @@ type Account = {
   identifier: string | null;
   course_year: string | null;
   department: string | null;
-  verification_status: Status;
+  verification_status: Status | "unsubmitted";
   verification_note: string | null;
   rejected_identifier: string | null;
   document_path: string | null;
@@ -83,7 +83,7 @@ export function VerificationQueue({ role }: { role: "student" | "faculty" }) {
 
   const counts = useMemo(() => {
     const result: Record<Status, number> = { pending: 0, verified: 0, rejected: 0 };
-    accounts.forEach((account) => { if (account.role === role) result[account.verification_status] += 1; });
+    accounts.forEach((account) => { if (account.role === role && account.verification_status !== "unsubmitted") result[account.verification_status] += 1; });
     return result;
   }, [accounts, role]);
 
@@ -175,11 +175,11 @@ export function VerificationQueue({ role }: { role: "student" | "faculty" }) {
 
                 <dl className={styles.meta}>
                   <div><dt>{account.role === "student" ? "Student ID" : "Faculty ID"}</dt><dd className={styles.mono}>{account.identifier || account.rejected_identifier || "—"}</dd></div>
-                  <div><dt>{account.role === "student" ? "Course & year" : "Department"}</dt><dd>{(account.role === "student" ? account.course_year : account.department) || "—"}</dd></div>
+                  <div><dt>Department</dt><dd>{account.department || account.course_year || "—"}</dd></div>
                   <div><dt>{tab === "pending" ? "Signed up" : "Reviewed"}</dt><dd>{formatDate(tab === "verified" && account.verified_at ? account.verified_at : account.created_at)}</dd></div>
                 </dl>
 
-                {account.role === "faculty" && (account.document_path ? <DocumentViewer path={account.document_path} /> : <p className={styles.warning}><FileWarning size={14} />No Faculty ID photo uploaded</p>)}
+                {account.document_path ? <DocumentViewer path={account.document_path} label={account.role === "student" ? "Student ID" : "Faculty ID"} /> : <p className={styles.warning}><FileWarning size={14} />No ID photo uploaded</p>}
                 {!account.email_confirmed && <p className={styles.warning}><MailWarning size={14} />Email not confirmed yet</p>}
                 {account.verification_status === "rejected" && account.verification_note && <p className={styles.note}><strong>Reason:</strong> {account.verification_note}</p>}
                 {rowErrors[account.profile_id] && <p className={styles.error}>{rowErrors[account.profile_id]}</p>}
@@ -215,7 +215,7 @@ export function VerificationQueue({ role }: { role: "student" | "faculty" }) {
   );
 }
 
-function DocumentViewer({ path }: { path: string }) {
+function DocumentViewer({ path, label }: { path: string; label: string }) {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -237,7 +237,7 @@ function DocumentViewer({ path }: { path: string }) {
   if (url) {
     return (
       <figure className={styles.document}>
-        <Image src={url} alt="Uploaded Faculty ID" width={640} height={400} unoptimized />
+        <Image src={url} alt={`Uploaded ${label}`} width={640} height={400} unoptimized />
         <button className={styles.ghostButton} type="button" onClick={() => setUrl("")}>Hide ID photo</button>
       </figure>
     );
@@ -245,7 +245,7 @@ function DocumentViewer({ path }: { path: string }) {
 
   return (
     <div className={styles.documentRow}>
-      <button className={styles.ghostButton} type="button" onClick={() => void open()} disabled={loading}><IdCard size={16} />{loading ? "Loading…" : isPdf ? "Open Faculty ID (PDF)" : "View Faculty ID photo"}</button>
+      <button className={styles.ghostButton} type="button" onClick={() => void open()} disabled={loading}><IdCard size={16} />{loading ? "Loading…" : isPdf ? `Open ${label} (PDF)` : `View ${label} photo`}</button>
       {error && <span className={styles.error}>{error}</span>}
     </div>
   );

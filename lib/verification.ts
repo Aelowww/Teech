@@ -5,13 +5,14 @@ import { createClient } from "@/lib/supabase/client";
 import { facultyIdFileError, uploadFacultyId } from "@/lib/faculty-id";
 
 export type Role = "student" | "faculty";
-export type VerificationStatus = "pending" | "verified" | "rejected";
+export type VerificationStatus = "unsubmitted" | "pending" | "verified" | "rejected";
 
 export type Verification = {
   role: Role;
   status: VerificationStatus;
   identifier: string | null;
   rejectedIdentifier: string | null;
+  department: string | null;
   note: string | null;
 };
 
@@ -33,7 +34,7 @@ export function useVerification() {
     }
     const { data, error } = await supabase
       .from("profiles")
-      .select("role, verification_status, verification_note, rejected_identifier, student_number, faculty_number")
+      .select("role, verification_status, verification_note, rejected_identifier, student_number, faculty_number, department")
       .eq("auth_user_id", user.id)
       .maybeSingle();
     if (error || !data || (data.role !== "student" && data.role !== "faculty")) {
@@ -48,6 +49,7 @@ export function useVerification() {
         status: data.verification_status as VerificationStatus,
         identifier: data.role === "student" ? data.student_number : data.faculty_number,
         rejectedIdentifier: data.rejected_identifier,
+        department: data.department,
         note: data.verification_note,
       },
     });
@@ -74,19 +76,17 @@ const resubmitMessages: Record<string, string> = {
   too_many: "You've resubmitted too many times today. Try again tomorrow.",
   not_rejected: "Your account isn't waiting on a correction right now.",
   not_allowed: "This account can't be verified.",
-  document_required: "Upload a photo of your Faculty ID.",
+  document_required: "Upload a photo of your ID.",
+  department_required: "Enter your department.",
 };
 
-export async function resubmitVerification(role: Role, identifier: string, idFile: File | null) {
-  let documentPath: string | null = null;
-  if (role === "faculty") {
-    const fileError = facultyIdFileError(idFile);
-    if (fileError || !idFile) return fileError;
-    const upload = await uploadFacultyId(idFile);
-    if (!upload.path) return upload.error;
-    documentPath = upload.path;
-  }
-  const { data, error } = await createClient().rpc("resubmit_my_verification", { new_identifier: identifier.trim(), document_path: documentPath });
+export async function submitVerification(role: Role, identifier: string, idFile: File | null, department: string) {
+  if (role === "student" && !department.trim()) return "Enter your department.";
+  const fileError = facultyIdFileError(idFile, identifierLabel(role));
+  if (fileError || !idFile) return fileError;
+  const upload = await uploadFacultyId(idFile);
+  if (!upload.path) return upload.error;
+  const { data, error } = await createClient().rpc("submit_my_verification", { new_identifier: identifier.trim(), document_path: upload.path, new_department: department.trim() || null });
   if (error) return error.message;
   if (data === "ok") return null;
   return resubmitMessages[data as string] || "Something went wrong. Please try again.";

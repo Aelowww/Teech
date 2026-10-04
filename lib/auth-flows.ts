@@ -17,24 +17,17 @@ function confirmRedirect(role: Role) {
   return `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
 }
 
-export async function signInAs(role: Role, identifier: string, password: string): Promise<SignInResult> {
+export async function signInAs(role: Role, emailInput: string, password: string): Promise<SignInResult> {
   const supabase = createClient();
-  const label = role === "student" ? "Student ID" : "Faculty ID";
-  const { data: resolved, error: resolveError } = await supabase.rpc("resolve_sign_in", { requested_role: role, identifier: identifier.trim(), password });
-  if (resolveError) return { ok: false, error: "We couldn't sign you in right now. Please try again." };
-  const match = (resolved as { status: string; email: string | null }[] | null)?.[0];
-  if (match?.status === "locked") return { ok: false, error: "Too many incorrect attempts. Try again later, or reset your password." };
-  if (match?.status === "pending_verification") return { ok: false, error: "Your account is waiting for admin verification. We'll email you as soon as your Faculty ID is approved." };
-  if (match?.status !== "ok" || !match.email) return { ok: false, error: `Incorrect ${label} or password.` };
-
-  const email = match.email;
+  const email = emailInput.trim().toLowerCase();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data.user) {
     if (error?.code === "email_not_confirmed") {
       return { ok: false, error: "Confirm your email first. Check your inbox for the link we sent.", unconfirmedEmail: email };
     }
-    if (error?.code === "invalid_credentials") return { ok: false, error: `Incorrect ${label} or password.` };
+    if (error?.code === "invalid_credentials") return { ok: false, error: "Incorrect email or password." };
+    if (error?.code === "over_request_rate_limit") return { ok: false, error: "Too many attempts. Please wait a few minutes and try again." };
     return { ok: false, error: error?.message || "Unable to sign in." };
   }
 
@@ -49,6 +42,14 @@ export async function signInAs(role: Role, identifier: string, password: string)
     return { ok: false, error: role === "student" ? "This account is not registered as a student." : "This account is not registered as faculty." };
   }
 
+  if (role === "faculty") {
+    const { data: profile } = await supabase.from("profiles").select("verification_status").eq("auth_user_id", data.user.id).maybeSingle();
+    if (profile?.verification_status === "pending") {
+      await supabase.auth.signOut();
+      return { ok: false, error: "Your account is waiting for admin verification. We'll email you as soon as your Faculty ID is approved." };
+    }
+  }
+
   return { ok: true };
 }
 
@@ -58,15 +59,13 @@ export async function resendConfirmation(role: Role, email: string) {
   return error.code === "over_email_send_rate_limit" ? "Please wait a minute before requesting another email." : error.message;
 }
 
-type StudentSignUp = { fullName: string; email: string; studentNumber: string; courseYear: string; password: string };
+type StudentSignUp = { fullName: string; email: string; password: string };
 type FacultySignUp = { fullName: string; email: string; facultyNumber: string; department: string; password: string; idFile: File | null };
 
 export async function signUpStudent(form: StudentSignUp) {
   return createAccount("student", form.email, form.password, {
     role: "student",
     full_name: form.fullName.trim(),
-    student_number: form.studentNumber.trim(),
-    course_year: form.courseYear.trim(),
   });
 }
 

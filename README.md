@@ -20,9 +20,9 @@ We built Teech because booking a consultation with a teacher at our school is ho
 
 ## Features
 
-- Sign in with a Student ID or Faculty ID; the email given at sign-up is only used for confirmation and password resets
-- Repeated wrong passwords lock sign-in for that ID for 15 minutes (24 hours after repeated lockouts)
-- Admin verification: an admin confirms every Student ID before the student can book
+- Students and faculty sign in with email; students confirm their email with a 6-digit code when signing up
+- Students sign up with just a name, email, and password, then submit their Student ID, department, and ID photo from inside the app; booking unlocks once an admin approves it
+- Admin console at `/admin` with a live dashboard and separate Students and Faculty verification queues
 - Faculty upload a photo of their Faculty ID when signing up and can't sign in until an admin approves it; they get an email with the decision
 - Admin portal at `/admin`, protected by password plus authenticator-app two-step verification
 - Book a consultation by picking a faculty member, an open date, and a time slot

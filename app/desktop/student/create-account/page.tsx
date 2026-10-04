@@ -16,14 +16,12 @@ import styles from "@/app/desktop/_components/auth.module.css";
 type SignUpForm = {
   fullName: string;
   email: string;
-  studentNumber: string;
-  courseYear: string;
   password: string;
   confirmPassword: string;
 };
 
 const emptyForm: SignUpForm = {
-  fullName: "", email: "", studentNumber: "", courseYear: "", password: "", confirmPassword: "",
+  fullName: "", email: "", password: "", confirmPassword: "",
 };
 
 export default function Page() {
@@ -46,10 +44,6 @@ export default function Page() {
     setError("");
     if (!isValidEmail(form.email)) {
       setError("Enter a valid email address.");
-      return;
-    }
-    if (!/^\d{6}$/.test(form.studentNumber)) {
-      setError("Student ID must be exactly 6 digits.");
       return;
     }
     const passwordError = getPasswordError(form.password);
@@ -134,8 +128,6 @@ export default function Page() {
         <div className={styles.fullRow}>
           <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="Enter your email" type="email" required />
         </div>
-        <FormField label="Student ID" name="studentNumber" value={form.studentNumber} onChange={(event) => setForm((current) => ({ ...current, studentNumber: onlyDigits(event.target.value) }))} placeholder="Enter your student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
-        <FormField label="Course and Year" name="courseYear" value={form.courseYear} onChange={updateField("courseYear")} placeholder="Enter your course and year" required />
         <PasswordField label="Password" name="password" value={form.password} onChange={updateField("password")} placeholder="Create a password" autoComplete="new-password" minLength={8} required />
         <PasswordField label="Confirm Password" name="confirmPassword" value={form.confirmPassword} onChange={updateField("confirmPassword")} placeholder="Re-enter your password" autoComplete="new-password" minLength={8} required />
         <p className={styles.passwordHint}>{passwordRequirementText}</p>
@@ -150,8 +142,4 @@ export default function Page() {
       <ConfirmationModal open={confirming} title="Create your account?" description="Please confirm that your details are correct." confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </AuthFrame>
   );
-}
-
-function onlyDigits(value: string) {
-  return value.replace(/\D/g, "").slice(0, 6);
 }

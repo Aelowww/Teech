@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Ban, BadgeCheck, CalendarCheck, CalendarClock, CalendarX, Clock3, GraduationCap, Hourglass, Send, ShieldAlert, ShieldX, UserPlus, UsersRound, type LucideIcon } from "lucide-react";
+import { Ban, BadgeCheck, CalendarCheck, CalendarClock, CalendarX, Clock3, GraduationCap, IdCard, Hourglass, Send, ShieldAlert, ShieldX, UserPlus, UsersRound, type LucideIcon } from "lucide-react";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { useAdmin } from "@/app/admin/_components/admin-shell";
 import { BarChart } from "@/app/admin/_components/bar-chart";
@@ -13,7 +13,7 @@ import styles from "@/app/admin/_components/console.module.css";
 type Counts = { total: number; verified: number; pending: number; rejected: number };
 type Recent = { kind: string; name: string; role: string; detail?: string | null; at: string };
 type Dashboard = {
-  students: Counts;
+  students: Counts & { unsubmitted: number };
   faculty: Counts & { available: number };
   appointments: { total: number; pending: number; confirmed: number; declined: number; cancelled: number; today: number; upcoming: number };
   daily: { date: string; requests: number; signUps: number }[];
@@ -77,7 +77,7 @@ export default function Page() {
       {data && (
         <>
           <section className={styles.tiles} aria-label="Overview">
-            <Tile href="/admin/students" label="Students" Icon={GraduationCap} value={data.students.total} sub={`${data.students.verified} verified · ${data.students.pending} pending`} />
+            <Tile href="/admin/students" label="Students" Icon={GraduationCap} value={data.students.total} sub={`${data.students.verified} verified · ${data.students.pending} pending · ${data.students.unsubmitted} not submitted`} />
             <Tile href="/admin/faculty" label="Faculty" Icon={UsersRound} value={data.faculty.total} sub={`${data.faculty.verified} verified · ${data.faculty.available} available now`} />
             <Tile href={data.faculty.pending > data.students.pending ? "/admin/faculty" : "/admin/students"} label="Waiting for review" Icon={ShieldAlert} value={pendingTotal} sub={pendingTotal ? "Approve or reject to unlock accounts" : "You're all caught up"} alert={pendingTotal > 0} />
             <Tile label="Consultations today" Icon={CalendarClock} value={data.appointments.today} sub={`${data.appointments.upcoming} upcoming confirmed`} />
@@ -107,7 +107,7 @@ export default function Page() {
                 <small>Verified accounts</small>
               </div>
               <div className={styles.statusRows}>
-                <StatusRow tone="accent" Icon={GraduationCap} label="Students" value={data.students.verified} total={data.students.total} detail={`${data.students.pending} pending · ${data.students.rejected} rejected`} />
+                <StatusRow tone="accent" Icon={GraduationCap} label="Students" value={data.students.verified} total={data.students.total} detail={`${data.students.pending} pending · ${data.students.unsubmitted} not submitted`} />
                 <StatusRow tone="accent" Icon={UsersRound} label="Faculty" value={data.faculty.verified} total={data.faculty.total} detail={`${data.faculty.pending} pending · ${data.faculty.rejected} rejected`} />
               </div>
             </div>
@@ -178,6 +178,7 @@ function ActivityItem({ item }: { item: Recent }) {
     review_approved: { Icon: BadgeCheck, text: `${item.name} was verified`, tone: styles.good },
     review_rejected: { Icon: ShieldX, text: `${item.name} was rejected`, tone: styles.bad },
     review_resubmitted: { Icon: Clock3, text: `${item.name} resubmitted their ID` },
+    review_submitted: { Icon: IdCard, text: `${item.name} submitted their ID for review` },
   };
   const { Icon, text, tone } = copy[item.kind] || { Icon: Clock3, text: item.name };
   return (

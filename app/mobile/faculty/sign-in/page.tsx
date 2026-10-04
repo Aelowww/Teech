@@ -23,7 +23,7 @@ function SignInPage() {
   const params = useSearchParams();
   const confirmFailed = params.get("confirm") === "failed";
   const awaitingReview = params.get("confirmed") === "1" || params.get("submitted") === "1";
-  const [facultyId, setFacultyId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [unconfirmedEmail, setUnconfirmedEmail] = useState("");
@@ -36,7 +36,7 @@ function SignInPage() {
     setUnconfirmedEmail("");
     setResendNote("");
     setSubmitting(true);
-    const result = await signInAs("faculty", facultyId, password);
+    const result = await signInAs("faculty", email, password);
     if (!result.ok) {
       setSubmitting(false);
       setError(result.error);
@@ -62,7 +62,7 @@ function SignInPage() {
         <div className={styles.form}>
           {awaitingReview && <Notice>Thanks! An admin is reviewing your Faculty ID. We&apos;ll email you as soon as you can sign in.</Notice>}
           {confirmFailed && <Notice>That confirmation link didn&apos;t work or has expired. If your email is already confirmed, sign in below. Otherwise sign in to get a new link.</Notice>}
-          <FormField label="Faculty ID" name="facultyId" value={facultyId} onChange={(event) => setFacultyId(event.target.value.slice(0, 32))} placeholder="Enter your faculty ID" maxLength={32} required />
+          <FormField label="Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" type="email" required />
           <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
           <Link className={styles.inlineLink} href="/faculty/forgot-password">Forgot Password?</Link>
         </div>
