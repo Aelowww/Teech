@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { BadgeCheck, Clock3, FileWarning, GraduationCap, IdCard, LogOut, MailWarning, RefreshCw, Search, ShieldX, UserRound } from "lucide-react";
+import { BadgeCheck, Clock3, FileWarning, GraduationCap, IdCard, MailWarning, RefreshCw, Search, ShieldX, UserRound } from "lucide-react";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import { facultyIdBucket } from "@/lib/faculty-id";
-import styles from "./admin.module.css";
+import { useRealtimeRefresh } from "@/lib/admin";
+import styles from "../admin.module.css";
 
 type Status = "pending" | "verified" | "rejected";
 
@@ -27,8 +28,6 @@ type Account = {
   created_at: string;
   verified_at: string | null;
 };
-
-const idleLimit = 15 * 60 * 1000;
 
 const reviewMessages: Record<string, string> = {
   email_unconfirmed: "This user hasn't confirmed their email yet, so they can't be approved.",
@@ -50,12 +49,11 @@ const tabs: { key: Status; label: string; Icon: typeof Clock3 }[] = [
   { key: "rejected", label: "Rejected", Icon: ShieldX },
 ];
 
-export default function Page() {
+export function VerificationQueue({ role }: { role: "student" | "faculty" }) {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [tab, setTab] = useState<Status>("pending");
-  const [roleFilter, setRoleFilter] = useState<"all" | "student" | "faculty">("all");
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
@@ -64,27 +62,15 @@ export default function Page() {
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
 
-  const signOut = useCallback(async () => {
-    await createClient().auth.signOut();
-    router.replace("/admin/sign-in");
-    router.refresh();
-  }, [router]);
-
   const load = useCallback(async () => {
-    const supabase = createClient();
-    const { data: status } = await supabase.rpc("my_admin_status");
-    if (status !== "ok") {
-      router.replace("/admin/sign-in");
-      return;
-    }
-    const { data, error: loadError } = await supabase.rpc("admin_verification_queue");
+    const { data, error: loadError } = await createClient().rpc("admin_verification_queue");
     if (loadError) setError(loadError.message);
     else {
       setError("");
       setAccounts((data || []) as Account[]);
     }
     setReady(true);
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -93,35 +79,22 @@ export default function Page() {
     return () => { active = false; };
   }, [load]);
 
-  const lastActivity = useRef(0);
-  useEffect(() => {
-    lastActivity.current = Date.now();
-    const touch = () => { lastActivity.current = Date.now(); };
-    const events = ["pointerdown", "keydown", "scroll"] as const;
-    events.forEach((name) => window.addEventListener(name, touch, { passive: true }));
-    const timer = window.setInterval(() => {
-      if (Date.now() - lastActivity.current > idleLimit) void signOut();
-    }, 30000);
-    return () => {
-      events.forEach((name) => window.removeEventListener(name, touch));
-      window.clearInterval(timer);
-    };
-  }, [signOut]);
+  useRealtimeRefresh("profiles", load);
 
   const counts = useMemo(() => {
     const result: Record<Status, number> = { pending: 0, verified: 0, rejected: 0 };
-    accounts.forEach((account) => { result[account.verification_status] += 1; });
+    accounts.forEach((account) => { if (account.role === role) result[account.verification_status] += 1; });
     return result;
-  }, [accounts]);
+  }, [accounts, role]);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return accounts
       .filter((account) => account.verification_status === tab)
-      .filter((account) => roleFilter === "all" || account.role === roleFilter)
+      .filter((account) => account.role === role)
       .filter((account) => !needle || [account.full_name, account.email, account.identifier, account.rejected_identifier].some((value) => value?.toLowerCase().includes(needle)))
       .sort((a, b) => tab === "pending" ? a.created_at.localeCompare(b.created_at) : b.created_at.localeCompare(a.created_at));
-  }, [accounts, tab, roleFilter, query]);
+  }, [accounts, tab, role, query]);
 
   async function refresh() {
     setRefreshing(true);
@@ -154,20 +127,11 @@ export default function Page() {
   if (!ready) return <AppLoader />;
 
   return (
-    <div className={styles.page}>
-      <header className={styles.topbar}>
-        <div className={styles.brand}>
-          <Image src="/logo/teech_logo.svg" alt="Teech" width={1118} height={348} className={styles.logo} priority />
-          <span className={styles.brandTag}>Admin</span>
-        </div>
-        <button className={styles.ghostButton} type="button" onClick={() => void signOut()}><LogOut size={16} />Sign out</button>
-      </header>
-
-      <main className={styles.main}>
+    <div className={styles.main}>
         <div className={styles.heading}>
           <div>
-            <h1>Identity verification</h1>
-            <p>Confirm each Student ID and Faculty ID against school records before the account can book or offer consultations.</p>
+            <h1>{role === "student" ? "Student verification" : "Faculty verification"}</h1>
+            <p>{role === "student" ? "Check each Student ID against school records, then approve or reject it. Students can book consultations once approved." : "Check each Faculty ID and its uploaded photo, then approve or reject it. Teachers can sign in once approved."}</p>
           </div>
           <button className={styles.ghostButton} type="button" onClick={() => void refresh()} disabled={refreshing}><RefreshCw size={16} className={refreshing ? styles.spin : ""} />Refresh</button>
         </div>
@@ -186,14 +150,7 @@ export default function Page() {
             <Search size={16} />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, email, or ID" aria-label="Search accounts" />
           </label>
-          <div className={styles.segmented} role="group" aria-label="Filter by role">
-            {(["all", "student", "faculty"] as const).map((value) => (
-              <button key={value} type="button" className={roleFilter === value ? styles.segmentActive : ""} aria-pressed={roleFilter === value} onClick={() => setRoleFilter(value)}>
-                {value === "all" ? "All" : value === "student" ? "Students" : "Faculty"}
-              </button>
-            ))}
           </div>
-        </div>
 
         {error && <p className={styles.error}>{error}</p>}
         {notice && <p className={styles.notice} role="status">{notice}</p>}
@@ -202,7 +159,7 @@ export default function Page() {
           <div className={styles.empty}>
             <BadgeCheck size={28} />
             <strong>{tab === "pending" ? "You're all caught up" : "Nothing here yet"}</strong>
-            <small>{tab === "pending" ? "New sign-ups waiting for review will appear here." : "Accounts will show up here after they're reviewed."}</small>
+            <small>{tab === "pending" ? `New ${role === "student" ? "students" : "teachers"} waiting for review will appear here.` : "Accounts will show up here after they're reviewed."}</small>
           </div>
         ) : (
           <ul className={styles.list}>
@@ -217,7 +174,6 @@ export default function Page() {
                 </div>
 
                 <dl className={styles.meta}>
-                  <div><dt>Role</dt><dd><span className={`${styles.chip} ${styles[account.role]}`}>{account.role === "student" ? "Student" : "Faculty"}</span></dd></div>
                   <div><dt>{account.role === "student" ? "Student ID" : "Faculty ID"}</dt><dd className={styles.mono}>{account.identifier || account.rejected_identifier || "—"}</dd></div>
                   <div><dt>{account.role === "student" ? "Course & year" : "Department"}</dt><dd>{(account.role === "student" ? account.course_year : account.department) || "—"}</dd></div>
                   <div><dt>{tab === "pending" ? "Signed up" : "Reviewed"}</dt><dd>{formatDate(tab === "verified" && account.verified_at ? account.verified_at : account.created_at)}</dd></div>
@@ -255,7 +211,6 @@ export default function Page() {
             ))}
           </ul>
         )}
-      </main>
     </div>
   );
 }

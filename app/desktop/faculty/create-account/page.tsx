@@ -90,7 +90,7 @@ export default function Page() {
         <FormField label="Full Name" name="fullName" value={form.fullName} onChange={updateField("fullName")} placeholder="Enter your full name" required />
         <FormField label="Faculty ID" name="facultyNumber" value={form.facultyNumber} onChange={updateField("facultyNumber")} placeholder="Enter your faculty ID" required />
         <FormField label="Department" name="department" value={form.department} onChange={updateField("department")} placeholder="Enter your department" required />
-        <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="you@school.edu" type="email" required />
+        <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="Enter your email" type="email" required />
         <div className={styles.fullRow}>
           <IdUploadField label="Faculty ID Photo" file={idFile} onChange={(file) => { setError(""); setIdFile(file); }} />
         </div>
@@ -105,7 +105,7 @@ export default function Page() {
       {error && <Notice error>{error}</Notice>}
       <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} />
       <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign in</Link></p>
-      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with Faculty ID ${form.facultyNumber.trim()} and email ${form.email.trim()}. Your Faculty ID photo will be reviewed by an admin before you can sign in.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
+      <ConfirmationModal open={confirming} title="Create your account?" description="Please confirm that your details are correct." confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </AuthFrame>
   );
 }

@@ -124,7 +124,7 @@ export function ProfileEditor({ role }: { role: Role }) {
         {avatarPath !== undefined && <div className={styles.photoEditor}><AvatarUploader initialPath={avatarPath} /></div>}
         <div className={styles.form}>
           <FormField label="Full Name" name="fullName" value={fullName} onChange={(event) => setFullName(event.target.value)} placeholder="Enter your full name" required />
-          {role === "faculty" && <FormField label="School Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@school.edu" type="email" required />}
+          {role === "faculty" && <FormField label="School Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" type="email" required />}
           {role === "faculty"
             ? <FormField label="Department" name="department" value={department} onChange={(event) => setDepartment(event.target.value)} placeholder="Enter your department" required />
             : <FormField label="Course and Year" name="courseYear" value={courseYear} onChange={(event) => setCourseYear(event.target.value)} placeholder="Enter your course and year" required />}

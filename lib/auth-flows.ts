@@ -62,7 +62,7 @@ type StudentSignUp = { fullName: string; email: string; studentNumber: string; c
 type FacultySignUp = { fullName: string; email: string; facultyNumber: string; department: string; password: string; idFile: File | null };
 
 export async function signUpStudent(form: StudentSignUp) {
-  return signUp("student", form.email, form.password, {
+  return createAccount("student", form.email, form.password, {
     role: "student",
     full_name: form.fullName.trim(),
     student_number: form.studentNumber.trim(),
@@ -75,34 +75,55 @@ export async function signUpFaculty(form: FacultySignUp) {
   if (fileError || !form.idFile) return fileError;
   const upload = await uploadFacultyId(form.idFile);
   if (!upload.path) return upload.error;
-  return signUp("faculty", form.email, form.password, {
+  const result = await createAccount("faculty", form.email, form.password, {
     role: "faculty",
     full_name: form.fullName.trim(),
     faculty_number: form.facultyNumber.trim(),
     department: form.department.trim(),
     id_document_path: upload.path,
   });
+  return result.error;
 }
 
-async function signUp(role: Role, email: string, password: string, data: Record<string, string>) {
+export async function verifyStudentCode(email: string, code: string) {
   const supabase = createClient();
-  const { error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.verifyOtp({ email: email.trim().toLowerCase(), token: code.trim(), type: "email" });
+  if (error) {
+    if (error.code === "otp_expired") return "That code has expired or isn't right. Check the latest email or request a new code.";
+    if (error.code === "over_request_rate_limit") return "Too many attempts. Please wait a minute and try again.";
+    return error.message;
+  }
+  await supabase.auth.signOut();
+  return null;
+}
+
+type CreateResult = { error: string | null; needsCode: boolean };
+
+async function createAccount(role: Role, email: string, password: string, data: Record<string, string>): Promise<CreateResult> {
+  const supabase = createClient();
+  const { data: created, error } = await supabase.auth.signUp({
     email: email.trim().toLowerCase(),
     password,
     options: { emailRedirectTo: confirmRedirect(role), data },
   });
 
+  const fail = (message: string): CreateResult => ({ error: message, needsCode: false });
   if (error) {
-    if (error.code === "user_already_exists") return "This email already has an account. Sign in instead, or use Forgot Password.";
-    if (error.code === "over_email_send_rate_limit") return "Too many sign-up attempts. Please wait a few minutes and try again.";
+    if (error.code === "user_already_exists") return fail("This email already has an account. Sign in instead, or use Forgot Password.");
+    if (error.code === "over_email_send_rate_limit") return fail("Too many sign-up attempts. Please wait a few minutes and try again.");
     if (error.status === 500 || error.code === "unexpected_failure") {
-      return role === "student"
+      return fail(role === "student"
         ? "We couldn't create your account. This Student ID may already be registered. If it's yours, contact support."
-        : "We couldn't create your account. This Faculty ID may already be registered. If it's yours, contact support.";
+        : "We couldn't create your account. This Faculty ID may already be registered. If it's yours, contact support.");
     }
-    return error.message;
+    return fail(error.message);
   }
 
-  await supabase.auth.signOut();
-  return null;
+  if (created.user && created.user.identities?.length === 0) return fail("This email already has an account. Sign in instead, or use Forgot Password.");
+
+  if (created.session) {
+    await supabase.auth.signOut();
+    return { error: null, needsCode: false };
+  }
+  return { error: null, needsCode: true };
 }

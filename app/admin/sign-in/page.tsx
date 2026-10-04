@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Notice, FormField } from "@/app/desktop/_components/ui";
@@ -122,7 +121,7 @@ export default function Page() {
       <AuthFrame onSubmit={handleCredentials} backTo="/welcome">
         <div className={authStyles.form}>
           <p className={styles.authLead}>Admin sign in</p>
-          <FormField label="Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="admin@school.edu" type="email" required />
+          <FormField label="Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" type="email" required />
           <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
         </div>
         {error && <Notice error>{error}</Notice>}
@@ -139,19 +138,24 @@ export default function Page() {
         {step.kind === "enroll" ? (
           <div className={styles.enroll}>
             <p>Scan this QR code with an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password, Authy), then enter the 6-digit code it shows.</p>
-            <Image className={styles.qr} src={step.qrCode} alt="Authenticator QR code" width={180} height={180} unoptimized />
+            <span className={styles.qr} role="img" aria-label="Authenticator QR code" style={{ backgroundImage: `url("${qrDataUrl(step.qrCode)}")` }} />
             <p className={styles.secret}>Can&apos;t scan? Enter this key: <code>{step.secret}</code></p>
           </div>
         ) : (
           <p className={styles.authHint}>Enter the 6-digit code from your authenticator app.</p>
         )}
-        <FormField label="Authentication code" name="code" value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="123456" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
+        <FormField label="Authentication code" name="code" value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="Enter the 6-digit code" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
       </div>
       {error && <Notice error>{error}</Notice>}
       <AuthSubmit label="Verify" pendingLabel="Verifying…" pending={submitting} />
       <p className={authStyles.formNote}><button className={authStyles.textButton} type="button" onClick={cancel}>Use a different account</button></p>
     </AuthFrame>
   );
+}
+
+function qrDataUrl(qrCode: string) {
+  const svg = qrCode.slice(qrCode.indexOf("<"));
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 async function secondFactorStep(): Promise<{ step?: Step; error?: string }> {

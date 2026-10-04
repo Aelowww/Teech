@@ -94,7 +94,7 @@ export default function Page() {
           <FormField label="Faculty ID" name="facultyNumber" value={form.facultyNumber} onChange={updateField("facultyNumber")} placeholder="Enter your faculty ID" required />
           <FormField label="Department" name="department" value={form.department} onChange={updateField("department")} placeholder="Enter your department" required />
           <IdUploadField label="Faculty ID Photo" file={idFile} onChange={(file) => { setError(""); setIdFile(file); }} />
-          <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="you@school.edu" type="email" required />
+          <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="Enter your email" type="email" required />
           <PasswordField label="Password" name="password" value={form.password} onChange={updateField("password")} placeholder="Create a password" autoComplete="new-password" minLength={8} required />
           <p className={styles.passwordHint}>{passwordRequirementText}</p>
           <PasswordField label="Confirm Password" name="confirmPassword" value={form.confirmPassword} onChange={updateField("confirmPassword")} placeholder="Re-enter your password" autoComplete="new-password" minLength={8} required />
@@ -109,7 +109,7 @@ export default function Page() {
       </FormCard>
       <SupportChat audience="guest" variant="link" />
       </form>
-      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with Faculty ID ${form.facultyNumber.trim()} and email ${form.email.trim()}. Your Faculty ID photo will be reviewed by an admin before you can sign in.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
+      <ConfirmationModal open={confirming} title="Create your account?" description="Please confirm that your details are correct." confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </MobileLayout>
   );
 }

@@ -8,7 +8,7 @@ import { PasswordField } from "@/app/desktop/_components/password-field";
 import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
 import { UserPlus } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
-import { isValidEmail, signUpStudent } from "@/lib/auth-flows";
+import { isValidEmail, resendConfirmation, signUpStudent, verifyStudentCode } from "@/lib/auth-flows";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/desktop/_components/support-chat";
 import styles from "@/app/desktop/_components/auth.module.css";
@@ -33,6 +33,9 @@ export default function Page() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [codeNote, setCodeNote] = useState("");
 
   function updateField(field: keyof SignUpForm) {
     return (event: ChangeEvent<HTMLInputElement>) => setForm((current) => ({ ...current, [field]: event.target.value }));
@@ -68,12 +71,58 @@ export default function Page() {
 
   async function createAccount() {
     setSubmitting(true);
-    const signUpError = await signUpStudent(form);
-    if (signUpError) {
+    const result = await signUpStudent(form);
+    if (result.error) {
       setSubmitting(false);
-      return signUpError;
+      return result.error;
+    }
+    if (!result.needsCode) {
+      router.push("/student/account-created");
+      return;
+    }
+    setSubmitting(false);
+    setConfirming(false);
+    setError("");
+    setPendingEmail(form.email.trim().toLowerCase());
+  }
+
+  async function verifyCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setCodeNote("");
+    if (!/^\d{6}$/.test(code)) {
+      setError("Enter the 6-digit code from your email.");
+      return;
+    }
+    setSubmitting(true);
+    const verifyError = await verifyStudentCode(pendingEmail, code);
+    if (verifyError) {
+      setSubmitting(false);
+      setError(verifyError);
+      return;
     }
     router.push("/student/account-created");
+  }
+
+  async function resendCode() {
+    setError("");
+    const resendError = await resendConfirmation("student", pendingEmail);
+    setCodeNote(resendError || `We sent a new code to ${pendingEmail}.`);
+  }
+
+  if (pendingEmail) {
+    return (
+      <AuthFrame onSubmit={verifyCode} backTo="/student/sign-in">
+        <div className={styles.form}>
+          <p className={styles.codeIntro}><strong>Check your email</strong>We sent a 6-digit code to {pendingEmail}. Enter it to finish creating your account.</p>
+          <FormField label="Verification code" name="code" value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="Enter the 6-digit code" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
+        </div>
+        {error && <Notice error>{error}</Notice>}
+        {codeNote && <Notice>{codeNote}</Notice>}
+        <AuthSubmit label="Verify and create account" pendingLabel="Verifying…" pending={submitting} />
+        <p className={styles.formNote}>Didn&apos;t get it? <button className={styles.textButton} type="button" onClick={resendCode}>Resend code</button></p>
+      </AuthFrame>
+    );
   }
 
   return (
@@ -83,7 +132,7 @@ export default function Page() {
           <FormField label="Full Name" name="fullName" value={form.fullName} onChange={updateField("fullName")} placeholder="Enter your full name" required />
         </div>
         <div className={styles.fullRow}>
-          <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="you@school.edu" type="email" required />
+          <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="Enter your email" type="email" required />
         </div>
         <FormField label="Student ID" name="studentNumber" value={form.studentNumber} onChange={(event) => setForm((current) => ({ ...current, studentNumber: onlyDigits(event.target.value) }))} placeholder="Enter your student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
         <FormField label="Course and Year" name="courseYear" value={form.courseYear} onChange={updateField("courseYear")} placeholder="Enter your course and year" required />
@@ -98,7 +147,7 @@ export default function Page() {
       {error && <Notice error>{error}</Notice>}
       <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} />
       <p className={styles.formNote}>Already have an account? <Link href="/student/sign-in">Sign in</Link></p>
-      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with Student ID ${form.studentNumber} and email ${form.email.trim()}. Make sure these details are correct.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
+      <ConfirmationModal open={confirming} title="Create your account?" description="Please confirm that your details are correct." confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </AuthFrame>
   );
 }
