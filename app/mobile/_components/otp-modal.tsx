@@ -20,6 +20,7 @@ export function OtpModal({ open, email, onCancel, onVerify, onResend }: OtpModal
   const [error, setError] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [cooldown, setCooldown] = useState(60);
   const titleId = useId();
   const descriptionId = useId();
 
@@ -31,6 +32,12 @@ export function OtpModal({ open, email, onCancel, onVerify, onResend }: OtpModal
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, submitting, onCancel]);
+
+  useEffect(() => {
+    if (!open || cooldown <= 0) return;
+    const timer = window.setTimeout(() => setCooldown((value) => value - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [open, cooldown]);
 
   if (!open) return null;
 
@@ -53,8 +60,10 @@ export function OtpModal({ open, email, onCancel, onVerify, onResend }: OtpModal
 
   async function resend() {
     setError("");
+    setCode("");
     const result = await onResend();
-    setNote(result || `We sent a new code to ${email}.`);
+    if (!result) setCooldown(60);
+    setNote(result || `We sent a new code to ${email}. Use this newest code, since earlier ones no longer work.`);
   }
 
   return createPortal(
@@ -62,7 +71,7 @@ export function OtpModal({ open, email, onCancel, onVerify, onResend }: OtpModal
       <form className={modalStyles.dialog} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descriptionId} onSubmit={submit}>
         <span className={modalStyles.icon} aria-hidden="true"><MailCheck size={22} /></span>
         <h2 id={titleId}>Verify your email</h2>
-        <p id={descriptionId}>We sent a 6-digit code to <b>{email}</b>. Enter it below to create your account.</p>
+        <p id={descriptionId}>We sent a 6-digit code to <b>{email}</b>. Enter it below to create your account. It can take a minute to arrive, and only the most recent code works.</p>
         <label className={modalStyles.confirmationField}>
           <span>Verification code</span>
           <input
@@ -79,7 +88,7 @@ export function OtpModal({ open, email, onCancel, onVerify, onResend }: OtpModal
         </label>
         {error && <p className={modalStyles.error} role="alert">{error}</p>}
         {note && <p className={styles.note} role="status">{note}</p>}
-        <p className={styles.resend}>Didn&apos;t get it? <button type="button" onClick={resend} disabled={submitting}>Resend code</button></p>
+        <p className={styles.resend}>Didn&apos;t get it? <button type="button" onClick={resend} disabled={submitting || cooldown > 0}>{cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}</button></p>
         <div className={modalStyles.actions}>
           <button className={`${buttonStyles.button} ${buttonStyles.block} ${modalStyles.cancel}`} type="button" onClick={onCancel} disabled={submitting}>Cancel</button>
           <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block}`} type="submit" disabled={submitting}>{submitting ? "Verifying..." : "Submit"}</button>
