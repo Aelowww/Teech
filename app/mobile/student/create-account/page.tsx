@@ -7,8 +7,7 @@ import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mo
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { UserPlus } from "lucide-react";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
-import { createClient } from "@/lib/supabase/client";
-import { studentAuthEmail } from "@/lib/student-auth";
+import { isValidEmail, signUpStudent } from "@/lib/auth-flows";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
@@ -16,6 +15,7 @@ import styles from "./page.module.css";
 
 type SignUpForm = {
   fullName: string;
+  email: string;
   studentNumber: string;
   courseYear: string;
   password: string;
@@ -23,7 +23,7 @@ type SignUpForm = {
 };
 
 const emptyForm: SignUpForm = {
-  fullName: "", studentNumber: "", courseYear: "", password: "", confirmPassword: "",
+  fullName: "", email: "", studentNumber: "", courseYear: "", password: "", confirmPassword: "",
 };
 
 export default function Page() {
@@ -41,6 +41,10 @@ export default function Page() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    if (!isValidEmail(form.email)) {
+      setError("Enter a valid email address.");
+      return;
+    }
     if (!/^\d{6}$/.test(form.studentNumber)) {
       setError("Student ID must be exactly 6 digits.");
       return;
@@ -64,24 +68,11 @@ export default function Page() {
 
   async function createAccount() {
     setSubmitting(true);
-    const { error: signUpError } = await createClient().auth.signUp({
-      email: studentAuthEmail(form.studentNumber),
-      password: form.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/student/sign-in`,
-        data: {
-          role: "student",
-          full_name: form.fullName,
-          student_number: form.studentNumber,
-          course_year: form.courseYear,
-        },
-      },
-    });
+    const signUpError = await signUpStudent(form);
     if (signUpError) {
       setSubmitting(false);
-      return signUpError.code === "user_already_exists" ? "This Student ID already has an account. Sign in instead, or use Forgot Password." : signUpError.message;
+      return signUpError;
     }
-    await createClient().auth.signOut();
     router.push("/student/account-created");
   }
 
@@ -92,6 +83,7 @@ export default function Page() {
         <FormCard>
         <div className={styles.form}>
           <FormField label="Full Name" name="fullName" value={form.fullName} onChange={updateField("fullName")} placeholder="Enter your full name" required />
+          <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="you@school.edu" type="email" required />
           <FormField label="Student ID" name="studentNumber" value={form.studentNumber} onChange={(event) => setForm((current) => ({ ...current, studentNumber: onlyDigits(event.target.value) }))} placeholder="Enter your student ID" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
           <FormField label="Course and Year" name="courseYear" value={form.courseYear} onChange={updateField("courseYear")} placeholder="Enter your course and year" required />
           <PasswordField label="Password" name="password" value={form.password} onChange={updateField("password")} placeholder="Create a password" autoComplete="new-password" minLength={8} required />
@@ -108,7 +100,7 @@ export default function Page() {
       </FormCard>
       <SupportChat audience="guest" variant="link" />
       </form>
-      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with Student ID ${form.studentNumber}. Make sure these details are correct.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
+      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with Student ID ${form.studentNumber} and email ${form.email.trim()}. Make sure these details are correct.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </MobileLayout>
   );
 }

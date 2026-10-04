@@ -42,8 +42,21 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const redirectTo = (path: string) => withCookies(NextResponse.redirect(new URL(path, request.url)), response);
 
+  if (isAdminArea(pathname) && pathname !== "/admin/sign-in" && data?.claims?.aal !== "aal2") return redirectTo("/admin/sign-in");
+
   const portal = privatePortal(pathname);
   if (portal && !data?.claims) return redirectTo(`/${portal}/sign-in`);
+
+  if (portal === "faculty" && data?.claims) {
+    const { data: profile } = await supabase.from("profiles").select("role, verification_status").eq("auth_user_id", data.claims.sub).maybeSingle();
+    if (profile?.role === "faculty" && profile.verification_status === "pending") {
+      await supabase.auth.signOut({ scope: "local" });
+      return redirectTo("/faculty/sign-in?submitted=1");
+    }
+    if (profile?.role === "faculty" && profile.verification_status === "rejected" && pathname !== "/faculty/verification") {
+      return redirectTo("/faculty/verification");
+    }
+  }
 
   const role = (data?.claims?.user_metadata as { role?: string } | undefined)?.role;
   const previewingSplash = pathname === "/splash" && request.nextUrl.searchParams.has("preview");
@@ -91,7 +104,11 @@ function withCookies(target: NextResponse, source: NextResponse) {
   return target;
 }
 
-const sharedPaths = ["/auth", "/api"];
+const sharedPaths = ["/auth", "/api", "/admin"];
+
+function isAdminArea(pathname: string) {
+  return pathname === "/admin" || pathname.startsWith("/admin/");
+}
 
 const visitedCookie = "teech_visited";
 

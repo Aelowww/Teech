@@ -5,7 +5,7 @@ export default function Page() {
     <MobileLayout className={styles.screen} backTo="/student/create-account">
       <div className={styles.page}>
         <StatusIndicator status="success" />
-        <PageHeading title="Account Created!" subtitle="Your student account is ready. Sign in with your Student ID and password." />
+        <PageHeading title="Account Created!" subtitle="Check your inbox and confirm your email, then sign in. An admin will verify your Student ID before you can book consultations." />
         <ActionButtons actions={[{ "label": "Go to Sign In", "href": "/student/sign-in" }]} primaryLabel="Go to Sign In" />
       </div>
     </MobileLayout>

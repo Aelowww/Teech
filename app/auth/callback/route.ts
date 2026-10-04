@@ -12,5 +12,6 @@ export async function GET(request: NextRequest) {
     if (!error) return NextResponse.redirect(new URL(safeNext, request.url));
   }
 
-  return NextResponse.redirect(new URL("/faculty/forgot-password?expired=true", request.url));
+  const portal = safeNext.startsWith("/student") ? "student" : "faculty";
+  return NextResponse.redirect(new URL(`/${portal}/forgot-password?expired=true`, request.url));
 }

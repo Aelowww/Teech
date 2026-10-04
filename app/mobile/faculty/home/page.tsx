@@ -8,6 +8,7 @@ import { MobileLayout, BrandLogo, CardList, EmptyState, ProfilePhoto, SpotlightC
 import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
+import { VerificationBanner } from "@/app/mobile/_components/verification";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
@@ -108,6 +109,7 @@ export default function Page() {
         <header className={styles.header}><BrandLogo /><div className={styles.headerActions}><FactCard role="faculty" /><NotificationBell href="/faculty/notifications" /></div></header>
         <div className={styles.greeting}><ProfilePhoto inline small src={photoUrl} /><div className={styles.greetingText}><small>{getGreeting()}</small><strong>{profile?.full_name || "Faculty"}</strong></div><PresenceSelect value={presence} onChange={(next) => void changePresence(next)} /></div>
         {presenceError && <p className={styles.presenceError}>{presenceError}</p>}
+        <VerificationBanner role="faculty" />
 
         {nextConsultation ? (
           <UpNextCard

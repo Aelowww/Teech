@@ -9,6 +9,7 @@ import { NotificationBell } from "@/app/mobile/_components/notification-bell";
 import { LoginStreakCard } from "@/app/mobile/_components/login-streak";
 import { FactCard } from "@/app/mobile/_components/fact-card";
 import { RecoveryReminder } from "@/app/mobile/_components/recovery-reminder";
+import { VerificationBanner } from "@/app/mobile/_components/verification";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
@@ -110,6 +111,7 @@ export default function Page() {
           <ProfilePhoto inline small src={photoUrl} />
           <div><small>{getGreeting()}</small><strong>{profile?.full_name || "Student"}</strong></div>
         </div>
+        <VerificationBanner role="student" />
         <RecoveryReminder />
 
         {nextAppointment ? (

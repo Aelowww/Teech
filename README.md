@@ -20,6 +20,11 @@ We built Teech because booking a consultation with a teacher at our school is ho
 
 ## Features
 
+- Sign in with a Student ID or Faculty ID; the email given at sign-up is only used for confirmation and password resets
+- Repeated wrong passwords lock sign-in for that ID for 15 minutes (24 hours after repeated lockouts)
+- Admin verification: an admin confirms every Student ID before the student can book
+- Faculty upload a photo of their Faculty ID when signing up and can't sign in until an admin approves it; they get an email with the decision
+- Admin portal at `/admin`, protected by password plus authenticator-app two-step verification
 - Book a consultation by picking a faculty member, an open date, and a time slot
 - Faculty publish their available dates, time ranges, and meeting rooms
 - Faculty confirm, decline, or cancel requests, and students can cancel their own
@@ -27,7 +32,7 @@ We built Teech because booking a consultation with a teacher at our school is ho
 - In-app notifications whenever a request changes
 - Daily login streaks, points, a points shop, and collectible badges
 - Profile photo, badge showcase, and account deletion
-- Password reset with security questions for students and email for faculty
+- Password reset by email, with security questions as a fallback for students
 - Reminder for students who haven't set up account recovery yet
 - Rotating study tips and a built-in help chat
 - Separate mobile and desktop layouts, picked automatically for each device
@@ -53,6 +58,16 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+### Admin account
+
+1. Create a normal faculty account at `/faculty/create-account` with the admin's email (any image works for the ID photo) and confirm it.
+2. In the Supabase SQL Editor, run `select public.promote_to_admin('admin@school.edu');`.
+3. Sign in at `/admin/sign-in` and scan the QR code with an authenticator app.
+
+In Supabase Auth settings, turn on **Confirm email**, set up custom SMTP, and add `<site>/auth/confirm` to the redirect URLs.
+
+Verification decision emails are sent with [Resend](https://resend.com). Set `RESEND_API_KEY`, `EMAIL_FROM` (an address on a domain verified in Resend), and `NEXT_PUBLIC_SITE_URL` in `.env.local` and in Vercel. Without them, decisions still save and show up as in-app notifications, but no email goes out.
+
 To share a demo with groupmates' phones, run `npm run tunnel` in a second terminal and send them the ngrok link.
 
 ## Project Structure
@@ -60,6 +75,8 @@ To share a demo with groupmates' phones, run `npm run tunnel` in a second termin
 - `app/mobile/` contains the mobile pages and their `_components`
 - `app/desktop/` contains the desktop pages and their `_components`
 - `app/auth/callback/` finishes email sign-in links like faculty password resets
+- `app/auth/confirm/` finishes sign-up email confirmation links
+- `app/admin/` is the admin verification portal (served the same on every device)
 - `app/api/support/` powers the help chat's Gemini fallback
 - `proxy.ts` protects signed-in pages and serves the mobile or desktop layout for each device
 - `lib/` holds the Supabase clients and small shared helpers

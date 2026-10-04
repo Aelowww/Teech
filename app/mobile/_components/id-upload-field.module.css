@@ -1,0 +1,96 @@
+.drop,
+.selected {
+  min-height: 52px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  background: #f8f8fc;
+  border: 1px dashed #c9c8de;
+  border-radius: 10px;
+}
+
+.drop {
+  position: relative;
+  cursor: pointer;
+  transition: border-color var(--motion) var(--ease), background var(--motion) var(--ease);
+}
+
+.drop:hover,
+.drop:focus-within {
+  border-color: var(--accent);
+  background: var(--accent-pale);
+}
+
+.drop input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.selected {
+  border-style: solid;
+  border-color: #dcdce9;
+}
+
+.icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border-radius: 10px;
+}
+
+.thumb {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  background-position: center;
+  background-size: cover;
+  border-radius: 10px;
+}
+
+.name {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+}
+
+.name strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.name small {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.remove {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.remove:hover {
+  color: var(--red);
+  background: #fff1f3;
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Award, Ban, Bell, CalendarCheck, CheckCheck, CalendarX, ChevronRight, Hourglass, Inbox, PartyPopper, Send, UserCheck, type LucideIcon } from "lucide-react";
+import { Award, Ban, BadgeCheck, Bell, CalendarCheck, CheckCheck, CalendarX, ChevronRight, Hourglass, Inbox, PartyPopper, Send, ShieldAlert, ShieldEllipsis, UserCheck, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EmptyState, DesktopLayout, Notice, PageHeading } from "@/app/desktop/_components/ui";
 import { createClient } from "@/lib/supabase/client";
@@ -167,6 +167,9 @@ const appearances: Record<string, { Icon: LucideIcon; tone: Tone }> = {
   request_cancelled: { Icon: Ban, tone: "danger" },
   request_expired: { Icon: Hourglass, tone: "warning" },
   badge_earned: { Icon: Award, tone: "accent" },
+  verification_pending: { Icon: ShieldEllipsis, tone: "warning" },
+  verification_approved: { Icon: BadgeCheck, tone: "success" },
+  verification_rejected: { Icon: ShieldAlert, tone: "danger" },
 };
 
 function appearanceFor(kind: string) {
@@ -178,6 +181,7 @@ function destinationFor(notification: Notification, role: "student" | "faculty")
     const requestsPath = role === "student" ? "/student/appointment-requests" : "/faculty/requests";
     return notification.appointment_request_id ? `${requestsPath}/${notification.appointment_request_id}` : requestsPath;
   }
+  if (notification.kind.startsWith("verification_")) return `/${role}/verification`;
   if (notification.kind === "badge_earned") return `/${role}/profile/badges`;
   if (notification.kind === "welcome") return `/${role}/profile/edit`;
   if (notification.kind === "account_created") return `/${role}/profile`;

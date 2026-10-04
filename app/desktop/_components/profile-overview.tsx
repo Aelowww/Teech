@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, ChevronRight, FileText, KeyRound, Pencil, ShieldCheck, ShieldQuestion, type LucideIcon } from "lucide-react";
+import { Award, BadgeCheck, ChevronRight, FileText, KeyRound, Pencil, ShieldCheck, ShieldQuestion, type LucideIcon } from "lucide-react";
 import { AvatarUploader } from "@/app/desktop/_components/avatar-uploader";
 import { ShowcasedBadges } from "@/app/desktop/_components/showcased-badges";
 import { SignOutButton } from "@/app/desktop/_components/sign-out-button";
@@ -70,6 +70,7 @@ export function ProfileOverview({
           <div className={styles.groups}>
             <Group label="Account & security">
               <SettingLink href={`${base}/badges`} icon={Award} label="Badges" />
+              <SettingLink href={`/${role}/verification`} icon={BadgeCheck} label="ID Verification" />
               <SettingLink href={`${base}/password`} icon={KeyRound} label="Change Password" />
               <SettingLink href={`${base}/security`} icon={ShieldQuestion} label="Account Recovery" />
             </Group>

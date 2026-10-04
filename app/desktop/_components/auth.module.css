@@ -373,3 +373,20 @@
     transform: none;
   }
 }
+
+.textButton {
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.textButton:hover,
+.textButton:focus-visible {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

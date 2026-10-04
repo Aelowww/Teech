@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, ChevronRight, FileText, KeyRound, ShieldCheck, ShieldQuestion, UserRound, type LucideIcon } from "lucide-react";
+import { Award, BadgeCheck, ChevronRight, FileText, KeyRound, ShieldCheck, ShieldQuestion, UserRound, type LucideIcon } from "lucide-react";
 import { AvatarUploader } from "@/app/mobile/_components/avatar-uploader";
 import { ShowcasedBadges } from "@/app/mobile/_components/showcased-badges";
 import { SignOutButton } from "@/app/mobile/_components/sign-out-button";
@@ -37,6 +37,7 @@ function ProfileMenu({ role }: { role: Role }) {
       </Group>
 
       <Group label="Security">
+        <SettingLink href={`/${role}/verification`} icon={BadgeCheck} label="ID Verification" />
         <SettingLink href={`${base}/password`} icon={KeyRound} label="Change Password" />
         <SettingLink href={`${base}/security`} icon={ShieldQuestion} label="Account Recovery" />
         <DeleteAccountButton role={role} className={`${styles.row} ${styles.danger}`} />

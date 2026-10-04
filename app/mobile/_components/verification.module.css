@@ -1,0 +1,243 @@
+.banner {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #fff 50%, var(--accent-pale) 100%);
+  border: 1px solid var(--line-hover);
+  border-left: 4px solid var(--accent);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(43, 41, 85, 0.08);
+  animation: nudge 0.5s ease;
+}
+
+.bannerRejected {
+  background: linear-gradient(135deg, #fff 50%, #fff1f3 100%);
+  border-color: #f6d3da;
+  border-left-color: var(--red);
+}
+
+.bannerIcon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border-radius: 11px;
+}
+
+.bannerRejected .bannerIcon {
+  color: #c23a4c;
+  background: #ffe4e8;
+}
+
+.bannerBody {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.bannerBody strong {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.bannerBody small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.bannerAction {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: var(--accent-dark);
+}
+
+.bannerRejected .bannerAction {
+  color: #c23a4c;
+}
+
+.bannerBody:focus-visible,
+.bannerAction:focus-visible {
+  outline: 3px solid rgba(119, 114, 201, 0.35);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.gate {
+  flex: 1;
+  display: grid;
+  align-content: center;
+  padding: 36px 0 16px;
+}
+
+.card {
+  width: 100%;
+  padding: 24px 18px 20px;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow);
+}
+
+.card h1 {
+  margin: 4px 0 0;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card > p {
+  margin: 0;
+  max-width: 420px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.cardIcon {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-dark);
+  background: var(--accent-pale);
+  border-radius: 18px;
+}
+
+.verified .cardIcon {
+  color: #149a55;
+  background: #e3f9ec;
+}
+
+.rejected .cardIcon {
+  color: #c23a4c;
+  background: #ffe4e8;
+}
+
+.facts {
+  width: 100%;
+  margin: 6px 0 4px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.facts div {
+  padding: 12px 14px;
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  background: var(--canvas);
+  border-radius: var(--radius-md, 14px);
+}
+
+.facts dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.facts dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  color: var(--accent-dark);
+  font-size: 12px;
+  background: var(--accent-pale);
+  border-radius: var(--radius-pill, 999px);
+}
+
+.verified .pill {
+  color: #149a55;
+  background: #e3f9ec;
+}
+
+.rejected .pill {
+  color: #c23a4c;
+  background: #ffe4e8;
+}
+
+.reason {
+  width: 100%;
+  margin: 0;
+  padding: 12px 14px;
+  color: #8f2a38;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+  background: #fff1f3;
+  border: 1px solid #f6d3da;
+  border-radius: var(--radius-md, 14px);
+}
+
+.resubmit {
+  width: 100%;
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.resubmit label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.resubmit input {
+  height: 44px;
+  padding: 0 14px;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 500;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md, 14px);
+  outline: none;
+  transition: border-color var(--motion, 220ms) var(--ease);
+}
+
+.resubmit input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(119, 114, 201, 0.18);
+}
+
+@keyframes nudge {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner {
+    animation: none;
+  }
+}

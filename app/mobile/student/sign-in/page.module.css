@@ -32,3 +32,13 @@
   margin-top: auto;
   margin-bottom: 8px;
 }
+.textButton {
+  padding: 0;
+  color: var(--accent-dark);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}

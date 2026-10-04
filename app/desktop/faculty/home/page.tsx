@@ -8,6 +8,7 @@ import { DesktopLayout, CardList, ProfilePhoto, UpNextCard } from "@/app/desktop
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
+import { VerificationBanner } from "@/app/desktop/_components/verification";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { createClient } from "@/lib/supabase/client";
 import { uniqueChannelName } from "@/lib/supabase/realtime";
@@ -116,6 +117,7 @@ export default function Page() {
 
       <div className={styles.layout}>
         <div className={styles.main}>
+          <VerificationBanner role="faculty" />
           {nextConsultation ? (
             <UpNextCard
               eyebrow="Up next"

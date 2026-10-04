@@ -8,7 +8,9 @@ import { PasswordField } from "@/app/desktop/_components/password-field";
 import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
 import { UserPlus } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
-import { createClient } from "@/lib/supabase/client";
+import { IdUploadField } from "@/app/desktop/_components/id-upload-field";
+import { isValidEmail, signUpFaculty } from "@/lib/auth-flows";
+import { facultyIdFileError } from "@/lib/faculty-id";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/desktop/_components/support-chat";
 import styles from "@/app/desktop/_components/auth.module.css";
@@ -33,6 +35,7 @@ export default function Page() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [idFile, setIdFile] = useState<File | null>(null);
 
   function updateField(field: keyof SignUpForm) {
     return (event: ChangeEvent<HTMLInputElement>) => setForm((current) => ({ ...current, [field]: event.target.value }));
@@ -41,6 +44,19 @@ export default function Page() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    if (!isValidEmail(form.email)) {
+      setError("Enter a valid email address.");
+      return;
+    }
+    if (!form.facultyNumber.trim() || form.facultyNumber.trim().length > 32) {
+      setError("Enter your Faculty ID (up to 32 characters).");
+      return;
+    }
+    const fileError = facultyIdFileError(idFile);
+    if (fileError) {
+      setError(fileError);
+      return;
+    }
     const passwordError = getPasswordError(form.password);
     if (passwordError) {
       setError(passwordError);
@@ -60,24 +76,11 @@ export default function Page() {
 
   async function createAccount() {
     setSubmitting(true);
-    const { error: signUpError } = await createClient().auth.signUp({
-      email: form.email,
-      password: form.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/faculty/sign-in`,
-        data: {
-          role: "faculty",
-          full_name: form.fullName,
-          faculty_number: form.facultyNumber,
-          department: form.department,
-        },
-      },
-    });
+    const signUpError = await signUpFaculty({ ...form, idFile });
     if (signUpError) {
       setSubmitting(false);
-      return signUpError.code === "user_already_exists" ? "This email already has an account. Sign in instead, or use Forgot Password." : signUpError.message;
+      return signUpError;
     }
-    await createClient().auth.signOut();
     router.push("/faculty/account-created");
   }
 
@@ -88,6 +91,9 @@ export default function Page() {
         <FormField label="Faculty ID" name="facultyNumber" value={form.facultyNumber} onChange={updateField("facultyNumber")} placeholder="Enter your faculty ID" required />
         <FormField label="Department" name="department" value={form.department} onChange={updateField("department")} placeholder="Enter your department" required />
         <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="you@school.edu" type="email" required />
+        <div className={styles.fullRow}>
+          <IdUploadField label="Faculty ID Photo" file={idFile} onChange={(file) => { setError(""); setIdFile(file); }} />
+        </div>
         <PasswordField label="Password" name="password" value={form.password} onChange={updateField("password")} placeholder="Create a password" autoComplete="new-password" minLength={8} required />
         <PasswordField label="Confirm Password" name="confirmPassword" value={form.confirmPassword} onChange={updateField("confirmPassword")} placeholder="Re-enter your password" autoComplete="new-password" minLength={8} required />
         <p className={styles.passwordHint}>{passwordRequirementText}</p>
@@ -99,7 +105,7 @@ export default function Page() {
       {error && <Notice error>{error}</Notice>}
       <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} />
       <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign in</Link></p>
-      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with ${form.email}. Make sure these details are correct.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
+      <ConfirmationModal open={confirming} title="Create your account?" description={`You are signing up as ${form.fullName} with Faculty ID ${form.facultyNumber.trim()} and email ${form.email.trim()}. Your Faculty ID photo will be reviewed by an admin before you can sign in.`} confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
     </AuthFrame>
   );
 }
