@@ -1,4 +1,3 @@
--- auth.users.email is varchar(255); cast it so RETURN QUERY matches the declared text column.
 create or replace function public.admin_account_contact(target_profile_id uuid)
 returns table (role text, full_name text, email text, verification_status text, verification_note text)
 language plpgsql
