@@ -61,7 +61,7 @@ function SignInPage() {
         <FormCard>
         <div className={styles.form}>
           {confirmFailed && <Notice>That confirmation link didn&apos;t work or has expired. If your email is already confirmed, sign in below. Otherwise sign in to get a new link.</Notice>}
-          <FormField label="Email" name="email" value={identifier} onChange={(event) => setIdentifier(event.target.value)} placeholder="Enter your email" type="email" required />
+          <FormField label="Email" name="email" value={identifier} onChange={(event) => setIdentifier(event.target.value)} placeholder="Enter your email" required />
           <PasswordField label="Password" name="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" autoComplete="current-password" required />
           <Link className={styles.inlineLink} href="/student/forgot-password">Forgot Password?</Link>
         </div>

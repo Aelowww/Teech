@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confirm your Teech account</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#f4f3fb;font-family:'DM Sans',Arial,Helvetica,sans-serif;color:#28294a;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f3fb;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;background-color:#ffffff;border:1px solid #e7e6f1;border-radius:20px;">
+            <tr>
+              <td style="padding:32px 32px 8px;text-align:center;">
+                <div style="font-size:28px;font-weight:700;letter-spacing:-0.5px;color:#514c9a;">Teech</div>
+                <div style="margin-top:4px;font-size:13px;font-style:italic;color:#8586a0;">Teacher within your reach</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 32px 0;text-align:center;">
+                <h1 style="margin:0;font-size:22px;font-weight:700;color:#28294a;">Confirm your email</h1>
+                <p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:#5d5f80;">Enter this code in Teech to finish creating your account.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 32px 8px;" align="center">
+                <div style="display:inline-block;padding:16px 28px;background-color:#f1f0fc;border:1px solid #d6d3f3;border-radius:14px;font-size:34px;font-weight:700;letter-spacing:10px;color:#514c9a;font-family:'Courier New',Courier,monospace;">{{ .Token }}</div>
+                <p style="margin:12px 0 0;font-size:13px;color:#8586a0;">This code expires in 1 hour.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 32px 0;text-align:center;">
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#5d5f80;">Signing up as a teacher? Confirm with this button instead.</p>
+                <a href="{{ .ConfirmationURL }}" style="display:inline-block;margin-top:14px;padding:12px 28px;background-color:#7772c9;border-radius:999px;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;">Confirm my email</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 32px 32px;text-align:center;">
+                <p style="margin:0;padding-top:20px;border-top:1px solid #efeef7;font-size:12px;line-height:1.6;color:#a3a4bd;">If you didn't create a Teech account, you can safely ignore this email. Never share this code with anyone.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

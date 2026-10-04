@@ -17,9 +17,20 @@ function confirmRedirect(role: Role) {
   return `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
 }
 
+const legacyStudentDomain = "@students.teech.local";
+
 export async function signInAs(role: Role, emailInput: string, password: string): Promise<SignInResult> {
   const supabase = createClient();
-  const email = emailInput.trim().toLowerCase();
+  let email = emailInput.trim().toLowerCase();
+
+  if (role === "student" && /^\d{6}$/.test(email)) {
+    const { data: resolved } = await supabase.rpc("resolve_sign_in", { requested_role: "student", identifier: email, password });
+    const match = (resolved as { status: string; email: string | null }[] | null)?.[0];
+    if (match?.status === "locked") return { ok: false, error: "Too many incorrect attempts. Try again later, or reset your password." };
+    if (match?.status !== "ok" || !match.email?.endsWith(legacyStudentDomain)) return { ok: false, error: "Incorrect email or password." };
+    email = match.email;
+  }
+
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data.user) {
