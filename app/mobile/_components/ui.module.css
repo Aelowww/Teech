@@ -713,13 +713,26 @@ a.listCard:active {
   .stage {
     padding: 0;
   }
+  /* Pinned to the screen: the page itself never scrolls or bounces (iOS Safari), only .content does. */
   .phone {
-    width: 100%;
+    position: fixed;
+    inset: 0;
+    width: auto;
     height: auto;
-    min-height: 100dvh;
+    min-height: 0;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
     border: 0;
     border-radius: 0;
     box-shadow: none;
+  }
+  .content {
+    -webkit-overflow-scrolling: touch;
+  }
+  .bottomNav {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 7px 18px calc(8px + env(safe-area-inset-bottom));
   }
 }
 

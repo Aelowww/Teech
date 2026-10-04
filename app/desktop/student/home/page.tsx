@@ -132,7 +132,6 @@ export default function Page() {
         <div className={styles.layout}>
           <div className={styles.main}>
             <RecoveryReminder />
-            <FactCard role="student" compact />
 
             {nextAppointment ? (
               <UpNextCard
@@ -187,6 +186,7 @@ export default function Page() {
               </div>
               <Link className={styles.overviewAll} href="/student/appointment-requests">View all requests<ChevronRight size={15} /></Link>
             </section>
+            <FactCard role="student" compact />
           </aside>
         </div>
       </div>
