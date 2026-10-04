@@ -42,7 +42,7 @@ export function RequestDecisionButtons({ requestId, canConfirm = true }: { reque
       </div>
       <ConfirmationModal
         open={Boolean(decision)}
-        title={decision === "confirmed" ? "Confirm request?" : "Decline request?"}
+        title={decision === "confirmed" ? "Are you sure you want to confirm this request?" : "Are you sure you want to decline this request?"}
         description={decision === "confirmed" ? "The student will see that their consultation has been confirmed." : "The student will see that their consultation request was declined."}
         confirmLabel={decision === "confirmed" ? "Confirm Request" : "Decline Request"}
         tone={decision === "declined" ? "danger" : "default"}

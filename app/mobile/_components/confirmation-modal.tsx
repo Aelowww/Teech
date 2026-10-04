@@ -58,10 +58,7 @@ export function ConfirmationModal({
   if (!open) return null;
 
   async function confirm() {
-    if (confirmationText && typedText !== confirmationText) {
-      setError(`Type ${confirmationText} to continue.`);
-      return;
-    }
+    if (confirmationText && typedText !== confirmationText) return;
 
     setError("");
     setSubmitting(true);
@@ -98,7 +95,7 @@ export function ConfirmationModal({
         {error && <p className={styles.error} role="alert">{error}</p>}
         <div className={styles.actions}>
           {!hideCancel && <button className={`${buttonStyles.button} ${buttonStyles.block} ${styles.cancel}`} type="button" onClick={dismiss} disabled={submitting}>Cancel</button>}
-          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${tone === "danger" ? styles.confirmDanger : ""}`} type="button" onClick={confirm} disabled={submitting} autoFocus>{submitting ? "Please wait..." : confirmLabel}</button>
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${tone === "danger" ? styles.confirmDanger : ""}`} type="button" onClick={confirm} disabled={submitting || Boolean(confirmationText && typedText !== confirmationText)} autoFocus>{submitting ? "Please wait..." : confirmLabel}</button>
         </div>
       </section>
     </div>,

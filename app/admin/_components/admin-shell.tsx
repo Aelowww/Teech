@@ -6,6 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { usePathname, useRouter } from "next/navigation";
 import { GraduationCap, LayoutDashboard, LogOut, UsersRound, type LucideIcon } from "lucide-react";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
+import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
 import { useRealtimeRefresh } from "@/lib/admin";
 import styles from "./console.module.css";
@@ -32,6 +33,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [name, setName] = useState("Admin");
   const [pending, setPending] = useState<Pending>({ student: 0, faculty: 0 });
+  const [confirmingSignOut, setConfirmingSignOut] = useState(false);
   const lastActivity = useRef(0);
 
   const signOut = useCallback(async () => {
@@ -116,11 +118,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <small>Administrator</small>
               </div>
             </div>
-            <button className={styles.signOut} type="button" onClick={() => void signOut()}><LogOut size={18} /><span>Sign out</span></button>
+            <button className={styles.signOut} type="button" onClick={() => setConfirmingSignOut(true)}><LogOut size={18} /><span>Sign out</span></button>
           </div>
         </aside>
 
         <main className={styles.main}>{children}</main>
+        <ConfirmationModal open={confirmingSignOut} title="Are you sure you want to sign out?" description="You'll need your email, password, and authenticator code to sign back in." confirmLabel="Sign Out" icon={LogOut} onCancel={() => setConfirmingSignOut(false)} onConfirm={signOut} />
       </div>
     </AdminContext.Provider>
   );

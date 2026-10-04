@@ -24,6 +24,6 @@ export function SignOutButton({ redirectTo, variant = "button", className }: { r
     {variant === "row"
       ? <button className={className} type="button" onClick={() => setConfirming(true)}><span><LogOut size={15} />Sign Out</span></button>
       : <button className={`${buttonStyles.button} ${buttonStyles.danger}`} type="button" onClick={() => setConfirming(true)}>Sign Out <LogOut size={16} /></button>}
-    <ConfirmationModal open={confirming} title="Sign out?" description="You'll need your ID and password to sign back in." confirmLabel="Sign Out" icon={LogOut} onCancel={() => setConfirming(false)} onConfirm={signOut} />
+    <ConfirmationModal open={confirming} title="Are you sure you want to sign out?" description="You'll need your email and password to sign back in." confirmLabel="Sign Out" icon={LogOut} onCancel={() => setConfirming(false)} onConfirm={signOut} />
   </>;
 }

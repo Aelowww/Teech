@@ -40,7 +40,7 @@ export function CancelAppointmentButton({ appointmentId, role, quiet = false }: 
       <button className={quiet ? styles.quiet : `${buttonStyles.button} ${buttonStyles.danger} ${styles.cancelButton}`} type="button" onClick={() => setConfirming(true)}><Ban size={quiet ? 14 : 15} />{quiet ? "Cancel consultation" : "Cancel Consultation"}</button>
       <ConfirmationModal icon={Ban}
         open={confirming}
-        title="Cancel consultation?"
+        title="Are you sure you want to cancel this consultation?"
         description={role === "faculty" ? "This will cancel the consultation and notify the student." : "This will cancel the consultation and notify the faculty member."}
         confirmLabel="Cancel Consultation"
         tone="danger"
