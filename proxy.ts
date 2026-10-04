@@ -53,7 +53,7 @@ export async function proxy(request: NextRequest) {
       await supabase.auth.signOut({ scope: "local" });
       return redirectTo("/faculty/sign-in?submitted=1");
     }
-    if (profile?.role === "faculty" && profile.verification_status === "rejected" && pathname !== "/faculty/verification") {
+    if (profile?.role === "faculty" && (profile.verification_status === "rejected" || profile.verification_status === "unsubmitted") && pathname !== "/faculty/verification") {
       return redirectTo("/faculty/verification");
     }
   }

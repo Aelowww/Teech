@@ -83,32 +83,49 @@ export async function signUpStudent(form: StudentSignUp) {
 export async function signUpFaculty(form: FacultySignUp) {
   const fileError = facultyIdFileError(form.idFile);
   if (fileError || !form.idFile) return { error: fileError, needsCode: false };
-  const upload = await uploadFacultyId(form.idFile);
-  if (!upload.path) return { error: upload.error, needsCode: false };
+  const idFile = form.idFile;
+  const facultyNumber = form.facultyNumber.trim();
   return createAccount("faculty", form.email, form.password, {
     role: "faculty",
     full_name: form.fullName.trim(),
-    faculty_number: form.facultyNumber.trim(),
+    faculty_number: facultyNumber,
     department: form.department.trim(),
-    id_document_path: upload.path,
-  });
+  }, () => submitFacultyId(idFile, facultyNumber));
 }
 
 export async function verifyEmailCode(email: string, code: string) {
   const supabase = createClient();
   const { error } = await supabase.auth.verifyOtp({ email: email.trim().toLowerCase(), token: code.trim(), type: "email" });
-  if (error) {
-    if (error.code === "otp_expired") return "That code has expired or isn't right. Check the latest email or request a new code.";
-    if (error.code === "over_request_rate_limit") return "Too many attempts. Please wait a minute and try again.";
-    return error.message;
-  }
+  if (error) return otpErrorMessage(error);
   await supabase.auth.signOut();
   return null;
 }
 
+export async function verifyFacultyEmailCode(email: string, code: string, idFile: File, facultyNumber: string) {
+  const supabase = createClient();
+  const { error } = await supabase.auth.verifyOtp({ email: email.trim().toLowerCase(), token: code.trim(), type: "email" });
+  if (error) return { error: otpErrorMessage(error), uploadFailed: false };
+  if (await submitFacultyId(idFile, facultyNumber.trim())) return { error: null, uploadFailed: true };
+  await supabase.auth.signOut();
+  return { error: null, uploadFailed: false };
+}
+
+function otpErrorMessage(error: { code?: string; message: string }) {
+  if (error.code === "otp_expired") return "That code has expired or isn't right. Check the latest email or request a new code.";
+  if (error.code === "over_request_rate_limit") return "Too many attempts. Please wait a minute and try again.";
+  return error.message;
+}
+
+async function submitFacultyId(idFile: File, facultyNumber: string) {
+  const upload = await uploadFacultyId(idFile);
+  if (!upload.path) return upload.error;
+  const { data, error } = await createClient().rpc("submit_my_verification", { new_identifier: facultyNumber, document_path: upload.path, new_department: null });
+  return error || data !== "ok" ? "We couldn't submit your Faculty ID." : null;
+}
+
 type CreateResult = { error: string | null; needsCode: boolean };
 
-async function createAccount(role: Role, email: string, password: string, data: Record<string, string>): Promise<CreateResult> {
+async function createAccount(role: Role, email: string, password: string, data: Record<string, string>, afterSession?: () => Promise<string | null>): Promise<CreateResult> {
   const supabase = createClient();
   const { data: created, error } = await supabase.auth.signUp({
     email: email.trim().toLowerCase(),
@@ -131,7 +148,9 @@ async function createAccount(role: Role, email: string, password: string, data: 
   if (created.user && created.user.identities?.length === 0) return fail("This email already has an account. Sign in instead, or use Forgot Password.");
 
   if (created.session) {
+    const submitError = afterSession ? await afterSession() : null;
     await supabase.auth.signOut();
+    if (submitError) return fail("Your account was created, but we couldn't upload your Faculty ID. Sign in to upload it again.");
     return { error: null, needsCode: false };
   }
   return { error: null, needsCode: true };

@@ -20,7 +20,7 @@ export function VerificationBanner({ role }: { role: Role }) {
   const alert = status === "rejected" || status === "unsubmitted";
   const title = status === "unsubmitted" ? "Verify your identity" : status === "rejected" ? `We couldn't verify your ${label}` : "Verification in progress";
   const body = status === "unsubmitted"
-    ? "Submit your Student ID so you can start booking consultations."
+    ? role === "student" ? "Submit your Student ID so you can start booking consultations." : "Submit your Faculty ID so students can start booking you."
     : status === "rejected"
       ? verification.note || `Update your ${label} so an admin can review it again.`
       : role === "student"
@@ -73,7 +73,9 @@ function VerificationCard({ verification, onChange, locked = false }: { verifica
     unsubmitted: {
       Icon: IdCard,
       title: "Verify your identity",
-      body: locked
+      body: role === "faculty"
+        ? "Upload a photo of your Faculty ID card. An admin will review it, and students can book you once you're approved."
+        : locked
         ? "Booking consultations is available once you're verified. Submit your Student ID and an admin will review it."
         : "Submit your Student ID, department, and a photo of your ID card. An admin will review it, and booking unlocks once you're approved.",
     },
@@ -86,7 +88,7 @@ function VerificationCard({ verification, onChange, locked = false }: { verifica
       Icon: Clock3,
       title: locked ? "Available once you're verified" : "Verification in progress",
       body: role === "student"
-        ? "An admin is reviewing your Student ID. You can still use your streaks and profile while you wait."
+        ? "An admin is reviewing your Student ID. We'll email you once your verification is complete — you can still use your streaks and profile while you wait"
         : "An admin is reviewing your Faculty ID. Students can book you once it's approved.",
     },
     rejected: {

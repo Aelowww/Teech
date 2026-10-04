@@ -85,7 +85,10 @@ export async function POST(request: NextRequest) {
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("admin_account_contact", { target_profile_id: profileId });
-  if (error) return NextResponse.json({ sent: false, reason: "forbidden" }, { status: 403 });
+  if (error) {
+    console.error("[verification-email] admin_account_contact failed:", error);
+    return NextResponse.json({ sent: false, reason: "forbidden" }, { status: 403 });
+  }
 
   const contact = (data as Contact[] | null)?.[0];
   if (!contact) return NextResponse.json({ sent: false, reason: "not_found" }, { status: 404 });
@@ -109,7 +112,10 @@ export async function POST(request: NextRequest) {
   const sent = await transport
     .sendMail({ from: `Teech <${user}>`, to: contact.email, subject: message.subject, text: message.text, html: message.html })
     .then(() => true)
-    .catch(() => false);
+    .catch((sendError) => {
+      console.error("[verification-email] sendMail failed:", sendError);
+      return false;
+    });
 
   if (!sent) return NextResponse.json({ sent: false, reason: "send_failed" }, { status: 502 });
   return NextResponse.json({ sent: true });

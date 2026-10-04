@@ -10,7 +10,7 @@ import { Clock3 } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { OtpModal } from "@/app/desktop/_components/otp-modal";
 import { IdUploadField } from "@/app/desktop/_components/id-upload-field";
-import { isValidEmail, resendConfirmation, signUpFaculty, verifyEmailCode } from "@/lib/auth-flows";
+import { isValidEmail, resendConfirmation, signUpFaculty, verifyFacultyEmailCode } from "@/lib/auth-flows";
 import { facultyIdFileError } from "@/lib/faculty-id";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/desktop/_components/support-chat";
@@ -92,8 +92,10 @@ export default function Page() {
   }
 
   async function verifyCode(code: string) {
-    const verifyError = await verifyEmailCode(pendingEmail, code);
-    if (verifyError) return verifyError;
+    if (!idFile) return "Upload a photo of your Faculty ID.";
+    const result = await verifyFacultyEmailCode(pendingEmail, code, idFile, form.facultyNumber);
+    if (result.error) return result.error;
+    if (result.uploadFailed) { router.replace("/faculty/verification"); return; }
     setPendingEmail("");
     setShowPending(true);
   }

@@ -118,7 +118,11 @@ export function VerificationQueue({ role }: { role: "student" | "faculty" }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ profileId: account.profile_id }),
-    }).then((response) => response.json() as Promise<{ sent: boolean; reason?: string }>).catch(() => ({ sent: false, reason: "send_failed" }));
+    }).then((response) => response.json() as Promise<{ sent: boolean; reason?: string }>).catch((fetchError) => {
+      console.error("[verification-email] request failed:", fetchError);
+      return { sent: false, reason: "send_failed" };
+    });
+    if (!emailResult.sent) console.warn("[verification-email] not sent, reason:", emailResult.reason);
     const verb = decision === "approve" ? "Approved" : account.verification_status === "verified" ? "Revoked" : "Rejected";
     setNotice(emailResult.sent ? `${verb} ${account.full_name}. We emailed them at ${account.email}.` : `${verb} ${account.full_name}. ${emailMessages[emailResult.reason || ""] || emailMessages.send_failed}`);
     await load();
