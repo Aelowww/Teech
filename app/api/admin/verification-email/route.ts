@@ -9,28 +9,71 @@ function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[character] as string);
 }
 
+function layout(siteUrl: string, title: string, heading: string, body: string, buttonLabel: string, buttonUrl: string, footer: string) {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${title}</title></head>
+<body style="margin:0;padding:0;background-color:#f4f3fb;font-family:'DM Sans',Arial,Helvetica,sans-serif;color:#28294a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f3fb;padding:32px 16px;"><tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;"><tr><td align="center" style="padding:0 0 20px;">
+<img src="${siteUrl}/logo/teech_logo_email.png" width="150" alt="Teech" style="display:block;width:150px;height:auto;border:0;" />
+<div style="margin-top:6px;font-size:13px;font-style:italic;color:#8586a0;">Teacher within your reach</div>
+</td></tr></table>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;background-color:#ffffff;border:1px solid #e7e6f1;border-radius:20px;">
+<tr><td style="padding:32px 32px 0;text-align:center;"><h1 style="margin:0;font-size:22px;font-weight:700;color:#28294a;">${heading}</h1></td></tr>
+<tr><td style="padding:12px 32px 0;text-align:center;font-size:15px;line-height:1.6;color:#5d5f80;">${body}</td></tr>
+<tr><td style="padding:24px 32px 16px;text-align:center;"><a href="${buttonUrl}" style="display:inline-block;padding:13px 32px;background-color:#7772c9;border-radius:999px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;">${buttonLabel}</a></td></tr>
+<tr><td style="padding:8px 32px 32px;text-align:center;"><p style="margin:0;padding-top:20px;border-top:1px solid #efeef7;font-size:12px;line-height:1.6;color:#a3a4bd;">${footer}</p></td></tr>
+</table>
+<p style="margin:20px 0 0;font-size:12px;color:#a3a4bd;">Teech · Student and faculty consultations</p>
+</td></tr></table></body></html>`;
+}
+
 function compose(contact: Contact, siteUrl: string) {
   const label = contact.role === "student" ? "Student ID" : "Faculty ID";
   const signInUrl = `${siteUrl}/${contact.role}/sign-in`;
   const name = escapeHtml(contact.full_name);
+  const footer = "You're receiving this because you have a Teech account. If you have questions, reply to your school's Teech administrator.";
 
   if (contact.verification_status === "verified") {
     const body = contact.role === "faculty"
-      ? "Your Faculty ID has been verified. Your Teech account is ready, so you can now sign in with your Faculty ID and password."
+      ? "Your Faculty ID has been verified. Your Teech account is ready, so you can now sign in with your email and password."
       : "Your Student ID has been verified. You can now book consultations on Teech.";
     return {
       subject: "Your Teech account is verified",
-      text: `Hi ${contact.full_name},\n\n${body}\n\nSign in: ${signInUrl}\n\nTeech`,
-      html: `<p>Hi ${name},</p><p>${body}</p><p><a href="${signInUrl}">Sign in to Teech</a></p><p>Teech</p>`,
+      text: `Hi ${contact.full_name},
+
+${body}
+
+Sign in: ${signInUrl}
+
+Teech`,
+      html: layout(siteUrl, "Your Teech account is verified", "You're verified", `<p style="margin:0;">Hi ${name},</p><p style="margin:12px 0 0;">${body}</p>`, "Sign in to Teech", signInUrl, footer),
     };
   }
 
   const reason = contact.verification_note || "The details you submitted didn't match our records.";
-  const nextStep = `Sign in with your ${label} and password to correct your details${contact.role === "faculty" ? " and upload a new photo of your Faculty ID" : ""}.`;
+  const nextStep = `Sign in to Teech to correct your details and upload a new photo of your ${label}.`;
   return {
     subject: `We couldn't verify your ${label}`,
-    text: `Hi ${contact.full_name},\n\nWe couldn't verify your ${label}.\n\nReason: ${reason}\n\n${nextStep}\n\nSign in: ${signInUrl}\n\nTeech`,
-    html: `<p>Hi ${name},</p><p>We couldn't verify your ${label}.</p><p><strong>Reason:</strong> ${escapeHtml(reason)}</p><p>${nextStep}</p><p><a href="${signInUrl}">Sign in to Teech</a></p><p>Teech</p>`,
+    text: `Hi ${contact.full_name},
+
+We couldn't verify your ${label}.
+
+Reason: ${reason}
+
+${nextStep}
+
+Sign in: ${signInUrl}
+
+Teech`,
+    html: layout(
+      siteUrl,
+      `We couldn't verify your ${label}`,
+      `We couldn't verify your ${label}`,
+      `<p style="margin:0;">Hi ${name},</p><p style="margin:16px 0 0;padding:12px 14px;text-align:left;color:#8f2a38;background-color:#fff1f3;border:1px solid #f6d3da;border-radius:12px;"><strong>Reason:</strong> ${escapeHtml(reason)}</p><p style="margin:16px 0 0;">${nextStep}</p>`,
+      "Update my details",
+      signInUrl,
+      footer,
+    ),
   };
 }
 
