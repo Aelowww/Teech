@@ -1,0 +1,39 @@
+.code {
+  text-align: center;
+  font-size: 20px !important;
+  letter-spacing: 0.3em !important;
+}
+
+.code::placeholder {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: normal;
+}
+
+.note {
+  color: #16884d !important;
+}
+
+.resend {
+  margin-top: 12px !important;
+}
+
+.resend button {
+  padding: 0;
+  color: var(--accent-dark, #514c9a);
+  font: inherit;
+  font-weight: 700;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.resend button:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.resend button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

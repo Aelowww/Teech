@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { Notice, FormField } from "@/app/desktop/_components/ui";
 import { PasswordField } from "@/app/desktop/_components/password-field";
 import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
-import { UserPlus } from "lucide-react";
+import { Clock3 } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
+import { OtpModal } from "@/app/desktop/_components/otp-modal";
 import { IdUploadField } from "@/app/desktop/_components/id-upload-field";
 import { isValidEmail, resendConfirmation, signUpFaculty, verifyEmailCode } from "@/lib/auth-flows";
 import { facultyIdFileError } from "@/lib/faculty-id";
@@ -34,10 +35,8 @@ export default function Page() {
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [confirming, setConfirming] = useState(false);
   const [pendingEmail, setPendingEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [codeNote, setCodeNote] = useState("");
+  const [showPending, setShowPending] = useState(false);
   const [idFile, setIdFile] = useState<File | null>(null);
 
   function updateField(field: keyof SignUpForm) {
@@ -74,62 +73,29 @@ export default function Page() {
       return;
     }
 
-    setConfirming(true);
+    void createAccount();
   }
 
   async function createAccount() {
     setSubmitting(true);
     const result = await signUpFaculty({ ...form, idFile });
+    setSubmitting(false);
     if (result.error) {
-      setSubmitting(false);
-      return result.error;
+      setError(result.error);
+      return;
     }
     if (!result.needsCode) {
       router.push("/faculty/account-created");
       return;
     }
-    setSubmitting(false);
-    setConfirming(false);
-    setError("");
     setPendingEmail(form.email.trim().toLowerCase());
   }
 
-  async function verifyCode(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    setCodeNote("");
-    if (!/^[0-9]{6}$/.test(code)) {
-      setError("Enter the 6-digit code from your email.");
-      return;
-    }
-    setSubmitting(true);
+  async function verifyCode(code: string) {
     const verifyError = await verifyEmailCode(pendingEmail, code);
-    if (verifyError) {
-      setSubmitting(false);
-      setError(verifyError);
-      return;
-    }
-    router.push("/faculty/account-created");
-  }
-
-  async function resendCode() {
-    setError("");
-    const resendError = await resendConfirmation("faculty", pendingEmail);
-    setCodeNote(resendError || `We sent a new code to ${pendingEmail}.`);
-  }
-  if (pendingEmail) {
-    return (
-      <AuthFrame onSubmit={verifyCode} backTo="/faculty/sign-in">
-        <div className={styles.form}>
-          <p className={styles.codeIntro}><strong>Check your email</strong>We sent a 6-digit code to {pendingEmail}. Enter it to finish creating your account.</p>
-          <FormField label="Verification code" name="code" value={code} onChange={(event) => setCode(event.target.value.replace(/[^0-9]/g, "").slice(0, 6))} placeholder="Enter the 6-digit code" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} required />
-        </div>
-        {error && <Notice error>{error}</Notice>}
-        {codeNote && <Notice>{codeNote}</Notice>}
-        <AuthSubmit label="Verify and create account" pendingLabel="Verifying…" pending={submitting} />
-        <p className={styles.formNote}>Didn&apos;t get it? <button className={styles.textButton} type="button" onClick={resendCode}>Resend code</button></p>
-      </AuthFrame>
-    );
+    if (verifyError) return verifyError;
+    setPendingEmail("");
+    setShowPending(true);
   }
 
   return (
@@ -153,7 +119,8 @@ export default function Page() {
       {error && <Notice error>{error}</Notice>}
       <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} />
       <p className={styles.formNote}>Already have an account? <Link href="/faculty/sign-in">Sign in</Link></p>
-      <ConfirmationModal open={confirming} title="Create your account?" description="Please confirm that your details are correct." confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
+      <OtpModal open={Boolean(pendingEmail)} email={pendingEmail} onCancel={() => setPendingEmail("")} onVerify={verifyCode} onResend={() => resendConfirmation("faculty", pendingEmail)} />
+      <ConfirmationModal open={showPending} title="Verification in progress" description="Your email is verified. An admin is now reviewing your Faculty ID, and we'll email you as soon as you're approved and can sign in." confirmLabel="Back to Sign In" icon={Clock3} hideCancel onCancel={() => router.push("/faculty/sign-in")} onConfirm={() => router.push("/faculty/sign-in")} />
     </AuthFrame>
   );
 }

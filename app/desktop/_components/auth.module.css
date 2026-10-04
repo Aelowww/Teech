@@ -390,19 +390,3 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-
-.codeIntro {
-  margin: 0;
-  display: grid;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
-}
-
-.codeIntro strong {
-  color: var(--ink);
-  font-size: 18px;
-  font-weight: 700;
-}

@@ -186,6 +186,7 @@ export function VerificationQueue({ role }: { role: "student" | "faculty" }) {
 
                 {rejecting === account.profile_id ? (
                   <RejectForm
+                    label={role === "student" ? "Student ID" : "Faculty ID"}
                     verb={account.verification_status === "verified" ? "Revoke" : "Reject"}
                     busy={busy === account.profile_id}
                     onCancel={() => setRejecting(null)}
@@ -251,7 +252,7 @@ function DocumentViewer({ path, label }: { path: string; label: string }) {
   );
 }
 
-function RejectForm({ verb, busy, onCancel, onSubmit }: { verb: string; busy: boolean; onCancel: () => void; onSubmit: (note: string) => void }) {
+function RejectForm({ label, verb, busy, onCancel, onSubmit }: { label: string; verb: string; busy: boolean; onCancel: () => void; onSubmit: (note: string) => void }) {
   const [note, setNote] = useState("");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -263,7 +264,7 @@ function RejectForm({ verb, busy, onCancel, onSubmit }: { verb: string; busy: bo
     <form className={styles.rejectForm} onSubmit={handleSubmit}>
       <label>
         <span>Reason shown to the user</span>
-        <textarea value={note} onChange={(event) => setNote(event.target.value.slice(0, 300))} placeholder="e.g. This Student ID doesn't match our records for this name." rows={2} maxLength={300} required autoFocus />
+        <textarea value={note} onChange={(event) => setNote(event.target.value.slice(0, 300))} placeholder={`e.g. This ${label} doesn't match our records for this name.`} rows={2} maxLength={300} required autoFocus />
       </label>
       <div className={styles.actions}>
         <button className={styles.reject} type="submit" disabled={busy || !note.trim()}>{busy ? "Saving…" : `${verb} account`}</button>

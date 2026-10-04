@@ -5,8 +5,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mobile/_components/ui";
 import { PasswordField } from "@/app/mobile/_components/password-field";
-import { UserPlus } from "lucide-react";
-import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
+import { OtpModal } from "@/app/mobile/_components/otp-modal";
 import { isValidEmail, resendConfirmation, signUpStudent, verifyEmailCode } from "@/lib/auth-flows";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
@@ -30,10 +29,7 @@ export default function Page() {
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [confirming, setConfirming] = useState(false);
   const [pendingEmail, setPendingEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [codeNote, setCodeNote] = useState("");
 
   function updateField(field: keyof SignUpForm) {
     return (event: ChangeEvent<HTMLInputElement>) => setForm((current) => ({ ...current, [field]: event.target.value }));
@@ -60,68 +56,28 @@ export default function Page() {
       return;
     }
 
-    setConfirming(true);
+    void createAccount();
   }
 
   async function createAccount() {
     setSubmitting(true);
     const result = await signUpStudent(form);
+    setSubmitting(false);
     if (result.error) {
-      setSubmitting(false);
-      return result.error;
+      setError(result.error);
+      return;
     }
     if (!result.needsCode) {
       router.push("/student/account-created");
       return;
     }
-    setSubmitting(false);
-    setConfirming(false);
-    setError("");
     setPendingEmail(form.email.trim().toLowerCase());
   }
 
-  async function verifyCode(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    setCodeNote("");
-    if (!/^\d{6}$/.test(code)) {
-      setError("Enter the 6-digit code from your email.");
-      return;
-    }
-    setSubmitting(true);
+  async function verifyCode(code: string) {
     const verifyError = await verifyEmailCode(pendingEmail, code);
-    if (verifyError) {
-      setSubmitting(false);
-      setError(verifyError);
-      return;
-    }
+    if (verifyError) return verifyError;
     router.push("/student/account-created");
-  }
-
-  async function resendCode() {
-    setError("");
-    const resendError = await resendConfirmation("student", pendingEmail);
-    setCodeNote(resendError || `We sent a new code to ${pendingEmail}.`);
-  }
-
-  if (pendingEmail) {
-    return (
-      <MobileLayout className={styles.screen} backTo="/student/sign-in">
-        <form className={styles.page} onSubmit={verifyCode}>
-          <BrandHeader />
-          <FormCard>
-          <div className={styles.form}>
-            <p className={styles.codeIntro}><strong>Check your email</strong>We sent a 6-digit code to {pendingEmail}. Enter it to finish creating your account.</p>
-            <FormField label="Verification code" name="code" value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="Enter the 6-digit code" inputMode="numeric" pattern="\d{6}" maxLength={6} required />
-          </div>
-          {error && <Notice error>{error}</Notice>}
-          {codeNote && <Notice>{codeNote}</Notice>}
-          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Verifying..." : "Verify and Create Account"}</button>
-          <p className={styles.formNote}>Didn&apos;t get it? <button className={styles.textButton} type="button" onClick={resendCode}>Resend code</button></p>
-        </FormCard>
-        </form>
-      </MobileLayout>
-    );
   }
 
   return (
@@ -146,7 +102,7 @@ export default function Page() {
       </FormCard>
       <SupportChat audience="guest" variant="link" />
       </form>
-      <ConfirmationModal open={confirming} title="Create your account?" description="Please confirm that your details are correct." confirmLabel="Create Account" icon={UserPlus} onCancel={() => setConfirming(false)} onConfirm={createAccount} />
+      <OtpModal open={Boolean(pendingEmail)} email={pendingEmail} onCancel={() => setPendingEmail("")} onVerify={verifyCode} onResend={() => resendConfirmation("student", pendingEmail)} />
     </MobileLayout>
   );
 }
