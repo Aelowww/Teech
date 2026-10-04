@@ -8,7 +8,7 @@ import { PasswordField } from "@/app/mobile/_components/password-field";
 import { UserPlus } from "lucide-react";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
 import { IdUploadField } from "@/app/mobile/_components/id-upload-field";
-import { isValidEmail, signUpFaculty } from "@/lib/auth-flows";
+import { isValidEmail, resendConfirmation, signUpFaculty, verifyEmailCode } from "@/lib/auth-flows";
 import { facultyIdFileError } from "@/lib/faculty-id";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
@@ -35,6 +35,9 @@ export default function Page() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [codeNote, setCodeNote] = useState("");
   const [idFile, setIdFile] = useState<File | null>(null);
 
   function updateField(field: keyof SignUpForm) {
@@ -76,12 +79,62 @@ export default function Page() {
 
   async function createAccount() {
     setSubmitting(true);
-    const signUpError = await signUpFaculty({ ...form, idFile });
-    if (signUpError) {
+    const result = await signUpFaculty({ ...form, idFile });
+    if (result.error) {
       setSubmitting(false);
-      return signUpError;
+      return result.error;
+    }
+    if (!result.needsCode) {
+      router.push("/faculty/account-created");
+      return;
+    }
+    setSubmitting(false);
+    setConfirming(false);
+    setError("");
+    setPendingEmail(form.email.trim().toLowerCase());
+  }
+
+  async function verifyCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setCodeNote("");
+    if (!/^[0-9]{6}$/.test(code)) {
+      setError("Enter the 6-digit code from your email.");
+      return;
+    }
+    setSubmitting(true);
+    const verifyError = await verifyEmailCode(pendingEmail, code);
+    if (verifyError) {
+      setSubmitting(false);
+      setError(verifyError);
+      return;
     }
     router.push("/faculty/account-created");
+  }
+
+  async function resendCode() {
+    setError("");
+    const resendError = await resendConfirmation("faculty", pendingEmail);
+    setCodeNote(resendError || `We sent a new code to ${pendingEmail}.`);
+  }
+  if (pendingEmail) {
+    return (
+      <MobileLayout className={styles.screen} backTo="/faculty/sign-in">
+        <form className={styles.page} onSubmit={verifyCode}>
+          <BrandHeader />
+          <FormCard>
+          <div className={styles.form}>
+            <p className={styles.codeIntro}><strong>Check your email</strong>We sent a 6-digit code to {pendingEmail}. Enter it to finish creating your account.</p>
+            <FormField label="Verification code" name="code" value={code} onChange={(event) => setCode(event.target.value.replace(/[^0-9]/g, "").slice(0, 6))} placeholder="Enter the 6-digit code" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} required />
+          </div>
+          {error && <Notice error>{error}</Notice>}
+          {codeNote && <Notice>{codeNote}</Notice>}
+          <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Verifying..." : "Verify and Create Account"}</button>
+          <p className={styles.formNote}>Didn&apos;t get it? <button className={styles.textButton} type="button" onClick={resendCode}>Resend code</button></p>
+        </FormCard>
+        </form>
+      </MobileLayout>
+    );
   }
 
   return (

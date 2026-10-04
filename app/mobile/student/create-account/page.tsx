@@ -7,7 +7,7 @@ import { BrandHeader, FormCard, MobileLayout, Notice, FormField } from "@/app/mo
 import { PasswordField } from "@/app/mobile/_components/password-field";
 import { UserPlus } from "lucide-react";
 import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
-import { isValidEmail, resendConfirmation, signUpStudent, verifyStudentCode } from "@/lib/auth-flows";
+import { isValidEmail, resendConfirmation, signUpStudent, verifyEmailCode } from "@/lib/auth-flows";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/mobile/_components/support-chat";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
@@ -89,7 +89,7 @@ export default function Page() {
       return;
     }
     setSubmitting(true);
-    const verifyError = await verifyStudentCode(pendingEmail, code);
+    const verifyError = await verifyEmailCode(pendingEmail, code);
     if (verifyError) {
       setSubmitting(false);
       setError(verifyError);

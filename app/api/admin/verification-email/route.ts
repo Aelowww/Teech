@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import nodemailer from "nodemailer";
 import { createClient } from "@/lib/supabase/server";
 
 type Contact = { role: "student" | "faculty"; full_name: string; email: string; verification_status: string; verification_note: string | null };
@@ -91,18 +92,25 @@ export async function POST(request: NextRequest) {
   if (contact.verification_status !== "verified" && contact.verification_status !== "rejected") return NextResponse.json({ sent: false, reason: "pending" });
   if (!contact.email || contact.email.endsWith("@students.teech.local")) return NextResponse.json({ sent: false, reason: "no_email" });
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM;
-  if (!apiKey || !from) return NextResponse.json({ sent: false, reason: "not_configured" });
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!user || !pass) return NextResponse.json({ sent: false, reason: "not_configured" });
+
+  const port = Number(process.env.SMTP_PORT || 465);
+  const transport = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+  });
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin).replace(/\/$/, "");
   const message = compose(contact, siteUrl);
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to: [contact.email], subject: message.subject, text: message.text, html: message.html }),
-  }).catch(() => null);
+  const sent = await transport
+    .sendMail({ from: `Teech <${user}>`, to: contact.email, subject: message.subject, text: message.text, html: message.html })
+    .then(() => true)
+    .catch(() => false);
 
-  if (!response?.ok) return NextResponse.json({ sent: false, reason: "send_failed" }, { status: 502 });
+  if (!sent) return NextResponse.json({ sent: false, reason: "send_failed" }, { status: 502 });
   return NextResponse.json({ sent: true });
 }

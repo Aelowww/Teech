@@ -66,7 +66,7 @@ Open `http://localhost:3000`.
 
 In Supabase Auth settings, turn on **Confirm email**, set up custom SMTP, and add `<site>/auth/confirm` to the redirect URLs.
 
-Verification decision emails are sent with [Resend](https://resend.com). Set `RESEND_API_KEY`, `EMAIL_FROM` (an address on a domain verified in Resend), and `NEXT_PUBLIC_SITE_URL` in `.env.local` and in Vercel. Without them, decisions still save and show up as in-app notifications, but no email goes out.
+Verification decision emails are sent over SMTP (a Gmail app password works). Set `SMTP_USER`, `SMTP_PASS`, and `NEXT_PUBLIC_SITE_URL` (plus `SMTP_HOST`/`SMTP_PORT` if not Gmail) in `.env.local` and in Vercel. Without them, decisions still save and show up as in-app notifications, but no email goes out. Email templates for Supabase Auth live in `supabase/templates/`.
 
 To share a demo with groupmates' phones, run `npm run tunnel` in a second terminal and send them the ngrok link.
 

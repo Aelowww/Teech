@@ -35,7 +35,7 @@ export async function signInAs(role: Role, emailInput: string, password: string)
 
   if (error || !data.user) {
     if (error?.code === "email_not_confirmed") {
-      return { ok: false, error: "Confirm your email first. Check your inbox for the link we sent.", unconfirmedEmail: email };
+      return { ok: false, error: "Your email isn't confirmed yet. Go to Sign up and enter the same details to get a new 6-digit code." };
     }
     if (error?.code === "invalid_credentials") return { ok: false, error: "Incorrect email or password." };
     if (error?.code === "over_request_rate_limit") return { ok: false, error: "Too many attempts. Please wait a few minutes and try again." };
@@ -82,20 +82,19 @@ export async function signUpStudent(form: StudentSignUp) {
 
 export async function signUpFaculty(form: FacultySignUp) {
   const fileError = facultyIdFileError(form.idFile);
-  if (fileError || !form.idFile) return fileError;
+  if (fileError || !form.idFile) return { error: fileError, needsCode: false };
   const upload = await uploadFacultyId(form.idFile);
-  if (!upload.path) return upload.error;
-  const result = await createAccount("faculty", form.email, form.password, {
+  if (!upload.path) return { error: upload.error, needsCode: false };
+  return createAccount("faculty", form.email, form.password, {
     role: "faculty",
     full_name: form.fullName.trim(),
     faculty_number: form.facultyNumber.trim(),
     department: form.department.trim(),
     id_document_path: upload.path,
   });
-  return result.error;
 }
 
-export async function verifyStudentCode(email: string, code: string) {
+export async function verifyEmailCode(email: string, code: string) {
   const supabase = createClient();
   const { error } = await supabase.auth.verifyOtp({ email: email.trim().toLowerCase(), token: code.trim(), type: "email" });
   if (error) {

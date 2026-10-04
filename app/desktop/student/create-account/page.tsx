@@ -8,7 +8,7 @@ import { PasswordField } from "@/app/desktop/_components/password-field";
 import { AuthFrame, AuthSubmit } from "@/app/desktop/_components/auth-frame";
 import { UserPlus } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
-import { isValidEmail, resendConfirmation, signUpStudent, verifyStudentCode } from "@/lib/auth-flows";
+import { isValidEmail, resendConfirmation, signUpStudent, verifyEmailCode } from "@/lib/auth-flows";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/desktop/_components/support-chat";
 import styles from "@/app/desktop/_components/auth.module.css";
@@ -89,7 +89,7 @@ export default function Page() {
       return;
     }
     setSubmitting(true);
-    const verifyError = await verifyStudentCode(pendingEmail, code);
+    const verifyError = await verifyEmailCode(pendingEmail, code);
     if (verifyError) {
       setSubmitting(false);
       setError(verifyError);

@@ -38,7 +38,7 @@ const reviewMessages: Record<string, string> = {
 };
 
 const emailMessages: Record<string, string> = {
-  not_configured: "No email was sent because email sending isn't set up yet (RESEND_API_KEY and EMAIL_FROM).",
+  not_configured: "No email was sent because email sending isn't set up yet (SMTP_USER and SMTP_PASS).",
   no_email: "No email was sent because this account has no real email address.",
   send_failed: "The decision was saved, but the email couldn't be sent.",
 };
