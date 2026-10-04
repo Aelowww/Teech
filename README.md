@@ -32,8 +32,7 @@ We built Teech because booking a consultation with a teacher at our school is ho
 - In-app notifications whenever a request changes
 - Daily login streaks, points, a points shop, and collectible badges
 - Profile photo, badge showcase, and account deletion
-- Password reset by email, with security questions as a fallback for students
-- Reminder for students who haven't set up account recovery yet
+- Password reset by email for students and faculty
 - Rotating study tips and a built-in help chat
 - Separate mobile and desktop layouts, picked automatically for each device
 - Animated loading screens and page skeletons while pages load

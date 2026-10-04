@@ -9,7 +9,6 @@ import { CardList, ProfilePhoto, SpotlightCard, UpNextCard } from "@/app/desktop
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { LoginStreakCard } from "@/app/desktop/_components/login-streak";
 import { FactCard } from "@/app/desktop/_components/fact-card";
-import { RecoveryReminder } from "@/app/desktop/_components/recovery-reminder";
 import { VerificationBanner } from "@/app/desktop/_components/verification";
 import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { CountUp } from "@/app/desktop/_components/count-up";
@@ -133,7 +132,6 @@ export default function Page() {
         <div className={styles.layout}>
           <div className={styles.main}>
             <VerificationBanner role="student" />
-            <RecoveryReminder />
 
             {nextAppointment ? (
               <UpNextCard

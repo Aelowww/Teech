@@ -98,7 +98,7 @@ export default function Page() {
         </label>
       </div>
       {error && <Notice error>{error}</Notice>}
-      <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} />
+      <AuthSubmit label="Create account" pendingLabel="Creating account…" pending={submitting} disabled={!isValidEmail(form.email)} />
       <p className={styles.formNote}>Already have an account? <Link href="/student/sign-in">Sign in</Link></p>
       <OtpModal open={Boolean(pendingEmail)} email={pendingEmail} onCancel={() => setPendingEmail("")} onVerify={verifyCode} onResend={() => resendConfirmation("student", pendingEmail)} />
     </AuthFrame>

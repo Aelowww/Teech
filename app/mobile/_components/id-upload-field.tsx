@@ -33,7 +33,7 @@ export function IdUploadField({ label, file, onChange }: { label: string; file: 
         <label className={styles.drop}>
           <span className={styles.icon}><ImageUp size={18} /></span>
           <span className={styles.name}><strong>Upload a clear photo of your ID</strong><small>JPG, PNG, WEBP, or PDF up to 5 MB</small></span>
-          <input type="file" accept={facultyIdAccept} onChange={(event) => onChange(event.target.files?.[0] ?? null)} />
+          <input type="file" accept={facultyIdAccept} onChange={(event) => onChange(event.target.files?.[0] ?? null)} aria-label={label} required />
         </label>
       )}
     </div>

@@ -97,7 +97,7 @@ export default function Page() {
           </label>
         </div>
         {error && <Notice error>{error}</Notice>}
-        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.submitButton}`} type="submit" disabled={submitting}>{submitting ? "Creating Account..." : "Create Account"}</button>
+        <button className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.submitButton}`} type="submit" disabled={submitting || !isValidEmail(form.email)}>{submitting ? "Creating Account..." : "Create Account"}</button>
         <p className={styles.formNote}>Already have an account? <Link href="/student/sign-in">Sign In</Link></p>
       </FormCard>
       <SupportChat audience="guest" variant="link" />

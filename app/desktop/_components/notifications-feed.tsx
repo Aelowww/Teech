@@ -169,6 +169,7 @@ const appearances: Record<string, { Icon: LucideIcon; tone: Tone }> = {
   badge_earned: { Icon: Award, tone: "accent" },
   verification_pending: { Icon: ShieldEllipsis, tone: "warning" },
   verification_required: { Icon: ShieldAlert, tone: "warning" },
+  verification_submitted: { Icon: Send, tone: "accent" },
   verification_approved: { Icon: BadgeCheck, tone: "success" },
   verification_rejected: { Icon: ShieldAlert, tone: "danger" },
 };

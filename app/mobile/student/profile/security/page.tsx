@@ -1,141 +1,45 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Info, ShieldAlert, ShieldCheck } from "lucide-react";
-import { MobileLayout, Notice, PageHeading } from "@/app/mobile/_components/ui";
-import { SuccessModal } from "@/app/mobile/_components/success-modal";
-import { ConfirmationModal } from "@/app/mobile/_components/confirmation-modal";
-import { PasswordField } from "@/app/mobile/_components/password-field";
+import { Mail } from "lucide-react";
+import { MobileLayout, PageHeading } from "@/app/mobile/_components/ui";
 import { SignOutEverywhere } from "@/app/mobile/_components/sign-out-everywhere";
 import { createClient } from "@/lib/supabase/client";
-import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "@/app/mobile/_components/profile-settings.module.css";
-import pageStyles from "./page.module.css";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
-
-const emptyTrio = ["", "", ""];
 
 export default function Page() {
   const router = useRouter();
-  const [options, setOptions] = useState<string[]>([]);
-  const [questions, setQuestions] = useState(emptyTrio);
-  const [answers, setAnswers] = useState(emptyTrio);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [error, setError] = useState("");
-  const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [confirming, setConfirming] = useState(false);
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isSetUp, setIsSetUp] = useState(false);
 
   useEffect(() => {
     let active = true;
-    async function loadQuestions() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+    async function loadEmail() {
+      const { data: { user } } = await createClient().auth.getUser();
       if (!user) { router.replace("/student/sign-in"); return; }
-      const [optionsResult, savedResult] = await Promise.all([
-        supabase.rpc("security_question_options"),
-        supabase.from("student_security_answers").select("question").order("question"),
-      ]);
       if (!active) return;
-      if (optionsResult.error || savedResult.error) {
-        setError(optionsResult.error?.message || savedResult.error?.message || "Security questions could not be loaded.");
-      } else {
-        setOptions((optionsResult.data || []) as string[]);
-        const saved = (savedResult.data || []).map((row) => row.question as string);
-        if (saved.length === 3) {
-          setQuestions(saved);
-          setIsSetUp(true);
-        }
-      }
+      setEmail(user.email || "");
       setIsLoading(false);
     }
-    void loadQuestions();
+    void loadEmail();
     return () => { active = false; };
   }, [router]);
 
   if (isLoading) return <AppLoader />;
 
-  function updateAt(list: string[], index: number, value: string) {
-    return list.map((item, itemIndex) => itemIndex === index ? value : item);
-  }
-
-  function saveQuestions(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    if (questions.some((question) => !question) || new Set(questions).size !== 3) {
-      setError("Choose three different questions.");
-      return;
-    }
-    if (answers.some((answer) => answer.trim().length < 2)) {
-      setError("Each answer must be at least 2 characters.");
-      return;
-    }
-
-    setConfirming(true);
-  }
-
-  async function persistQuestions() {
-    setSaving(true);
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.email) { setSaving(false); router.replace("/student/sign-in"); return; }
-    const { error: passwordError } = await supabase.auth.signInWithPassword({ email: user.email, password: currentPassword });
-    if (passwordError) {
-      setSaving(false);
-      setError("Your current password is incorrect.");
-      return;
-    }
-    const { error: saveError } = await supabase.rpc("set_security_answers", { questions, answers });
-    setSaving(false);
-    if (saveError) { setError(saveError.message); return; }
-    setAnswers(emptyTrio);
-    setCurrentPassword("");
-    setIsSetUp(true);
-    setSaved(true);
-  }
-
   return (
     <MobileLayout className={styles.screen} backTo="/student/profile" role="student" activeNav="profile">
-      <form className={styles.page} onSubmit={saveQuestions}>
-        <PageHeading title="Account Recovery" subtitle="Security questions let you reset your password if you forget it." />
-        <p className={`${pageStyles.status} ${isSetUp ? pageStyles.statusOn : ""}`}>
-          {isSetUp ? <ShieldCheck size={15} aria-hidden="true" /> : <ShieldAlert size={15} aria-hidden="true" />}
-          {isSetUp ? "Recovery is set up. Save again to change it." : "Not set up yet"}
-        </p>
-
-        <ol className={pageStyles.questions}>
-          {questions.map((question, index) => (
-            <li key={index}>
-              <span className={pageStyles.step} aria-hidden="true">{index + 1}</span>
-              <div className={pageStyles.pair}>
-                <div className={pageStyles.selectWrap}>
-                  <select aria-label={`Question ${index + 1}`} className={question ? "" : pageStyles.placeholder} value={question} onChange={(event) => setQuestions((current) => updateAt(current, index, event.target.value))} required>
-                    <option value="" disabled>Choose a question</option>
-                    {options.map((option) => (
-                      <option key={option} value={option} disabled={questions.includes(option) && option !== question}>{option}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={16} aria-hidden="true" />
-                </div>
-                <input aria-label={`Answer ${index + 1}`} name={`answer${index + 1}`} value={answers[index]} onChange={(event) => setAnswers((current) => updateAt(current, index, event.target.value))} placeholder="Your answer" maxLength={100} autoComplete="off" required />
-              </div>
-            </li>
-          ))}
-        </ol>
-        <p className={pageStyles.hint}><Info size={13} aria-hidden="true" />Answers aren&apos;t case-sensitive. Pick ones only you would know.</p>
-
-        <div className={pageStyles.confirm}>
-          <PasswordField label="Confirm it's you" name="currentPassword" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} placeholder="Your current password" autoComplete="current-password" required />
-        </div>
-        {error && <Notice error>{error}</Notice>}
-        <div className={pageStyles.submit}><button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Saving..." : "Save questions"}</button></div>
+      <div className={styles.page}>
+        <PageHeading title="Account Recovery" subtitle="How you get back into your account if you forget your password." />
+        <section className={styles.securityCard}>
+          <h2><Mail size={15} />Recovery email</h2>
+          <strong className={styles.securityValue}>{email}</strong>
+          <p>If you forget your password, tap <b>Forgot Password</b> on the sign-in screen and we&apos;ll email a reset link to this address.</p>
+        </section>
         <SignOutEverywhere />
-      </form>
-      <ConfirmationModal open={confirming} title="Save security questions?" description={isSetUp ? "These will replace your current security questions and answers." : "You will use these answers to recover your account if you forget your password."} confirmLabel="Save Questions" icon={ShieldCheck} onCancel={() => setConfirming(false)} onConfirm={persistQuestions} />
-      <SuccessModal open={saved} title="Security questions saved" description="You can now use them to recover your account if you forget your password." onDone={() => setSaved(false)} />
+      </div>
     </MobileLayout>
   );
 }

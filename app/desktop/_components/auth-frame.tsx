@@ -9,13 +9,15 @@ export function AuthSubmit({
   label,
   pendingLabel,
   pending,
+  disabled = false,
 }: {
   label: string;
   pendingLabel: string;
   pending: boolean;
+  disabled?: boolean;
 }) {
   return (
-    <button className={styles.submitButton} type="submit" disabled={pending} aria-busy={pending}>
+    <button className={styles.submitButton} type="submit" disabled={pending || disabled} aria-busy={pending}>
       <span>{pending ? pendingLabel : label}</span>
       {pending ? (
         <LoaderCircle className={styles.submitSpinner} size={16} strokeWidth={2.25} aria-hidden="true" />

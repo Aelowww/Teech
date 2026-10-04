@@ -166,7 +166,7 @@ function IdentityForm({ role, initialId, initialDepartment, resubmitting, onDone
       )}
       <IdUploadField label={`${label} photo`} file={idFile} onChange={(file) => { setError(""); setIdFile(file); }} />
       {error && <Notice error>{error}</Notice>}
-      <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving}>{saving ? "Submitting…" : resubmitting ? "Resubmit for review" : "Submit for verification"}</button>
+      <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving || !identifier.trim() || !idFile || (role === "student" && !department.trim())}>{saving ? "Submitting…" : resubmitting ? "Resubmit for review" : "Submit for verification"}</button>
     </form>
   );
 }

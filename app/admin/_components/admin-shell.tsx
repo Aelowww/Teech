@@ -36,7 +36,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     await createClient().auth.signOut();
-    router.replace("/admin/sign-in");
+    router.replace("/welcome");
     router.refresh();
   }, [router]);
 

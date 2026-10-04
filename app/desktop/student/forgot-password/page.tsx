@@ -65,7 +65,6 @@ function ForgotPasswordPage() {
         </div>
         {error && <Notice error>{error}</Notice>}
         <button className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.block} ${styles.submitButton}`} type="submit" disabled={sending}>{sending ? "Sending..." : "Send Reset Link"}</button>
-        <p className={styles.hint}>No email on your account? <Link href="/student/forgot-password/questions">Answer your security questions instead</Link></p>
       </form>
     </DesktopLayout>
   );
