@@ -1,0 +1,138 @@
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap");
+:root{--bg:#0f1221;--card:#171b2e;--ink:#eef0fa;--muted:#8b91b0;--grid:#2a3050;--accent:#ffd36e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 50% 0%,#3a2340 0%,var(--bg) 55%);color:var(--ink);font-family:"Inter",system-ui,sans-serif}
+.card{width:min(1200px,100%);background:var(--card);border:1px solid #262c48;border-radius:20px;padding:28px 28px 20px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.eyebrow{margin:0;color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+#title{margin:6px 0 4px;font-family:"Fraunces",Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600}
+#description{margin:0 0 16px;color:var(--muted)}
+.chart svg{display:block;width:100%;height:auto}
+.axis text{fill:var(--muted);font-family:"Inter",system-ui,sans-serif;font-size:11px}
+.axis path,.axis line{stroke:var(--grid)}
+.axis-label,.legend-title{fill:var(--muted);font-size:12px}
+.cell{shape-rendering:crispEdges}
+.cell:hover{stroke:var(--ink);stroke-width:1.5}
+#legend rect{stroke:var(--card);stroke-width:1}
+#tooltip{position:absolute;pointer-events:none;opacity:0;visibility:hidden;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.96);color:#14182b;font-size:.85rem;line-height:1.45;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:opacity 120ms ease;white-space:nowrap}
+#tooltip.visible{opacity:1;visibility:visible}
+#tooltip .tt-date{font-weight:600;font-size:.95rem}
+#tooltip .tt-temp{font-size:1.1rem;font-weight:600}
+#tooltip .tt-var{color:#5b6178}
+</style>
+
+<main class="card">
+  <header>
+    <p class="eyebrow">Global land-surface temperature</p>
+    <h1 id="title">Monthly Global Land-Surface Temperature</h1>
+    <p id="description">1753 – 2015: base temperature 8.66℃</p>
+  </header>
+  <div id="chart" class="chart"></div>
+</main>
+
+<div id="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const DATA_URL = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json";
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const COLORS = ["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"];
+
+const width = 1200, height = 560;
+const margin = { top: 10, right: 30, bottom: 130, left: 100 };
+const innerWidth = width - margin.left - margin.right;
+const innerHeight = height - margin.top - margin.bottom;
+
+const svg = d3.select("#chart").append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .attr("preserveAspectRatio", "xMidYMid meet");
+const plot = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
+const tooltip = d3.select("#tooltip");
+const fmt1 = d3.format(".1f");
+const fmtVar = d3.format("+.1f");
+
+fetch(DATA_URL)
+  .then((r) => r.json())
+  .then(render)
+  .catch((e) => d3.select("#chart").append("p").text(`Couldn't load the data: ${e.message}`));
+
+function render({ baseTemperature, monthlyVariance }) {
+  const data = monthlyVariance.map((d) => ({ ...d, month: d.month - 1, temp: baseTemperature + d.variance }));
+  const years = [...new Set(data.map((d) => d.year))];
+
+  d3.select("#description").text(
+    `${years[0]} – ${years[years.length - 1]}: base temperature ${baseTemperature}℃`
+  );
+
+  const x = d3.scaleBand().domain(years).range([0, innerWidth]);
+  const y = d3.scaleBand().domain(d3.range(12)).range([0, innerHeight]);
+
+  const [minTemp, maxTemp] = d3.extent(data, (d) => d.temp);
+  const step = (maxTemp - minTemp) / COLORS.length;
+  const thresholds = d3.range(1, COLORS.length).map((i) => minTemp + i * step);
+  const color = d3.scaleThreshold().domain(thresholds).range(COLORS);
+
+  plot.selectAll(".cell").data(data).join("rect")
+    .attr("class", "cell")
+    .attr("data-month", (d) => d.month)
+    .attr("data-year", (d) => d.year)
+    .attr("data-temp", (d) => d.temp)
+    .attr("x", (d) => x(d.year))
+    .attr("y", (d) => y(d.month))
+    .attr("width", x.bandwidth())
+    .attr("height", y.bandwidth())
+    .attr("fill", (d) => color(d.temp))
+    .on("mouseover", (event, d) => {
+      tooltip.attr("data-year", d.year)
+        .html(
+          `<div class="tt-date">${MONTHS[d.month]} ${d.year}</div>` +
+          `<div class="tt-temp">${fmt1(d.temp)}℃</div>` +
+          `<div class="tt-var">${fmtVar(d.variance)}℃ vs. base</div>`
+        )
+        .classed("visible", true);
+    })
+    .on("mousemove", (event) => {
+      const node = tooltip.node(), offset = 16;
+      let left = event.pageX + offset;
+      if (left + node.offsetWidth > window.scrollX + window.innerWidth) left = event.pageX - node.offsetWidth - offset;
+      tooltip.style("left", `${left}px`).style("top", `${event.pageY - node.offsetHeight - offset}px`);
+    })
+    .on("mouseout", () => tooltip.classed("visible", false));
+
+  plot.append("g").attr("id", "x-axis").attr("class", "axis")
+    .attr("transform", `translate(0, ${innerHeight})`)
+    .call(d3.axisBottom(x).tickValues(years.filter((yr) => yr % 10 === 0)).tickSizeOuter(0));
+
+  plot.append("g").attr("id", "y-axis").attr("class", "axis")
+    .call(d3.axisLeft(y).tickFormat((m) => MONTHS[m]).tickSizeOuter(0));
+
+  plot.append("text").attr("class", "axis-label").attr("transform", "rotate(-90)")
+    .attr("x", -innerHeight / 2).attr("y", -margin.left + 16).attr("text-anchor", "middle")
+    .text("Month");
+
+  plot.append("text").attr("class", "axis-label")
+    .attr("x", innerWidth / 2).attr("y", innerHeight + 40).attr("text-anchor", "middle")
+    .text("Year");
+
+  // Legend
+  const legendWidth = 440, legendHeight = 16;
+  const legendX = d3.scaleLinear().domain([minTemp, maxTemp]).range([0, legendWidth]);
+  const legend = svg.append("g").attr("id", "legend")
+    .attr("transform", `translate(${margin.left}, ${height - 60})`);
+
+  legend.append("text").attr("class", "legend-title").attr("y", -8).text("Temperature (℃)");
+
+  legend.selectAll("rect")
+    .data(COLORS.map((c, i) => [minTemp + i * step, minTemp + (i + 1) * step, c]))
+    .join("rect")
+    .attr("x", (d) => legendX(d[0]))
+    .attr("width", (d) => legendX(d[1]) - legendX(d[0]))
+    .attr("height", legendHeight)
+    .attr("fill", (d) => d[2]);
+
+  legend.append("g").attr("class", "axis")
+    .attr("transform", `translate(0, ${legendHeight})`)
+    .call(d3.axisBottom(legendX).tickValues([minTemp, ...thresholds, maxTemp]).tickFormat(fmt1));
+}
+</script>
+<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
