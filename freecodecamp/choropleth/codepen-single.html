@@ -1,0 +1,116 @@
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap");
+:root{--bg:#0f1221;--card:#171b2e;--ink:#eef0fa;--muted:#8b91b0;--grid:#2a3050;--accent:#ffd36e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 30% 0%,#1d3a4a 0%,var(--bg) 55%);color:var(--ink);font-family:"Inter",system-ui,sans-serif}
+.card{width:min(1040px,100%);background:var(--card);border:1px solid #262c48;border-radius:20px;padding:28px 28px 20px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.eyebrow{margin:0;color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+#title{margin:6px 0 4px;font-family:"Fraunces",Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600}
+#description{margin:0 0 8px;color:var(--muted)}
+.chart svg{display:block;width:100%;height:auto}
+.county{cursor:pointer}
+.county:hover{stroke:var(--accent);stroke-width:1.5}
+.states{fill:none;stroke:var(--card);stroke-width:1.2;stroke-linejoin:round;pointer-events:none}
+.axis text{fill:var(--muted);font-family:"Inter",system-ui,sans-serif;font-size:11px}
+.axis path,.axis line{stroke:var(--muted)}
+.legend-title{fill:var(--muted);font-size:12px}
+footer{margin-top:8px;color:var(--muted);font-size:.8rem}
+footer a{color:var(--muted)}
+#tooltip{position:absolute;pointer-events:none;opacity:0;visibility:hidden;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.96);color:#14182b;font-size:.85rem;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:opacity 120ms ease;white-space:nowrap}
+#tooltip.visible{opacity:1;visibility:visible}
+#tooltip .tt-name{font-weight:600;font-size:.95rem}
+#tooltip .tt-edu{font-size:1.1rem;font-weight:600}
+#tooltip .tt-meta{color:#5b6178}
+</style>
+
+<main class="card">
+  <header>
+    <p class="eyebrow">US Census · Education</p>
+    <h1 id="title">United States Educational Attainment</h1>
+    <p id="description">Percentage of adults age 25 and older with a bachelor's degree or higher (2010–2014)</p>
+  </header>
+  <div id="chart" class="chart"></div>
+  <footer>Source: <a href="https://www.ers.usda.gov/data-products/county-level-data-sets/download-data.aspx" target="_blank" rel="noopener">USDA Economic Research Service</a></footer>
+</main>
+
+<div id="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+const EDUCATION_URL = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json";
+const COUNTY_URL = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json";
+const COLORS = ["#f7fcf0", "#e0f3db", "#ccebc5", "#a8ddb5", "#7bccc4", "#4eb3d3", "#2b8cbe", "#0868ac", "#084081"];
+
+const width = 960, height = 640;
+const svg = d3.select("#chart").append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .attr("preserveAspectRatio", "xMidYMid meet");
+const tooltip = d3.select("#tooltip");
+const path = d3.geoPath();
+
+Promise.all([d3.json(COUNTY_URL), d3.json(EDUCATION_URL)])
+  .then(([us, education]) => render(us, education))
+  .catch((e) => d3.select("#chart").append("p").text(`Couldn't load the data: ${e.message}`));
+
+function render(us, education) {
+  const byFips = new Map(education.map((d) => [d.fips, d]));
+  const [minEdu, maxEdu] = d3.extent(education, (d) => d.bachelorsOrHigher);
+  const step = (maxEdu - minEdu) / COLORS.length;
+  const thresholds = d3.range(1, COLORS.length).map((i) => minEdu + i * step);
+  const color = d3.scaleThreshold().domain(thresholds).range(COLORS);
+
+  // Legend
+  const legendWidth = 320, legendHeight = 10;
+  const legendX = d3.scaleLinear().domain([minEdu, maxEdu]).range([0, legendWidth]);
+  const legend = svg.append("g").attr("id", "legend")
+    .attr("transform", `translate(${width - legendWidth - 40}, 30)`);
+  legend.append("text").attr("class", "legend-title").attr("y", -8).text("Bachelor's degree or higher");
+  legend.selectAll("rect")
+    .data(COLORS.map((c, i) => [minEdu + i * step, minEdu + (i + 1) * step, c]))
+    .join("rect")
+    .attr("x", (d) => legendX(d[0]))
+    .attr("width", (d) => legendX(d[1]) - legendX(d[0]))
+    .attr("height", legendHeight)
+    .attr("fill", (d) => d[2]);
+  legend.append("g").attr("class", "axis")
+    .attr("transform", `translate(0, ${legendHeight})`)
+    .call(d3.axisBottom(legendX).tickSize(14).tickValues([minEdu, ...thresholds, maxEdu]).tickFormat((v) => `${Math.round(v)}%`))
+    .select(".domain").remove();
+
+  const map = svg.append("g").attr("transform", "translate(0, 40)");
+
+  map.append("g").selectAll("path")
+    .data(topojson.feature(us, us.objects.counties).features)
+    .join("path")
+    .attr("class", "county")
+    .attr("data-fips", (d) => d.id)
+    .attr("data-education", (d) => byFips.get(d.id)?.bachelorsOrHigher ?? 0)
+    .attr("fill", (d) => color(byFips.get(d.id)?.bachelorsOrHigher ?? 0))
+    .attr("d", path)
+    .on("mouseover", (event, d) => {
+      const r = byFips.get(d.id);
+      if (!r) return;
+      tooltip.attr("data-education", r.bachelorsOrHigher)
+        .html(
+          `<div class="tt-name">${r.area_name}, ${r.state}</div>` +
+          `<div class="tt-edu">${r.bachelorsOrHigher}%</div>` +
+          `<div class="tt-meta">have a bachelor's degree or higher</div>`
+        )
+        .classed("visible", true);
+    })
+    .on("mousemove", (event) => {
+      const node = tooltip.node(), offset = 16;
+      let left = event.pageX + offset;
+      if (left + node.offsetWidth > window.scrollX + window.innerWidth) left = event.pageX - node.offsetWidth - offset;
+      tooltip.style("left", `${left}px`).style("top", `${event.pageY - node.offsetHeight - offset}px`);
+    })
+    .on("mouseout", () => tooltip.classed("visible", false));
+
+  map.append("path")
+    .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+    .attr("class", "states")
+    .attr("d", path);
+}
+</script>
+<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
