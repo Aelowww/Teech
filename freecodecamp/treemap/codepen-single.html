@@ -1,0 +1,147 @@
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap");
+:root{--bg:#0f1221;--card:#171b2e;--ink:#eef0fa;--muted:#8b91b0;--accent:#ffd36e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 70% 0%,#2f2a55 0%,var(--bg) 55%);color:var(--ink);font-family:"Inter",system-ui,sans-serif}
+.card{width:min(1040px,100%);background:var(--card);border:1px solid #262c48;border-radius:20px;padding:28px 28px 20px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.eyebrow{margin:0;color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+#title{margin:6px 0 4px;font-family:"Fraunces",Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600}
+#description{margin:0 0 16px;color:var(--muted)}
+.chart svg,#legend{display:block;width:100%;height:auto}
+.tile{stroke:var(--card);stroke-width:1;cursor:pointer}
+.tile:hover{stroke:var(--ink);stroke-width:2}
+.tile-label{fill:#14182b;font-size:10px;font-weight:500;pointer-events:none}
+.legend-wrap{margin-top:16px}
+.legend-title{margin:0 0 6px;color:var(--muted);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+#legend text{fill:var(--ink);font-size:13px}
+#tooltip{position:absolute;pointer-events:none;opacity:0;visibility:hidden;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.96);color:#14182b;font-size:.85rem;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:opacity 120ms ease;white-space:nowrap}
+#tooltip.visible{opacity:1;visibility:visible}
+#tooltip .tt-name{font-weight:600;font-size:.95rem}
+#tooltip .tt-value{font-size:1.1rem;font-weight:600}
+#tooltip .tt-meta{color:#5b6178}
+</style>
+
+<main class="card">
+  <header>
+    <p class="eyebrow">Top 100 best-selling games</p>
+    <h1 id="title">Video Game Sales</h1>
+    <p id="description">Top 100 most sold video games grouped by platform</p>
+  </header>
+  <div id="chart" class="chart"></div>
+  <div class="legend-wrap">
+    <p class="legend-title">Platforms</p>
+    <svg id="legend"></svg>
+  </div>
+</main>
+
+<div id="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const DATA_URL = "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json";
+const PALETTE = [
+  "#ff8fa3", "#ffb38a", "#ffd36e", "#c8e67a", "#8de0a6", "#6fd6d0", "#7cc4ff", "#9aa8ff", "#c3a0ff",
+  "#f09ae0", "#ff6f7d", "#f5a35c", "#e6c35c", "#a3d36c", "#5cc98f", "#4fb3c9", "#5d93e6", "#b18cf0"
+];
+
+const width = 980, height = 600;
+const svg = d3.select("#chart").append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .attr("preserveAspectRatio", "xMidYMid meet");
+const tooltip = d3.select("#tooltip");
+
+fetch(DATA_URL)
+  .then((r) => r.json())
+  .then(render)
+  .catch((e) => d3.select("#chart").append("p").text(`Couldn't load the data: ${e.message}`));
+
+function render(data) {
+  const root = d3.hierarchy(data)
+    .sum((d) => +d.value || 0)
+    .sort((a, b) => b.height - a.height || b.value - a.value);
+
+  d3.treemap().size([width, height]).paddingInner(1).round(false)(root);
+
+  const categories = data.children.map((c) => c.name);
+  const color = d3.scaleOrdinal().domain(categories).range(PALETTE);
+
+  const leaves = svg.selectAll("g").data(root.leaves()).join("g")
+    .attr("transform", (d) => `translate(${d.x0}, ${d.y0})`);
+
+  leaves.append("rect")
+    .attr("class", "tile")
+    .attr("data-name", (d) => d.data.name)
+    .attr("data-category", (d) => d.data.category)
+    .attr("data-value", (d) => d.data.value)
+    .attr("width", (d) => d.x1 - d.x0)
+    .attr("height", (d) => d.y1 - d.y0)
+    .attr("rx", 3)
+    .attr("fill", (d) => color(d.data.category))
+    .on("mouseover", (event, d) => {
+      tooltip.attr("data-value", d.data.value)
+        .html(
+          `<div class="tt-name">${d.data.name}</div>` +
+          `<div class="tt-meta">Platform: ${d.data.category}</div>` +
+          `<div class="tt-value">${d.data.value}M copies</div>`
+        )
+        .classed("visible", true);
+    })
+    .on("mousemove", (event) => {
+      const node = tooltip.node(), offset = 16;
+      let left = event.pageX + offset;
+      if (left + node.offsetWidth > window.scrollX + window.innerWidth) left = event.pageX - node.offsetWidth - offset;
+      tooltip.style("left", `${left}px`).style("top", `${event.pageY - node.offsetHeight - offset}px`);
+    })
+    .on("mouseout", () => tooltip.classed("visible", false));
+
+  // Keep each label inside its own tile
+  leaves.append("clipPath")
+    .attr("id", (_, i) => `clip-${i}`)
+    .append("rect")
+    .attr("width", (d) => d.x1 - d.x0)
+    .attr("height", (d) => d.y1 - d.y0);
+
+  // Wrap the game name into lines that fit the tile
+  leaves.append("text")
+    .attr("class", "tile-label")
+    .attr("clip-path", (_, i) => `url(#clip-${i})`)
+    .each(function (d) {
+      const w = d.x1 - d.x0, h = d.y1 - d.y0;
+      const maxChars = Math.max(Math.floor((w - 8) / 5.6), 1);
+      const lines = [];
+      let line = "";
+      d.data.name.split(/\s+/).forEach((word) => {
+        if ((line + " " + word).trim().length > maxChars && line) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = (line + " " + word).trim();
+        }
+      });
+      if (line) lines.push(line);
+      const fit = lines.slice(0, Math.max(Math.floor((h - 6) / 12), 0));
+      d3.select(this).selectAll("tspan").data(fit).join("tspan")
+        .attr("x", 4)
+        .attr("y", (_, i) => 13 + i * 12)
+        .text((t) => t);
+    });
+
+  // Legend
+  const cols = 6, itemW = 150, itemH = 26, size = 16;
+  const legend = d3.select("#legend")
+    .attr("viewBox", `0 0 ${cols * itemW} ${Math.ceil(categories.length / cols) * itemH}`);
+  const items = legend.selectAll("g").data(categories).join("g")
+    .attr("transform", (_, i) => `translate(${(i % cols) * itemW}, ${Math.floor(i / cols) * itemH})`);
+  items.append("rect")
+    .attr("class", "legend-item")
+    .attr("width", size)
+    .attr("height", size)
+    .attr("rx", 3)
+    .attr("fill", (c) => color(c));
+  items.append("text")
+    .attr("x", size + 8)
+    .attr("y", size - 3)
+    .text((c) => c);
+}
+</script>
+<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
