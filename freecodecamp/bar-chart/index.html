@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>United States GDP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="card">
+      <header>
+        <p class="eyebrow">Federal Reserve Economic Data</p>
+        <h1 id="title">United States GDP</h1>
+        <p class="subtitle">Quarterly gross domestic product, 1947 – 2015</p>
+      </header>
+
+      <div id="chart" class="chart" aria-label="Bar chart of US GDP over time"></div>
+
+      <footer>
+        <span>Units: billions of dollars, seasonally adjusted annual rate</span>
+        <a href="http://www.bea.gov/national/pdf/nipaguid.pdf" target="_blank" rel="noopener">Source: BEA</a>
+      </footer>
+    </main>
+
+    <div id="tooltip" role="tooltip"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+  </body>
+</html>

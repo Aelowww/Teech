@@ -1,0 +1,140 @@
+:root {
+  --bg: #0f1221;
+  --card: #171b2e;
+  --ink: #eef0fa;
+  --muted: #8b91b0;
+  --grid: #2a3050;
+  --bar-low: #5b6cff;
+  --bar-high: #ff7a59;
+  --accent: #ffd36e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: radial-gradient(circle at 20% 0%, #232a52 0%, var(--bg) 55%);
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.card {
+  width: min(1000px, 100%);
+  background: var(--card);
+  border: 1px solid #262c48;
+  border-radius: 20px;
+  padding: 28px 28px 20px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+#title {
+  margin: 6px 0 4px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.axis text {
+  fill: var(--muted);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+}
+
+.axis path,
+.axis line {
+  stroke: var(--grid);
+}
+
+.grid line {
+  stroke: var(--grid);
+  stroke-dasharray: 2 4;
+}
+
+.grid path {
+  display: none;
+}
+
+.axis-label {
+  fill: var(--muted);
+  font-size: 12px;
+}
+
+.bar {
+  transition: opacity 120ms ease;
+}
+
+.bar:hover,
+.bar.active {
+  fill: var(--accent);
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+footer a {
+  color: var(--muted);
+}
+
+#tooltip {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #14182b;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: opacity 120ms ease;
+  white-space: nowrap;
+}
+
+#tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#tooltip .tt-date {
+  color: #5b6178;
+  font-weight: 500;
+}
+
+#tooltip .tt-gdp {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
