@@ -1,0 +1,131 @@
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap");
+:root{--bg:#0f1221;--card:#171b2e;--ink:#eef0fa;--muted:#8b91b0;--grid:#2a3050;--clean:#4fd1c5;--doped:#ff6b8b;--accent:#ffd36e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(circle at 80% 0%,#2a2350 0%,var(--bg) 55%);color:var(--ink);font-family:"Inter",system-ui,sans-serif}
+.card{width:min(1000px,100%);background:var(--card);border:1px solid #262c48;border-radius:20px;padding:28px 28px 20px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.eyebrow{margin:0;color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+#title{margin:6px 0 4px;font-family:"Fraunces",Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600}
+.subtitle{margin:0 0 16px;color:var(--muted)}
+.chart svg{display:block;width:100%;height:auto}
+.axis text{fill:var(--muted);font-family:"Inter",system-ui,sans-serif;font-size:11px}
+.axis path,.axis line{stroke:var(--grid)}
+.grid line{stroke:var(--grid);stroke-dasharray:2 4}
+.grid path{display:none}
+.axis-label{fill:var(--muted);font-size:12px}
+.dot{stroke:var(--card);stroke-width:1.5;cursor:pointer;transition:r 120ms ease}
+.dot:hover{stroke:var(--accent);stroke-width:2.5}
+#legend text{fill:var(--ink);font-size:12px}
+footer{margin-top:8px;color:var(--muted);font-size:.8rem}
+#tooltip{position:absolute;pointer-events:none;opacity:0;visibility:hidden;max-width:280px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.96);color:#14182b;font-size:.85rem;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:opacity 120ms ease}
+#tooltip.visible{opacity:1;visibility:visible}
+#tooltip .tt-name{font-weight:600;font-size:.95rem}
+#tooltip .tt-meta{color:#5b6178}
+#tooltip .tt-doping{margin-top:6px;padding-top:6px;border-top:1px solid #e3e5ee;white-space:normal}
+</style>
+
+<main class="card">
+  <header>
+    <p class="eyebrow">Tour de France · Alpe d'Huez</p>
+    <h1 id="title">Doping in Professional Bicycle Racing</h1>
+    <p class="subtitle">35 fastest climbing times up Alpe d'Huez</p>
+  </header>
+  <div id="chart" class="chart"></div>
+  <footer>Hover a dot to see the rider, time and any doping allegations.</footer>
+</main>
+
+<div id="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+const DATA_URL = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
+const width = 920, height = 500;
+const margin = { top: 20, right: 30, bottom: 60, left: 80 };
+const innerWidth = width - margin.left - margin.right;
+const innerHeight = height - margin.top - margin.bottom;
+const COLORS = { clean: "#4fd1c5", doped: "#ff6b8b" };
+
+const svg = d3.select("#chart").append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .attr("preserveAspectRatio", "xMidYMid meet");
+const plot = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
+const tooltip = d3.select("#tooltip");
+const formatTime = d3.timeFormat("%M:%S");
+
+fetch(DATA_URL)
+  .then((r) => r.json())
+  .then(render)
+  .catch((e) => d3.select("#chart").append("p").text(`Couldn't load the data: ${e.message}`));
+
+function render(data) {
+  const riders = data.map((d) => {
+    const [min, sec] = d.Time.split(":").map(Number);
+    return { ...d, time: new Date(1970, 0, 1, 0, min, sec) };
+  });
+
+  const x = d3.scaleLinear()
+    .domain([d3.min(riders, (d) => d.Year) - 1, d3.max(riders, (d) => d.Year) + 1])
+    .range([0, innerWidth]);
+
+  const y = d3.scaleTime()
+    .domain(d3.extent(riders, (d) => d.time))
+    .range([0, innerHeight])
+    .nice();
+
+  plot.append("g").attr("class", "grid")
+    .call(d3.axisLeft(y).tickSize(-innerWidth).tickFormat(""));
+
+  plot.append("g").attr("id", "x-axis").attr("class", "axis")
+    .attr("transform", `translate(0, ${innerHeight})`)
+    .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+  plot.append("g").attr("id", "y-axis").attr("class", "axis")
+    .call(d3.axisLeft(y).tickFormat(formatTime));
+
+  plot.append("text").attr("class", "axis-label").attr("transform", "rotate(-90)")
+    .attr("x", -innerHeight / 2).attr("y", -margin.left + 18).attr("text-anchor", "middle")
+    .text("Climb time (minutes)");
+
+  plot.append("text").attr("class", "axis-label")
+    .attr("x", innerWidth / 2).attr("y", innerHeight + 44).attr("text-anchor", "middle")
+    .text("Year");
+
+  plot.selectAll(".dot").data(riders).join("circle")
+    .attr("class", "dot")
+    .attr("data-xvalue", (d) => d.Year)
+    .attr("data-yvalue", (d) => d.time)
+    .attr("cx", (d) => x(d.Year))
+    .attr("cy", (d) => y(d.time))
+    .attr("r", 7)
+    .attr("fill", (d) => (d.Doping ? COLORS.doped : COLORS.clean))
+    .attr("fill-opacity", 0.85)
+    .on("mouseover", (event, d) => {
+      tooltip.attr("data-year", d.Year)
+        .html(
+          `<div class="tt-name">${d.Name} <span class="tt-meta">(${d.Nationality})</span></div>` +
+          `<div class="tt-meta">Year ${d.Year} · Time ${d.Time} · Rank #${d.Place}</div>` +
+          (d.Doping ? `<div class="tt-doping">${d.Doping}</div>` : "")
+        )
+        .classed("visible", true);
+    })
+    .on("mousemove", (event) => {
+      const node = tooltip.node(), offset = 16;
+      let left = event.pageX + offset;
+      if (left + node.offsetWidth > window.scrollX + window.innerWidth) left = event.pageX - node.offsetWidth - offset;
+      tooltip.style("left", `${left}px`).style("top", `${event.pageY - node.offsetHeight - offset}px`);
+    })
+    .on("mouseout", () => tooltip.classed("visible", false));
+
+  const legend = plot.append("g").attr("id", "legend")
+    .attr("transform", `translate(${innerWidth - 220}, 10)`);
+  [
+    { label: "No doping allegations", color: COLORS.clean },
+    { label: "Riders with doping allegations", color: COLORS.doped },
+  ].forEach((item, i) => {
+    const row = legend.append("g").attr("transform", `translate(0, ${i * 24})`);
+    row.append("circle").attr("cx", 7).attr("cy", 0).attr("r", 7).attr("fill", item.color);
+    row.append("text").attr("x", 22).attr("y", 4).text(item.label);
+  });
+}
+</script>
+<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
