@@ -17,7 +17,7 @@ begin
   end if;
   if new.role = 'student'
     and new.course_year is not null
-    and new.course_year is distinct from case when tg_op = 'UPDATE' then old.course_year end
+    and new.course_year is distinct from old.course_year
     and new.course_year !~ '^IT - Year [1-4]$'
     and current_user in ('authenticated', 'anon') then
     raise exception 'Course must be IT with a year level from 1 to 4.';
