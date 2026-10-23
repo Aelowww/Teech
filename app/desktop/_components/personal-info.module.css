@@ -4,24 +4,12 @@
   gap: 24px;
 }
 
-.header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-}
-
 .heading {
   min-width: 0;
 }
 
 .heading > :last-child {
   margin-bottom: 0;
-}
-
-.edit {
-  flex: 0 0 auto;
-  margin: 0;
 }
 
 .list {
@@ -82,11 +70,4 @@
 .row dd.empty {
   color: #b9b8cb;
   font-weight: 500;
-}
-
-@media (max-width: 760px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }

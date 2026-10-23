@@ -20,7 +20,6 @@ export default async function Page() {
   return (
     <DesktopLayout className={styles.screen} backTo="/student/profile" role="student" activeNav="profile">
       <PersonalInfo
-        editHref="/student/profile/edit"
         fields={[
           { icon: UserRound, label: "Full Name", value: profile.full_name },
           { icon: IdCard, label: "Student ID", value: profile.student_number },

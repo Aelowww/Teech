@@ -20,7 +20,6 @@ export default async function Page() {
   return (
     <MobileLayout className={styles.screen} backTo="/faculty/profile" role="faculty" activeNav="profile">
       <PersonalInfo
-        editHref="/faculty/profile/edit"
         fields={[
           { icon: UserRound, label: "Full Name", value: profile.full_name },
           { icon: IdCard, label: "Faculty ID", value: profile.faculty_number },
