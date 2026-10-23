@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { accountRole } from "@/lib/account-role";
 import { facultyIdFileError, uploadFacultyId } from "@/lib/faculty-id";
+import { DEPARTMENT } from "@/lib/department";
 
 type Role = "student" | "faculty";
 
@@ -71,7 +72,7 @@ export async function resendConfirmation(role: Role, email: string) {
 }
 
 type StudentSignUp = { fullName: string; email: string; password: string };
-type FacultySignUp = { fullName: string; email: string; facultyNumber: string; department: string; password: string; idFile: File | null };
+type FacultySignUp = { fullName: string; email: string; facultyNumber: string; password: string; idFile: File | null };
 
 export async function signUpStudent(form: StudentSignUp) {
   return createAccount("student", form.email, form.password, {
@@ -89,7 +90,7 @@ export async function signUpFaculty(form: FacultySignUp) {
     role: "faculty",
     full_name: form.fullName.trim(),
     faculty_number: facultyNumber,
-    department: form.department.trim(),
+    department: DEPARTMENT,
   }, () => submitFacultyId(idFile, facultyNumber));
 }
 

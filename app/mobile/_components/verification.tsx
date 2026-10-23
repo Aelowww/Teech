@@ -8,6 +8,7 @@ import { MobileLayout, Notice } from "@/app/mobile/_components/ui";
 import { AppLoader } from "@/app/mobile/_components/app-loader";
 import { IdUploadField } from "@/app/mobile/_components/id-upload-field";
 import { createClient } from "@/lib/supabase/client";
+import { DEPARTMENT } from "@/lib/department";
 import { identifierLabel, submitVerification, useVerification, type Role, type Verification } from "@/lib/verification";
 import buttonStyles from "@/app/mobile/_components/button.module.css";
 import styles from "./verification.module.css";
@@ -111,15 +112,14 @@ function VerificationCard({ verification, onChange, locked = false }: { verifica
         </dl>
       )}
       {status === "rejected" && verification.note && <p className={styles.reason}><strong>Reason:</strong> {verification.note}</p>}
-      {needsForm && <IdentityForm role={role} initialId={verification.rejectedIdentifier || ""} initialDepartment={verification.department || ""} resubmitting={status === "rejected"} onDone={onChange} />}
+      {needsForm && <IdentityForm role={role} initialId={verification.rejectedIdentifier || ""} resubmitting={status === "rejected"} onDone={onChange} />}
       {!needsForm && <Link className={`${buttonStyles.button} ${buttonStyles.secondary}`} href={`/${role}/home`}>Back to home</Link>}
     </section>
   );
 }
 
-function IdentityForm({ role, initialId, initialDepartment, resubmitting, onDone }: { role: Role; initialId: string; initialDepartment: string; resubmitting: boolean; onDone: () => Promise<void> }) {
+function IdentityForm({ role, initialId, resubmitting, onDone }: { role: Role; initialId: string; resubmitting: boolean; onDone: () => Promise<void> }) {
   const [identifier, setIdentifier] = useState(initialId);
-  const [department, setDepartment] = useState(initialDepartment);
   const [idFile, setIdFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -130,7 +130,7 @@ function IdentityForm({ role, initialId, initialDepartment, resubmitting, onDone
     event.preventDefault();
     setError("");
     setSaving(true);
-    const result = await submitVerification(role, identifier, idFile, department);
+    const result = await submitVerification(role, identifier, idFile);
     if (result) {
       setSaving(false);
       setError(result);
@@ -163,12 +163,12 @@ function IdentityForm({ role, initialId, initialDepartment, resubmitting, onDone
       {role === "student" && (
         <label>
           <span>Department</span>
-          <input value={department} onChange={(event) => setDepartment(event.target.value.slice(0, 80))} maxLength={80} placeholder="Enter your department" required />
+          <input value={DEPARTMENT} readOnly />
         </label>
       )}
       <IdUploadField label={`${label} photo`} file={idFile} onChange={(file) => { setError(""); setIdFile(file); }} />
       {error && <Notice error>{error}</Notice>}
-      <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving || !identifier.trim() || !idFile || (role === "student" && !department.trim())}>{saving ? "Submitting…" : resubmitting ? "Resubmit for review" : "Submit for verification"}</button>
+      <button className={`${buttonStyles.button} ${buttonStyles.primary}`} type="submit" disabled={saving || !identifier.trim() || !idFile}>{saving ? "Submitting…" : resubmitting ? "Resubmit for review" : "Submit for verification"}</button>
     </form>
   );
 }

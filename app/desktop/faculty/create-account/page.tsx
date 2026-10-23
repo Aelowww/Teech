@@ -12,6 +12,7 @@ import { OtpModal } from "@/app/desktop/_components/otp-modal";
 import { IdUploadField } from "@/app/desktop/_components/id-upload-field";
 import { isValidEmail, resendConfirmation, signUpFaculty, verifyFacultyEmailCode } from "@/lib/auth-flows";
 import { facultyIdFileError } from "@/lib/faculty-id";
+import { DEPARTMENT } from "@/lib/department";
 import { getPasswordError, passwordRequirementText } from "@/lib/password";
 import { SupportChat } from "@/app/desktop/_components/support-chat";
 import styles from "@/app/desktop/_components/auth.module.css";
@@ -19,14 +20,13 @@ import styles from "@/app/desktop/_components/auth.module.css";
 type SignUpForm = {
   fullName: string;
   facultyNumber: string;
-  department: string;
   email: string;
   password: string;
   confirmPassword: string;
 };
 
 const emptyForm: SignUpForm = {
-  fullName: "", facultyNumber: "", department: "", email: "", password: "", confirmPassword: "",
+  fullName: "", facultyNumber: "", email: "", password: "", confirmPassword: "",
 };
 
 export default function Page() {
@@ -105,7 +105,7 @@ export default function Page() {
       <div className={`${styles.form} ${styles.formColumns}`}>
         <FormField label="Full Name" name="fullName" value={form.fullName} onChange={updateField("fullName")} placeholder="Enter your full name" required />
         <FormField label="Faculty ID" name="facultyNumber" value={form.facultyNumber} onChange={updateField("facultyNumber")} placeholder="Enter your faculty ID" required />
-        <FormField label="Department" name="department" value={form.department} onChange={updateField("department")} placeholder="Enter your department" required />
+        <FormField label="Department" name="department" value={DEPARTMENT} placeholder="Department" readOnly />
         <FormField label="Email" name="email" value={form.email} onChange={updateField("email")} placeholder="Enter your email" type="email" required />
         <div className={styles.fullRow}>
           <IdUploadField label="Faculty ID Photo" file={idFile} onChange={(file) => { setError(""); setIdFile(file); }} />

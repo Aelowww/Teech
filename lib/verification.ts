@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { facultyIdFileError, uploadFacultyId } from "@/lib/faculty-id";
+import { DEPARTMENT } from "@/lib/department";
 
 export type Role = "student" | "faculty";
 export type VerificationStatus = "unsubmitted" | "pending" | "verified" | "rejected";
@@ -80,13 +81,12 @@ const resubmitMessages: Record<string, string> = {
   department_required: "Enter your department.",
 };
 
-export async function submitVerification(role: Role, identifier: string, idFile: File | null, department: string) {
-  if (role === "student" && !department.trim()) return "Enter your department.";
+export async function submitVerification(role: Role, identifier: string, idFile: File | null) {
   const fileError = facultyIdFileError(idFile, identifierLabel(role));
   if (fileError || !idFile) return fileError;
   const upload = await uploadFacultyId(idFile);
   if (!upload.path) return upload.error;
-  const { data, error } = await createClient().rpc("submit_my_verification", { new_identifier: identifier.trim(), document_path: upload.path, new_department: department.trim() || null });
+  const { data, error } = await createClient().rpc("submit_my_verification", { new_identifier: identifier.trim(), document_path: upload.path, new_department: role === "student" ? DEPARTMENT : null });
   if (error) return error.message;
   if (data === "ok") return null;
   return resubmitMessages[data as string] || "Something went wrong. Please try again.";

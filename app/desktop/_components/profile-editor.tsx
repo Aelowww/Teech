@@ -8,6 +8,7 @@ import { AppLoader } from "@/app/desktop/_components/app-loader";
 import { UserPen } from "lucide-react";
 import { ConfirmationModal } from "@/app/desktop/_components/confirmation-modal";
 import { createClient } from "@/lib/supabase/client";
+import { DEPARTMENT, courseYearLabel, yearFromCourseYear } from "@/lib/department";
 import buttonStyles from "@/app/desktop/_components/button.module.css";
 import { SuccessModal } from "./success-modal";
 import styles from "./profile-settings.module.css";
@@ -19,8 +20,7 @@ export function ProfileEditor({ role }: { role: Role }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [initialEmail, setInitialEmail] = useState("");
-  const [department, setDepartment] = useState("");
-  const [courseYear, setCourseYear] = useState("");
+  const [year, setYear] = useState("");
   const [avatarPath, setAvatarPath] = useState<string | null | undefined>(undefined);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -40,7 +40,7 @@ export function ProfileEditor({ role }: { role: Role }) {
       if (!user) { router.replace(signInPath); return; }
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("full_name, email, department, course_year, role, avatar_path")
+        .select("full_name, email, course_year, role, avatar_path")
         .eq("auth_user_id", user.id)
         .maybeSingle();
       if (!active) return;
@@ -55,8 +55,7 @@ export function ProfileEditor({ role }: { role: Role }) {
         setEmail(profileEmail);
         setInitialEmail(profileEmail);
       }
-      setDepartment(profile.department || "");
-      setCourseYear(profile.course_year || "");
+      setYear(yearFromCourseYear(profile.course_year));
       setAvatarPath(profile.avatar_path || null);
     }
     void loadProfile();
@@ -79,8 +78,8 @@ export function ProfileEditor({ role }: { role: Role }) {
     if (!user) { setSaving(false); router.replace(signInPath); return; }
 
     const updates = role === "faculty"
-      ? { full_name: fullName.trim(), department: department.trim() }
-      : { full_name: fullName.trim(), course_year: courseYear.trim() };
+      ? { full_name: fullName.trim() }
+      : { course_year: courseYearLabel(year) };
     const { error: updateError } = await supabase
       .from("profiles")
       .update(updates)
@@ -123,11 +122,11 @@ export function ProfileEditor({ role }: { role: Role }) {
         <PageHeading title="Edit Profile" subtitle="Update the information shown in your portal." />
         {avatarPath !== undefined && <div className={styles.photoEditor}><AvatarUploader initialPath={avatarPath} /></div>}
         <div className={styles.form}>
-          <FormField label="Full Name" name="fullName" value={fullName} onChange={(event) => setFullName(event.target.value)} placeholder="Enter your full name" required />
+          <FormField label="Full Name" name="fullName" value={fullName} onChange={role === "faculty" ? (event) => setFullName(event.target.value) : undefined} placeholder="Enter your full name" readOnly={role === "student"} required />
           {role === "faculty" && <FormField label="School Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" type="email" required />}
           {role === "faculty"
-            ? <FormField label="Department" name="department" value={department} onChange={(event) => setDepartment(event.target.value)} placeholder="Enter your department" required />
-            : <FormField label="Course and Year" name="courseYear" value={courseYear} onChange={(event) => setCourseYear(event.target.value)} placeholder="Enter your course and year" required />}
+            ? <FormField label="Department" name="department" value={DEPARTMENT} placeholder="Department" readOnly />
+            : <><FormField label="Course" name="course" value={DEPARTMENT} placeholder="Course" readOnly /><FormField label="Year Level" name="year" value={year} onChange={(event) => setYear(event.target.value.replace(/[^1-4]/g, "").slice(0, 1))} placeholder="Enter 1 to 4" inputMode="numeric" pattern="[1-4]" maxLength={1} required /></>}
         </div>
         {error && <Notice error>{error}</Notice>}
         {notice && <Notice>{notice}</Notice>}
