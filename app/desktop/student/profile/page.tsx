@@ -3,6 +3,7 @@ import { DesktopLayout } from "@/app/desktop/_components/ui";
 import { ProfileOverview } from "@/app/desktop/_components/profile-overview";
 import { signedAvatarUrl } from "@/lib/avatar";
 import { createClient } from "@/lib/supabase/server";
+import { DEPARTMENT, yearLevel } from "@/lib/department";
 import styles from "./page.module.css";
 
 export default async function Page() {
@@ -30,9 +31,10 @@ export default async function Page() {
   const details = [
     { label: "Full name", value: profile.full_name },
     { label: "Student ID", value: profile.student_number },
-    { label: "Course and year", value: profile.course_year },
+    { label: "Department", value: DEPARTMENT },
+    { label: "Year level", value: yearLevel(profile.course_year) },
   ];
-  const chips = [profile.course_year, profile.student_number ? `ID ${profile.student_number}` : null].filter((chip): chip is string => Boolean(chip));
+  const chips = [DEPARTMENT, yearLevel(profile.course_year), profile.student_number ? `ID ${profile.student_number}` : null].filter((chip): chip is string => Boolean(chip));
 
   return (
     <DesktopLayout className={styles.screen} role="student" activeNav="profile">

@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
-import { GraduationCap, IdCard, UserRound } from "lucide-react";
+import { Building2, GraduationCap, IdCard, UserRound } from "lucide-react";
 import { MobileLayout } from "@/app/mobile/_components/ui";
 import { PersonalInfo } from "@/app/mobile/_components/personal-info";
 import { createClient } from "@/lib/supabase/server";
+import { DEPARTMENT, yearLevel } from "@/lib/department";
 import styles from "../page.module.css";
 
 export default async function Page() {
@@ -23,7 +24,8 @@ export default async function Page() {
         fields={[
           { icon: UserRound, label: "Full Name", value: profile.full_name },
           { icon: IdCard, label: "Student ID", value: profile.student_number },
-          { icon: GraduationCap, label: "Course and Year", value: profile.course_year },
+          { icon: Building2, label: "Department", value: DEPARTMENT },
+          { icon: GraduationCap, label: "Year Level", value: yearLevel(profile.course_year) },
         ]}
       />
     </MobileLayout>

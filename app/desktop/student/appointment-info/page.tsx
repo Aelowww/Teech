@@ -89,7 +89,7 @@ export default function Page() {
             </div>
             <dl className={styles.identityMeta}>
               <div><dt>Student ID</dt><dd>{draft.studentId || "Not set"}</dd></div>
-              <div><dt>Course and Year</dt><dd>{draft.courseYear || "Not set"}</dd></div>
+              <div><dt>Department and Year</dt><dd>{draft.courseYear || "Not set"}</dd></div>
             </dl>
           </div>
 

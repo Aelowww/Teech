@@ -46,7 +46,7 @@ export default function Page() {
     const items = [
       { label: "Student Name", value: draft.studentName },
       { label: "Student ID", value: draft.studentId },
-      { label: "Course and Year", value: draft.courseYear },
+      { label: "Department and Year", value: draft.courseYear },
       { label: "Faculty Member", value: draft.facultyName },
       { label: "Preferred Date", value: draft.preferredDate },
       { label: "Preferred Time", value: draft.preferredTime },

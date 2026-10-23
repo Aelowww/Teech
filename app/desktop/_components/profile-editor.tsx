@@ -126,7 +126,7 @@ export function ProfileEditor({ role }: { role: Role }) {
           {role === "faculty" && <FormField label="School Email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" type="email" required />}
           {role === "faculty"
             ? <FormField label="Department" name="department" value={DEPARTMENT} placeholder="Department" readOnly />
-            : <><FormField label="Course" name="course" value={DEPARTMENT} placeholder="Course" readOnly /><FormField label="Year Level" name="year" value={year} onChange={(event) => setYear(event.target.value.replace(/[^1-4]/g, "").slice(0, 1))} placeholder="Enter 1 to 4" inputMode="numeric" pattern="[1-4]" maxLength={1} required /></>}
+            : <><FormField label="Department" name="department" value={DEPARTMENT} placeholder="Department" readOnly /><FormField label="Year Level" name="year" value={year} onChange={(event) => setYear(event.target.value.replace(/[^1-4]/g, "").slice(0, 1))} placeholder="Enter 1 to 4" inputMode="numeric" pattern="[1-4]" maxLength={1} required /></>}
         </div>
         {error && <Notice error>{error}</Notice>}
         {notice && <Notice>{notice}</Notice>}

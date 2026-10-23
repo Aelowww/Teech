@@ -79,7 +79,7 @@ export default function Page() {
         <div className={styles.form}>
           <FormField label="Student Name" name="studentName" value={draft.studentName} placeholder="" readOnly required />
           <FormField label="Student ID" name="studentId" value={draft.studentId} placeholder="" readOnly required />
-          <FormField label="Course and Year" name="courseYear" value={draft.courseYear} placeholder="" readOnly required />
+          <FormField label="Department and Year" name="courseYear" value={draft.courseYear} placeholder="" readOnly required />
           <FormField label="Faculty Member" name="facultyName" value={draft.facultyName} placeholder="" readOnly required />
           <FormField label="Reason for Consultation" name="reason" value={draft.reason} onChange={updateField("reason")} placeholder="" maxLength={200} required />
           <FormField label="Additional Details" name="details" value={draft.details} onChange={updateField("details")} placeholder="" maxLength={1000} />
